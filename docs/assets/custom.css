@@ -9,7 +9,7 @@
 .md-typeset .admonition.bolum-bilgi > .admonition-title { background-color: rgba(255,107,53,0.1); }
 .md-typeset .admonition.bolum-bilgi > .admonition-title::before { background-color: #ff6b35; }
 
-/* Quiz kutusu */
+/* Eski quiz kutusu (details/summary tabanlı, legacy) */
 .quiz {
   background: rgba(255,107,53,0.05);
   border: 1px solid rgba(255,107,53,0.3);
@@ -23,4 +23,674 @@
 /* Mobile */
 @media (max-width: 768px) {
   .md-typeset table:not([class]) { font-size: 0.85em; }
+}
+
+/* =========================================================
+   F6/F7 — Interaktif widget stilleri
+   (api-client, progress, quiz, code-editor)
+   ========================================================= */
+
+/* -- Quiz kutusu -- */
+.ma-quiz {
+  background: rgba(255,107,53,0.06);
+  border: 1px solid rgba(255,107,53,0.35);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  margin: 1.5rem 0;
+}
+[data-md-color-scheme="slate"] .ma-quiz {
+  background: rgba(255,107,53,0.12);
+  border-color: rgba(255,107,53,0.5);
+}
+.ma-quiz .ma-quiz-q {
+  font-weight: 600;
+  margin: 0 0 0.75rem 0;
+}
+
+.ma-opt {
+  padding: 0.55rem 0.9rem;
+  margin: 0.3rem 0;
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s;
+  background: var(--md-default-bg-color);
+  color: var(--md-default-fg-color);
+}
+.ma-opt:hover {
+  border-color: #ff6b35;
+  background: rgba(255,107,53,0.08);
+}
+/* Cevaplanmış quiz'de hover kapalı */
+.ma-quiz[data-ma-answered="1"] .ma-opt {
+  cursor: default;
+}
+.ma-quiz[data-ma-answered="1"] .ma-opt:hover {
+  border-color: var(--md-default-fg-color--lightest);
+  background: var(--md-default-bg-color);
+}
+/* Durum class'ları — her modda çalışır */
+.ma-opt.ma-opt-correct {
+  border-color: #16a34a !important;
+  background: rgba(22,163,74,0.15) !important;
+  color: #14532d !important;
+  font-weight: 600;
+}
+[data-md-color-scheme="slate"] .ma-opt.ma-opt-correct {
+  color: #86efac !important;
+  background: rgba(22,163,74,0.25) !important;
+}
+.ma-opt.ma-opt-wrong {
+  border-color: #dc2626 !important;
+  background: rgba(220,38,38,0.12) !important;
+  color: #7f1d1d !important;
+}
+[data-md-color-scheme="slate"] .ma-opt.ma-opt-wrong {
+  color: #fca5a5 !important;
+  background: rgba(220,38,38,0.25) !important;
+}
+.ma-opt.ma-opt-disabled {
+  opacity: 0.55;
+}
+
+/* Feedback mesajı */
+.ma-quiz-feedback {
+  margin-top: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.88rem;
+  font-weight: 500;
+}
+.ma-quiz-feedback.ma-fb-correct {
+  background: rgba(22,163,74,0.15);
+  color: #14532d;
+}
+[data-md-color-scheme="slate"] .ma-quiz-feedback.ma-fb-correct {
+  background: rgba(22,163,74,0.25);
+  color: #86efac;
+}
+.ma-quiz-feedback.ma-fb-wrong {
+  background: rgba(220,38,38,0.12);
+  color: #7f1d1d;
+}
+[data-md-color-scheme="slate"] .ma-quiz-feedback.ma-fb-wrong {
+  background: rgba(220,38,38,0.25);
+  color: #fca5a5;
+}
+
+/* -- Tamamla butonu kutusu -- */
+#ma-complete-wrap {
+  margin: 2.5rem 0 1rem 0;
+  padding: 1.25rem;
+  border: 1px dashed rgba(255,107,53,0.5);
+  border-radius: 8px;
+  background: rgba(255,107,53,0.05);
+  text-align: center;
+}
+[data-md-color-scheme="slate"] #ma-complete-wrap {
+  background: rgba(255,107,53,0.12);
+  border-color: rgba(255,107,53,0.6);
+}
+#ma-complete-btn {
+  background: #ff6b35;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.6rem 1.4rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-family: inherit;
+}
+#ma-complete-btn:hover:not(:disabled) { background: #e55a28; }
+#ma-complete-btn:disabled { cursor: default; }
+#ma-complete-btn.ma-complete-done {
+  background: #16a34a !important;
+}
+#ma-complete-btn.ma-complete-error {
+  background: #dc2626 !important;
+}
+.ma-complete-hint {
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--md-default-fg-color--light);
+}
+
+/* -- Fixed XP badge (sağ üst) -- */
+#ma-badge {
+  position: fixed;
+  top: 0.75rem;
+  right: 0.75rem;
+  z-index: 9999;
+  background: rgba(255,107,53,0.95);
+  color: #fff;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+  font-family: Inter, system-ui, sans-serif;
+  user-select: none;
+  pointer-events: none;
+}
+
+/* -- Code run bar (F9'a kadar placeholder) -- */
+.ma-code-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.5rem 0 -0.25rem 0;
+}
+.ma-code-bar .ma-code-run {
+  background: #0ea5e9;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 0.3rem 0.8rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+}
+.ma-code-bar .ma-code-run:hover { background: #0284c7; }
+.ma-code-bar .ma-code-lang {
+  font-size: 0.72rem;
+  color: var(--md-default-fg-color--light);
+  background: rgba(0,0,0,0.06);
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+}
+[data-md-color-scheme="slate"] .ma-code-bar .ma-code-lang {
+  background: rgba(255,255,255,0.08);
+}
+
+.ma-code-toast {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.85);
+  color: #fff;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  z-index: 10000;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  transition: opacity 0.4s;
+}
+
+/* Mobile cila */
+@media (max-width: 768px) {
+  #ma-badge { font-size: 0.72rem; padding: 0.3rem 0.6rem; top: 0.5rem; right: 0.5rem; }
+  #ma-complete-wrap { padding: 1rem; }
+}
+
+/* =========================================================
+   F8 — Dashboard stilleri
+   ========================================================= */
+
+/* Target tabs */
+.ma-target-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1rem 0 1.5rem 0;
+}
+.ma-target-tab {
+  background: var(--md-default-bg-color);
+  color: var(--md-default-fg-color);
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 999px;
+  padding: 0.4rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+.ma-target-tab:hover {
+  border-color: #ff6b35;
+}
+.ma-target-tab.ma-target-active {
+  background: #ff6b35;
+  color: #fff;
+  border-color: #ff6b35;
+}
+.ma-target-tab:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+/* Kartlar grid */
+.ma-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.75rem;
+  margin: 1rem 0 1.5rem 0;
+}
+.ma-card {
+  background: var(--md-default-bg-color);
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 10px;
+  padding: 1rem;
+  text-align: center;
+}
+[data-md-color-scheme="slate"] .ma-card {
+  background: rgba(255,255,255,0.03);
+}
+.ma-card-label {
+  font-size: 0.78rem;
+  color: var(--md-default-fg-color--light);
+  margin-bottom: 0.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.ma-card-value {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #ff6b35;
+  line-height: 1.1;
+}
+
+/* Son quiz listesi */
+#ma-dash-quiz {
+  margin: 0.5rem 0 1.5rem 0;
+}
+.ma-quiz-row {
+  display: grid;
+  grid-template-columns: 2rem 1fr 1.5fr auto;
+  gap: 0.5rem;
+  padding: 0.4rem 0.6rem;
+  font-size: 0.85rem;
+  border-bottom: 1px solid var(--md-default-fg-color--lightest);
+  align-items: center;
+}
+.ma-quiz-row:last-child {
+  border-bottom: none;
+}
+.ma-qr-icon { font-size: 1rem; }
+.ma-qr-id { font-family: JetBrains Mono, monospace; font-size: 0.78rem; color: var(--md-default-fg-color--light); }
+.ma-qr-page { font-size: 0.8rem; color: var(--md-default-fg-color); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ma-qr-when { font-size: 0.75rem; color: var(--md-default-fg-color--light); text-align: right; }
+
+/* Progress listesi */
+.ma-pg-legend {
+  font-size: 0.8rem;
+  color: var(--md-default-fg-color--light);
+  margin-bottom: 0.75rem;
+}
+#ma-pg-list .ma-pg-section {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin: 1.2rem 0 0.4rem 0;
+  padding: 0;
+  border: none;
+  color: #ff6b35;
+}
+.ma-pg-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.35rem 0.6rem;
+  border-radius: 4px;
+  transition: background 0.1s;
+}
+.ma-pg-row:hover {
+  background: rgba(255,107,53,0.06);
+}
+.ma-pg-icon {
+  display: inline-block;
+  width: 1.2rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--md-default-fg-color--light);
+}
+.ma-pg-label {
+  font-size: 0.88rem;
+  color: var(--md-default-fg-color);
+}
+.ma-pg-row.ma-pg-seen .ma-pg-icon { color: #0ea5e9; }
+.ma-pg-row.ma-pg-done .ma-pg-icon { color: #16a34a; font-weight: 700; }
+.ma-pg-row.ma-pg-done .ma-pg-label {
+  text-decoration: line-through;
+  text-decoration-color: rgba(22,163,74,0.4);
+  color: var(--md-default-fg-color--light);
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  .ma-cards { grid-template-columns: repeat(2, 1fr); }
+  .ma-card-value { font-size: 1.4rem; }
+  .ma-quiz-row {
+    grid-template-columns: 1.5rem 1fr auto;
+  }
+  .ma-quiz-row .ma-qr-page { display: none; }
+}
+
+/* =========================================================
+   F9 — Kod çalıştırma output paneli (Pyodide)
+   ========================================================= */
+
+.ma-code-output {
+  margin-top: 0.4rem;
+  margin-bottom: 1rem;
+  padding: 0.75rem 1rem;
+  border-left: 4px solid #0ea5e9;
+  border-radius: 0 6px 6px 0;
+  background: rgba(14,165,233,0.06);
+  color: var(--md-default-fg-color);
+  font-family: "JetBrains Mono", "Fira Code", Menlo, monospace;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 320px;
+  overflow: auto;
+}
+
+[data-md-color-scheme="slate"] .ma-code-output {
+  background: rgba(14,165,233,0.12);
+}
+
+/* Loading durumu (yüklenirken / çalışırken) */
+.ma-code-output.ma-code-loading {
+  border-left-color: #f59e0b;
+  background: rgba(245,158,11,0.08);
+  color: var(--md-default-fg-color--light);
+  font-style: italic;
+}
+[data-md-color-scheme="slate"] .ma-code-output.ma-code-loading {
+  background: rgba(245,158,11,0.15);
+}
+
+/* Hata durumu */
+.ma-code-output.ma-code-error {
+  border-left-color: #dc2626;
+  background: rgba(220,38,38,0.08);
+  color: #7f1d1d;
+}
+[data-md-color-scheme="slate"] .ma-code-output.ma-code-error {
+  background: rgba(220,38,38,0.18);
+  color: #fca5a5;
+}
+
+/* Çalıştırma butonu disabled durumu */
+.ma-code-bar .ma-code-run:disabled {
+  opacity: 0.6;
+  cursor: wait;
+  background: #64748b;
+}
+
+/* =========================================================
+   F10 — Bugün banner + Haftalık heatmap
+   ========================================================= */
+
+/* Bugün banner */
+.ma-today-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.9rem 1.1rem;
+  margin: 0.5rem 0 1.5rem 0;
+  border-radius: 10px;
+  border-left: 4px solid;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+.ma-today-banner .ma-today-emoji {
+  font-size: 1.6rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.ma-today-banner .ma-today-msg {
+  flex: 1;
+  color: var(--md-default-fg-color);
+}
+
+.ma-today-banner.ma-today-quiet {
+  background: rgba(100,116,139,0.1);
+  border-left-color: #64748b;
+}
+[data-md-color-scheme="slate"] .ma-today-banner.ma-today-quiet {
+  background: rgba(100,116,139,0.18);
+}
+.ma-today-banner.ma-today-active {
+  background: rgba(14,165,233,0.1);
+  border-left-color: #0ea5e9;
+}
+[data-md-color-scheme="slate"] .ma-today-banner.ma-today-active {
+  background: rgba(14,165,233,0.18);
+}
+.ma-today-banner.ma-today-hot {
+  background: rgba(255,107,53,0.12);
+  border-left-color: #ff6b35;
+}
+[data-md-color-scheme="slate"] .ma-today-banner.ma-today-hot {
+  background: rgba(255,107,53,0.22);
+}
+
+/* Heatmap */
+.ma-heatmap-wrap {
+  margin: 0.5rem 0;
+}
+.ma-heatmap {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.4rem;
+  margin-bottom: 0.5rem;
+}
+.ma-hm-cell {
+  aspect-ratio: 1;
+  border-radius: 6px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.12s;
+  cursor: default;
+  min-height: 38px;
+}
+.ma-hm-cell:hover {
+  transform: scale(1.15);
+  z-index: 2;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+.ma-hm-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: rgba(0,0,0,0.55);
+}
+.ma-hm-cell.ma-hm-l3 .ma-hm-label,
+.ma-hm-cell.ma-hm-l4 .ma-hm-label {
+  color: rgba(255,255,255,0.9);
+}
+
+/* Renk tonları — light mode */
+.ma-hm-l0 { background: rgba(100,116,139,0.15); }
+.ma-hm-l1 { background: #ffe4d6; }
+.ma-hm-l2 { background: #ffb68e; }
+.ma-hm-l3 { background: #ff8347; }
+.ma-hm-l4 { background: #c14114; }
+
+/* Dark mode */
+[data-md-color-scheme="slate"] .ma-hm-l0 { background: rgba(255,255,255,0.06); }
+[data-md-color-scheme="slate"] .ma-hm-l1 { background: rgba(255,107,53,0.28); }
+[data-md-color-scheme="slate"] .ma-hm-l2 { background: rgba(255,107,53,0.55); }
+[data-md-color-scheme="slate"] .ma-hm-l3 { background: rgba(255,107,53,0.82); }
+[data-md-color-scheme="slate"] .ma-hm-l4 { background: #ff6b35; }
+[data-md-color-scheme="slate"] .ma-hm-label { color: rgba(255,255,255,0.7); }
+[data-md-color-scheme="slate"] .ma-hm-cell.ma-hm-l3 .ma-hm-label,
+[data-md-color-scheme="slate"] .ma-hm-cell.ma-hm-l4 .ma-hm-label { color: #fff; }
+
+/* Legend */
+.ma-heatmap-legend {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.74rem;
+  color: var(--md-default-fg-color--light);
+}
+.ma-heatmap-legend i {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+}
+.ma-heatmap-note {
+  font-size: 0.76rem;
+  color: var(--md-default-fg-color--light);
+  margin: 0.5rem 0 1.5rem 0;
+}
+
+/* Mobile */
+@media (max-width: 500px) {
+  .ma-hm-cell { min-height: 30px; }
+  .ma-hm-label { font-size: 0.65rem; }
+  .ma-today-banner { font-size: 0.88rem; padding: 0.75rem 0.9rem; }
+}
+
+/* =============================================================
+   v2 — Kapsam proje-temelli; sayfa şablonu 7-rol protokolü
+   ============================================================= */
+
+/* Sayfa üstü meta blok — süre/önkoşul/çıktı */
+.ma-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 0.85rem 1rem;
+  margin: 0 0 1.5rem 0;
+  background: var(--md-code-bg-color);
+  border-left: 3px solid var(--md-primary-fg-color);
+  border-radius: 4px;
+  font-size: 0.88rem;
+}
+.ma-meta .ma-meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+}
+.ma-meta strong { font-weight: 600; margin-right: 0.25rem; }
+
+/* Persona rozetleri — üç renk, hafif dolgu */
+.ma-persona {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.12rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.76rem;
+  font-weight: 500;
+  line-height: 1.3;
+}
+.ma-persona-baslangic {
+  background: rgba(34,197,94,0.14);
+  color: #15803d;
+  border: 1px solid rgba(34,197,94,0.35);
+}
+.ma-persona-is {
+  background: rgba(59,130,246,0.14);
+  color: #1d4ed8;
+  border: 1px solid rgba(59,130,246,0.35);
+}
+.ma-persona-kisisel {
+  background: rgba(168,85,247,0.14);
+  color: #7e22ce;
+  border: 1px solid rgba(168,85,247,0.35);
+}
+
+/* Dark mode persona ton ayarı */
+[data-md-color-scheme="slate"] .ma-persona-baslangic {
+  background: rgba(34,197,94,0.22);
+  color: #86efac;
+}
+[data-md-color-scheme="slate"] .ma-persona-is {
+  background: rgba(59,130,246,0.22);
+  color: #93c5fd;
+}
+[data-md-color-scheme="slate"] .ma-persona-kisisel {
+  background: rgba(168,85,247,0.22);
+  color: #d8b4fe;
+}
+
+/* Aktif persona vurgu — js tarafı .ma-persona.active ekleyecek */
+.ma-persona.ma-persona-active {
+  box-shadow: 0 0 0 2px currentColor;
+  font-weight: 600;
+}
+.ma-persona.ma-persona-dim {
+  opacity: 0.35;
+}
+
+/* Çıktı kanıtı bloğu — dikkat çekici, eylem vurgulu */
+.ma-cikti-kaniti {
+  background: linear-gradient(180deg,
+    rgba(255,107,53,0.08) 0%,
+    rgba(255,107,53,0.03) 100%);
+  border: 1px solid rgba(255,107,53,0.35);
+  border-radius: 6px;
+  padding: 1rem 1.15rem;
+  margin: 1.5rem 0;
+}
+.ma-cikti-kaniti h3,
+.ma-cikti-kaniti h4 {
+  margin-top: 0;
+  color: #c14114;
+  font-size: 1rem;
+}
+[data-md-color-scheme="slate"] .ma-cikti-kaniti {
+  background: rgba(255,107,53,0.08);
+  border-color: rgba(255,107,53,0.45);
+}
+[data-md-color-scheme="slate"] .ma-cikti-kaniti h3,
+[data-md-color-scheme="slate"] .ma-cikti-kaniti h4 {
+  color: #ff9466;
+}
+
+/* Anthropic resmi kaynak bloğu — markalı, ayırt edici */
+.ma-anthropic {
+  background: rgba(217,119,87,0.06);
+  border: 1px solid rgba(217,119,87,0.3);
+  border-left: 4px solid #d97757;
+  border-radius: 4px;
+  padding: 0.9rem 1.1rem;
+  margin: 1.5rem 0;
+  font-size: 0.93rem;
+}
+.ma-anthropic-header {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-weight: 600;
+  color: #a0522d;
+  margin-bottom: 0.4rem;
+}
+[data-md-color-scheme="slate"] .ma-anthropic {
+  background: rgba(217,119,87,0.08);
+}
+[data-md-color-scheme="slate"] .ma-anthropic-header {
+  color: #e8a589;
+}
+
+/* Sonraki adım bloğu */
+.ma-sonraki {
+  background: rgba(100,116,139,0.08);
+  border-radius: 6px;
+  padding: 0.9rem 1.1rem;
+  margin: 1.5rem 0 1rem 0;
+  font-size: 0.93rem;
+}
+.ma-sonraki-header {
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+  color: var(--md-default-fg-color);
+}
+
+/* Mobil ayarı */
+@media (max-width: 500px) {
+  .ma-meta { font-size: 0.82rem; }
+  .ma-persona { font-size: 0.7rem; padding: 0.1rem 0.45rem; }
+  .ma-cikti-kaniti, .ma-anthropic, .ma-sonraki { padding: 0.75rem 0.9rem; }
 }
