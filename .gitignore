@@ -1,0 +1,44 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+venv/
+.venv/
+env/
+.env
+*.egg-info/
+.pytest_cache/
+
+# MkDocs
+site/
+
+# SQLite
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+
+# Logs
+*.log
+logs/
+nohup.out
+
+# IDE
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# Backups
+*.bak
+*.bak.*
+backups/
+
+# Secrets
+.env
+.env.local
+secrets/
+*.pem
+*.key

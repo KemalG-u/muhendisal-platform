@@ -1,0 +1,26 @@
+/* MühendisAl özel stil */
+:root {
+  --md-primary-fg-color: #ff6b35;
+  --md-accent-fg-color: #cc5520;
+}
+.md-typeset h1 { font-weight: 700; letter-spacing: -0.02em; }
+.md-typeset h2 { border-bottom: 1px solid var(--md-default-fg-color--lightest); padding-bottom: 0.3rem; }
+.md-typeset .admonition.bolum-bilgi { border-left-color: #ff6b35; }
+.md-typeset .admonition.bolum-bilgi > .admonition-title { background-color: rgba(255,107,53,0.1); }
+.md-typeset .admonition.bolum-bilgi > .admonition-title::before { background-color: #ff6b35; }
+
+/* Quiz kutusu */
+.quiz {
+  background: rgba(255,107,53,0.05);
+  border: 1px solid rgba(255,107,53,0.3);
+  border-radius: 8px;
+  padding: 1rem 1.5rem;
+  margin: 1.5rem 0;
+}
+.quiz summary { font-weight: 600; cursor: pointer; }
+.quiz summary:hover { color: #ff6b35; }
+
+/* Mobile */
+@media (max-width: 768px) {
+  .md-typeset table:not([class]) { font-size: 0.85em; }
+}
