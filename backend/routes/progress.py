@@ -1,10 +1,11 @@
 """Progress route'ları — sayfa görüldü/tamamlandı + XP."""
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request
 from sqlalchemy.orm import Session
 from datetime import datetime, date
 from typing import List
 from .. import models, schemas
 from ..database import get_db
+from ..rate_limit import limiter
 from .auth import get_current_user
 
 router = APIRouter(prefix="/api/progress", tags=["progress"])
@@ -50,7 +51,9 @@ def _update_streak(db: Session, user_id: int):
 
 
 @router.post("/seen")
+@limiter.limit("60/minute")
 def mark_seen(
+    request: Request,
     payload: schemas.ProgressEvent,
     user: models.User = Depends(get_current_user),
     db: Session = Depends(get_db),
@@ -71,7 +74,9 @@ def mark_seen(
 
 
 @router.post("/complete")
+@limiter.limit("30/minute")
 def mark_complete(
+    request: Request,
     payload: schemas.ProgressEvent,
     user: models.User = Depends(get_current_user),
     db: Session = Depends(get_db),

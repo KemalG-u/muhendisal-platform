@@ -1,9 +1,10 @@
 """Streak ve feedback route'ları."""
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request
 from sqlalchemy.orm import Session
 from typing import List
 from .. import models, schemas
 from ..database import get_db
+from ..rate_limit import limiter
 from .auth import get_current_user
 
 router = APIRouter(prefix="/api", tags=["streak", "feedback"])
@@ -24,7 +25,9 @@ def get_streak(
 
 
 @router.post("/feedback", response_model=schemas.FeedbackOut)
+@limiter.limit("10/minute")
 def post_feedback(
+    request: Request,
     payload: schemas.FeedbackIn,
     user: models.User = Depends(get_current_user),
     db: Session = Depends(get_db),

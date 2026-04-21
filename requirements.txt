@@ -1,0 +1,20 @@
+# MühendisAl Platform — runtime bağımlılıkları
+# Üretildi: 21 Nis 2026 (FAZ D)
+
+# ===== Backend (FastAPI) =====
+fastapi==0.115.0
+uvicorn[standard]==0.32.0
+pydantic==2.10.0
+SQLAlchemy==2.0.36
+slowapi==0.1.9
+
+# ===== Docs (MkDocs Material) =====
+# KRITIK: Material 2.0 (2026 Subat duyurusu) geriye uyumlu degil —
+# plugin sistemi kaldirildi, tema override bozulacak, migration yolu yok.
+# Bu platform plugin ve custom.css'e dayaniyor; 2.0 YAYINLANANA KADAR pin.
+# Karar yeniden degerlendirme: 2026 Q3, Faz post-launch.
+mkdocs==1.6.1
+mkdocs-material>=9.7.0,<10.0.0
+mkdocs-material-extensions==1.3.1
+mkdocs-glightbox==0.5.2
+pymdown-extensions==10.21.2

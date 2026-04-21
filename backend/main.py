@@ -2,17 +2,26 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from slowapi import _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
 from .database import init_db
-from .routes import auth, progress, quiz, streak_feedback
+from .rate_limit import limiter
+from .routes import auth, progress, quiz, streak_feedback, xp
+
 
 app = FastAPI(
     title="MühendisAl Platform API",
-    version="0.1.0",
-    description="AI Engineer öğrenme platformu — backend (FAZ 5)",
+    version="0.2.0",
+    description="AI Engineer öğrenme platformu — FAZ D rate limit eklendi",
     docs_url="/api/docs",
     redoc_url="/api/redoc",
     openapi_url="/api/openapi.json",
 )
+
+# Rate limiter state + exception handler
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
 
 # CORS — wiki.oluk.org'dan widget JS'leri çağırabilsin
 app.add_middleware(
@@ -34,7 +43,7 @@ def on_startup():
 
 @app.get("/api/health")
 def health():
-    return {"status": "ok", "service": "muhendisal-api", "version": "0.1.0"}
+    return {"status": "ok", "service": "muhendisal-api", "version": "0.2.0"}
 
 
 # Router'ları kaydet
@@ -42,10 +51,14 @@ app.include_router(auth.router)
 app.include_router(progress.router)
 app.include_router(quiz.router)
 app.include_router(streak_feedback.router)
+app.include_router(xp.router)
 
 
 @app.exception_handler(Exception)
 async def global_exception_handler(request, exc):
+    # Rate limit istisnaları kendi handler'ında yakalanıyor; bu sadece güvenlik ağı
+    if isinstance(exc, RateLimitExceeded):
+        raise exc
     return JSONResponse(
         status_code=500,
         content={"detail": str(exc), "type": exc.__class__.__name__},
