@@ -1,0 +1,18 @@
+# Yerel / üretilen dosyalar
+.env
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# Çalışma zamanı çıktıları
+db/taslaklar.db
+db/*.db-journal
+reports/*.md
+!reports/.gitkeep
+
+# IDE
+.vscode/
+.idea/
