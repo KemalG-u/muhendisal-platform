@@ -108,8 +108,12 @@ plugins:
       lang: tr
   - glightbox
 
+hooks:
+  - hooks/pre_build.py
+
 nav:
   - Ana Sayfa: index.md
+  - 📊 Dashboard: dashboard.md
   - Bölüm 0 — Temel Hazırlık:
       - bolum-0/index.md
       - 0.1 VPS ve Linux Komutları: bolum-0/01-vps-linux.md
@@ -200,3 +204,12 @@ nav:
 
 extra_css:
   - assets/custom.css
+
+extra_javascript:
+  - assets/js/api-client.js
+  - assets/js/progress.js
+  - assets/js/quiz.js
+  - assets/js/code-editor.js
+  - assets/js/dashboard.js
+  - assets/js/app.js
+  - assets/js/ekosistem.js

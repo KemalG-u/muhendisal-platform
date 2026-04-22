@@ -694,3 +694,195 @@
   .ma-persona { font-size: 0.7rem; padding: 0.1rem 0.45rem; }
   .ma-cikti-kaniti, .ma-anthropic, .ma-sonraki { padding: 0.75rem 0.9rem; }
 }
+
+/* =============================================================
+   v3 (22 Nis 2026) — Ekosistem diyagrami + dis link + Anthropic oz
+   + neden-sonuc zinciri. Kisi yabanci kalmayacak.
+   ============================================================= */
+
+/* Ekosistem bloğu — Mermaid diyagramı + aktör tablosu */
+.ma-ekosistem {
+  margin: 1.5rem 0;
+  padding: 1rem 1.15rem;
+  background: linear-gradient(180deg,
+    rgba(59,130,246,0.06) 0%,
+    rgba(59,130,246,0.02) 100%);
+  border: 1px solid rgba(59,130,246,0.25);
+  border-left: 4px solid #3b82f6;
+  border-radius: 6px;
+}
+.ma-ekosistem-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  color: #1d4ed8;
+  margin-bottom: 0.5rem;
+  font-size: 1.02rem;
+}
+[data-md-color-scheme="slate"] .ma-ekosistem {
+  background: rgba(59,130,246,0.08);
+  border-color: rgba(59,130,246,0.4);
+}
+[data-md-color-scheme="slate"] .ma-ekosistem-header {
+  color: #93c5fd;
+}
+.ma-ekosistem .mermaid {
+  background: transparent;
+  text-align: center;
+  margin: 0.5rem 0 0.75rem 0;
+}
+
+/* Aktor tablosu — diyagramda gorulen her dugumu aciklar */
+.ma-aktorler {
+  width: 100%;
+  font-size: 0.9rem;
+  border-collapse: collapse;
+  margin-top: 0.75rem;
+}
+.ma-aktorler th {
+  text-align: left;
+  padding: 0.4rem 0.6rem;
+  background: rgba(0,0,0,0.04);
+  font-weight: 600;
+  border-bottom: 2px solid rgba(59,130,246,0.3);
+}
+.ma-aktorler td {
+  padding: 0.45rem 0.6rem;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  vertical-align: top;
+}
+.ma-aktorler td:first-child {
+  font-weight: 600;
+  white-space: nowrap;
+  color: #1d4ed8;
+}
+[data-md-color-scheme="slate"] .ma-aktorler th {
+  background: rgba(255,255,255,0.04);
+}
+[data-md-color-scheme="slate"] .ma-aktorler td {
+  border-color: rgba(255,255,255,0.08);
+}
+[data-md-color-scheme="slate"] .ma-aktorler td:first-child {
+  color: #93c5fd;
+}
+
+/* Dis link ikonu — adam siteyi terk ediyor sinyali */
+a.ma-ext-link::after {
+  content: " ↗";
+  font-size: 0.85em;
+  opacity: 0.6;
+  margin-left: 0.1em;
+  vertical-align: baseline;
+}
+a.ma-ext-link:hover::after {
+  opacity: 1;
+}
+
+/* Anthropic ozu bloğu — link degil, bağlamlı ozet + kaynak */
+.ma-anthropic-oz {
+  background: rgba(217,119,87,0.06);
+  border: 1px solid rgba(217,119,87,0.3);
+  border-left: 4px solid #d97757;
+  border-radius: 6px;
+  padding: 1rem 1.15rem;
+  margin: 1.5rem 0;
+}
+.ma-anthropic-oz-header {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-weight: 600;
+  color: #a0522d;
+  margin-bottom: 0.5rem;
+  font-size: 1.02rem;
+}
+.ma-anthropic-oz-kaynak {
+  margin-top: 0.75rem;
+  padding-top: 0.6rem;
+  border-top: 1px dashed rgba(217,119,87,0.35);
+  font-size: 0.88rem;
+  color: rgba(0,0,0,0.7);
+}
+[data-md-color-scheme="slate"] .ma-anthropic-oz {
+  background: rgba(217,119,87,0.09);
+}
+[data-md-color-scheme="slate"] .ma-anthropic-oz-header {
+  color: #e8a589;
+}
+[data-md-color-scheme="slate"] .ma-anthropic-oz-kaynak {
+  color: rgba(255,255,255,0.72);
+  border-top-color: rgba(217,119,87,0.4);
+}
+
+/* Neden-sonuç zinciri — sayfa kapanısı, A çünkü B çünkü C, sonuç D */
+.ma-neden-sonuc {
+  background: linear-gradient(180deg,
+    rgba(34,197,94,0.07) 0%,
+    rgba(34,197,94,0.02) 100%);
+  border: 1px solid rgba(34,197,94,0.3);
+  border-left: 4px solid #22c55e;
+  border-radius: 6px;
+  padding: 1rem 1.15rem;
+  margin: 1.5rem 0;
+}
+.ma-neden-sonuc-header {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-weight: 600;
+  color: #15803d;
+  margin-bottom: 0.6rem;
+  font-size: 1.02rem;
+}
+.ma-neden-sonuc-zincir {
+  margin: 0;
+  padding-left: 1.2rem;
+  list-style: none;
+  counter-reset: nsc;
+}
+.ma-neden-sonuc-zincir li {
+  position: relative;
+  padding: 0.35rem 0 0.35rem 1.5rem;
+  counter-increment: nsc;
+}
+.ma-neden-sonuc-zincir li::before {
+  content: counter(nsc);
+  position: absolute;
+  left: 0;
+  top: 0.45rem;
+  width: 1.15rem;
+  height: 1.15rem;
+  border-radius: 50%;
+  background: #22c55e;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+.ma-neden-sonuc-sonuc {
+  margin-top: 0.7rem;
+  padding: 0.55rem 0.75rem;
+  background: rgba(34,197,94,0.15);
+  border-radius: 4px;
+  font-weight: 500;
+}
+[data-md-color-scheme="slate"] .ma-neden-sonuc {
+  background: rgba(34,197,94,0.09);
+}
+[data-md-color-scheme="slate"] .ma-neden-sonuc-header {
+  color: #86efac;
+}
+[data-md-color-scheme="slate"] .ma-neden-sonuc-sonuc {
+  background: rgba(34,197,94,0.2);
+}
+
+/* Mobile ayarı — bloklar dar ekranda ferah kalsın */
+@media (max-width: 500px) {
+  .ma-ekosistem, .ma-anthropic-oz, .ma-neden-sonuc { padding: 0.8rem 0.95rem; }
+  .ma-aktorler { font-size: 0.82rem; }
+  .ma-aktorler th, .ma-aktorler td { padding: 0.35rem 0.45rem; }
+}
