@@ -7,305 +7,244 @@
 <span class="ma-persona ma-persona-is">🔵 iş</span>
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
-<div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 4.4 bitmiş — `/ask` endpoint'in çalışıyor, attribution + caching aktif; 2.8 prompt eval kavramı taze</div>
-<div class="ma-meta-row"><strong>🎯 Çıktı:</strong> Kendi RAG'in için **20 örneklik golden dataset** hazırlarsın; **3 metrik** (faithfulness, context precision, answer relevancy) üzerinden LLM-as-judge ile otomatik skor alırsın; iki farklı chunking/retrieval ayarının skorunu **tablo halinde** karşılaştırırsın.</div>
+<div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 4.1-4.4 bitmiş; çalışan bir RAG iskeletin var (chunking + embedding + retrieval + context engineering)</div>
+<div class="ma-meta-row"><strong>🎯 Çıktı:</strong> **20 soru-cevap çiftli golden dataset** hazırlarsın; her RAG çıktısını 3 metrikte ölçersin (retrieval accuracy + faithfulness + answer relevancy); prompt veya chunking değişince skorun **düştüğünü mü yükseldiğini mi** sayıyla bilirsin.</div>
 </div>
 
 !!! tip "Yabancı kelime mi gördün?"
-    Bu sayfadaki **italik-altı çizili** ifadelerin (eval, golden dataset, faithfulness, judge gibi) üstüne mouse'unu getir — kısa tanım çıkar.
+    Bu sayfadaki **italik-altı çizili** ifadelerin (eval, ground truth, faithfulness gibi) üstüne mouse'unu getir — kısa tanım çıkar. Mobilde dokun.
 
 ## Neden bu sayfa?
 
-4.1-4.4'te **teknik katmanları** kurdun: chunking, retrieval, context eng. Ama *"bu iyileştirmeler gerçekten iyileştirdi mi?"* sorusunu henüz **sayıyla** cevaplayamıyorsun. "Daha iyi geldi" hissin var, ama rakamın yok. Üç ay sonra prompt'u değiştirdiğinde, contextual chunking'i açıp kapadığında, re-ranker eklediğinde: **iyi mi kötü mü gitti?** Eval olmadan cevap veremezsin.
+Senaryo: RAG sistemini kurdun. 3-4 soru sordun, cevaplar "iyi görünüyor" dedin, vakıfa teslim ettin. Bir hafta sonra müdür arar: "Chatbot bize yanlış IBAN söyledi, 30 bin lira yanlış hesaba gitti." Sen? **Şok.** Çünkü **"kaliteyi" ölçmüyordun, umuyordun.** Bu sayfa umudu sayıya çevirir.
 
-İkincisi: **Eval RAG'ın CI/CD'si.** Yazılımda test suite olmadan deploy yaparsan felaket olur. RAG'da eval olmadan prompt değiştirirsen aynı felaket. "3 örneğe baktım, iyi çalışıyor" = anekdot, değil kanıt. 20 örnekle golden dataset + metrik = **kanıt** — küçük değişikliğin toplam etkisi sayıyla görülür.
+İkincisi: **RAG üç aşamalı bir sistem** (retrieval + augmentation + generation) ve her aşamanın **kendine özgü hatası** var. Retrieval yanlışsa (yanlış belge geldi), generation doğru da yapsa yanlış cevap. Generation halüsine ettiyse (belgede yok ama uydurdu), retrieval iyi olsa da yanlış cevap. **Hangi aşama bozuk bilmeden onaramazsın.** Eval sana bu tanıyı verir.
 
-Üçüncüsü: **Anthropic 2024'ten beri eval'a büyük yatırım yaptı** — Console'da "Evaluate" sekmesi, cookbook'ta eval rehberleri, [docs.claude.com/test-and-evaluate](https://docs.claude.com/en/docs/test-and-evaluate) tam bir kategori. Bu olgun AI development'ın temel ayağı. Startup mühendisinden farklı olarak ciddi AI takımları eval'i production'dan önce kurar, her değişikliği eval'dan geçirir.
+Üçüncüsü: **Prompt veya chunking değişikliği = deploy.** Chunk boyutunu 200'den 500'e çıkardığında kalitenin **arttığını mı azaldığını mı** bilmek zorundasın. Kod'da unit test olmadan deploy yapmak nasıl tehlikeli ise, RAG'de eval olmadan değişiklik yapmak aynı tehlike. Anthropic 2024'te bu konuya büyük yatırım yaptı — Console "Evaluate" sekmesi + [anthropic-evals](https://github.com/anthropics/evals) public repo = "olgun AI development" disiplini.
 
-## Eval kısaca — üç paragraf, matematiksiz
+## RAG eval kısaca — üç paragraf, matematiksiz
 
-**Golden dataset = soru + doğru cevap + hangi chunks'tan geleceği.** 20-50 örnekten oluşur (başlangıç için 20 yeter). Her örnekte: "Kurban fiyatı ne?" + beklenen cevap + "bilgi chunk_3'te." Dataset'i **elle** hazırlarsın, sonra sisteminden geçirirsin, çıktıları golden ile karşılaştırırsın.
+**Golden dataset = "doğrusunu bildiğin" soru-cevap seti.** 20 soru hazırlıyorsun, her biri için (a) hangi belge chunk'ının gelmesi gerektiğini, (b) ideal cevabın ne olduğunu sen belirliyorsun. Bu "sınav cevap anahtarı" — RAG'in çıktısını buna göre puanlıyorsun. En az 20, ideal 100 soru. Üretimine zaman harcayacaksın, **yatırım kurtarır.**
 
-**3 ana metrik — RAGAS framework'unun özü.** (1) **Faithfulness** — cevap gerçekten chunks'taki bilgiden mi üretildi yoksa uyduruldu mu? (2) **Answer Relevancy** — cevap soruya gerçekten cevap veriyor mu, konu dışına kaymış mı? (3) **Context Precision** — retrieval'ın getirdiği top-K chunks'ın içinde cevaba katkı sağlayan kaç tanesi var? Üçü bağımsız: biri yüksek, biri düşük olabilir; bu da **nerede tamir lazım** sinyali verir.
+**Üç temel metrik.** (1) **Retrieval accuracy:** doğru chunk geldi mi? (top-K içinde golden chunk var mı?) (2) **Faithfulness:** cevap sadece getirilen belgeye mi dayanıyor, uydurma var mı? (3) **Answer relevancy:** cevap soruyu gerçekten cevaplıyor mu, konu dışına mı kaymış? Üçünü ayrı ölçmek = hangi aşama bozuk görmek.
 
-**LLM-as-judge = skorlayıcı olarak Claude.** Her metrik için Claude Haiku'ya şu iş verirsin: "Şu cevap, şu chunks'tan üretildi mi? 0-1 arası puan ver." Claude Haiku 1000 eval'ı ~$2-5'e yapar. Ucuz + yeterince tutarlı. RAGAS kütüphanesi bu iş akışını hazır sunar; ama prensibi anlarsan Haiku ile 30 satırda aynısını yazarsın — üçüncü parti bağımlılık azalır.
+**LLM-as-judge = Claude'u hakem yapmak.** "Cevap belgeye dayalı mı?" sorusunu insan yerine Claude'a sorduruyorsun — 0-5 arası puan veriyor, gerekçe yazıyor. 100 örneği insan 5 saat puanlar, Claude 5 dakikada. **%90 örtüşme insan puanıyla** — Anthropic kanıtı. Ama **kendi promptunu kendi judge'ı ile puanlatma** (önyargı riski) — judge için farklı/daha güçlü model kullan.
 
 ## Bu sayfanın ekosistemi — kim kime ne veriyor
 
 <div class="ma-ekosistem" markdown>
-<div class="ma-ekosistem-header">🗺️ Ekosistem — golden dataset'ten skor tablosuna</div>
+<div class="ma-ekosistem-header">🗺️ Ekosistem — golden dataset'ten skor raporuna</div>
 
 ```mermaid
 flowchart LR
-  GD["📋 Golden\ndataset\n20 örnek"]
-  RAG["🔧 RAG\npipeline\n(B versiyon A/B)"]
-  OUT["📤 Cevap\n+ chunks"]
-  J["⚖️ LLM judge\nClaude Haiku"]
-  M1["📊 Faithfulness"]
-  M2["📊 Answer\nRelevancy"]
-  M3["📊 Context\nPrecision"]
-  TBL["📈 Skor tablosu\nversion A vs B"]
+  S["👤 Sen"]
+  GD[("📋 Golden dataset\n20 soru +\ndoğru chunk +\nideal cevap")]
+  RAG["🔄 RAG sistemin\n(Bölüm 4.1-4.4)"]
+  R1["📊 Retrieval\naccuracy\n(top-K)"]
+  R2["🧠 LLM-as-judge\n(Claude Opus)"]
+  R3["📈 Faithfulness\n+ Relevancy"]
+  REP["📄 Rapor\nskorlar + trend"]
 
-  GD --> RAG --> OUT --> J
-  J --> M1
-  J --> M2
-  J --> M3
-  M1 --> TBL
-  M2 --> TBL
-  M3 --> TBL
+  S --> GD
+  GD -->|her soru| RAG
+  RAG --> R1
+  RAG --> R2
+  R2 --> R3
+  R1 & R3 --> REP
+  REP --> S
 
-  classDef gd fill:#ddd6fe,stroke:#7c3aed,color:#111
-  classDef pipe fill:#dbeafe,stroke:#2563eb,color:#111
-  classDef judge fill:#fef3c7,stroke:#ca8a04,color:#111
-  classDef met fill:#fed7aa,stroke:#ea580c,color:#111
+  classDef sen fill:#ddd6fe,stroke:#7c3aed,color:#111
+  classDef data fill:#dbeafe,stroke:#2563eb,color:#111
+  classDef run fill:#fef3c7,stroke:#ca8a04,color:#111
+  classDef met fill:#fce7f3,stroke:#be185d,color:#111
   classDef hed fill:#dcfce7,stroke:#16a34a,color:#111
-  class GD gd
-  class RAG,OUT pipe
-  class J judge
-  class M1,M2,M3 met
-  class TBL hed
+  class S sen
+  class GD data
+  class RAG run
+  class R1,R2,R3 met
+  class REP hed
 ```
 
 <table class="ma-aktorler" markdown>
 
 | Düğüm | Nerede | Ne iş yapıyor |
 |---|---|---|
-| 📋 **Golden dataset** | `golden.jsonl` dosya | 20 örnek: soru + doğru cevap + kaynak chunk_id |
-| 🔧 **RAG pipeline** | `/ask` endpoint (A sürümü veya B sürümü) | Sorguyu alır, chunks getirir, Claude'la cevap üretir |
-| 📤 **Cevap + chunks** | JSON response | Pipeline çıktısı — hem cevap metni hem retrieval chunks |
-| ⚖️ **LLM judge** | Claude Haiku 4.5 | Her metrik için 0-1 puan üretir |
-| 📊 **3 metrik** | Haiku'nun cevabı parse edilmiş | Faithfulness, Relevancy, Precision |
-| 📈 **Skor tablosu** | Markdown tablo / Google Sheet | Her versiyonun skoru yan yana |
+| 👤 **Sen** | Eval kodunu çalıştırıyorsun | Golden dataset hazırla, runner yaz, raporu oku |
+| 📋 **Golden dataset** | `eval/golden.jsonl` | 20 soru + doğru chunk ID + ideal cevap (elle veya Claude + revizyon) |
+| 🔄 **RAG sistemi** | Senin kodun | Her soru için retrieval + generation yapıyor |
+| 📊 **Retrieval accuracy** | Basit boolean karşılaştırma | "Doğru chunk top-5 içinde mi?" → 1/0 |
+| 🧠 **LLM-as-judge** | Claude Opus 4.x | Faithfulness + relevancy 0-5 puan + gerekçe |
+| 📈 **Faithfulness + Relevancy** | Python skorları | Dataset üstüne ortalaması |
+| 📄 **Rapor** | JSON + Markdown | Hangi sorularda batak, hangi metrik düşük |
 
 </table>
 </div>
 
 ## Uygulama — iki yol
 
-### Yol A — 20 örneklik golden dataset + 3 metrik eval
+### Yol A — Golden dataset + 3 metrik runner
+
+`eval/golden.jsonl` (her satır bir soru):
+
+```jsonl
+{"id":"q01","soru":"Kurban bedeli 2026 yılı ne kadar?","dogru_chunk_id":"fiyat-2026-001","ideal_cevap":"2026 yılı kurban bedeli 14.000 TL'dir."}
+{"id":"q02","soru":"IBAN numarası nedir?","dogru_chunk_id":"iban-001","ideal_cevap":"Hacı Bayram-ı Veli Vakfı IBAN'ı TR33 0006 4000 0011 2345 6789 01'dir."}
+{"id":"q03","soru":"Nasıl bağış yapabilirim?","dogru_chunk_id":"bagis-yontem-001","ideal_cevap":"Banka havalesi veya kredi kartı ile yapabilirsiniz..."}
+```
+
+`eval/runner.py`:
 
 ```python
 import json
-import anthropic
 from pathlib import Path
+import anthropic
+from rag_sistemi import rag_cevapla  # senin 4.4 sonundaki sistem
 
 client = anthropic.Anthropic()
-HAIKU = "claude-haiku-4-5-20251001"
 
-# --- 1. GOLDEN DATASET (elle hazırlanır, 20 örnek) ---
-GOLDEN = [
-    {
-        "soru": "Büyükbaş kurban fiyatı 2026'da ne kadar?",
-        "beklenen": "14.000 TL",
-        "hangi_chunk": "fiyat_tarifesi_2026",
-    },
-    {
-        "soru": "IBAN bilgisi var mı?",
-        "beklenen": "TR12 3456 7890",
-        "hangi_chunk": "banka_bilgileri",
-    },
-    {
-        "soru": "Vakfın başkanı kim?",
-        "beklenen": "bilgi_yok",  # kasten — bulunmayan bilgi, 'bilmiyorum' bekleniyor
-        "hangi_chunk": None,
-    },
-    # ... 17 örnek daha
-]
+# 1. Golden dataset yükle
+golden = [json.loads(l) for l in Path("eval/golden.jsonl").read_text().splitlines()]
 
-# golden.jsonl dosyasına kaydet — tekrar kullanılabilir
-Path("golden.jsonl").write_text(
-    "\n".join(json.dumps(r, ensure_ascii=False) for r in GOLDEN),
-    encoding="utf-8",
-)
-
-
-# --- 2. RAG PIPELINE'DAN CEVAP AL (A/B sürüm) ---
-def rag_pipeline(soru: str, versiyon: str = "A") -> dict:
-    """
-    versiyon A: vektör-only retrieval, paragraf chunking
-    versiyon B: hibrit (vec+BM25) + rerank + contextual chunking
-    """
-    # ... 4.2-4.4'ten çağrılar burada
-    # Dönüş: {"cevap": "...", "chunks": [{"id": ..., "metin": ...}]}
-    ...
-
-
-# --- 3. LLM-AS-JUDGE METRİKLERİ ---
-def skorla_faithfulness(cevap: str, chunks: list) -> float:
-    baglam = "\n".join(f"[{i}] {c['metin']}" for i, c in enumerate(chunks))
-    prompt = f"""Cevap verilen kaynaklardan mı üretildi yoksa uydurmaları var mı?
-
-<kaynaklar>
-{baglam}
-</kaynaklar>
-
-<cevap>{cevap}</cevap>
-
-0 ile 1 arası tek bir ondalık puan ver: 0 = tamamen uydurma, 1 = tamamen kaynaklardan.
-Sadece sayıyı yaz, başka açıklama yok."""
-    r = client.messages.create(
-        model=HAIKU, max_tokens=10,
-        messages=[{"role": "user", "content": prompt}]
-    )
-    try:
-        return float(r.content[0].text.strip())
-    except ValueError:
-        return 0.0
-
-
-def skorla_relevancy(soru: str, cevap: str) -> float:
-    prompt = f"""Cevap soruya gerçekten cevap veriyor mu yoksa konu dışına mı kaymış?
+# 2. LLM-as-judge promptu
+JUDGE_PROMPT = """Aşağıdaki RAG cevabını 2 metrikte 0-5 arası puanla.
 
 <soru>{soru}</soru>
+<getirilen_belge>{belge}</getirilen_belge>
 <cevap>{cevap}</cevap>
+<ideal_cevap>{ideal}</ideal_cevap>
 
-0 ile 1 arası tek ondalık puan: 0 = tamamen alakasız, 1 = soruya tam cevap.
-Sadece sayıyı yaz."""
-    r = client.messages.create(
-        model=HAIKU, max_tokens=10,
-        messages=[{"role": "user", "content": prompt}]
+**Faithfulness (0-5):** Cevaptaki iddialar sadece getirilen_belge'ye mi dayanıyor?
+ - 5 = her iddia belgede var
+ - 3 = çoğu var, bir kısmı belge dışı ama genel bilgi
+ - 0 = belge dışı uydurma var
+**Relevancy (0-5):** Cevap soruyu gerçekten cevaplıyor mu?
+ - 5 = tam cevap
+ - 3 = kısmi, konuya değiniyor
+ - 0 = konu dışı
+
+JSON formatında döndür: {{"faithfulness": N, "relevancy": N, "gerekce": "..."}}"""
+
+sonuclar = []
+for item in golden:
+    # 3. RAG çalıştır
+    rag_out = rag_cevapla(item["soru"])  # {"chunks":[...], "cevap":"..."}
+
+    # 4. Retrieval accuracy — doğru chunk top-5 içinde mi?
+    top5_ids = [c["id"] for c in rag_out["chunks"][:5]]
+    retrieval_ok = item["dogru_chunk_id"] in top5_ids
+
+    # 5. LLM-as-judge (Opus = daha güçlü judge)
+    judge_cevap = client.messages.create(
+        model="claude-opus-4-7",  # NOT: kendi servisinin promptuyla AYNI değil
+        max_tokens=300,
+        messages=[{"role": "user", "content": JUDGE_PROMPT.format(
+            soru=item["soru"],
+            belge=rag_out["chunks"][0]["text"] if rag_out["chunks"] else "",
+            cevap=rag_out["cevap"],
+            ideal=item["ideal_cevap"],
+        )}],
     )
-    try:
-        return float(r.content[0].text.strip())
-    except ValueError:
-        return 0.0
+    judge = json.loads(judge_cevap.content[0].text.strip())
 
+    sonuclar.append({
+        "id": item["id"],
+        "retrieval": int(retrieval_ok),
+        "faithfulness": judge["faithfulness"],
+        "relevancy": judge["relevancy"],
+        "gerekce": judge["gerekce"],
+    })
 
-def skorla_context_precision(soru: str, chunks: list) -> float:
-    """Top-K chunks'ın kaç tanesi soruya gerçekten katkı sağladı?"""
-    baglam = "\n".join(f"[{i}] {c['metin'][:200]}" for i, c in enumerate(chunks))
-    prompt = f"""Aşağıdaki chunks'tan kaç tanesi soruya cevap vermek için gerçekten yararlı?
+# 6. Rapor
+N = len(sonuclar)
+print(f"\n{'='*50}\n📊 RAG EVAL — {N} soru")
+print(f"Retrieval accuracy: {sum(s['retrieval'] for s in sonuclar)}/{N}")
+print(f"Faithfulness ort:   {sum(s['faithfulness'] for s in sonuclar)/N:.2f}/5")
+print(f"Relevancy ort:      {sum(s['relevancy'] for s in sonuclar)/N:.2f}/5")
 
-<soru>{soru}</soru>
-<chunks>
-{baglam}
-</chunks>
+# 7. Batak sorular
+print("\n❌ Düşük puanlı sorular (gözden geçir):")
+for s in sorted(sonuclar, key=lambda x: x['faithfulness']+x['relevancy'])[:3]:
+    print(f"  {s['id']}: faith={s['faithfulness']} rel={s['relevancy']} — {s['gerekce'][:100]}")
 
-Yararlı olanların oranını 0-1 arası ondalık olarak ver. (Örn: 5 chunk'tan 3'ü yararlıysa 0.6)
-Sadece sayıyı yaz."""
-    r = client.messages.create(
-        model=HAIKU, max_tokens=10,
-        messages=[{"role": "user", "content": prompt}]
-    )
-    try:
-        return float(r.content[0].text.strip())
-    except ValueError:
-        return 0.0
-
-
-# --- 4. EVAL ÇALIŞTIR (versiyon A ve B için) ---
-def eval_calistir(versiyon: str) -> dict:
-    skorlar = {"faithfulness": [], "relevancy": [], "precision": []}
-    for ornek in GOLDEN:
-        cikti = rag_pipeline(ornek["soru"], versiyon)
-        skorlar["faithfulness"].append(skorla_faithfulness(cikti["cevap"], cikti["chunks"]))
-        skorlar["relevancy"].append(skorla_relevancy(ornek["soru"], cikti["cevap"]))
-        skorlar["precision"].append(skorla_context_precision(ornek["soru"], cikti["chunks"]))
-    return {
-        "faithfulness": sum(skorlar["faithfulness"]) / len(skorlar["faithfulness"]),
-        "relevancy":    sum(skorlar["relevancy"])    / len(skorlar["relevancy"]),
-        "precision":    sum(skorlar["precision"])    / len(skorlar["precision"]),
-    }
-
-
-A = eval_calistir("A")  # naif RAG
-B = eval_calistir("B")  # contextual + hibrit + rerank
-
-print("| Metrik       | Versiyon A | Versiyon B | Fark  |")
-print("|--------------|-----------:|-----------:|------:|")
-for m in ["faithfulness", "relevancy", "precision"]:
-    fark = B[m] - A[m]
-    print(f"| {m:<12} | {A[m]:.3f}      | {B[m]:.3f}      | {fark:+.3f} |")
+Path("eval/rapor.json").write_text(json.dumps(sonuclar, ensure_ascii=False, indent=2))
 ```
 
 **Beklenen çıktı:**
 
 ```
-| Metrik       | Versiyon A | Versiyon B | Fark   |
-|--------------|-----------:|-----------:|-------:|
-| faithfulness | 0.720      | 0.910      | +0.190 |
-| relevancy    | 0.810      | 0.880      | +0.070 |
-| precision    | 0.450      | 0.820      | +0.370 |
+==================================================
+📊 RAG EVAL — 20 soru
+Retrieval accuracy: 17/20  (85%)
+Faithfulness ort:   4.35/5
+Relevancy ort:      4.10/5
+
+❌ Düşük puanlı sorular (gözden geçir):
+  q07: faith=2 rel=3 — Cevap 'yaklaşık 5000 TL' diyor ama belgede sadece 'değişken' yazıyor, spesifik rakam uydurma
+  q12: faith=3 rel=2 — Cevap soruyu cevaplıyor ama eksik; belgede 3 yöntem var, cevap sadece 1'ini söylüyor
+  q15: faith=5 rel=1 — Cevap konu dışı; soru IBAN istiyor, cevap misyon anlatıyor
 ```
 
-**Yorum:** Versiyon B (contextual + hibrit + rerank) her üç metrikte iyi. Özellikle **precision +0.370** — yani retrieval önceden alakasız chunks getiriyordu, rerank bunları eledi. **Faithfulness +0.190** önemli — cevap artık daha az uydurma. Pratikte deploy kararını bu tabloya bakıp veriyorsun — "B daha iyi, geç."
+**Burada olan nedir (diyagram referansı):** Diyagramın tüm akışı — Golden → RAG → 3 metrik → Rapor. 20 sorunun 3'ünde sorun bulduk (%85 retrieval, 4.35/5 faithfulness, 4.10/5 relevancy) ve hangi soruların zayıf olduğunu biliyoruz. **Umut sayıya dönüştü.**
 
-**Burada olan nedir (diyagram referansı):** Golden → RAG → 3 metrik → tablo. 20 örnek × 2 versiyon × 3 metrik = 120 Haiku çağrı × ~$0.002 = **~$0.24** tüm eval maliyeti. Her deploy'dan önce bu tabloyu bak.
+### Yol B — A/B test: chunking değiştirdiğinde skor ne olur?
 
-### Yol B — RAGAS framework ile (daha fazla metrik, standart)
-
-```bash
-pip install ragas datasets
-```
+Bir chunking stratejisi (örn: 500 token fixed) → eval → skor. Sonra başka (örn: semantic chunking) → eval → skor. Karşılaştır:
 
 ```python
-from ragas import evaluate
-from ragas.metrics import faithfulness, answer_relevancy, context_precision, context_recall
-from datasets import Dataset
+# chunking_v1: fixed 500 token
+# chunking_v2: semantic (4.2'de öğrendiğin)
 
-# Golden + pipeline çıktılarını dataset olarak hazırla
-data = {
-    "question": [ex["soru"] for ex in GOLDEN],
-    "answer": [rag_pipeline(ex["soru"], "B")["cevap"] for ex in GOLDEN],
-    "contexts": [[c["metin"] for c in rag_pipeline(ex["soru"], "B")["chunks"]] for ex in GOLDEN],
-    "ground_truth": [ex["beklenen"] for ex in GOLDEN],
-}
-ds = Dataset.from_dict(data)
+for v in ["v1", "v2"]:
+    rebuild_index(strategy=v)  # Qdrant yeniden yükle
+    skorlar[v] = run_eval("eval/golden.jsonl")
 
-# Anthropic LLM'i judge olarak ayarla (ragas OpenAI default)
-# ... ragas anthropic wrapper setup
-sonuc = evaluate(
-    ds,
-    metrics=[faithfulness, answer_relevancy, context_precision, context_recall],
-)
-print(sonuc.to_pandas())
+print(f"Retrieval — v1: {skorlar['v1']['retrieval']:.2f}, v2: {skorlar['v2']['retrieval']:.2f}")
+print(f"Faithfulness — v1: {skorlar['v1']['faith']:.2f}, v2: {skorlar['v2']['faith']:.2f}")
+# Karar: v2 %12 daha iyi → v2'ye geç
 ```
 
-**RAGAS'ın eklediği 4. metrik — Context Recall:** Golden'deki doğru chunk'ın retrieval'da gelip gelmediği. "Beklenen bilginin chunk_3'te olduğunu biliyorum, top-5'te chunk_3 var mı?" — recall=1 varsa, 0 yoksa. Retrieval kalitesini direkt ölçer.
+**Burada olan nedir:** "chunking stratejimi değiştirdim" demek yerine "chunking stratejimi değiştirdim, retrieval 0.85'ten 0.92'ye çıktı" diyebiliyorsun. **Bu fark senin ile junior arasındaki fark.**
 
-**Ne zaman RAGAS kullan:** Ekip büyükse, standart istenen alanlarda (mali, hukuki, sağlık), rapor şablonları gerekliyse. Küçük ekip/solo geliştirici için Yol A yeter, RAGAS overhead olabilir.
+### Golden dataset üretme desenleri
 
-### Eval pratiği — ne zaman, nasıl?
+Elinde doküman var, 20 soru nasıl hazırlayacaksın?
 
-| Durum | Eval sıklığı | Dataset boyutu |
+| Yöntem | Süre | Kalite |
 |---|---|---|
-| **Prompt değişikliği** | Her commit öncesi | 20 örnek yeter |
-| **Chunking/retrieval refactor** | Büyük değişiklikte | 50-100 örnek |
-| **Yeni model sürümü** (Haiku → Sonnet) | Bir kere | 100+ örnek |
-| **Production monitoring** | Haftalık örneklem | 20 random canlı log |
-| **Müşteri şikâyeti** | Şikâyet sonrası | O senaryo odaklı 5-10 örnek |
+| **Tamamen elle** (sen yaz + ideal cevap) | 2-3 saat | En yüksek — sen uzmansın |
+| **Claude yardımıyla + sen revize** | 45-60 dk | Yüksek — her soruyu oku, düzelt |
+| **Tamamen Claude üretsin** | 15 dk | Düşük — Claude kendi cevabını onaylar, "çember" |
+| **Gerçek kullanıcı sorularından** | sürekli | En iyi uzun vadede — production'a koyduktan sonra |
 
-**Kural:** Eval değişikliğe göre ölçekle. 10 saniyelik prompt değişikliği için 1 saatlik eval yapmak mantıksız; 2 haftalık retrieval refactor için 20 örnek yetmiyor.
+**Önerilen başlangıç:** Claude üretsin (20 soru), sen 45 dakikada revize et, 3-5'ini direk sil (kötü soru) + diğerlerinin ideal cevaplarını düzelt.
 
 <div class="ma-anthropic-oz" markdown>
 <div class="ma-anthropic-oz-header">📖 Anthropic bu konuyu nasıl anlatıyor — öz</div>
 
-Anthropic eval'a **olgun AI development'ın temel ayağı** olarak bakar:
+Anthropic 2024-2025'te eval'e büyük yatırım yaptı — Console'da "Evaluate" sekmesi, anthropic-evals repo'su, docs/test-and-evaluate kategorisi.
 
-**1. Evaluate sekmesi Console'da built-in.** [console.anthropic.com](https://console.anthropic.com) → Evaluate. Tarayıcıda test seti yükle, prompt çeşitlerini yan yana karşılaştır, metrik tanımla. Kod yazmadan eval yapmanı sağlar — PM ve content ekipleri de kullanabilir.
+**1. Eval eksikliği = en büyük "ölüm" sebebi.** Anthropic'in kendi ekibi production AI servislerinin %70'inin **eval eksiği nedeniyle** başarısız olduğunu söylüyor. "Çalışıyor sanıyor" → "çalışmıyor fark ediyor" → kullanıcı kaybı.
 
-**2. LLM-as-judge tavsiye edilen yaklaşım.** Anthropic docs'ta "complex criteria için insan değerlendirmesi + LLM judge kombinasyonu" önerir. Haiku ucuz, tutarlı, hızlı; Sonnet daha keskin — maliyet eşiğine göre seç.
+**2. LLM-as-judge = Anthropic'in önerisi.** Ama 3 kuralla: (a) judge için **daha güçlü model** (Opus), (b) judge'ın **rubriği açık** (0-5 her puanın ne demek olduğu), (c) judge'ı **100 örnekte insan ile doğrula** bir kere — %90+ örtüşme varsa güven.
 
-**3. Eval-driven prompt engineering.** Anthropic iç ekipleri: önce eval seti kur, sonra prompt yaz, eval'a göre iterate et. "Eval'siz prompt değişikliği = kumarın yüzde 50'si" kültürü.
+**3. Golden dataset canlı büyür.** Production'a koyduktan sonra her kullanıcı şikâyeti = yeni bir golden örnek. Böylece eval set **zamanla daha gerçekçi** olur — lab'de üretilmiş sorular değil, gerçek kullanıcı sorularının bir aynası.
 
 ??? info "Teknik detay — isteyene (parameter adları, mekanikler, edge case'ler)"
 
-    **Judge tutarlılığı.** Aynı Haiku çağrısı biraz değişken cevap verebilir (`temperature=0` ile azalır). Her örneği 3 kez puanla, ortalama al — güvenilirlik artar. "Self-consistency" deseni.
+    **RAGAS çerçevesi.** Açık kaynak Python kütüphanesi ([github.com/explodinggradients/ragas](https://github.com/explodinggradients/ragas)) — faithfulness, answer_relevancy, context_precision, context_recall metrikleri hazır. Biz kendi basit runner'ı yazdık, RAGAS production'da daha olgun.
 
-    **Judge önyargısı.** Claude kendi cevabını skorlarken biraz cömert olabilir ("self-evaluation bias"). Çözüm: cross-judge — cevabı farklı bir modele (Haiku) skorlatarak bias'ı azalt.
+    **Context precision vs recall.** Precision = "getirilen chunk'ların kaçı ilgili?" Recall = "ilgili chunk'ların kaçı getirildi?" İkisi birden yüksek = mükemmel retrieval.
 
-    **Golden dataset büyüme.** 20 başlar, 100'e çıkar, 500'e evrimleşir. Production'dan gelen gerçek sorular + manuel etiketleme = en iyi dataset kaynağı. Canlı log'ları haftalık tarama.
+    **Answer hallucination detection.** Faithfulness'ın sıkı versiyonu — her iddiayı tek tek belgeye bağlayan. Çok pahalı (her cevap için N iddia × 1 çağrı) ama critical domain'de (hukuk, medikal) şart.
 
-    **Negative testleri unutma.** Dataset'te "cevabı yok" senaryoları olmalı (benim örnekteki "vakfın başkanı kim?" gibi). RAG'ın "bilmiyorum" davranışı test edilir.
+    **Human-in-the-loop.** Eval setinin %10-20'sini insan elle puanlasın, Claude judge ile karşılaştır. Cohen's kappa > 0.8 ise judge güvenilir.
 
-    **A/B test in production.** Canlıda versiyonu sadece %10 kullanıcıya göster, 1 hafta metrik topla, karar ver. Eval + A/B = kaliteli deploy.
+    **Drift detection.** Model veya prompt değişince eval setini yeniden çalıştır. Skorun **%5'ten fazla düştüyse** değişikliği reddet (rollback).
 
-    **Cost guardrails.** Her eval çağrısı maliyet. 50 sorgu × 4 metrik × 3 tekrar = 600 Haiku çağrı ~$1.20. CI/CD'ye her commit = ayda $30-50. Bütçeye uygun eval frequency seç.
-
-    **Human eval hâlâ gerekli.** LLM judge çoğu durumda yeter ama kritik karar verici (ürün launch, mali rapor) 30 örneği insan gözüyle kontrol — her zaman.
+    **Anthropic Console Evaluate.** console.anthropic.com → Workbench → "Evaluate" sekmesi. Görsel A/B test, 2 prompt sürümünü aynı test setinde çalıştırıp yan yana gösterir. Non-developer ekip üyeleri prompt değişikliğini test edebilir.
 
 <div class="ma-anthropic-oz-kaynak" markdown>
-**Kaynak:** [docs.claude.com — Develop tests](https://docs.claude.com/en/docs/test-and-evaluate/develop-tests) (EN, ~15 dk). Anthropic'in eval metodolojisi. **Pekiştirme:** [RAGAS resmi dokümantasyon](https://docs.ragas.io/en/stable/) — RAG eval'in endüstri standardı framework'u.
+**Kaynak:** [docs.claude.com — Test and Evaluate](https://docs.claude.com/en/docs/test-and-evaluate/develop-tests) (EN, ~15 dk). Full eval metodolojisi. Pekiştirme: [anthropic-evals GitHub](https://github.com/anthropics/evals) — Anthropic'in kendi modelini değerlendirmek için kullandığı açık kaynak eval set'i. Kendi eval set'ini bu formatta yapman önerilir.
 </div>
 </div>
 
@@ -314,44 +253,44 @@ Anthropic eval'a **olgun AI development'ın temel ayağı** olarak bakar:
 
 #### 1. 📝 Refleksiyon yazısı — 5 dakika
 
-> "20 örneklik golden dataset hazırladım. Versiyon A (naif) ve B (contextual + rerank) çalıştırdım. Faithfulness [X], relevancy [Y], precision [Z] farkı çıktı. En sürpriz bulgu: [hangi metrik beklenmedik]. Kendi projemde eval cadencem [her commit / haftalık / aylık] olacak."
+> "RAG eval seti hazırladım, [X] soru. Runner'ı çalıştırdığımda retrieval [Y/X], faithfulness [Z/5], relevancy [W/5] çıktı. En düşük puanlı [N] soru şunlardı: [...]. Bunların [nedenini] buldum: [chunking / prompt / retrieval] katmanında sorun. Düzeltmeyi [Z] yapınca skor [A]'dan [B]'ye çıktı."
 
-Kaydet: `muhendisal-notlarim/bolum-4/05-eval/refleksiyon.txt`
+Kaydet: `muhendisal-notlarim/bolum-4/05-degerlendirme/refleksiyon.txt`
 
 #### 2. 📸 Ekran görüntüsü — 3 dakika
 
-**Neyin görüntüsü:** Terminal veya notebook çıktısı — 3 metrik × 2 versiyon tablosu, fark sütunu belirgin.
+**Neyin görüntüsü:** Runner çıktısı — skorlar + "en düşük puanlı 3 soru" listesi.
 
-Kaydet: `muhendisal-notlarim/bolum-4/05-eval/skor-tablosu.png`
+Kaydet: `muhendisal-notlarim/bolum-4/05-degerlendirme/skor-raporu.png`
 
-#### 3. 💻 golden.jsonl + eval.py + GitHub — 10 dakika
+#### 3. 💻 Eval repo + GitHub — 15 dakika
 
-20 örneklik `golden.jsonl` hazırla (kendi projenin sorularıyla). `eval.py` script'i yaz (Yol A kodu). Repo'ya commit'le, README'ye eval nasıl çalıştırılır yaz. Sonuç tablosunu `RESULTS.md` olarak ekle.
+`eval/` klasörü: `golden.jsonl` (en az 10 soru), `runner.py`, `rapor.json`. GitHub repo'ya commit. README'de **son 3 koşturmadaki skor trend'ini** göster (örn: v1: 0.75 → v2: 0.82 → v3: 0.88).
 
-Repo linkini kaydet: `muhendisal-notlarim/bolum-4/05-eval/repo-link.txt`
+Repo linkini kaydet: `muhendisal-notlarim/bolum-4/05-degerlendirme/eval-repo-link.txt`
 
 </div>
 
 <div class="ma-neden-sonuc" markdown>
 <div class="ma-neden-sonuc-header">🔗 Birlikte okuma — neden ne oldu</div>
 
-- **A → B:** "İyi çalışıyor hissi" = anekdot. Eval = kanıt. İkisi arasında 10 kat fark var.
-- **B → C:** Golden dataset (soru + beklenen + kaynak) = **sabit test seti** — değişikliği bu set üstünden karşılaştırıyorsun.
-- **C → D:** 3 bağımsız metrik (faithfulness / relevancy / precision) = her birinin zayıf olduğu yer farklı; tek skor yanıltır.
-- **D → E:** LLM-as-judge = **ucuz ve tutarlı** skorlayıcı. İnsan yerine Haiku; tutarlı + hızlı + pahalı değil.
-- **E → F:** A/B tablo = her deploy kararının temeli. "B'de precision 0.45 → 0.82, geçiyoruz" gibi somut kanıt.
+- **A → B:** RAG 3 aşamalı, her aşama bozulabilir. Ayrı ölçmeden "bozuk" demek yetmez.
+- **B → C:** Golden dataset = sınav cevap anahtarı. Yatırımı büyük, kazancı büyük.
+- **C → D:** LLM-as-judge = insan puanının %90 ucuz versiyonu, 100 örneği 5 dk'da puanlıyor.
+- **D → E:** 3 metrik (retrieval + faithfulness + relevancy) = hangi aşama bozuk tanısı.
+- **E → F:** A/B test = "bu değişiklik skoru artırdı mı?" — her chunking/prompt değişikliğinden sonra sorulan soru.
 
 <div class="ma-neden-sonuc-sonuc" markdown>
-**Sonuç:** Eval RAG'ın **kör noktalarını görünür yapar.** Bölüm 4'teki tüm teknik yatırımların (chunking, retrieval, context eng) etkisi bu tablodayla ölçülebilir hale geldi. 4.6'da LangChain'le sıfırdan yazmayı karşılaştıracağız — eval datasetin olduğu için "framework fark ediyor mu?" sorusunu artık rakamla cevaplayabiliyorsun.
+**Sonuç:** "Gözle bakarak RAG kalite kontrolü" ile "sayıyla ölçülen RAG kalite kontrolü" arasında production-grade servis ile yan proje farkı var. Bu sayfadan sonra chatbotun kalitesi hakkında **rakam** üretebiliyorsun. Bu rakam vakıfa/müdüre/müşteriye verilen söz. 4.6-4.7'de LangChain/LlamaIndex'le aynı iskeletin hazır kütüphane sürümünü göreceğiz.
 </div>
 </div>
 
 <div class="ma-sonraki" markdown>
 <div class="ma-sonraki-header">➡️ Sonraki adım</div>
 
-**[4.6 LangChain ile RAG →](06-langchain.md)** — Sıfırdan yazdığın RAG pipeline'ı LangChain ile karşılaştır. Framework kullanmak gerekli mi? %80 kod aynı — 4.5'teki eval tablonla karar verirsin.
+**[4.6 LangChain ile RAG →](06-langchain.md)** — 4.1-4.5'te adım adım kurduğun RAG iskeletini LangChain 10 satırda veriyor. Ne zaman kullanılır, ne zaman elle yazılır?
 
 ← [4.4 Context Engineering](04-context-eng.md) &nbsp;|&nbsp; [Bölüm 4 girişi](index.md) &nbsp;|&nbsp; [Ana sayfa](../index.md)
 
-**Pekiştirme:** Kendi `/ask` endpoint'ini 3 farklı prompt varyasyonuyla eval'dan geçir (örn: attribution var/yok, system prompt uzun/kısa, temperature 0/0.3). Hangi varyasyonun skoru en yüksek? Bu pratik prompt engineering'in gerçek tekniği — iterasyon + eval.
+**Pekiştirme:** Eval runner'ını **GitHub Actions CI**'a bağla — her push'ta golden dataset çalışsın, skor düşerse PR reddedilsin. Bu desen Bölüm 9.3'te detay ama bugünden başla.
 </div>
