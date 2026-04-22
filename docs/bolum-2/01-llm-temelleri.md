@@ -7,14 +7,16 @@
 <span class="ma-persona ma-persona-is">🔵 iş</span>
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
-<div class="ma-meta-row"><strong>⏱️ Süre:</strong> 45 dakika</div>
 <div class="ma-meta-row"><strong>📋 Önkoşul:</strong> Yok — Bölüm 0 kurulumu yapılmadıysa zararı olmaz; Console kısmı tarayıcıda çalışır</div>
 <div class="ma-meta-row"><strong>🎯 Çıktı:</strong> Claude'a ilk mesajını gönderirsin; yanıtı aldığında **neyin nereye gittiğini, geriye neyin döndüğünü** kendi cümlelerinle anlatabilirsin.</div>
 </div>
 
+!!! tip "Yabancı kelime mi gördün?"
+    Bu sayfadaki **italik-altı çizili** ifadelerin (LLM, API, token, RAG, agent, MCP gibi) üstüne mouse'unu getir — kısa tanım çıkacak. Mobilde kelimeye dokun. Bilmediğin her terim burada bu şekilde anlatılır.
+
 ## Neden bu sayfa?
 
-Bu rehberde ne yaparsak yapalım — RAG, agent, MCP, prompt teknikleri — hepsi tek bir temele oturuyor: **sen Claude'a konuşuyorsun, Claude sana geri konuşuyor.** Bu konuşma nerede olur, nasıl olur, arka planda kim ne yapar?
+Bu rehberde ne yaparsak yapalım — ister Claude'a kendi belgelerini okutmak (RAG), ister ona iş yaptırmak (agent), ister onu Gmail veya veritabanına bağlamak (MCP), ister ona "şöyle cevap ver" demenin inceliklerini öğrenmek (prompt teknikleri) — hepsi tek bir temele oturuyor: **sen Claude'a konuşuyorsun, Claude sana geri konuşuyor.** Bu konuşma nerede olur, nasıl olur, arka planda kim ne yapar?
 
 Sayfa bittiğinde iki şey elinde kalacak: (1) ilk çalışan API çağrın, (2) bu evrende kendini konumlandıran bir harita. Bundan sonraki 63 sayfa bu iki şeyin üzerine yapı kuracak. Haritasız yola çıkarsak yabancı kalırız — bu sayfada o yabancılığı kesiyoruz.
 
@@ -101,11 +103,11 @@ flowchart LR
 
 **Önemli not:** Üç yolun (A, B, C) hedefi aynı — `api.anthropic.com` ve aynı model. Fark sadece "sen hangi araçla konuşuyorsun". Bu kurstaki ilerleyiş de bu sırayla olacak: önce Console'da elini alıştırırsın, sonra Python'a geçer gerçek uygulamaları yazarsın, ileride Claude Code ile Claude'u kendi kendine çalışan bir ortağa dönüştürürsün.
 
-## Uygulama — iki yol, ikisi de 15 dk
+## Uygulama — iki yol
 
 Aşağıdaki iki yolu da dene. Sıralaması önemli: **önce Yol A (Console)**, sonra **Yol B (Python)**. Console'da Claude'un davranışını görürsün, Python'da aynı davranışı kendi ortamında üretirsin. Bu, diyagramda Yol A'dan Yol B'ye geçişi kendi elinle kanıtlaman demek.
 
-### Yol A — Claude Console (kod yok, 5 dakika)
+### Yol A — Claude Console (kod yok)
 
 🔵 **İş personası için önerilen başlangıç.** Tarayıcı aç, Claude'u yerinde gör.
 
@@ -123,7 +125,7 @@ Aşağıdaki iki yolu da dene. Sıralaması önemli: **önce Yol A (Console)**, 
 
 **Burada olan nedir (diyagram referansı):** Sen → Workbench → api.anthropic.com → Claude modeli → yanıt → Workbench → sen. Tarayıcı seni API'ye taşıdı, API Key Anthropic hesabından otomatik eklendi, sayaç arkada döndü.
 
-### Yol B — Python SDK ile ilk API çağrın (10 dakika)
+### Yol B — Python SDK ile ilk API çağrın
 
 🟢 🟣 **Başlangıç ve kişisel persona için.** Terminal veya Colab ortamında.
 
@@ -202,40 +204,80 @@ Girdi token: 58
 
 ??? tip "Hata aldıysan"
     - `AuthenticationError`: API key export edilmedi. `echo $ANTHROPIC_API_KEY` (Linux/Mac) veya `$env:ANTHROPIC_API_KEY` (Windows) ile kontrol et; boşsa tekrar set et.
-    - `model_not_found`: model adı değişmiş olabilir. Güncel adlar için sağdaki Anthropic özüne bak.
+    - `model_not_found`: model adı değişmiş olabilir. Güncel adlar için aşağıdaki Anthropic özüne bak.
     - `rate_limit_error`: deneme kredisini bitirdin veya dakikalık limit aşıldı. 1 dakika bekle.
     - `InvalidRequestError (max_tokens)`: sayıyı düşür, 100'den başla.
 
 <div class="ma-anthropic-oz" markdown>
 <div class="ma-anthropic-oz-header">📖 Anthropic bu konuyu nasıl anlatıyor — öz</div>
 
-Anthropic'in resmi dokümanı ve **Building with the Claude API** kursu bu sayfada yaptığımız üç şeyi şöyle çerçeveliyor:
+Anthropic'in resmi dokümanı ve **Building with the Claude API** kursu bu sayfadaki çağrıyı üç kuralla özetliyor:
 
-**1. Messages API'nin iki zorunlu alanı: `model` ve `messages`.** Hiçbir çağrı bu ikisi olmadan çalışmaz. Sen bu sayfada `claude-sonnet-4-5-20250929` değerini `model`'e, bir `user` mesajını `messages`'a verdin — minimum sözleşme sağlandı.
+**1. Her API çağrısında üç zorunlu parça var:** (1) hangi modeli kullanacaksın, (2) ne mesaj yollayacaksın, (3) cevap en fazla kaç token olsun (`max_tokens`). **Son maddeyi unutma** — yoksa Claude 20 sayfa cevap üretip faturayı şişirebilir. Sen bu sayfada üçünü de verdin.
 
-**2. `max_tokens` her çağrıda zorunludur ve bir güvenliktir.** Model çıktı token'ı başına ücretlendirilir. `max_tokens=300` yazman Claude'un hesabını patlatacak kadar uzun cevap üretmesini engelledi — 300'de kesilir. Geniş işlerde artırırsın (ör. 4000), küçük işlerde düşürürsün (ör. 50). Modelin kesildiği `stop_reason: "max_tokens"` ile anlaşılır.
+**2. Model adını tarihli yaz.** `claude-sonnet-4-5` (sabit isim) yerine `claude-sonnet-4-5-20250929` (tarihli snapshot) kullan — böylece Anthropic modeli yarın güncellese de kodun aynı davranır, kırılmaz.
 
-**3. Modelleri isimle, belirli tarihlerle çağır.** `claude-sonnet-4-5` (sabit isim) yerine `claude-sonnet-4-5-20250929` (tarihli snapshot) tercih edilir çünkü model sürümleri zamanla güncellenir — tarihli çağrı, kodunu kırılmaya karşı sabitler. Canlı Claude yönergeleri yeni bir tarihli snapshot geldikçe güncellenir; yeni işlere başladığında [docs.claude.com/models](https://docs.claude.com/en/docs/about-claude/models) adresinden güncel snapshot adını al.
+**3. Kimliğini API key ile ispatla.** Key'i koda yazma, ortam değişkenine koy. SDK zaten header'lara otomatik ekliyor; sen bu işin mekaniğiyle uğraşmıyorsun.
 
-**4. Kimlik doğrulama HTTP header ile.** SDK senin yerine `x-api-key` ve `anthropic-version` header'larını ekliyor; düz HTTP ile denerken bu ikisini manuel eklemen gerekir. SDK kullanmanın ana kazanımı bu — kimlik, hata yakalama, yeniden deneme, streaming mekanikleri hazır gelir.
+??? info "Teknik detay — isteyene (düz HTTP, header'lar, stop_reason, kaynaklar)"
+
+    **Messages API'nin zorunlu alanları: `model` ve `messages`.** Hiçbir çağrı bu ikisi olmadan çalışmaz. Sen bu sayfada `claude-sonnet-4-5-20250929` değerini `model`'e, bir `user` mesajını `messages`'a verdin — minimum sözleşme sağlandı. `max_tokens` da zorunlu ve bir güvenlik katmanı: model çıktı token'ı başına ücretlendirilir; `max_tokens=300` Claude'u 300 token'da keser. Geniş işlerde artırırsın (ör. 4000), küçük işlerde düşürürsün (ör. 50). Kesildiğinde `stop_reason: "max_tokens"` döner.
+
+    **Tarihli snapshot neden:** Model sürümleri zamanla güncellenir. `claude-sonnet-4-5` bir takma ad — bugün A sürümüne, yarın B sürümüne işaret edebilir. Tarihli snapshot (`...-20250929`) sabittir. Yeni işlere başladığında [docs.claude.com/models](https://docs.claude.com/en/docs/about-claude/models) adresinden güncel snapshot adını al.
+
+    **Header mekaniği:** SDK senin yerine `x-api-key` ve `anthropic-version` header'larını ekliyor. Düz HTTP ile (ör. `curl` ile) denerken bu ikisini manuel eklemen gerekir. SDK'nin ana kazancı bu: kimlik, hata yakalama, yeniden deneme, streaming hazır gelir.
 
 <div class="ma-anthropic-oz-kaynak" markdown>
-**Kaynak:** [docs.claude.com/en/api/messages](https://docs.claude.com/en/api/messages) (resmi API referansı) ve [Building with the Claude API](https://anthropic.skilljar.com/claude-with-the-anthropic-api) — Anthropic Academy (ücretsiz, sertifikalı, EN, ~2 saat). Kurs bu sayfadaki konuları 3 saatlik detayla anlatır, SDK'nin streaming/tool-use/prompt-caching gibi ileri konularına da girer. **Bu sayfayı bitirdiğinde kursun ilk üç bölümünü zaten deneyimlemiş olacaksın.**
+**Kaynak:** [docs.claude.com/en/api/messages](https://docs.claude.com/en/api/messages) (resmi API referansı) ve [Building with the Claude API](https://anthropic.skilljar.com/claude-with-the-anthropic-api) — Anthropic Academy (ücretsiz, sertifikalı, EN, ~2 saat). Bu sayfayı bitirdiğinde kursun ilk üç bölümünü zaten deneyimlemiş olacaksın.
 </div>
 </div>
 
 <div class="ma-cikti-kaniti" markdown>
-### 📦 Çıktı Kanıtı — bu sayfayı bitirdiğini nasıl kanıtlarsın
+### 📦 Bu sayfayı bitirdiğini nasıl kanıtlarsın
 
-**Aşağıdakilerden birini yap:**
+Aşağıdaki üç kanıttan **en az birini** üret. Sıralama zorluk: en kolay en üstte.
 
-1. **Screenshot:** Console Workbench veya terminal çıktısının ekran görüntüsü. Usage panelinde token sayıları görünsün.
-2. **GitHub Gist:** `ilk_cagri.py` dosyanı anonim bir [Gist](https://gist.github.com) olarak yayınla — **API key'i çıkararak** (yerinde `sk-ant-...` yazsın).
-3. **1 paragraf refleksiyon:** Diyagramdaki akışı kendi cümlelerinle anlat. "Ben `python ilk_cagri.py` yazdığımda şu oldu: ..." 3-5 cümle.
+#### 1. 📝 Refleksiyon yazısı — 5 dakika, herkes yapabilir
 
-**Teslim:** [Geri bildirim formu](/platform/#geri-bildirim) — `Tür: proje_teslim` seç, linki veya metni paylaş.
+Not defteri (Windows) veya TextEdit (Mac) aç, 3-5 cümle yaz:
 
-**Neden bu önemli:** Kitap okumak değil, _yapmış olmak_ sayılsın diye. Bundan sonraki her sayfa bu çağrının üzerine ekleme yapıyor — çağrıyı yapmadıysan sonraki sayfalarda yolunu bulamazsın.
+> "`python ilk_cagri.py` yazdığımda şu oldu: önce ... sonra ... Ekrana gelen sayılar ... demek oluyormuş. Diyagrama tekrar baktığımda artık ... anlıyorum."
+
+Dosyayı şu yola kaydet: `muhendisal-notlarim/bolum-2/01-ilk-cagri/refleksiyon.txt` (bu klasörü bilgisayarında bir kere aç, sonraki sayfalar da buraya birikecek).
+
+#### 2. 📸 Ekran görüntüsü — 3 dakika, işletim sistemi kısayolu lazım
+
+**Neyin görüntüsü:** Ya Console → Workbench'teki **Usage** paneli (token sayıları görünmeli), ya da terminaldeki `python ilk_cagri.py` çıktısı.
+
+| İşletim sistemi | Kısayol | Nereye kaydedilir |
+|---|---|---|
+| **Windows** | `Win + Shift + S` → alan seç → panoya kopyalanır → Paint aç (Başlat'a "Paint" yaz) → `Ctrl + V` → Dosya → Kaydet (PNG) | Seçtiğin klasöre |
+| **Mac** | `Cmd + Shift + 4` → alan seç → otomatik kaydedilir | Masaüstü |
+| **Linux (GNOME)** | `Shift + PrtScr` → alan seç | Resimler klasörü |
+
+Görüntüyü `muhendisal-notlarim/bolum-2/01-ilk-cagri/ekran.png` olarak taşı.
+
+#### 3. 💻 GitHub Gist — 10 dakika, GitHub hesabı lazım
+
+**Gist nedir:** GitHub'ın "tek dosyalık paylaşım" servisi. Dosyanı başkasının okuyabileceği bir web linkine dönüştürür.
+
+**GitHub hesabın yoksa:** bu adımı atla, yukarıdaki 1 veya 2 yeterli.
+
+**Varsa:**
+
+1. [gist.github.com](https://gist.github.com) aç.
+2. Üst sağda **"+"** işareti → **"New gist"**.
+3. **"Filename including extension"** kutusuna `ilk_cagri.py` yaz.
+4. Büyük metin kutusuna kendi `ilk_cagri.py` içeriğini yapıştır.
+5. **Kontrol et:** Kodda `os.environ["ANTHROPIC_API_KEY"]` yazıyor mu? Yazıyorsa iyi — anahtar kodda değil, ortamda. Eğer yanlışlıkla gerçek `sk-ant-...` değerini koyduysan **hemen sil, yerine `os.environ[...]` yaz.**
+6. Sağ altta **"Create public gist"** (açık) veya **"Create secret gist"** (linki bilen görür, listede yok) seç.
+7. Adres çubuğundaki URL'yi kopyala → `muhendisal-notlarim/bolum-2/01-ilk-cagri/gist-linki.txt` dosyasına yapıştır.
+
+---
+
+**Nereye saklıyoruz:** Bilgisayarında `muhendisal-notlarim/` diye bir ana klasör aç. Her bölüm/sayfa bunun altına birikecek. Kurs bittiğinde bu klasör **senin portföyün** olacak — iş başvurularında "işte yaptıklarım" kanıtı. İleride GitHub'a public repo olarak yükleyebilirsin.
+
+**Neden bu önemli:** Kitap okumak değil, *yapmış olmak* sayılsın diye. Bundan sonraki her sayfa bu çağrının üzerine ekleme yapıyor — çağrıyı yapmadıysan sonraki sayfalarda yolunu bulamazsın.
 </div>
 
 <div class="ma-neden-sonuc" markdown>
