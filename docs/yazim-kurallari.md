@@ -65,7 +65,7 @@ S["👤 Sen<br/>(bilgisayarın başında)"]    ← YANLIŞ (br escape olur)
 
 **Yer:** Uygulama bölümünden sonra, Çıktı Kanıtı'ndan önce.
 
-**YANLIŞ:** "Daha fazla bilgi için [Building with the Claude API](link)"
+**YANLIŞ:** "Daha fazla bilgi için `[Building with the Claude API](link)`"
 **DOĞRU:** Kaynağın **bu sayfaya dokunan 3-5 maddesini Türkçe özetle, sayfaya göm**, en altta tek kaynak satırı.
 
 **Format (zorunlu, değişmez):**
