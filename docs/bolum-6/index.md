@@ -1,7 +1,14 @@
 # Bölüm 6 — AI Agents ve MCP
 
 <div class="ma-meta" markdown>
-**Persona:** Bölüm 5'e kadar geldi, RAG'i kurdu, karar verebiliyor. Şimdi **"Claude sadece cevap yazmasın, iş yapsın"** istiyor — API çağırmak, dosya okumak, çoklu adımlı görevler · **Süre:** ~6 saat (8 sayfa, MCP ekseninde yoğun) · **Önkoşul:** Bölüm 2 (tool use kavramı için) + bir MCP sunucusu kurabilecek backend refleksi · **Çıktı:** Kendi yazdığın MCP sunucusu ayakta + Claude'un bu sunucuyla konuşup çok adımlı görev bitirdiği canlı demo
+<div class="ma-meta-row" markdown>
+<strong>Kim için:</strong>
+<span class="ma-persona ma-persona-baslangic">🟢 başlangıç</span>
+<span class="ma-persona ma-persona-is">🔵 iş</span>
+<span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
+</div>
+<div class="ma-meta-row"><strong>📋 Önkoşul:</strong> Bölüm 2 bitmiş (prompt engineering + tool use kavramı), Bölüm 4 bitmiş (RAG — retrieve/generate ayrımı oturmuş); bir MCP sunucusu kurabilecek backend refleksin var (FastAPI + venv)</div>
+<div class="ma-meta-row"><strong>🎯 Çıktı:</strong> Kendi yazdığın **MCP sunucun** ayakta, Claude Desktop'tan "takvimimi göster" dediğinde senin yazdığın tool çalışıyor + Claude'un ReAct döngüsünde çok adımlı görev bitirdiği **canlı demo** + 4 Anthropic Academy kursu (Intro MCP, Advanced MCP, Subagents, Agent Skills) için içerik zemini.</div>
 </div>
 
 ## Neden bu bölüm?
