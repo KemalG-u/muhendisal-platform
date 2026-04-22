@@ -7,222 +7,221 @@
 <span class="ma-persona ma-persona-is">🔵 iş</span>
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
-<div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 4.6 bitmiş — LangChain'i gördün, abstraction felsefesini biliyorsun</div>
-<div class="ma-meta-row"><strong>🎯 Çıktı:</strong> Aynı RAG'i **LlamaIndex** ile 15 satırda kurarsın; LangChain'den **ne zaman farklı** olduğunu bilirsin; **doküman-yoğun** projelerde (PDF, veritabanı, wiki) LlamaIndex'i niye tercih edebileceğini sayıyla anlarsın.</div>
+<div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 4.1-4.5 elden RAG bitmiş + 4.6 LangChain denemiş; ikisinin **felsefi** farkını anlamaya hazırsın</div>
+<div class="ma-meta-row"><strong>🎯 Çıktı:</strong> Aynı RAG'i **LlamaIndex ile 15 satırda** kurarsın; LangChain ile yan yana koyarsın; ikisinin **felsefi farkını** (chain vs index, agent vs document) kendi cümlelerinle anlatırsın; kendi projen için hangisi daha uygun kararını verirsin.</div>
 </div>
 
 !!! tip "Yabancı kelime mi gördün?"
-    Bu sayfadaki **italik-altı çizili** ifadelerin (indexing, query engine, node gibi) üstüne mouse'unu getir — kısa tanım çıkar. Mobilde dokun.
+    Bu sayfadaki **italik-altı çizili** ifadelerin (index, node, query engine gibi) üstüne mouse'unu getir — kısa tanım çıkar. Mobilde dokun.
 
 ## Neden bu sayfa?
 
-LangChain'i öğrendin. **Niye ikinci kütüphane?** Çünkü LangChain *LLM-zinciri* odaklı, LlamaIndex *veri-zinciri* odaklı. İkisi aynı problemi farklı tarafından çözüyor:
+LangChain (4.6) ve LlamaIndex **aynı ekosistemde iki rakip** — ikisi de RAG kurar, ama **başlangıç varsayımları farklı.** LangChain "agent" merkezli düşünür ("LLM'e ne yapacağını söyle, zincirle, tool'lar ver"). LlamaIndex **belge merkezli** düşünür ("belgeyi indexle, sorguyla gel, RAG'ın daha doğal aracı benim"). İkisini öğrenmek = iki ayrı zihinsel modele sahip olmak.
 
-- **LangChain:** "LLM'e nasıl veri beslerim + nasıl zincirlerim + nasıl agent yaparım?"
-- **LlamaIndex:** "Dokümanlarımı nasıl iyi indekslerim + nasıl sorgulanabilir yaparım?"
+İkincisi: RAG **kurumsal ürünlerde** LlamaIndex daha çok tercih ediliyor (2024-2026 trendi). Sebep: LlamaIndex'in `VectorStoreIndex`, `NodeParser`, `QueryEngine` gibi abstraksiyonları RAG'ın kendi kavramlarıyla örtüşür. LangChain'de RAG bir **alt desen**; LlamaIndex'te RAG **ana amacı**. Bu fark tutorial'larda, API'de, dokümantasyonda hissediliyor.
 
-İkincisi: **Kurumsal doküman yoğunluğu artarsa** (yüzlerce PDF, birden fazla veri kaynağı, güncellenen wiki), LlamaIndex'in **ingestion pipeline**'ı LangChain'inkinden olgun. Kemal'in HBV vakıf belgeleri, bir hukuk firmasının dava dosyaları, bir hastanenin klinik kılavuzları — hepsi **doküman-ağır RAG** = LlamaIndex tercih sebebi.
-
-Üçüncüsü: 2024'te LlamaIndex **"agentic RAG"** kavramını öne çıkardı — retriever'ın kendisi de bir Claude çağrısıyla "ne aramalıyım?" kararı veriyor. Bölüm 6 ajan'a köprü. Bu yönde LlamaIndex hâlâ öndedir.
+Üçüncüsü: **Karar verme zamanı.** Bu sayfa bittiğinde üç seçeneğin var: elden yaz (4.1-4.4), LangChain kullan (4.6), LlamaIndex kullan (4.7). Her projede bir seçim yapacaksın. Bu sayfa sana **üçüncü seçeneği** veriyor — artık bilinçli karar verebileceksin.
 
 ## LlamaIndex kısaca — üç paragraf, matematiksiz
 
-**LlamaIndex = veri → LLM köprüsü.** 2022'de "GPT-Index" olarak başladı, 2023'te LlamaIndex oldu. Temel fikir: "LLM'in context'ine **ne zaman, ne ölçüde, ne kadar** veri vereceğini" akıllıca yönet. Document → Node (chunk) → Index → Query Engine zinciri.
+**LlamaIndex'in çekirdek kavramı: "Index".** LangChain'de "Chain" (işlem zinciri) merkezdedir; LlamaIndex'te "Index" (belge üstünde arama yapısı) merkezde. `VectorStoreIndex.from_documents(docs)` bir satırda: belgeyi parçala, embed et, sakla, indexle. 4 adımı tek soyutlama.
 
-**Ana farkı: indexing çeşitliliği.** Sadece vector index değil — tree index, list index, keyword index, knowledge graph index. Hangisi hangi veri için? Kod arama = keyword; hiyerarşik dokümantasyon = tree; soru-cevap = vector. LangChain bu çeşitliliği "retriever" düzeyinde soyutluyor ama LlamaIndex **indexing'i birinci sınıf** yapıyor.
+**Node = chunk.** LlamaIndex "chunk" yerine "Node" der. Her Node'un `text`, `metadata`, `relationships` var (parent/prev/next sibling). Bu graf yapısı — LangChain'in düz chunk listesinden farkı. Karmaşık belgelerde (hiyerarşik PDF, sözleşme bölümleri) Node ilişkileri **retrieval sırasında ek bağlam** sağlar.
 
-**Query engine = RAG motoru.** `index.as_query_engine()` çağrısı retrieval + prompt + LLM'i tek soyutlamada veriyor. LangChain'deki chain'in LlamaIndex versiyonu. Subquery engine (karmaşık sorguyu alt parçalara böl), router query engine (doğru indexe yönlendir) gibi güçlü varyantlar var.
+**Query Engine = RAG pipeline tek nesne.** `index.as_query_engine(llm=Anthropic(model="..."))` bir satırda: retriever + reranker + response synthesizer hazır. Çağırıyorsun `.query("soru")`, cevap geliyor. LangChain'de `RetrievalQA.from_chain_type(...)` benzeri, ama LlamaIndex'te kavramlar RAG'a daha yakın adlandırılmış.
 
 ## Bu sayfanın ekosistemi — kim kime ne veriyor
 
 <div class="ma-ekosistem" markdown>
-<div class="ma-ekosistem-header">🗺️ Ekosistem — LlamaIndex veri-yoğun zinciri</div>
+<div class="ma-ekosistem-header">🗺️ Ekosistem — LlamaIndex soyutlama katmanları</div>
 
 ```mermaid
-flowchart LR
-  SRC["📂 Kaynaklar\nPDF, DB, Notion,\nGoogle Drive"]
-  READER["📥 SimpleDirectory\nReader"]
-  NODE["🧩 Nodes\n(chunk + metadata)"]
-  IDX["🗃 Index\n(Vector/Tree/KG)"]
-  QE["⚙️ QueryEngine"]
-  LLM["🤖 Anthropic LLM"]
-  OUT["💬 Cevap"]
+flowchart TB
+  DOC["📄 Documents\nload_data()"]
+  NP["✂️ NodeParser\n(chunker)"]
+  NODES["📦 Nodes\n(chunk + meta + ilişki)"]
+  EMB["🔢 Embedding\n(Voyage / HuggingFace)"]
+  IDX["🗄️ VectorStoreIndex\n(Qdrant arkada)"]
+  QE["🔍 QueryEngine\n(retriever + synth)"]
+  LLM["🤖 Anthropic\n(LLM wrapper)"]
+  OUT["💬 Response\n+ source_nodes"]
 
-  SRC --> READER --> NODE --> IDX --> QE --> OUT
+  DOC --> NP --> NODES --> EMB --> IDX
+  IDX --> QE
   LLM --> QE
-  IDX -.observe.-> LS[("📊 LlamaIndex\nobservability\n(veya Arize)")]
+  QE -->|query| OUT
 
-  classDef src fill:#fed7aa,stroke:#ea580c,color:#111
-  classDef li fill:#dbeafe,stroke:#2563eb,color:#111
-  classDef db fill:#fef3c7,stroke:#ca8a04,color:#111
-  classDef out fill:#dcfce7,stroke:#16a34a,color:#111
-  classDef obs fill:#fce7f3,stroke:#be185d,color:#111
-  class SRC src
-  class READER,NODE,QE li
-  class IDX db
-  class LLM,OUT out
-  class LS obs
+  classDef doc fill:#ddd6fe,stroke:#7c3aed,color:#111
+  classDef parse fill:#fef3c7,stroke:#ca8a04,color:#111
+  classDef idx fill:#fed7aa,stroke:#ea580c,color:#111
+  classDef llm fill:#dbeafe,stroke:#2563eb,color:#111
+  classDef hed fill:#dcfce7,stroke:#16a34a,color:#111
+  class DOC doc
+  class NP,NODES,EMB parse
+  class IDX idx
+  class QE,LLM llm
+  class OUT hed
 ```
 
 <table class="ma-aktorler" markdown>
 
-| Düğüm | LlamaIndex adı | Ne yapıyor |
+| Düğüm | LlamaIndex sınıfı | Ne iş yapıyor |
 |---|---|---|
-| 📥 **Reader** | `SimpleDirectoryReader`, `PDFReader`, `NotionPageReader`, `GoogleDriveReader` | Kaynağa özel konektör, `Document` döndürür |
-| 🧩 **Nodes** | `SentenceSplitter`, `SemanticSplitter` | Document → Node (chunk + metadata ilişkileri) |
-| 🗃 **Index** | `VectorStoreIndex`, `TreeIndex`, `KeywordTableIndex`, `KnowledgeGraphIndex` | Veri tipine göre farklı indexleme |
-| ⚙️ **QueryEngine** | `.as_query_engine()`, `SubQuestionQueryEngine`, `RouterQueryEngine` | Retrieval + prompt + LLM tek paket |
-| 🤖 **Anthropic** | `llama_index.llms.anthropic.Anthropic` | Claude SDK wrapper |
+| 📄 **Documents** | `SimpleDirectoryReader` / `Document` | PDF, MD, TXT, URL yükle |
+| ✂️ **NodeParser** | `SentenceSplitter`, `SemanticSplitterNodeParser` | Chunking stratejisi (4.2'deki 4 yol buralarda) |
+| 📦 **Nodes** | `TextNode` + `metadata` + `relationships` | Chunk + meta + bağlantı grafı |
+| 🔢 **Embedding** | `VoyageEmbedding`, `HuggingFaceEmbedding` | Embedding modeli wrapper'ı |
+| 🗄️ **VectorStoreIndex** | `VectorStoreIndex`, `QdrantVectorStore` | Tüm chunking+embedding+saklama tek çağrıda |
+| 🔍 **QueryEngine** | `index.as_query_engine(llm=...)` | Retriever + Synthesizer birleşik |
+| 🤖 **LLM wrapper** | `Anthropic(model="claude-sonnet-4-5")` | LLM çağrılarını standardize eder |
+| 💬 **Response** | `response.response` + `response.source_nodes` | Cevap + kaynak Node listesi (attribution) |
 
 </table>
 </div>
 
 ## Uygulama — iki yol
 
-### Yol A — 15 satırda RAG
+### Yol A — LlamaIndex ile 15 satırda RAG
 
 ```bash
-pip install llama-index llama-index-llms-anthropic llama-index-embeddings-voyageai llama-index-vector-stores-qdrant
+pip install llama-index llama-index-llms-anthropic llama-index-embeddings-huggingface
 ```
-
-`rag_llamaindex.py`:
 
 ```python
 from llama_index.core import VectorStoreIndex, SimpleDirectoryReader, Settings
 from llama_index.llms.anthropic import Anthropic
-from llama_index.embeddings.voyageai import VoyageEmbedding
-from llama_index.vector_stores.qdrant import QdrantVectorStore
-from qdrant_client import QdrantClient
+from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 
-# 1. Global ayar — LLM + embedding
-Settings.llm = Anthropic(model="claude-sonnet-4-5", temperature=0)
-Settings.embed_model = VoyageEmbedding(model_name="voyage-3")
+# Global ayar — LLM ve embedding modeli
+Settings.llm = Anthropic(model="claude-sonnet-4-5")
+Settings.embed_model = HuggingFaceEmbedding(
+    model_name="sentence-transformers/paraphrase-multilingual-mpnet-base-v2"
+)
 
-# 2. Dokümanları yükle (klasördeki tüm .md, .pdf, .txt otomatik)
-docs = SimpleDirectoryReader("./hbv-belgeler").load_data()
+# 1) Belgeleri yükle (data/ klasöründe PDF/MD/TXT)
+docs = SimpleDirectoryReader("data/hbv_bilgi").load_data()
 
-# 3. Qdrant vector store + index
-client = QdrantClient(url="http://localhost:6333")
-vs = QdrantVectorStore(client=client, collection_name="hbv_li")
-index = VectorStoreIndex.from_documents(docs, vector_store=vs)
+# 2) Index kur (chunking + embedding + storage TEK SATIRDA)
+index = VectorStoreIndex.from_documents(docs)
 
-# 4. Query engine + sorgu
+# 3) Query engine — RAG hazır
 qe = index.as_query_engine(similarity_top_k=5)
-cevap = qe.query("Kurban bedeli 2026 yılı ne kadar?")
-print(cevap)
-print(f"\nKullanılan belgeler: {[n.metadata.get('file_name') for n in cevap.source_nodes]}")
+
+# 4) Soru sor
+r = qe.query("Yurtdışı bağış fiyatı ne kadar?")
+print(r.response)
+
+# 5) Kaynak Node'lar (attribution)
+for node in r.source_nodes:
+    print(f"  [skor {node.score:.3f}] {node.text[:100]}...")
 ```
 
-**Çıktı:**
+**Beklenen çıktı:**
 
 ```
-Hacı Bayram-ı Veli Vakfı 2026 kurban bedeli 14.000 TL'dir. Bu tutar
-yıllık olarak güncellenir.
+Yurtdışı bağışlar için USD bazlı ayrı tarife uygulanır: büyükbaş hissesi
+500 USD, küçükbaş 250 USD. Ödemeler PayPal veya banka havalesi ile
+yapılabilir.
 
-Kullanılan belgeler: ['fiyat-listesi-2026.md', 'bagis-sikca-sorulan.md']
+  [skor 0.891] Yurtdışı bağışlar farklı hesaplanır. USD tarifesi için...
+  [skor 0.654] IBAN TR12 3456 7890 Ziraat Bankası...
 ```
 
-**Burada olan nedir (diyagram referansı):** Diyagramın tüm akışı 15 satırda. Özellik: `SimpleDirectoryReader` klasördeki **PDF + md + txt** dosyalarını **otomatik tanıyor**, LangChain'de her format için ayrı loader yazardın. Bu LlamaIndex'in "veri-first" avantajı.
+**Burada olan nedir (diyagram referansı):** Tek satır `VectorStoreIndex.from_documents(docs)` diyagramın 4 düğümünü (NodeParser + Nodes + Embedding + VectorStoreIndex) zincirleyerek çalıştırıyor. 4.1-4.4'te elden yazdığın 100+ satır, burada **varsayılan ayarlarla** 5 satıra iniyor.
 
-### Yol B — Router QueryEngine (2 farklı index)
-
-Senaryo: Vakıfın 2 tip belgesi var:
-1. **Fiyat listeleri** (yapılandırılmış, tablolar) → keyword index
-2. **Sıkça sorulan sorular** (anlatım) → vector index
-
-Doğru soruya doğru indexi otomatik yönlendir:
+### Yol B — Contextual + Qdrant + Rerank (production yapı)
 
 ```python
-from llama_index.core import VectorStoreIndex, KeywordTableIndex
-from llama_index.core.tools import QueryEngineTool
-from llama_index.core.query_engine import RouterQueryEngine
-from llama_index.core.selectors import LLMSingleSelector
+from llama_index.core import VectorStoreIndex, StorageContext
+from llama_index.core.node_parser import SentenceSplitter
+from llama_index.vector_stores.qdrant import QdrantVectorStore
+from llama_index.core.postprocessor import SentenceTransformerRerank
+from qdrant_client import QdrantClient
 
-# Aynı dokümanlardan 2 ayrı index
-fiyat_docs = SimpleDirectoryReader("./hbv-belgeler/fiyat").load_data()
-sss_docs = SimpleDirectoryReader("./hbv-belgeler/sss").load_data()
+# Qdrant (4.3'ten)
+qdrant = QdrantClient(url="http://localhost:6333")
+vector_store = QdrantVectorStore(client=qdrant, collection_name="hbv_li")
+storage_ctx = StorageContext.from_defaults(vector_store=vector_store)
 
-fiyat_index = KeywordTableIndex.from_documents(fiyat_docs)
-sss_index = VectorStoreIndex.from_documents(sss_docs)
+# Chunking stratejisi — 4.2'deki paragraf yaklaşımına denk
+Settings.node_parser = SentenceSplitter(chunk_size=500, chunk_overlap=50)
 
-# Her index bir "tool"
-fiyat_tool = QueryEngineTool.from_defaults(
-    query_engine=fiyat_index.as_query_engine(),
-    description="Fiyat, rakam, tutar, lira soruları için",
-)
-sss_tool = QueryEngineTool.from_defaults(
-    query_engine=sss_index.as_query_engine(),
-    description="Genel süreç, yöntem, açıklama soruları için",
+# Index'i Qdrant üstüne kur
+index = VectorStoreIndex.from_documents(
+    docs, storage_context=storage_ctx
 )
 
-# Router — Claude karar veriyor hangi tool'a gidecek
-router = RouterQueryEngine(
-    selector=LLMSingleSelector.from_defaults(),
-    query_engine_tools=[fiyat_tool, sss_tool],
+# Rerank post-processor
+reranker = SentenceTransformerRerank(
+    model="cross-encoder/ms-marco-MiniLM-L-12-v2",  # veya Cohere/Voyage wrapper
+    top_n=3,
 )
 
-# Sorgu 1 → fiyat_tool'a yönlenir
-print(router.query("Kurban bedeli ne kadar?"))
-# Sorgu 2 → sss_tool'a yönlenir
-print(router.query("Nasıl bağış yapabilirim?"))
+# Query engine — top-20 getir, top-3'e rerank, Claude cevap üret
+qe = index.as_query_engine(
+    similarity_top_k=20,
+    node_postprocessors=[reranker],
+)
+
+r = qe.query("Bağıştan sonra fotoğraf istemezsem ne olur?")
+print(r.response)
+print(f"Kaynak {len(r.source_nodes)} Node'dan sentezlendi")
 ```
 
-**Burada olan nedir (diyagram referansı):** LlamaIndex Claude'u **router** olarak kullandı — "bu soru hangi tool'a gitmeli?" kararını LLM veriyor. Bu **agentic RAG'in** giriş kapısı. Bölüm 6'da tam agent'ları göreceğiz ama LlamaIndex zaten bu tarafa mı mı eğik.
+**Burada olan nedir (diyagram referansı):** LangChain'de `RetrievalQA` + `ContextualCompressionRetriever` + `CohereRerank` 3-4 sınıf gerektirirken, LlamaIndex'te `similarity_top_k=20` + `node_postprocessors=[reranker]` iki parametre. **Aynı pipeline, daha az kavram.**
 
-### LlamaIndex vs LangChain — karşılaştırma
+### LangChain vs LlamaIndex — felsefi + pratik karşılaştırma
 
-| Kriter | LlamaIndex | LangChain |
-|---|---|---|
-| **Odak** | Veri ingestion + indexleme | LLM zinciri + agent |
-| **Loader çeşitliliği** | **Üstün** — Notion/GDrive/Confluence hazır | Orta — community paketleri |
-| **Vector store desteği** | ~20 destek | ~40 destek |
-| **Query engine çeşitleri** | **Üstün** — Router/SubQuestion built-in | RouterChain var ama az güçlü |
-| **Tool/agent desteği** | Orta — son 1 yılda geliştirdi | **Üstün** — LangGraph var |
-| **Öğrenme materyali** | İyi ama az | **Çok fazla** — 10x tutorial |
-| **Production kullanımı** | Doküman-yoğun şirketler | Her yer |
-| **Topluluk büyüklüğü** | ~25K GitHub star | ~95K GitHub star |
-| **Anthropic native** | Var (`llama-index-llms-anthropic`) | Var (`langchain-anthropic`) |
+| Kriter | **LangChain (4.6)** | **LlamaIndex (4.7)** | **Elden (4.1-4.4)** |
+|---|---|---|---|
+| Felsefe | Chain / Agent merkezli | Index / Document merkezli | Kontrol merkezli |
+| RAG kod satırı | ~20 | ~15 | ~200 |
+| Kavramsal yük | Yüksek (Chain, Tool, Agent, Memory...) | Orta (Document, Node, Index, QueryEngine) | Düşük (doğrudan Python) |
+| Kontrol | Orta (abstraksiyon sızıntıları) | Orta (config parametreleri) | Yüksek (her şey sende) |
+| Ekosistem | **Çok geniş** (agent, tool, memory için ideal) | **RAG-odaklı** (PDF, hiyerarşik, grafik index) | Kendi ekosistemin |
+| Topluluk | 95K+ GitHub stars | 35K+ GitHub stars | — |
+| Debug | Zor (zincir katmanları) | Orta (daha sade) | Kolay (kendi kodun) |
+| Öğrenme eğrisi | Dik (çok kavram) | Orta | Düz (temel Python) |
+| Performans | Orta (abstraksiyon overhead) | Orta (benzer) | Yüksek (native) |
+| 2026 trendi | Agent + tool use senaryolar için güçleniyor | RAG uygulamaları için standartlaşıyor | Hybrid (elden + kütüphane parçaları) |
 
-**Pratik öneri:** Çok sayıda doküman + çeşitli format + ingestion pipeline → LlamaIndex. LLM-zinciri + agent + multi-step workflow → LangChain. Hem RAG hem agent varsa → ikisini beraber kullan (LlamaIndex ingestion + LangGraph agent).
+**Karar ağacı:**
 
-### HBV için seçim (Kemal'in projesi)
-
-HBV chatbot:
-- 16 markdown belge (orta büyüklük)
-- Tek dil (Türkçe)
-- Fiyat + süreç iki farklı tip → **Router faydalı**
-- Agent değil, basit RAG → LangChain'de gerek yok
-- **Seçim: LlamaIndex + Router QueryEngine**
-
-Ama 4.8'de göreceğimiz gibi Kemal'in **gerçek** HBV chatbot'u **elden yazılmış** — çünkü spam filter, Meta webhook idempotency, custom state machine gibi özel gereksinimler var. LlamaIndex bunların hepsini override etmeni gerektirir; bu noktada "elden yaz" daha hızlı olur.
+- **RAG merkezli mi projen?** → LlamaIndex
+- **Agent + çoklu tool use + MCP?** → LangChain (veya Anthropic native, Bölüm 6)
+- **Maksimum kontrol + minimum bağımlılık?** → Elden
+- **Prototip hızı önemli?** → Hangisini bilirsen o
+- **HBV gibi üretim RAG projesi?** → Elden (şeffaflık) veya LlamaIndex (hız)
 
 <div class="ma-anthropic-oz" markdown>
 <div class="ma-anthropic-oz-header">📖 Anthropic bu konuyu nasıl anlatıyor — öz</div>
 
-Anthropic LlamaIndex'i de LangChain gibi **önermez-kötülemez.** Resmi `llama-index-llms-anthropic` package ortak maintain ediliyor — yanıt kalitesi test ediliyor.
+Anthropic **ne LangChain ne LlamaIndex'e** özel bağlılık göstermez — üçüncü parti kütüphaneler `anthropic-cookbook`'ta opsiyon olarak geçer, resmi bir tavsiye yok:
 
-**1. Resmi partner package.** `llama-index-llms-anthropic` + `llama-index-embeddings-voyageai` (Anthropic'in embedding ortağı Voyage). İkisi birlikte çalışır — Claude + Voyage sadece LlamaIndex ekosisteminde değil, birbirleriyle de uyumlu.
+**1. Anthropic resmi SDK yeterli RAG için.** `anthropic.Anthropic()` + `messages.create(...)` ile prompt caching + tool use + structured output — hepsi elden yazılabilir. Anthropic "abstraksiyon gerektirmez, bizim SDK kuvvetli" tutumunda.
 
-**2. Anthropic cookbook'ta LlamaIndex örneği var.** [anthropic-cookbook/third_party/LlamaIndex](https://github.com/anthropics/anthropic-cookbook/tree/main/third_party/LlamaIndex) — 2-3 notebook. LangChain'den daha az ama var.
+**2. LlamaIndex ve LangChain Anthropic wrapper'ı hazır.** `llama-index-llms-anthropic` ve `langchain-anthropic` paketleri **Anthropic tarafından desteklenir**. Üçüncü parti kütüphane tercihinde Claude'u devre dışı bırakmak zorunda değilsin.
 
-**3. Contextual Retrieval + LlamaIndex.** Anthropic'in 4.4'te gördüğümüz Contextual Retrieval tekniği LlamaIndex'te **custom node postprocessor** olarak kurulabilir. Resmi bir package yok, community implementasyonları var. Bölüm 4.4'teki manuel uygulama referans değerli.
+**3. "Framework yorgunluğu" trendi.** 2024-2026'da mühendis topluluğu framework abstraksiyonlarını sorgulamaya başladı (@hwchase17, LangChain yaratıcısının kendi dahi). Anthropic "bizim SDK + iyi prompt = çoğu iş tamam" mesajını bu ortamda net veriyor. Claude Code'ın kendi LangChain kullanmaması = ilan gibi.
 
 ??? info "Teknik detay — isteyene (parameter adları, mekanikler, edge case'ler)"
 
-    **Ingestion pipeline.** LlamaIndex'in `IngestionPipeline` sınıfı = chunking + embedding + cache tek paket. Aynı belgeyi iki kere işlemez (hash ile cache). Büyük dokümanlarla çok verimli.
+    **Settings global state.** LlamaIndex 0.10+ sürümünde `Settings.llm`, `Settings.embed_model` global konfig. Production'da tek proje için iyi, mikro servislerde izolasyon kaybı.
 
-    **Node relationships.** LlamaIndex node'lar arasında parent/child/prev/next ilişkisi kurar — chunk bağlamını retrieval'da koruyor. LangChain bu relationship'leri direkt saklamaz.
+    **Response synthesizer modları.** `response_mode="compact"` (default, tek LLM çağrısı), `"tree_summarize"` (hiyerarşik), `"accumulate"` (her node için ayrı cevap + birleştir). Uzun context'te tree_summarize daha iyi.
 
-    **Structured data.** `llama-index-readers-database` ile Postgres/MySQL'den direkt okuma. LangChain community'de var ama LlamaIndex native desteği olgun.
+    **Node relationships.** `Node.relationships[NodeRelationship.PREVIOUS]` ile önceki chunk'ın referansı. Hiyerarşik belgelerde (sözleşme maddeleri) "madde X'in üst başlığı" ilişkisi retrieval'da bağlam zenginleştirir.
 
-    **LlamaParse.** LlamaIndex'in ücretli PDF parser'ı (LlamaCloud) — karmaşık PDF tablo/formül'leri doğru çıkarıyor. Bölüm 4.2 chunking'in upgrade versiyonu.
+    **Observability.** LlamaIndex `Settings.callback_manager` ile LangSmith, Langfuse, Phoenix gibi gözlemlenebilirlik platformlarına entegre. LangChain'de benzer `LangChainTracer`.
 
-    **Evaluator.** `llama-index.core.evaluation` modülü — faithfulness, relevancy, correctness evaluator'ları hazır. 4.5 eval'in LlamaIndex versiyonu. RAGAS'a alternatif.
+    **Anthropic wrapper fiyat farkı yok.** `Anthropic(model=...)` doğrudan Anthropic API'ye gider, Anthropic fiyatından aracılık yok. Üçüncü parti SaaS (Helicone, OpenRouter) kullanmadıkça fiyat şeffaf.
 
-    **Agent workflow.** LlamaIndex'in `Workflow` API'si (2024 sonu) = LangGraph alternatifi. Event-driven, async, state machine. Bölüm 6'da agent'larda tekrar ele alacağız.
+    **Streaming desteği.** Her iki framework'te `streaming=True` parametresi; FastAPI + SSE veya WebSocket ile birleşir. LlamaIndex'te `qe.query()` yerine `qe.aquery()` async; `stream=True` ile token token.
+
+    **Memory + history.** LangChain'de `ConversationBufferMemory` + `ChatMessageHistory`. LlamaIndex'te `ChatEngine` ile benzeri. Memory ayrı bir konu (Bölüm 6 agent'ta detay).
 
 <div class="ma-anthropic-oz-kaynak" markdown>
-**Kaynak:** [docs.llamaindex.ai — Anthropic integration](https://docs.llamaindex.ai/en/stable/examples/llm/anthropic/) (EN, ~15 dk). Setup + examples. Pekiştirme: [Anthropic Cookbook — LlamaIndex notebook](https://github.com/anthropics/anthropic-cookbook/tree/main/third_party/LlamaIndex) — Claude + LlamaIndex ortak desenler.
+**Kaynak:** [LlamaIndex — Anthropic Integration](https://docs.llamaindex.ai/en/stable/examples/llm/anthropic/) (EN, ~10 dk). Resmi Claude entegrasyonu. **Pekiştirme:** [Anthropic Cookbook — third_party folder](https://github.com/anthropics/anthropic-cookbook/tree/main/third_party) — LlamaIndex + LangChain örnekleri Anthropic resmi deposu altında.
 </div>
 </div>
 
@@ -231,44 +230,44 @@ Anthropic LlamaIndex'i de LangChain gibi **önermez-kötülemez.** Resmi `llama-
 
 #### 1. 📝 Refleksiyon yazısı — 5 dakika
 
-> "LlamaIndex ile aynı RAG'i [X] satırda kurdum. LangChain'e göre [neden] farklı hissettirdi. Router QueryEngine denedim, '[hangi soru]' '[hangi tool]'a yönlendi. Kendi projem [HBV / başka] için [LangChain / LlamaIndex / elden / hybrid] seçeceğim çünkü..."
+> "LlamaIndex ile aynı RAG'i [X] satırda kurdum. LangChain sürümüm [Y] satır, elden sürümüm [Z] satırdı. Hız bakımından [hangisi önde], kod okunabilirlik [hangisi], kontrol [hangisi]. Kendi projem için seçimim: [LangChain / LlamaIndex / Elden], çünkü [gerekçe]."
 
 Kaydet: `muhendisal-notlarim/bolum-4/07-llamaindex/refleksiyon.txt`
 
 #### 2. 📸 Ekran görüntüsü — 3 dakika
 
-**Neyin görüntüsü:** Router QueryEngine çalışırken — iki farklı soru, iki farklı tool'a yönlendiği konsol çıktısı.
+**Neyin görüntüsü:** Aynı soruya 3 yol çıktısı yan yana — elden, LangChain, LlamaIndex. Cevap + source nodes/chunks görünür.
 
-Kaydet: `muhendisal-notlarim/bolum-4/07-llamaindex/router-cikti.png`
+Kaydet: `muhendisal-notlarim/bolum-4/07-llamaindex/uc-yol-karsilastirma.png`
 
-#### 3. 💻 3'lü karşılaştırma repo + GitHub — 15 dakika
+#### 3. 💻 3 yolu aynı repo'da + Gist — 10 dakika
 
-`rag-3li-karsilastirma/` — elden yazım + LangChain + LlamaIndex, üçü de aynı golden dataset üstünde çalışsın. Aynı 5 soruda 3 farklı sonuç, kalite + hız karşılaştırması README'de tablo.
+Repo'nda `rag_elden.py`, `rag_langchain.py`, `rag_llamaindex.py` üçünü koy. README'ye eval tablonu (4.5'ten) ekle — her biri aynı 20 golden sorgu üzerinde. Skor farklarını yorumla. [gist.github.com](https://gist.github.com)'a karşılaştırma raporu yükle.
 
-Repo linkini kaydet: `muhendisal-notlarim/bolum-4/07-llamaindex/uclu-karsilastirma-link.txt`
+Repo linkini kaydet: `muhendisal-notlarim/bolum-4/07-llamaindex/uc-yol-repo.txt`
 
 </div>
 
 <div class="ma-neden-sonuc" markdown>
 <div class="ma-neden-sonuc-header">🔗 Birlikte okuma — neden ne oldu</div>
 
-- **A → B:** LangChain LLM-zinciri, LlamaIndex veri-zinciri. Farklı problem çözüyorlar.
-- **B → C:** Doküman çeşitliliği artarsa (PDF + Notion + DB) LlamaIndex'in **loader çeşitliliği** avantaj.
-- **C → D:** Index çeşidi (vector/tree/keyword/KG) = "veri tipine özel arama" = LangChain'de daha soyut.
-- **D → E:** Router QueryEngine = agentic RAG giriş kapısı; Bölüm 6 agent'lara mantıksal köprü.
-- **E → F:** Gerçek seçim tek kütüphane değil — hybrid desenler production'da yaygın.
+- **A → B:** LangChain "chain/agent" merkezli düşünür; RAG bir alt desen.
+- **B → C:** LlamaIndex "index/document" merkezli düşünür; RAG ana iş.
+- **C → D:** Kavramsal olarak LlamaIndex'in soyutlamaları RAG ihtiyaçlarıyla **daha dar örtüşür** — ezberlemesi kolay.
+- **D → E:** LangChain **çok amaçlı geniş** (agent + tool + memory + RAG); LlamaIndex **RAG-odaklı derin**.
+- **E → F:** Her iki kütüphane de Anthropic tarafından resmi desteklenir; seçim "hangi zihinsel modele yakın hissediyorsun" sorusuna iner.
 
 <div class="ma-neden-sonuc-sonuc" markdown>
-**Sonuç:** Artık 3 seçeneğin var — elden, LangChain, LlamaIndex. Her birinin güçlü/zayıf tarafını biliyorsun. 4.8'de **Kemal'in gerçek HBV chatbot'u** vakası: 100+ kullanıcı, canlı production, neden elden yazıldı, hangi dersler alındı.
+**Sonuç:** Üç yolu da gördün — **elden** (4.1-4.4), **LangChain** (4.6), **LlamaIndex** (4.7). Her seçim bir değiş-tokuş. Kurumsal RAG'da LlamaIndex 2026'da öne geçiyor, agent-yoğun senaryolarda LangChain güçlü kalıyor, hassas kontrol gerektiren üretimde elden vazgeçilmez. 4.8'de **gerçek bir HBV üretim vakası** ile bu seçimin nasıl yapıldığını göreceğiz.
 </div>
 </div>
 
 <div class="ma-sonraki" markdown>
 <div class="ma-sonraki-header">➡️ Sonraki adım</div>
 
-**[4.8 Production RAG (HBV Vakası) →](08-production.md)** — Platformun **gerçek hayat** karşılığı. 135 bağışçı, Meta Cloud API, Chatwoot, spam filter — Bölüm 4'ün bitiş çizgisi.
+**[4.8 Production RAG (HBV Vakası) →](08-production.md)** — Bu platformun yazarı Kemal'in gerçek üretim RAG projesi. 35 gün içinde canlıya alınan bir kurumsal chatbot'un **ham gerçekleri** — neyin çalıştığı, neyin kırıldığı, hangi kararların geri döndüğü.
 
-← [4.6 LangChain ile RAG](06-langchain.md) &nbsp;|&nbsp; [Bölüm 4 girişi](index.md) &nbsp;|&nbsp; [Ana sayfa](../index.md)
+← [4.6 LangChain](06-langchain.md) &nbsp;|&nbsp; [Bölüm 4 girişi](index.md) &nbsp;|&nbsp; [Ana sayfa](../index.md)
 
-**Pekiştirme:** LlamaIndex'in [starter tutorial](https://docs.llamaindex.ai/en/stable/getting_started/starter_example/)'ını birebir yap (15 dk). Farkları kendi gözünle gör — yazılı karşılaştırmadan 10 kat değerli.
+**Pekiştirme:** [LlamaIndex — Node Postprocessors](https://docs.llamaindex.ai/en/stable/module_guides/querying/node_postprocessors/root.html) sayfasını gez. `SentenceTransformerRerank`, `LongContextReorder`, `MetadataReplacementPostProcessor` gibi hazır post-process'ler var — çoğu 4.3-4.4'te elden yazdığımız şeyler.
 </div>
