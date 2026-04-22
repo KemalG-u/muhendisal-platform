@@ -190,3 +190,20 @@ class DailyXP(BaseModel):
     quiz_xp: int
     quiz_count: int
     pages_completed: int
+
+class WeeklyXP(BaseModel):
+    week_start: date  # Pazartesi
+    total_xp: int
+    quiz_xp: int
+    quiz_count: int
+    pages_completed: int
+
+
+class XPTotal(BaseModel):
+    total_xp: int  # Streak.total_xp — kanonik kaynak (quiz+progress+streak_ping toplamı)
+    quiz_xp_all_time: int
+    quiz_count_all_time: int
+    pages_completed_all_time: int
+    current_streak: int
+    longest_streak: int
+
