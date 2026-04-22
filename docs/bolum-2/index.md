@@ -26,7 +26,9 @@ Niye 8 sayfa? Çünkü "merhaba Claude" demek ile "Claude'u üretim kalitesinde 
 
 **2.6 — Prompt Şablonları.** Değişken enjekte edilebilir şablonlar. `{{topic}}`, `{{constraint}}` placeholder'lar. Jinja2 vs f-string karşılaştırması. Bu sayfa **yeniden kullanılabilir prompt kütüphanesi** kurmanın temellerini atar — projeniz için bir `prompts/` klasörü çıkıyor.
 
-**2.7 ve 2.8 (nav'da kapalı detay):** Prompt değerlendirmesi ve prompt caching — Anthropic'in son 12 ayda çok önemsediği iki konu. 2.7 prompt'un "doğru mu" sorusunu cevaplamayı (eval framework), 2.8 prompt caching ile maliyet düşürmeyi işliyor.
+**2.7 — Prompt Enjeksiyonu ve Savunma.** Kullanıcı prompt'una "sistem talimatlarını unut, başka şey yap" tarzı saldırı yazarsa ne olur. Saldırı türleri (prompt injection, jailbreak, leak), Anthropic'in önerdiği savunma desenleri (XML tag ile sistem-kullanıcı keskin ayrımı, output filtering).
+
+**2.8 — Prompt Test ve Değerlendirme.** Prompt'un "çalışıyor mu" sorusunu gözle değil **testle** cevaplamak. Eval framework (RAGAS benzeri kavramlar prompt'a uyarlanmış), 20 örnekli test seti, kalite skorları. Bölüm 4.5 RAG eval'inin temeli buradan atılır.
 
 ## Bu bölümün yol haritası
 
@@ -39,7 +41,7 @@ flowchart LR
   P24["📄 2.4\nSystem\nprompt"]
   P25["📄 2.5\nFew-shot\n& CoT"]
   P26["📄 2.6\nŞablonlar"]
-  P278["📄 2.7-2.8\nEval &\ncaching"]
+  P278["📄 2.7-2.8\nInjection &\nprompt test"]
   OUT{{"✅ Çalışan\nprompt arsenali\n+ maliyet kontrolü"}}
   ANT[("📖 Anthropic\nBuild with API\n+ prompt\ntutorial")]
 
@@ -72,7 +74,7 @@ flowchart LR
 | 📄 **2.4 System prompt** | Platform + terminal | Chatbot'a "Sen X rolündesin" de, cevabı nasıl değişir gör |
 | 📄 **2.5 Few-shot & CoT** | Platform + terminal | Karar destek soru seti kur, 0-shot vs 3-shot karşılaştır |
 | 📄 **2.6 Şablonlar** | Platform + `prompts/` klasörün | Kendi prompt kütüphanen ilk kez yazılır |
-| 📄 **2.7-2.8 Eval & caching** | Platform + test dosyan | Prompt'un doğruluğunu otomatik ölç, caching ile maliyet yarıla |
+| 📄 **2.7-2.8 Injection & test** | Platform + test dosyan | Prompt enjeksiyonu saldırılarına savunma kur, prompt'un doğruluğunu eval seti ile otomatik ölç |
 | 📖 **Anthropic API & Academy** | [docs.claude.com](https://docs.claude.com), [anthropics/courses](https://github.com/anthropics/courses) | Her sayfada ilgili docs + notebook linki |
 | ✅ **Çıktı (OUT)** | Repo'nda `prompts/` + `2-bolum-denemeler/` | 8 sayfa sonunda çalışan prompt arsenalin + maliyet tablon |
 
@@ -84,7 +86,8 @@ flowchart LR
 - **Temperature/sampling refleksi:** Yeni bir proje geldiğinde "bu deterministik mi yaratıcı mı?" sorusunu sorup doğru temperature'ı seçebiliyorsun
 - **Few-shot yazma becerisi:** 0-shot denemeden önce 2-3 örnek hazırlayıp %20-40 daha iyi sonuç alma refleksi oturmuş
 - **Prompt eval temeli:** Prompt'un "çalışıyor mu" sorusunu gözle değil testle cevaplayan bir mini framework'ün var
-- **Prompt caching kullanan bir örnek:** Uzun sistem prompt'u olan bir çağrının caching'le ne kadar ucuzladığını gördün
+- **Prompt enjeksiyon savunması:** En azından 3 bilinen saldırı vektörüne karşı kendi sistem promptunu test ettin
+- **Prompt eval iskeleti:** 20 örnekli test setiyle promptlarının doğruluğunu sayısal ölçen mini framework
 - **Anthropic ekosistemine ilk girişin:** docs.claude.com'un prompting bölümü + courses repo'nun prompt tutorial notebook'u senin için artık yabancı değil
 
 Bu çıktı 3. bölüme (embeddings + vektör DB) geçmeden önce zorunlu: Embedding'le arama yapabilmen için önce "LLM ne konuşuyor" hissini kazanmış olman gerek.
@@ -98,7 +101,7 @@ Bölüm 2 Anthropic'in **en güçlü olduğu alandır**. Üç kanalda zengin iç
 
 **2. Dokümantasyon — Prompt engineering overview ve Best practices.** [docs.claude.com/en/docs/prompt-engineering](https://docs.claude.com/en/docs/prompt-engineering) Anthropic'in **kanonik** rehberi. Her 2.x sayfasında ilgili docs alt sayfasına köprü kuruyoruz. XML tag'leri (2.4), CoT (2.5), prompt templates (2.6) hepsi docs'un adlandırmasıyla aynı — bu kasıtlı, Anthropic sözlüğüne alıştırıyor.
 
-**3. GitHub — `anthropics/courses/prompt_engineering_interactive_tutorial`.** Jupyter notebook, 9 bölüm, her bölümde çalışan kod. 2.5 (few-shot) ve 2.8 (caching) için özellikle zengin. Bu notebook'u Colab'de aç, kendi API anahtarınla çalıştır — 2-3 saat harcadığın en iyi pratik budur. Biz bu notebook'un temel kavramlarını Türkçeleştirip senaryoluyoruz; sen Colab'de pratik etmeye devam ediyorsun.
+**3. GitHub — `anthropics/courses/prompt_engineering_interactive_tutorial`.** Jupyter notebook, 9 bölüm, her bölümde çalışan kod. 2.5 (few-shot) ve 2.7-2.8 (güvenlik + test) için özellikle zengin. Bu notebook'u Colab'de aç, kendi API anahtarınla çalıştır — 2-3 saat harcadığın en iyi pratik budur. Biz bu notebook'un temel kavramlarını Türkçeleştirip senaryoluyoruz; sen Colab'de pratik etmeye devam ediyorsun.
 
 <div class="ma-anthropic-oz-kaynak" markdown>
 **Kaynak:** [Anthropic courses — Prompt Engineering Interactive Tutorial](https://github.com/anthropics/courses/tree/master/prompt_engineering_interactive_tutorial) (İngilizce, Jupyter notebook, ücretsiz, ~3 saat). 2.5 sonrasında aç — Colab'de kendi API anahtarınla çalıştır. Bu notebook bu bölümün "en büyük katkı" eşlikçisidir.
