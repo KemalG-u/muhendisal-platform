@@ -138,6 +138,42 @@ Son satır **hata vermesi normal** — çünkü klasörü sildin, artık yok. "N
 !!! warning "Sık yapılan hata"
     `rm -rf /` **sakın yazma**. Bu tüm sistemi siler. `rm -rf` sadece sınırlı bir alt klasörle kullan, kök dizinde değil.
 
+## 🎮 Canlı Pratik (Etkileşimli Widget)
+
+Aşağıdaki bloklar **F6/F7 interaktif widget'larla** çalışır. Quiz'lere tıklayınca anında doğru/yanlış görürsün, backend'e kaydedilir, **+XP** kazanırsın. Kod bloğundaki "▶ Çalıştır" butonu **F9'da** Pyodide ile aktif olacak.
+
+### Python örneği
+
+<pre data-ma-run="python"><code>import os
+
+# Şu anki klasor
+print(os.getcwd())
+
+# Icindeki dosyalar
+for dosya in sorted(os.listdir('.')):
+    print(dosya)
+</code></pre>
+
+### Quiz 1 — pwd komutu
+
+<div class="ma-quiz" data-quiz-id="b0-01-live-q1" data-correct="B">
+<p class="ma-quiz-q"><code>pwd</code> komutu ne yapar?</p>
+<div class="ma-opt" data-key="A">A) Dosya siler</div>
+<div class="ma-opt" data-key="B">B) Şu anki dizinin yolunu yazdırır</div>
+<div class="ma-opt" data-key="C">C) Kullanıcı şifresi değiştirir</div>
+<div class="ma-opt" data-key="D">D) Paket kurar</div>
+</div>
+
+### Quiz 2 — Klasör silme
+
+<div class="ma-quiz" data-quiz-id="b0-01-live-q2" data-correct="C">
+<p class="ma-quiz-q">Bir klasörü <strong>içindekilerle birlikte</strong> silmek için hangi komut kullanılır?</p>
+<div class="ma-opt" data-key="A">A) <code>rm dosya.txt</code></div>
+<div class="ma-opt" data-key="B">B) <code>rmdir klasor</code></div>
+<div class="ma-opt" data-key="C">C) <code>rm -rf klasor</code></div>
+<div class="ma-opt" data-key="D">D) <code>delete klasor</code></div>
+</div>
+
 ## ❓ Kendini Test Et
 
 ??? quiz "1. SSH'ın açılımı nedir?"
