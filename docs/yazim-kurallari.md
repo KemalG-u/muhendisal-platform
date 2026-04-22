@@ -1,6 +1,6 @@
 # MühendisAl — Yazım Kuralları (64 Sayfa İçin Tek Kitap)
 
-**Tarih:** 21 Nisan 2026 · **Durum:** CANLI · **Sürüm:** v3.1
+**Tarih:** 22 Nisan 2026 · **Durum:** CANLI · **Sürüm:** v3.2
 **Kapsam:** `muhendisal_kapsam_v2` (Brain)
 **Pilot referans:** `docs/bolum-2/01-llm-temelleri.md`
 
@@ -280,10 +280,79 @@ Her yeni sayfa için akış:
 
 ---
 
+## Kural 12 — Sayfa Başlangıç Testi (5 Somut Soru)
+
+**Ne zaman:** Yeni sayfa yazmaya başlamadan önce. Boş dosyanın üstüne H1 yazmadan önce.
+
+**Amaç:** Sayfa yarılandığında "acaba ben bunu kime ne için yazıyorum" sorusunun çıkmaması. Bu 5 soru **hepsi somut cevap almalı**. Biri bile "duruma göre" / "herkes için" / "genel olarak" ile cevaplanıyorsa sayfa henüz yazmaya hazır değil.
+
+### Beş Soru
+
+**S1 — Bu sayfayı kim bitirecek? (persona)**
+
+| | Cevap |
+|---|---|
+| ✅ Doğru | "Python bilen, Anthropic API'yi hiç görmemiş geliştirici" |
+| ❌ Yanlış | "Herkes" / "İlgili kişi" / "Geliştiriciler" |
+
+Cevap yoksa → Bölüm index'ine dön, persona seçim diyagramına bak. Hâlâ muğlaksa → sayfayı yazma, önce Bölüm 0'a gönder.
+
+**S2 — Sayfa bitince kullanıcının elinde hangi somut çıktı olacak?**
+
+| | Cevap |
+|---|---|
+| ✅ Doğru | "Terminal'de `python hello_claude.py` çalıştırdı, Claude'dan ilk cevabı aldı, ekran görüntüsü aldı" |
+| ❌ Yanlış | "LLM'leri anlar" / "Konsept kavrar" / "Farkında olur" |
+
+Cevap kavramsalsa → çıktı kanıtı bölümü (`ma-cikti-kaniti`) yazılamaz. Sayfayı yazma.
+
+**S3 — Gelen kullanıcı önceden ne biliyor olmalı? (önkoşul)**
+
+| | Cevap |
+|---|---|
+| ✅ Doğru | "Bölüm 0 bitti, Python 3.10+ kurulu, terminal açabiliyor, `venv` ne olduğunu biliyor" |
+| ❌ Yanlış | "Biraz Python" / "Temel bilgisayar bilgisi" |
+
+Önkoşul muğlaksa → sayfayı ikiye böl veya önkoşul oluşturan bir sayfayı önce yaz.
+
+**S4 — Ekosistem diyagramında hangi 4-8 aktör olacak? (Kural 1 hazırlığı)**
+
+| | Cevap |
+|---|---|
+| ✅ Doğru | "Sen (mor), Python script (mavi), anthropic SDK (mavi), api.anthropic.com (turuncu), Claude modeli (turuncu), fatura sayacı (sarı), API key saklayıcı (sarı)" |
+| ❌ Yanlış | "Kullanıcı ve sistem" / "İstemci-sunucu" |
+
+Aktörler sayılamıyorsa → konu yeterince derinleşmemiş. Önce Kural 8 araştırması yap, sonra dön.
+
+**S5 — Anthropic-öz bloğu hangi resmi kaynağa yaslanacak? (Kural 2 hazırlığı)**
+
+| | Cevap |
+|---|---|
+| ✅ Doğru | "docs.claude.com/en/api/messages — 'Request body' ve 'System prompts' bölümleri + `anthropics/courses` repo `01_basic_api_usage.ipynb`" |
+| ❌ Yanlış | "İnternette bakarız" / "Birkaç kaynak var" / (boş) |
+
+Birincil kaynak yoksa → Kural 8'i uygula: 3+ `web_search` + 2 `web_fetch`. Yine yoksa Anthropic-öz bloğunu "resmi kaynak henüz yok, alternatif: [X]" kalıbıyla yaz.
+
+### Karar Matrisi
+
+| 5 sorunun durumu | Ne yap |
+|---|---|
+| 5'i de somut cevaplı | Yazmaya başla. Kural 11 akışına geç. |
+| 1-2'si muğlak | Muğlakları netleştir (15 dk kapsam notu). Sonra başla. |
+| 3+ muğlak | Sayfa henüz olgunlaşmamış. Brain'e `muhendisal_sayfa_<konu>_sorular.md` aç, notları topla, 1 gün sonra dön. |
+
+### Sayfa Başında Yazılı Kanıt
+
+Cevaplar dosyanın **en tepesindeki `ma-meta` bloğunda** zaten yer tutar (persona + süre + önkoşul + çıktı). S4 ve S5 ise yazarın zihninde/scratch notunda tutulur, sayfada görünmez — ama diyagram + öz bloğu yazılırken oradan beslenir.
+
+**Kendini denetle:** Sayfa bittiğinde `ma-meta` bloğundaki persona + önkoşul + çıktı ile sayfanın gerçek içeriği aynı hikâyeyi anlatıyor mu? Uyuşmuyorsa S1-S3'ü yanlış cevaplamışsın — başa dön.
+
+---
+
 ## Pilot Sayfa — Canlı Referans
 
 **URL:** https://wiki.oluk.org/platform/bolum-2/01-llm-temelleri/
-**Dosya:** `docs/bolum-2/01-llm-temelleri.md` (16236 B)
+**Dosya:** `docs/bolum-2/01-llm-temelleri.md` (v3.2, 18.9 KB)
 **Sayfa tipi:** Normal (Tip olmayan — standart)
 
 Bu sayfa bu kurallar kitabının canlı uygulamasıdır. Yeni sayfa yazmaya başlarken:
@@ -312,6 +381,7 @@ Bu sayfa bu kurallar kitabının canlı uygulamasıdır. Yeni sayfa yazmaya baş
 
 ## Güncelleme Geçmişi
 
+- **v3.2** (22 Nis 2026) — Kural 12 (5-soru başlangıç testi) eklendi, glossary + `hooks/pre_build.py` devreye alındı (45 terim auto-inject), pilot sayfa (`bolum-2/01-llm-temelleri.md`) v3.2 yeniden yazıldı.
 - **v3.1** (21 Nis 2026) — Kemal pilot kontrol sonrası: `<br/>` → `\n` Mermaid fix, "yabancı testi" (Kural 5) eklendi, özel sayfa tipleri (Kural 7) netleştirildi.
 - **v3.0** (21 Nis 2026) — Kemal "yabancılık öldür" yönergesi: 4 zorunlu blok (ekosistem + anthropic-oz + dış link + neden-sonuc).
 - **v2.0** (21 Nis 2026) — Kapsam v2 onayı: persona etiketleri, çıktı kanıtı, Anthropic köprüsü.
