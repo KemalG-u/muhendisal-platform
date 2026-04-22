@@ -112,6 +112,7 @@ hooks:
   - hooks/pre_build.py
 
 nav:
+  - "Yazım Kuralları (CTO)": yazim-kurallari.md
   - Ana Sayfa: index.md
   - 📊 Dashboard: dashboard.md
   - Bölüm 0 — Temel Hazırlık:

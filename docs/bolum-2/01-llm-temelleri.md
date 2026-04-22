@@ -35,24 +35,24 @@ Aşağıdaki diyagram sayfanın anayurdudur. Uygulamaya geçmeden önce bu harit
 
 ```mermaid
 flowchart LR
-    S["👤 Sen<br/>(bilgisayarın başında)"]
+    S["👤 Sen\n(bilgisayarın başında)"]
 
-    subgraph K1["Yol A: Claude Console<br/>(tarayıcı)"]
-        WB["console.anthropic.com<br/>Workbench"]
+    subgraph K1["Yol A: Claude Console\n(tarayıcı)"]
+        WB["console.anthropic.com\nWorkbench"]
     end
 
-    subgraph K2["Yol B: Python SDK<br/>(lokal script)"]
-        PY["ilk_cagri.py<br/>anthropic.Anthropic()"]
+    subgraph K2["Yol B: Python SDK\n(lokal script)"]
+        PY["ilk_cagri.py\nanthropic.Anthropic()"]
     end
 
-    subgraph K3["Yol C: Claude Code<br/>(terminal — Bölüm 9)"]
-        CC["claude CLI<br/>agent modu"]
+    subgraph K3["Yol C: Claude Code\n(terminal — Bölüm 9)"]
+        CC["claude CLI\nagent modu"]
     end
 
-    API["🌐 api.anthropic.com<br/>HTTPS /v1/messages"]
-    MODEL["🧠 Claude Sonnet 4.6<br/>(model)"]
-    SAY["📊 Sayaç<br/>• Token kullanımı<br/>• Fatura<br/>• Rate limit"]
-    KEY["🔑 API Key<br/>sk-ant-...<br/>(sana özel)"]
+    API["🌐 api.anthropic.com\nHTTPS /v1/messages"]
+    MODEL["🧠 Claude Sonnet 4.6\n(model)"]
+    SAY["📊 Sayaç\n• Token kullanımı\n• Fatura\n• Rate limit"]
+    KEY["🔑 API Key\nsk-ant-...\n(sana özel)"]
 
     S -->|"mesaj yaz"| WB
     S -->|"python çalıştır"| PY
