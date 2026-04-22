@@ -7,341 +7,322 @@
 <span class="ma-persona ma-persona-is">🔵 iş</span>
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
-<div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 2.7 bitmiş — savunma katmanlarını uyguladın, prompt'larını yazıyorsun</div>
-<div class="ma-meta-row"><strong>🎯 Çıktı:</strong> 20 örnekli bir **test seti** kurarsın; prompt'unun doğruluğunu **sayıyla** ölçersin (accuracy / format match / LLM-as-judge); A/B test ile prompt v1 vs v2 karşılaştırırsın; **eval olmadan production deploy etmiyorsun.**</div>
+<div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 2.6 prompt şablonları + 2.7 güvenlik bitmiş; `prompts/` klasörün var</div>
+<div class="ma-meta-row"><strong>🎯 Çıktı:</strong> Kendi promptun için **20 örneklik golden dataset** hazırlarsın; `pytest` stili prompt testleri yazarsın; LLM-as-judge ile otomatik skor alırsın; prompt değişikliklerinin **kaliteyi düşürüp yükseltmediğini** sayıyla bilirsin.</div>
 </div>
 
 !!! tip "Yabancı kelime mi gördün?"
-    Bu sayfadaki **italik-altı çizili** ifadelerin (eval, accuracy, F1, ground truth gibi) üstüne mouse'unu getir — kısa tanım çıkar. Mobilde dokun.
+    Bu sayfadaki **italik-altı çizili** ifadelerin (eval, judge, golden dataset gibi) üstüne mouse'unu getir — kısa tanım çıkar.
 
 ## Neden bu sayfa?
 
-2.7'ye kadar prompt yazdın, savunma kattın, çalıştırdın. Şu soruyu sormadın: **"Çalışıyor mu? Ne kadar iyi çalışıyor?"** Cevabı bilmiyorsan **bilmiyorsun.** "Bana iyi geldi" sübjektif. "20 testten 18'i geçti" objektif. Production hattı objektif rakam üzerine kurulur.
+Senaryo: Prompt'unu geliştirdin, 3 örneğe baktın, "güzel cevap geliyor" dedin, canlıya verdin. Bir hafta sonra kullanıcılar şikayet: "Bot saçma cevap veriyor." Sen? **Emin değilsin.** Çünkü "kaliteyi" ölçmüyordun, **umuyordun**. Bu sayfa umudu sayıya çevirir.
 
-İkincisi: Prompt'un v1'den v2'ye **iyi mi kötü mü gittiğini** ölçmenin tek yolu eval. "Daha akıcı geliyor" hisle karar vermek = projenin 3 ay sonra geri sarması demek. **Sayı = ilerleme delili.**
+İkincisi: **Prompt değişikliği = deploy.** Sistem promptunu bir kelime değiştirdiğinde aslında production davranışını değiştiriyorsun. Kod'da unit test olmadan deploy yapmak nasıl tehlikeli ise, **prompt'ta eval olmadan değişiklik yapmak aynı tehlike.** Eval = prompt'un "CI/CD test suite'i".
 
-Üçüncüsü: Bu sayfa **Bölüm 4.5 RAG eval'inin temelini** kuruyor. RAG'de hem "doğru chunk geldi mi" hem "üretilen cevap doğru mu" iki katmanı ayrı ölçeceksin. O ileri konunun temel disiplini bu sayfadan çıkıyor.
+Üçüncüsü: **Anthropic 2024'te bu konuya büyük yatırım yaptı** — Console'da "Evaluate" sekmesi, [anthropic-evals](https://github.com/anthropics/evals) public repo, docs/test-and-evaluate tam bir kategori. Bu "olgun AI development" iş akışının temel ayağı — ve en çok atlanıyor. Sen atlama.
 
-## Eval kısaca — üç paragraf, matematiksiz
+## Prompt eval kısaca — üç paragraf, matematiksiz
 
-**Eval seti = "doğru cevabı önceden bildiğin" 20+ test örneği.** Her örnek `(girdi, beklenen çıktı)` çifti. Prompt'unu bu set üstünde çalıştırıp **kaç tanesinde doğru cevap aldığını** sayıyorsun. 20'de 18 = %90 doğruluk. Sayı somut, karşılaştırılabilir, ilerleme görülebilir.
+**Golden dataset = "doğru cevabı bildiğin" örnek seti.** 20-50 satır: her satırda (girdi, beklenen çıktı, beklenen kategori) üçlüsü. Sen prompt'unu bu sete karşı çalıştırırsın, Claude'un ürettiği çıktıyı beklenen ile karşılaştırırsın. **Küçük ama dikkatli kurulmuş 20 örnek**, rastgele toplanmış 200 örnekten daha değerlidir — her satırı sen elle seçmişsin ve doğru cevabı biliyorsun.
 
-**3 metrik tipi.** (1) **Exact match** — sınıflandırma için ("spam" vs "ham"); cevap tam eşleşmeli. (2) **Pattern match** — format için ("JSON parse oluyor mu", "regex `\d{2,3}` cümlede var mı"); yapısal kontrol. (3) **LLM-as-judge** — kalite için (özetleme, çeviri, yaratıcı yazma); başka bir Claude'a "bu cevap iyi mi" diye sorar 1-5 skor verirsin. İnsan değerlendirmesi en güvenilir ama **en pahalı** — kritik karar öncesi 50 örnek için kullan.
+**3 değerlendirme yöntemi, zorluk sırasına göre:** (1) **Exact match** — çıktı birebir beklenenle aynı mı (sınıflandırma, kısa etiketleme için ideal); (2) **Semantic similarity** — embedding ile iki metin arasındaki anlam benzerliği (0-1 skor, Bölüm 3'teki embedding'lerle); (3) **LLM-as-judge** — ikinci bir Claude çağrısı "bu cevap iyi mi?" diye soruluyor, 1-10 skor döndürüyor (en güçlü, en pahalı).
 
-**A/B test = iki prompt versiyonunu aynı set üstünde çalıştır, kazananı seç.** v1 %78, v2 %85 → v2'yi production'a al, v1'i arşivle. Ama: %78 → %85 değişim **istatistiksel olarak anlamlı mı?** 20 örnekte tek bir flip'in farkı %5 — gürültü olabilir. **100+ örnekli set** karar güvenilirliğini yükseltir, ama küçük başlamak büyük başlamamaktan iyi.
+**Test-driven prompt development (TDPD) = prompt'u eval'dan önce yazma.** Önce 20 golden örneği kur, istediğin kalite eşiğini belirle (örn: "en az %85 doğruluk"), sonra prompt'u yaz ve eşiği geçene kadar **iteration yap.** Prompt'u bir kere değiştirip "herhalde iyi oldu" yerine, 20 örneklik sete karşı çalıştır, skoru 0.72'den 0.81'e çıktı mı **sayıyla gör.**
 
 ## Bu sayfanın ekosistemi — kim kime ne veriyor
 
 <div class="ma-ekosistem" markdown>
-<div class="ma-ekosistem-header">🗺️ Ekosistem — eval seti, çağrı, skorlama</div>
+<div class="ma-ekosistem-header">🗺️ Ekosistem — golden dataset → eval → karar</div>
 
 ```mermaid
 flowchart LR
-  S["👤 Sen\n(prompt v1)"]
-  TEST[("📊 eval_set.json\n20 örnek\n(girdi + beklenen)")]
-  RUN["⚙️ run_eval.py\nher örnek için\nClaude çağır"]
-  SCORE{{"📐 Skorlama"}}
-  EM["✅ Exact match\n(sınıflandırma)"]
-  PM["✅ Pattern match\n(JSON/regex)"]
-  JUDGE["✅ LLM-judge\n(2. Claude\n1-5 skor)"]
-  REPORT["📋 results.csv\n%X doğruluk\n+ hata listesi"]
-  V2["📝 prompt v2\n(düzeltilmiş)"]
-  AB["🔁 A/B karar\nv1 vs v2"]
+  S["👤 Sen"]
+  GD[("📊 golden.csv\n20 örnek\n(girdi + beklenen)")]
+  PR["📝 prompt\nvX"]
+  API["🌐 Claude API\n(test edilen)"]
+  OUT["💬 gerçek\nçıktı"]
+  JDG["⚖️ Değerlendirici"]
+  JDG1["🎯 exact\nmatch"]
+  JDG2["🧮 semantic\nsim"]
+  JDG3["🧑‍⚖️ LLM\nas-judge"]
+  SCR["📈 skor\n0.00-1.00"]
+  DEC{karar}
+  DEP["✅ prompt\ncanlıya"]
+  ITR["🔄 prompt'u\niyileştir"]
 
-  S --> TEST --> RUN
-  RUN --> SCORE
-  SCORE --> EM & PM & JUDGE
-  EM & PM & JUDGE --> REPORT
-  REPORT --> V2 --> AB
-  AB -.döngü.-> RUN
+  S --> GD
+  S --> PR
+  GD --> API
+  PR --> API
+  API --> OUT --> JDG
+  JDG --> JDG1
+  JDG --> JDG2
+  JDG --> JDG3
+  JDG1 --> SCR
+  JDG2 --> SCR
+  JDG3 --> SCR
+  SCR --> DEC
+  DEC -->|eşik üstü| DEP
+  DEC -->|eşik altı| ITR --> PR
 
   classDef sen fill:#ddd6fe,stroke:#7c3aed,color:#111
-  classDef veri fill:#dbeafe,stroke:#2563eb,color:#111
-  classDef kod fill:#fef3c7,stroke:#ca8a04,color:#111
-  classDef metrik fill:#dcfce7,stroke:#16a34a,color:#111
-  classDef hed fill:#fed7aa,stroke:#ea580c,color:#111
-  class S,V2 sen
-  class TEST veri
-  class RUN,AB kod
-  class SCORE,EM,PM,JUDGE metrik
-  class REPORT hed
+  classDef data fill:#dbeafe,stroke:#2563eb,color:#111
+  classDef teknik fill:#fef3c7,stroke:#ca8a04,color:#111
+  classDef uzak fill:#fed7aa,stroke:#ea580c,color:#111
+  classDef karar fill:#fce7f3,stroke:#be185d,color:#111
+  classDef iyi fill:#dcfce7,stroke:#16a34a,color:#111
+  class S sen
+  class GD,OUT,SCR data
+  class PR,JDG,JDG1,JDG2,JDG3 teknik
+  class API uzak
+  class DEC karar
+  class DEP,ITR iyi
 ```
 
 <table class="ma-aktorler" markdown>
 
 | Düğüm | Nerede | Ne iş yapıyor |
 |---|---|---|
-| 👤 **Sen** | Editör + terminal | Prompt yazıyor, eval setini hazırlıyor, sonuçları okuyor |
-| 📊 **eval_set.json** | `tests/eval_data/` klasörü | 20+ örnek `{girdi, beklenen}` çifti — el yazısı veya gerçek user log'larından üretilmiş |
-| ⚙️ **run_eval.py** | `tests/` klasörü (pytest uyumlu) | Her örnek için Claude çağrısı yapıyor, çıktıyı topluyor |
-| 📐 **Skorlama** | Python kod | Görev tipine göre 3 metrikten en az birini uyguluyor |
-| ✅ **Exact match** | `actual == expected` | Sınıflandırma, etiket görevleri için |
-| ✅ **Pattern match** | `re.search()`, `json.loads()` try | Format kısıtı olan görevler için |
-| ✅ **LLM-judge** | İkinci Claude çağrısı | Yaratıcı/sübjektif görevler için |
-| 📋 **results.csv** | `reports/` klasörü | Her örnek için: girdi, beklenen, gerçek, skor, hata |
-| 📝 **prompt v2** | `prompts/` klasörü | Hata listesini görüp düzeltilmiş yeni prompt |
-| 🔁 **A/B karar** | Sen değerlendiriyorsun | v1 vs v2 toplam skor karşılaştırması |
+| 👤 **Sen** | Test kodu + golden CSV | 20 örneği elle kurar, kalite eşiği belirler, iteration yapar |
+| 📊 **golden.csv** | `tests/golden.csv` | `girdi,beklenen_cikti,kategori` sütunları. Kutsal dosya — kolayca değişmez |
+| 📝 **prompt vX** | `prompts/email_class.j2` | Versiyonlanmış prompt. Her değişiklikte eval çalışır |
+| 🌐 **Claude API** | api.anthropic.com | Test subject — gerçek çağrı yapılır |
+| 💬 **Gerçek çıktı** | API cevabı | Beklenen ile karşılaştırılacak |
+| ⚖️ **Değerlendirici** | Python fonksiyonu | 3 metot'tan birini veya kombinasyon seçer |
+| 🎯 **Exact match** | `actual == expected` | En ucuz. Sınıflandırma/etiketleme için |
+| 🧮 **Semantic sim** | Embedding cosine | Anlam eşleşmesi. Bölüm 3'te detay |
+| 🧑‍⚖️ **LLM-as-judge** | İkinci Claude çağrısı | En güçlü, en pahalı. Serbest formlu cevaplar için |
+| 📈 **Skor** | 0.00 - 1.00 arası float | Eşiğe karşı karşılaştırılır (örn: 0.85) |
+| ✅ **Deploy** | Production | Eşik geçildi → prompt canlıya |
+| 🔄 **Iteration** | Geri | Eşik geçilmedi → prompt revize, tekrar eval |
 
 </table>
 </div>
 
 ## Uygulama — iki yol
 
-### Yol A — Sınıflandırma görevi için exact match eval
+### Yol A — Google Sheets ile manuel eval (kod yok)
 
-`tests/eval_data/email_class.json`:
+Pratik bir başlangıç — ekip üyesi olmayan biri bile yapabilir:
 
-```json
-[
-  {"id": 1, "girdi": "Faturanızın son ödeme tarihi 5 gün sonra dolacaktır.", "beklenen": "fatura"},
-  {"id": 2, "girdi": "Selam, bu hafta sonu kahveye gidelim mi?", "beklenen": "kişisel"},
-  {"id": 3, "girdi": "ŞANSLI SEÇİLDİNİZ! 1 milyon TL kazandınız!", "beklenen": "spam"},
-  {"id": 4, "girdi": "Yarınki toplantı saat 10:00'da, link ekte.", "beklenen": "iş"},
-  {"id": 5, "girdi": "Yeni ürünümüzde %30 indirim, kaçırmayın!", "beklenen": "promosyon"},
-  {"id": 6, "girdi": "Annem rahatsız, bu hafta köye gidiyorum.", "beklenen": "kişisel"},
-  {"id": 7, "girdi": "Vergi dairesinden tebligatınız var, dikkate alın.", "beklenen": "iş"},
-  {"id": 8, "girdi": "Tıkla kazan, yarın sona eriyor!", "beklenen": "spam"},
-  {"id": 9, "girdi": "Faturanız kesilmiştir, ekte gönderiyoruz.", "beklenen": "fatura"},
-  {"id": 10, "girdi": "Düğünümüze davetlisiniz, 15 Mayıs.", "beklenen": "kişisel"}
-]
+1. Google Sheets'te yeni dosya: **"Prompt Eval — Email Classifier v1"**
+2. Sütunlar: `#`, `Girdi (e-posta)`, `Beklenen Kategori`, `Gerçek Cevap`, `Doğru mu?`, `Not`
+3. 20 satır gerçek veri: çeşitli e-posta örnekleri (fatura, kişisel, spam, iş, promosyon her biri 4'er)
+4. `Beklenen Kategori` sütununu **elle doldur** (ground truth)
+5. Anthropic Console'a git, her e-postayı prompt'a ver, cevabı `Gerçek Cevap` sütununa yapıştır
+6. `Doğru mu?` sütunu: `=IF(C2=D2, 1, 0)`
+7. Alt hücrede toplam: `=SUM(E2:E21)/20` → senin **doğruluk skorun**
+
+**Beklenen sonuç:** İlk denemede 14/20 (0.70). Prompt'u revize et, yeni sheet sekmesi aç ("v2"), tekrar çalıştır. 18/20 (0.90). **Şimdi sayıyla** biliyorsun — v2 daha iyi.
+
+**Burada olan nedir (diyagram referansı):** Golden dataset = el ile kurduğun 20 satır. Exact match = `C2=D2` formülü. Skor = SUM / 20. Iteration = yeni sekme. Hepsi sheets'te, kod yok, 45 dakika.
+
+### Yol B — Python + pytest + LLM-as-judge
+
+Production projede otomasyon gerek. Dosya yapısı:
+
+```
+projem/
+├── prompts/
+│   └── email_class.j2
+├── tests/
+│   ├── golden.csv         # 20 satır
+│   └── test_email_class.py
+└── eval.py                # ana eval script
 ```
 
-`tests/run_eval.py`:
+`tests/golden.csv`:
+
+```csv
+girdi,beklenen_kategori
+"Sayın müşterimiz faturanızın son ödeme tarihi...",fatura
+"Selam, hafta sonu kahveye gidelim mi?",kişisel
+"ŞANSLI SEÇİLDİNİZ! Milyon TL kazandınız!!!",spam
+"Toplantı yarın 14:00'te, gündem ektedir.",iş
+...20 satır...
+```
+
+`eval.py`:
 
 ```python
-import json
-import anthropic
-from pathlib import Path
-from collections import Counter
-
-client = anthropic.Anthropic()
-
-PROMPT_TEMPLATE = """Aşağıdaki e-postayı şu kategorilerden birine sınıflandır:
-fatura, kişisel, spam, iş, promosyon
-
-Sadece kategori adını yaz, başka açıklama yok.
-
-E-posta: {girdi}
-Kategori:"""
-
-def claude_cevap(girdi: str) -> str:
-    cevap = client.messages.create(
-        model="claude-sonnet-4-5",
-        max_tokens=20,
-        temperature=0,
-        messages=[{"role": "user", "content": PROMPT_TEMPLATE.format(girdi=girdi)}],
-    )
-    return cevap.content[0].text.strip().lower()
-
-# Eval setini yükle
-eval_set = json.loads(Path("tests/eval_data/email_class.json").read_text())
-
-# Çalıştır
-sonuclar = []
-for ornek in eval_set:
-    actual = claude_cevap(ornek["girdi"])
-    expected = ornek["beklenen"].lower()
-    dogru = (actual == expected)
-    sonuclar.append({
-        "id": ornek["id"],
-        "girdi": ornek["girdi"][:50],
-        "beklenen": expected,
-        "gerçek": actual,
-        "doğru": dogru,
-    })
-
-# Skorla
-toplam = len(sonuclar)
-dogru_sayisi = sum(1 for s in sonuclar if s["doğru"])
-accuracy = dogru_sayisi / toplam
-
-print(f"\n{'='*60}")
-print(f"📊 EVAL RAPORU — Email Sınıflandırma")
-print('='*60)
-print(f"Toplam örnek:    {toplam}")
-print(f"Doğru cevap:     {dogru_sayisi}")
-print(f"Accuracy:        %{accuracy*100:.1f}")
-print(f"\n❌ Hatalı örnekler:")
-for s in sonuclar:
-    if not s["doğru"]:
-        print(f"  #{s['id']:2d} '{s['girdi']}' → bekliyordu '{s['beklenen']}', aldı '{s['gerçek']}'")
-
-# CSV'ye yaz
 import csv
-with open("reports/email_class_eval.csv", "w", encoding="utf-8") as f:
-    writer = csv.DictWriter(f, fieldnames=sonuclar[0].keys())
-    writer.writeheader()
-    writer.writerows(sonuclar)
-print(f"\n💾 Detay rapor: reports/email_class_eval.csv")
-```
-
-**Beklenen çıktı:**
-
-```
-============================================================
-📊 EVAL RAPORU — Email Sınıflandırma
-============================================================
-Toplam örnek:    10
-Doğru cevap:     9
-Accuracy:        %90.0
-
-❌ Hatalı örnekler:
-  # 7 'Vergi dairesinden tebligatınız var, dikkate alın.' → bekliyordu 'iş', aldı 'fatura'
-
-💾 Detay rapor: reports/email_class_eval.csv
-```
-
-**Burada olan nedir (diyagram referansı):** Tek script tüm pipeline'ı çalıştırdı: eval set → Claude çağrı (10x) → exact match skorlama → CSV rapor. Hata #7 görünür: "vergi dairesi tebligatı" Claude için "fatura" gibi geldi — prompt'a "vergi/yasal yazışmalar = iş kategorisi" örneği eklemek v2 için iyileştirme yönü.
-
-### Yol B — LLM-as-judge ile özet kalitesi ölçme
-
-Sübjektif görev (özetleme) için exact match çalışmaz — başka bir Claude'a "bu özet iyi mi" diye sor.
-
-```python
-import anthropic
 from pathlib import Path
+from jinja2 import Environment, FileSystemLoader
+import anthropic
 
 client = anthropic.Anthropic()
+env = Environment(loader=FileSystemLoader("prompts"))
+template = env.get_template("email_class.j2")
 
-ORIJINAL = """Türkiye'de yapay zeka sektörü 2025-2026 döneminde önemli bir büyüme
-yaşadı. Özellikle finansal teknoloji, e-ticaret ve sağlık alanlarında AI destekli
-çözümler yaygınlaştı. Yatırım hacmi geçen yıla göre %180 arttı; toplam 8 unicorn
-aday startup oluştu. İnsan kaynağı tarafında AI Engineer pozisyonları en çok
-aranan 5 teknik rolden biri haline geldi."""
 
-# v1 prompt — basit özet
-SUMMARIZER_V1 = "Aşağıdaki metni 1 cümleyle özetle:\n\n{metin}"
+# ---------- 1. Exact match değerlendirici ----------
+def exact_match(actual: str, expected: str) -> float:
+    return 1.0 if actual.strip().lower() == expected.strip().lower() else 0.0
 
-# v2 prompt — yapılandırılmış özet
-SUMMARIZER_V2 = """Aşağıdaki metni özetle. Özet şu kuralları izlesin:
-- 1 cümle (max 30 kelime)
-- Ana sayı/yüzde varsa koru
-- Tekil isim ve yer adı varsa koru
 
-Metin:
-{metin}
+# ---------- 2. LLM-as-judge değerlendirici ----------
+JUDGE_PROMPT = """Sen bir değerlendirici asistansın.
+Bir AI modelinin cevabı verilecek. Cevabın beklenen cevaba ne kadar 
+uygun olduğunu 0-10 arası puanla.
 
-Özet:"""
+Puanlama kriteri:
+- 10: Cevap tam doğru, beklenen kategoriyle eşleşiyor
+- 7-9: Küçük fark var ama anlamca doğru
+- 4-6: Kısmen doğru, bazı sınıflandırma hataları
+- 0-3: Yanlış kategori
 
-def ozet_uret(prompt_template: str) -> str:
+SADECE bir sayı döndür, başka hiçbir şey yazma.
+
+<beklenen>{beklenen}</beklenen>
+<gercek>{gercek}</gercek>
+
+Puan:"""
+
+
+def llm_as_judge(actual: str, expected: str) -> float:
     cevap = client.messages.create(
-        model="claude-sonnet-4-5",
-        max_tokens=100,
+        model="claude-haiku-4-5-20251001",  # ucuz + hızlı judge
+        max_tokens=10,
         temperature=0,
-        messages=[{"role": "user", "content": prompt_template.format(metin=ORIJINAL)}],
+        messages=[{"role": "user", "content": JUDGE_PROMPT.format(
+            beklenen=expected, gercek=actual
+        )}],
     )
-    return cevap.content[0].text.strip()
+    try:
+        puan = int(cevap.content[0].text.strip())
+        return puan / 10.0  # 0-1 aralığına normalize
+    except ValueError:
+        return 0.0
 
-# 2 versiyondan da çağır
-ozet_v1 = ozet_uret(SUMMARIZER_V1)
-ozet_v2 = ozet_uret(SUMMARIZER_V2)
 
-# LLM-as-judge — Haiku ile (judge için ucuz model)
-JUDGE_PROMPT = """Aşağıdaki orijinal metnin iki farklı özeti var.
-Her özeti 5 kritere göre 1-5 arası puanla:
-- Doğruluk (orijinaldeki bilgileri yansıtıyor mu)
-- Kısalık (gereksiz tekrar var mı)
-- Bilgi yoğunluğu (kritik sayıları/isimleri tutmuş mu)
-- Akıcılık (Türkçesi düzgün mü)
-- Genel kalite
+# ---------- 3. Ana eval döngüsü ----------
+def eval_prompt(prompt_version: str = "v1"):
+    KATEGORILER = ["fatura", "kişisel", "spam", "iş", "promosyon"]
+    sonuclar = []
 
-<orijinal>
-{orijinal}
-</orijinal>
+    with open("tests/golden.csv", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        for i, row in enumerate(reader, 1):
+            prompt = template.render(
+                kategoriler=KATEGORILER,
+                gonderen="n/a",
+                konu="n/a",
+                icerik=row["girdi"],
+            )
+            cevap = client.messages.create(
+                model="claude-sonnet-4-5",
+                max_tokens=20,
+                temperature=0,
+                messages=[{"role": "user", "content": prompt}],
+            )
+            actual = cevap.content[0].text.strip().lower()
+            expected = row["beklenen_kategori"].strip().lower()
 
-<ozet_v1>
-{v1}
-</ozet_v1>
+            skor_exact = exact_match(actual, expected)
+            skor_judge = llm_as_judge(actual, expected)
 
-<ozet_v2>
-{v2}
-</ozet_v2>
+            sonuclar.append({
+                "id": i,
+                "girdi": row["girdi"][:40] + "...",
+                "beklenen": expected,
+                "gercek": actual,
+                "exact": skor_exact,
+                "judge": skor_judge,
+            })
+            print(f"#{i:2d} {expected:12s} → {actual:12s}  "
+                  f"exact={skor_exact:.1f}  judge={skor_judge:.2f}")
 
-Çıktı formatı:
-v1_skor: [toplam 5-25 arası]
-v2_skor: [toplam 5-25 arası]
-karar: v1 / v2 / berabere
-gerekce: [1 cümle]"""
+    toplam_exact = sum(r["exact"] for r in sonuclar) / len(sonuclar)
+    toplam_judge = sum(r["judge"] for r in sonuclar) / len(sonuclar)
+    print(f"\n{'='*60}")
+    print(f"📊 PROMPT {prompt_version} SONUÇLARI ({len(sonuclar)} örnek):")
+    print(f"   Exact match  : {toplam_exact:.2%}")
+    print(f"   LLM-as-judge : {toplam_judge:.2%}")
+    print(f"{'='*60}")
+    return {"exact": toplam_exact, "judge": toplam_judge}
 
-karar = client.messages.create(
-    model="claude-haiku-4-5-20251001",  # judge için ucuz
-    max_tokens=300,
-    temperature=0,
-    messages=[{"role": "user", "content": JUDGE_PROMPT.format(
-        orijinal=ORIJINAL, v1=ozet_v1, v2=ozet_v2)}],
-).content[0].text
 
-print(f"📝 v1 özeti: {ozet_v1}\n")
-print(f"📝 v2 özeti: {ozet_v2}\n")
-print(f"⚖️  YARGIÇ KARARI:\n{karar}")
+if __name__ == "__main__":
+    eval_prompt("v1")
 ```
 
 **Beklenen çıktı:**
 
 ```
-📝 v1 özeti: Türkiye'de yapay zeka sektörü 2025-2026'da büyüyerek finans, e-ticaret ve sağlıkta yaygınlaştı.
+# 1 fatura       → fatura       exact=1.0  judge=1.00
+# 2 kişisel      → kişisel      exact=1.0  judge=1.00
+# 3 spam         → spam         exact=1.0  judge=1.00
+# 4 iş           → iş           exact=1.0  judge=1.00
+# 5 promosyon    → spam         exact=0.0  judge=0.60
+# 6 fatura       → fatura       exact=1.0  judge=1.00
+...
+#20 iş           → iş           exact=1.0  judge=1.00
 
-📝 v2 özeti: Türkiye AI sektörü 2025-2026'da %180 yatırım artışı ve 8 unicorn adayıyla finans, e-ticaret ve sağlıkta büyüdü.
-
-⚖️  YARGIÇ KARARI:
-v1_skor: 17
-v2_skor: 22
-karar: v2
-gerekce: v2 kritik sayıları (%180, 8 unicorn) tutmuş, v1 ise sayıları kaybetmiş.
+============================================================
+📊 PROMPT v1 SONUÇLARI (20 örnek):
+   Exact match  : 85.00%
+   LLM-as-judge : 91.50%
+============================================================
 ```
 
-**Burada olan nedir (diyagram referansı):** Aynı eval döngüsü ama metrik **LLM-judge.** v2 daha yüksek skor → A/B testi v2 lehine sonuçlandı. Production'da v2 prompt'unu kullan, v1'i arşivle. Maliyet: judge için Haiku (~5x ucuz) seçildi.
+**Burada olan nedir (diyagram referansı):** Script tüm ekosistemi (golden + prompt + Claude + 2 judge + skor) tek runda çalıştırdı. Exact match (%85) sıkı metrik — kategori adı birebir eşleşmeli. LLM-as-judge (%91.5) yumuşak — "spam ile promosyon çok yakın, %60 kabul edilebilir" diyor. İkisini birden raporlamak genellikle en doğrusu.
 
-### Eval seti tasarım kuralları
+### Pytest-style prompt testi
 
-| Kural | Niye |
-|---|---|
-| **Min 20 örnek başlangıç, 100+ olgun** | İstatistiksel anlam için. 20 örnek "yön gösterir", 100 "karar verir" |
-| **Edge case dahil et** | Sadece kolay örnek = yanıltıcı yüksek skor. Beklenmedik girdileri (boş, çok uzun, karışık dil) eklemeden olmaz |
-| **Real user log'lardan beslen** | Production'a çıktıktan sonra gerçek kullanıcı sorularından eval setini büyüt. En değerli veri burada |
-| **Eval setini git'le versiyonla** | `tests/eval_data/` klasörü repo'da. Eval seti büyüdükçe history takip edilebilir |
-| **CI/CD'ye bağla** | Her PR'da eval otomatik koşsun. Skor düşerse merge bloklansın. Bölüm 9.3 |
-| **Insan eval örneklem** | Her 100 LLM-judge sonucundan 10'unu insan kontrol et — judge bias'ı kaçmasın |
+CI/CD'de her pull request'te otomatik çalıştırmak için:
 
-### Anthropic Console "Evals" özelliği
+```python
+# tests/test_email_class.py
+import pytest
+from eval import eval_prompt
 
-[console.anthropic.com](https://console.anthropic.com) → "Evals" sekmesi (2024 sonu eklendi). Görsel arayüzde:
-- Test seti yükle (CSV / JSON)
-- Prompt'unu seç
-- "Run" → her örnek için Claude çağrılır, sonuç tablosu
-- v1 vs v2 yan yana karşılaştır
+def test_prompt_v1_kalite_esigi():
+    sonuc = eval_prompt("v1")
+    assert sonuc["exact"] >= 0.85, f"Exact match eşiğin altında: {sonuc['exact']:.2%}"
+    assert sonuc["judge"] >= 0.90, f"Judge skoru eşiğin altında: {sonuc['judge']:.2%}"
+```
 
-Geliştirici olmayan ekip üyeleri (PM, content team) bu arayüzde eval yapabilir, kod yazmadan. Production prompt değişikliği öncesi **zorunlu durak.**
+GitHub Actions'ta `.github/workflows/prompt-test.yml` ile her push'ta çalışır. Prompt'u bozmayı zorlaştıran güvenlik ağı.
+
+### 4 metrik, 4 kullanım
+
+| Metrik | Zorluk | Maliyet | Ne zaman |
+|---|---|---|---|
+| **Exact match** | En kolay | ~$0 | Sınıflandırma, kategori, etiket, yes/no |
+| **Substring match** | Kolay | ~$0 | Cevabın içinde belli bir kelime geçmeli |
+| **Semantic similarity** | Orta | Embedding ücreti | Serbest formlu ama kısa cevaplar (özet, tanım) |
+| **LLM-as-judge** | En güçlü | Haiku ile ~$0.001/örnek | Uzun serbest cevaplar, subjektif kalite (ton, nezaket) |
+
+**Anthropic önerisi:** Tek metrik tuzağına düşme — exact + judge ikilisi çoğu görev için yeterli. Critical production'da her ikisini de raporla.
 
 <div class="ma-anthropic-oz" markdown>
 <div class="ma-anthropic-oz-header">📖 Anthropic bu konuyu nasıl anlatıyor — öz</div>
 
-Anthropic eval konusunda **çok güçlü kaynak üretti** — "evals = production AI'nın yarısı" felsefesi.
+Anthropic 2024'te eval'ı dokümantasyonun **merkez sütunlarından biri** haline getirdi:
 
-**1. Define success criteria önce gelir.** Anthropic dokümantasyonu "promtu yazmadan önce ne demek başarı tanımla" der. Ölçemediğin şeyi iyileştiremezsin. 2.8'in özeti tam bu.
+**1. Define & Evaluate Success = Anthropic'in ilk prompt engineering adımı.** Dokümantasyondaki sıralama: (a) başarı kriterini tanımla → (b) eval setini kur → (c) prompt'u yaz. Çoğu insan (b)'yi atlar — Anthropic bunu "en sık yapılan hata" olarak not eder.
 
-**2. Anthropic Console'un Evals özelliği = native tool.** Üçüncü taraf eval framework'leri (Promptfoo, LangSmith, Braintrust) iyi seçenekler ama Anthropic'in kendisinin native eval arayüzü var, ücretsiz, integrated. Console workflow'u ile birleşik.
+**2. Anthropic Console'da Evaluate sekmesi.** [console.anthropic.com](https://console.anthropic.com) → "Evaluate" → görsel eval builder. Test case'leri UI'dan ekle, prompt versiyonlarını karşılaştır, skor tablosu görsel. Geliştirici olmayan ekip üyesi (PM, content) eval koşabilir.
 
-**3. LLM-as-judge bilim dalı haline geldi.** Anthropic'in araştırma ekibi judge bias'ları üzerine paper yayınladı: position bias (uzun cevabı tercih etme), familiarity bias (judge kendi tarzına benzeyen cevabı tercih). Çözüm: judge'a kontrol soruları sor, 3-5 kez çalıştır, çoğunluk karar.
+**3. LLM-as-judge'ı Claude için Haiku ile yap.** Anthropic resmi tavsiyesi: Sonnet'i test ederken judge olarak Haiku kullan (ucuz + hızlı + yeterince akıllı). Opus'u Sonnet'le judge etme — bias olur.
 
 ??? info "Teknik detay — isteyene (parameter adları, mekanikler, edge case'ler)"
 
-    **Anthropic Console Evals API.** Programatik kullanım için: `client.evals.create(name, dataset_id, prompt_id)`. SDK'da henüz beta — Console'dan başla, API'ye geçiş zamanla.
+    **Anthropic Evals repo.** [github.com/anthropics/evals](https://github.com/anthropics/evals) — Anthropic'in eval framework'ü + hazır eval setleri (coding, math, reasoning). Kendi projende Anthropic'in deseni + hazır setlerden parçaları alabilirsin.
 
-    **Test seti boyutu vs anlam.** İstatistiksel güç hesabı: %5 farkı %95 güvenle yakalamak için ~400 örnek lazım. Pratikte bu boyut çoğu projede bulunmaz; 100 örnek "iyi tahmin" verir. 20 örnek "yön gösterir."
+    **Holistic eval = meta.** Tek tek örneklere bakmak yerine **dağılıma** bak: hangi kategoride hata çok, hangi uzunluk grubunda hata yoğun. Confusion matrix + bucket analizi. Bu seviye ileri ama production'da zorunlu.
 
-    **Stratified sampling.** Eval setinde her kategori dengeli temsil edilmeli — 95 spam + 5 ham örneklem yanıltıcı. Dengeli set: kategori başına ~10-20 örnek.
+    **Inter-judge agreement.** LLM-as-judge'ın güvenilirliği? Anthropic önerir: aynı örneği 3 kez judge'a ver, skorlar tutarlı mı? Tutarsızsa judge prompt'u muğlak demektir, revize et. Production'da her 100 örnekten 10'u double-check olarak 2. judge'a gitsin.
 
-    **Judge model seçimi.** Genel kural: judge **görev modelinden farklı (veya daha güçlü)** olmalı. Aynı modeli judge yapmak self-consistency bias yaratır. Anthropic önerisi: Sonnet üreticiyse Opus judge (veya tersine).
+    **Eval dataset pollution.** Golden dataset'ini prompt optimize ederken kullanırsan, prompt'u "golden'a overfit" edersin — production'da başarısız olur. Çözüm: golden'ı **train + holdout** olarak böl (15 train + 5 holdout). Holdout'u ara sıra çalıştır.
 
-    **Online vs offline eval.** Offline eval (sabit set) prompt değişikliği öncesi. Online eval (canlı user feedback) production sonrası. İkisi de gerekli; offline = hızlı iterasyon, online = gerçek dünya kalibrasyonu.
+    **Continual eval.** Production logs'tan her hafta 20 yeni örnek topla, manuel etiketle, golden'a ekle. Eval seti **yaşayan** bir varlık. 6 ay sonra golden'ın 200+ satıra çıkmış olmalı.
 
-    **Evaluation drift.** Modelin yeni sürümü gelince (Sonnet 4.5 → Sonnet 4.6) eval skorları değişir. Versiyon güncellemesi öncesi eval setini tekrar koş — "yeni model daha iyi" varsayımı her zaman doğru değil.
-
-    **Anthropic Cookbook eval örnekleri.** [github.com/anthropics/anthropic-cookbook](https://github.com/anthropics/anthropic-cookbook) → `misc/building_evals.ipynb` — Jupyter notebook tam pipeline.
+    **A/B test vs eval.** Eval = offline (prod'a çıkmadan). A/B test = online (prod'da iki prompt'u paralel canlıda, kullanıcı davranışını karşılaştır). İkisi farklı — Bölüm 8.3 A/B detay.
 
 <div class="ma-anthropic-oz-kaynak" markdown>
-**Kaynak:** [docs.claude.com — Define your success criteria](https://docs.claude.com/en/docs/test-and-evaluate/define-success) (EN, ~10 dk) ve [Create strong empirical evaluations](https://docs.claude.com/en/docs/test-and-evaluate/develop-tests) (EN, ~15 dk). İkisi birlikte eval disiplinin temeli. Pekiştirme: [Anthropic Console Evals](https://console.anthropic.com) görsel arayüz.
+**Kaynak:** [docs.claude.com — Define success criteria](https://docs.claude.com/en/docs/test-and-evaluate/define-success) ve [Develop test cases](https://docs.claude.com/en/docs/test-and-evaluate/develop-tests) (EN, toplam ~20 dk). Anthropic Console Evaluate: [console.anthropic.com](https://console.anthropic.com) → Evaluate sekmesi. Public repo: [github.com/anthropics/evals](https://github.com/anthropics/evals).
 </div>
 </div>
 
@@ -350,13 +331,13 @@ Anthropic eval konusunda **çok güçlü kaynak üretti** — "evals = productio
 
 #### 1. 📝 Refleksiyon yazısı — 5 dakika
 
-> "Eval seti hazırladım. [Hangi görev için] [N] örnek yazdım. [Exact match / pattern / LLM-judge] metriği seçtim çünkü görevim [...]. Prompt v1 skoru %X, v2 skoru %Y. [v1/v2] kazandı çünkü..."
+> "Eval kurdum. [Hangi görev] için [kaç] örnekli golden dataset hazırladım. İlk prompt skoru [%X] exact + [%Y] judge. Prompt'u [nasıl] revize ettim, skor [%X']+[%Y']'e çıktı. Kendi projem için kalite eşiğimi [%Z] koyacağım çünkü..."
 
 Kaydet: `muhendisal-notlarim/bolum-2/08-test-degerlendirme/refleksiyon.txt`
 
 #### 2. 📸 Ekran görüntüsü — 3 dakika
 
-**Neyin görüntüsü:** Yol A çıktısı — accuracy + hatalı örnek listesi; veya Yol B çıktısı — judge'ın v1 vs v2 kararı.
+**Neyin görüntüsü:** Yol B Python çıktısı — 20 örnek × sonuç satırı + alt toplam skor tablosu.
 
 | OS | Kısayol |
 |---|---|
@@ -364,38 +345,38 @@ Kaydet: `muhendisal-notlarim/bolum-2/08-test-degerlendirme/refleksiyon.txt`
 | Mac | `Cmd + Shift + 4` |
 | Linux | `Shift + PrtScr` |
 
-Kaydet: `muhendisal-notlarim/bolum-2/08-test-degerlendirme/eval-rapor.png`
+Kaydet: `muhendisal-notlarim/bolum-2/08-test-degerlendirme/eval-cikti.png`
 
-#### 3. 💻 Kendi eval setin + GitHub repo — 10 dakika
+#### 3. 💻 Kendi eval framework + GitHub + Actions — 10 dakika
 
-Kendi projenden bir görev seç (sınıflandırma / özet / çeviri). 20 örnekli `eval_set.json` yaz, `run_eval.py` hazırla. Skor + hata listesi al. GitHub'a public repo olarak yayınla (veya gist).
+Kendi projende `tests/golden.csv` (en az 20 satır) + `eval.py` + `tests/test_*.py` pytest kur. GitHub'a push et, [GitHub Actions](https://github.com/features/actions) workflow ekle — her push'ta eval otomatik çalışsın. Yeşil badge README'ye.
 
-Repo/gist linkini kaydet: `muhendisal-notlarim/bolum-2/08-test-degerlendirme/eval-repo.txt`
+Kaydet: `muhendisal-notlarim/bolum-2/08-test-degerlendirme/repo-link.txt`
 
 </div>
 
 <div class="ma-neden-sonuc" markdown>
 <div class="ma-neden-sonuc-header">🔗 Birlikte okuma — neden ne oldu</div>
 
-- **A → B:** Prompt yazmak kolay, **iyi prompt yazmak** zor. İkisi arasındaki fark **ölçüm.**
-- **B → C:** Eval seti = sayısal "iyiliği" tanımlama — "iyi geliyor"u "X% doğruluk"a çeviriyor.
-- **C → D:** 3 metrik tipi (exact / pattern / judge) görev tipine göre seçilir; her görev için 1 yeterli, kombinasyon güçlendirir.
-- **D → E:** A/B testi prompt iyileştirmesinin tek bilimsel yolu — "hissediyorum" yerine "ölçtüm."
-- **E → F:** CI/CD'ye bağlama (Bölüm 9.3) prompt'u kod kalitesinde tutar — eval skoru düşerse merge bloklanır.
+- **A → B:** Prompt'u "umut ile" kullanmak = rulet — bir değişiklik kaliteyi yükseltebilir de düşürebilir de, görmezsin.
+- **B → C:** Golden dataset = değişikliklerin etkisini ölçülebilir hale getirir. 20 örnek **yeterli** başlangıçta, 50-100 production'da.
+- **C → D:** Exact match sınıflandırmada iş görür ama serbest cevaplarda haksız katı; LLM-as-judge daha nüanslı ama daha pahalı. **Kombinasyon en sağlam.**
+- **D → E:** Eval CI/CD'ye girince prompt değişiklikleri **kod değişikliği disiplinine** kavuşur — kötü prompt merge edilmez.
+- **E → F:** Production'dan gelen gerçek örnekler eval'ı canlı tutar — "6 ay önceki golden" bayatlamış olur.
 
 <div class="ma-neden-sonuc-sonuc" markdown>
-**Sonuç:** Production AI'nın iki yarısı: **prompt yazma + eval.** Eval olmadan production = kör uçuş. Bu sayfa eval disiplinini eline verdi. **Bölüm 2 burada bitti.** Sıradaki bölümler artık bu temelin üstüne — embeddings, RAG, agents — gerçek production sistemleri inşa.
+**Sonuç:** Eval = prompt engineering'in "test" ayağı. Bu ayak olmadan her geliştirme rulet. 2.1-2.8 Bölüm 2'nin 8 sayfası Anthropic API ile güvenli + ölçülü prompt geliştirme hattının temel kurgusunu verdi. Bölüm 3'te artık **Claude'un bilmediği verilerle** — kendi dokümantasyonunla, wiki'nle, notlarınla — cevap vermesini sağlayacağız. Embeddings ve Vector DB dünyasına.
 </div>
 </div>
 
 <div class="ma-sonraki" markdown>
 <div class="ma-sonraki-header">➡️ Sonraki adım</div>
 
-**[Bölüm 3 — Embeddings ve Vector DB →](../bolum-3/index.md)** — Claude'a "kendi belgelerinden" cevap verdirmek için ilk adım: metni sayıya çevirmek (embedding) ve milyonlarca metni hızlı arayabilen veritabanı (Qdrant). RAG'in kalbidir.
+**[Bölüm 3 — Embeddings ve Vector DB →](../bolum-3/index.md)** — Prompt engineering yeter mi? Claude'un bilmediği dokümanlar için Vector DB zorunlu. Embedding nedir, Qdrant ile pratik kurulum, semantic search. RAG'e hazırlık.
 
 ← [2.7 Prompt Enjeksiyonu ve Savunma](07-prompt-injection.md) &nbsp;|&nbsp; [Bölüm 2 girişi](index.md) &nbsp;|&nbsp; [Ana sayfa](../index.md)
 
-**Pekiştirme:** Anthropic Console'a (console.anthropic.com) git, "Evals" sekmesinde küçük bir test seti yükle ve görsel arayüzü tanı. Production'da takım üyesi olmayan kişilerin kullanacağı arayüz budur.
+**Pekiştirme:** Bugün 30 dakika ayır, **kendi projeni için 20 örneklik golden dataset** hazırla. Sonradan eklemek zor — en kritik ilk iş.
 
-**🎉 Bölüm 2 bitti.** Token + sıcaklık + sistem prompt + few-shot + CoT + şablon + injection savunma + eval — tek başına bir AI Engineer'ın **çekirdek alet kutusu.** Bundan sonrası bu kutunun gerçek dünyada nasıl kullanılacağı.
+**🎓 Bölüm 2 tebrikler:** 8 sayfayı bitirdiysen prompt engineering'in **omurgasını** öğrendin: LLM temelleri, token/maliyet, sampling, sistem prompt + XML, few-shot + CoT, şablonlar, güvenlik, eval. Bu Anthropic ile **production-grade** çalışabilmenin temel eşiği. Senin elinde artık ciddi bir alet takımı var.
 </div>
