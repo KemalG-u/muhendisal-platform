@@ -76,7 +76,7 @@ flowchart TB
 
 </div>
 
-## Proje yapısı — 11 dosya
+## Proje yapısı — 18 dosya
 
 ```
 rag-chatbot/
@@ -91,15 +91,36 @@ rag-chatbot/
 │   └── static/
 │       └── style.css        # minimal CSS (Tailwind CDN)
 ├── tests/
-│   ├── test_rag.py
-│   └── test_api.py
+│   ├── __init__.py
+│   ├── test_rag.py          # 8 test: chunk + PDF parse
+│   ├── test_claude.py       # 6 test: prompt builder + mock stream
+│   └── test_api.py          # 5 test: endpoint'ler (TestClient)
 ├── Dockerfile               # 9.1'deki multi-stage
 ├── compose.yml              # app + qdrant
 ├── pyproject.toml
 ├── .env.example
+├── .gitignore
 ├── .github/workflows/deploy.yml   # 9.3'teki pipeline
 └── README.md
 ```
+
+!!! success "Referans repo: `examples/rag-chatbot/`"
+    Bu sayfanın tüm kodu platform repo'sunda **çalışan** referans proje olarak mevcut — `/examples/rag-chatbot/`. 4 CTO kanıtı geçti:
+
+    - **AST syntax** ✅ `python -m compileall -q app tests`
+    - **Ruff lint** ✅ `All checks passed!`
+    - **Pytest** ✅ **19/19 PASSED** (1.44s) — API 5 + Claude 6 + RAG 8
+    - **Sürüm pin** ✅ fastapi 0.136.0 · anthropic 0.96.0 · qdrant-client 1.17.1 · voyageai 0.3.7 · pypdf 6.10.2
+
+    `docker compose config --quiet` ✅ geçti. `env_file` opsiyonel (`required: false`) — `.env` yokken de valid.
+
+    ```bash
+    cd examples/rag-chatbot
+    python -m venv .venv && source .venv/bin/activate
+    pip install -e ".[dev]"
+    pytest -q         # 19 passed
+    ruff check .      # All checks passed
+    ```
 
 ## `pyproject.toml` — sürüm pin
 

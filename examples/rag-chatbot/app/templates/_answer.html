@@ -1,0 +1,8 @@
+<div class="sources mt-4 text-sm text-slate-600">
+    <strong>Kaynaklar:</strong>
+    <ul class="list-disc pl-5 mt-1">
+        {% for src in sources %}
+        <li>[{{ loop.index }}] {{ src.doc_name }} — s.{{ src.page }} (skor: {{ src.score }})</li>
+        {% endfor %}
+    </ul>
+</div>

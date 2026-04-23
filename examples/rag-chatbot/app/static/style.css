@@ -1,0 +1,14 @@
+.answer {
+    padding: 1rem;
+    background: #f8fafc;
+    border-left: 3px solid #3b82f6;
+    border-radius: 4px;
+}
+.stream {
+    line-height: 1.6;
+    white-space: pre-wrap;
+}
+.sources {
+    border-top: 1px solid #e2e8f0;
+    padding-top: 0.75rem;
+}

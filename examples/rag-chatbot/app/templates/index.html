@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAG Chatbot — PDF'inle sohbet et</title>
+    <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="bg-slate-50 min-h-screen">
+    <div class="max-w-3xl mx-auto p-6">
+        <h1 class="text-3xl font-bold text-slate-800 mb-6">📄 RAG Chatbot</h1>
+
+        <section class="bg-white rounded-lg shadow p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-3">1. PDF Yükle</h2>
+            <form hx-post="/upload"
+                  hx-encoding="multipart/form-data"
+                  hx-target="#upload-result"
+                  hx-swap="innerHTML">
+                <input type="file" name="file" accept=".pdf" required
+                       class="block w-full mb-3 text-sm">
+                <button type="submit"
+                        class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                    Yükle
+                </button>
+            </form>
+            <div id="upload-result" class="mt-4 text-sm text-slate-600"></div>
+        </section>
+
+        <section class="bg-white rounded-lg shadow p-6">
+            <h2 class="text-xl font-semibold mb-3">2. Soru Sor</h2>
+            <form hx-post="/ask"
+                  hx-target="#answer-result"
+                  hx-swap="innerHTML">
+                <textarea name="question" rows="3" required
+                          placeholder="Makalenin ana tezi ne?"
+                          class="w-full border rounded p-2 mb-3"></textarea>
+                <button type="submit"
+                        class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+                    Sor
+                </button>
+            </form>
+            <div id="answer-result" class="mt-4"></div>
+        </section>
+
+        <footer class="text-xs text-slate-400 mt-8 text-center">
+            FastAPI + Qdrant + Voyage AI + Claude Sonnet 4.5 · MIT
+        </footer>
+    </div>
+</body>
+</html>
