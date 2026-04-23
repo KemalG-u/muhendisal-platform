@@ -308,8 +308,14 @@ def build_user_prompt(question: str, sources: list[dict]) -> str:
     return "\n".join(lines)
 
 
-async def stream_answer(question: str, sources: list[dict]) -> AsyncIterator[str]:
-    client = AsyncAnthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
+async def stream_answer(
+    question: str,
+    sources: list[dict],
+    client: AsyncAnthropic | None = None,
+) -> AsyncIterator[str]:
+    """Claude'dan streaming cevap. client=None default; test icin mock enjekte edilebilir."""
+    if client is None:
+        client = AsyncAnthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
     user_content = build_user_prompt(question, sources)
 
     async with client.messages.stream(
@@ -367,7 +373,7 @@ def health():
 
 @app.get("/", response_class=HTMLResponse)
 async def index(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+    return templates.TemplateResponse(request, "index.html")
 
 
 @app.post("/upload")
@@ -415,9 +421,10 @@ services:
     image: ghcr.io/kullanici/rag-chatbot:latest
     build: .
     restart: unless-stopped
+    env_file:
+      - path: .env
+        required: false   # .env yoksa hata yerine warning — validate gecer
     environment:
-      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
-      VOYAGE_API_KEY: ${VOYAGE_API_KEY}
       QDRANT_URL: http://qdrant:6333
       GIT_SHA: ${GIT_SHA:-dev}
     ports:
