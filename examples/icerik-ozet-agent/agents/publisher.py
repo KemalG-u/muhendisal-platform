@@ -1,13 +1,15 @@
 """Publisher — Eşik üstü özetleri markdown rapor dosyasına yazar.
 
 Opsiyonel: SMTP ile email gönderimi. Dry-run modunda dosya yazmaz,
-sadece konsola basar.
+sadece konsola basar. Her yayınlanan Puan nesnesine `yayinlandi=True`
+işaretlenir — pipeline bu bayrağa bakarak DB'ye kaydeder.
 
-Referans: Bölüm 6 6.5 karar matrisi — kalite filtresi burada uygulanır.
+Referans: Bölüm 6.5 evaluator-optimizer pattern — kalite eşiği burada uygulanır.
 """
 
 from __future__ import annotations
 
+import logging
 import os
 import smtplib
 from datetime import date
@@ -16,14 +18,19 @@ from pathlib import Path
 
 from .evaluator import Puan
 
+log = logging.getLogger(__name__)
+
 
 def rapor_yaz(
     puanlar: list[Puan],
     esik: float = 6.5,
-    dizin: str = "reports",
+    dizin: str | Path = "reports",
     dry_run: bool = False,
 ) -> tuple[Path | None, list[Puan]]:
     """Eşik üstü özetleri tek bir markdown dosyasına yazar.
+
+    Her yayınlanan Puan nesnesinde `yayinlandi=True` işaretlenir —
+    çağıran (pipeline) DB kaydında bu alana bakar.
 
     Args:
         puanlar: Evaluator'dan gelen puanlanmış özetler.
@@ -37,8 +44,12 @@ def rapor_yaz(
     yayin = [p for p in puanlar if p.ortalama >= esik]
     yayin.sort(key=lambda p: p.ortalama, reverse=True)
 
+    # Yayın flag'ini işaretle — DB kaydı bu alana bakar
+    for p in yayin:
+        p.yayinlandi = True
+
     if not yayin:
-        print(f"[publisher] Eşik {esik}'in üstünde özet yok — rapor yazılmadı.")
+        log.info("[publisher] Eşik %s'in üstünde özet yok — rapor yazılmadı.", esik)
         return None, []
 
     bugun = date.today().isoformat()
@@ -57,7 +68,18 @@ def rapor_yaz(
             f"(tek.{p.teknik_dogruluk} · dil:{p.turkce_kalitesi} · net:{p.ozet_netligi})\n"
         )
 
-    icerik = baslik + "\n---\n\n".join(bolumler) + "\n"
+    # Maliyet footer'ı — şeffaflık (agent SDK'ların `ResultMessage.total_cost_usd` benzeri)
+    toplam_maliyet = sum(p.ozet.maliyet_usd + p.maliyet_usd for p in puanlar)
+    toplam_in = sum(p.ozet.input_tokens + p.input_tokens for p in puanlar)
+    toplam_out = sum(p.ozet.output_tokens + p.output_tokens for p in puanlar)
+    footer = (
+        "\n---\n\n"
+        f"_Toplam {len(puanlar)} özet üretildi, {len(yayin)} tanesi eşik üstü._\n"
+        f"_Maliyet: ${toplam_maliyet:.4f} · "
+        f"{toplam_in:,} in + {toplam_out:,} out token._\n"
+    )
+
+    icerik = baslik + "\n---\n\n".join(bolumler) + footer
 
     if dry_run:
         print("=" * 60)
@@ -68,14 +90,15 @@ def rapor_yaz(
     Path(dizin).mkdir(parents=True, exist_ok=True)
     yol = Path(dizin) / f"{bugun}.md"
     yol.write_text(icerik, encoding="utf-8")
-    print(f"[publisher] {len(yayin)} özet rapora yazıldı: {yol}")
+    log.info("[publisher] %d özet rapora yazıldı: %s", len(yayin), yol)
     return yol, yayin
 
 
 def email_gonder(rapor_yolu: Path, konu: str | None = None) -> bool:
     """Raporu SMTP üstünden email olarak yollar.
 
-    Env var: SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, REPORT_TO_EMAIL.
+    Env var: SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, REPORT_TO_EMAIL,
+    SMTP_SSL (1/0 — 1 ise doğrudan SSL port 465, 0 ise STARTTLS port 587).
     Herhangi biri boşsa atlanır.
 
     Returns:
@@ -86,9 +109,10 @@ def email_gonder(rapor_yolu: Path, konu: str | None = None) -> bool:
     user = os.environ.get("SMTP_USER")
     sifre = os.environ.get("SMTP_PASS")
     alici = os.environ.get("REPORT_TO_EMAIL")
+    ssl_mode = os.environ.get("SMTP_SSL", "0") == "1"
 
     if not all([host, user, sifre, alici]):
-        print("[publisher] SMTP env eksik — email atlanıyor")
+        log.info("[publisher] SMTP env eksik — email atlanıyor")
         return False
 
     konu = konu or f"AI Haberleri — {date.today().isoformat()}"
@@ -101,12 +125,17 @@ def email_gonder(rapor_yolu: Path, konu: str | None = None) -> bool:
     mesaj.set_content(icerik)
 
     try:
-        with smtplib.SMTP(host, port) as s:
-            s.starttls()
-            s.login(user, sifre)
-            s.send_message(mesaj)
-        print(f"[publisher] Email {alici} adresine gönderildi")
+        if ssl_mode:
+            with smtplib.SMTP_SSL(host, port) as s:
+                s.login(user, sifre)
+                s.send_message(mesaj)
+        else:
+            with smtplib.SMTP(host, port) as s:
+                s.starttls()
+                s.login(user, sifre)
+                s.send_message(mesaj)
+        log.info("[publisher] Email %s adresine gönderildi", alici)
         return True
     except (smtplib.SMTPException, OSError) as e:
-        print(f"[publisher] SMTP hatası: {e}")
+        log.error("[publisher] SMTP hatası: %s", e)
         return False

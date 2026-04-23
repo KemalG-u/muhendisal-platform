@@ -3,6 +3,9 @@
 Gerçek Claude API çağrısı YAPMAZ — mock kullanır. CI'da deterministic
 çalışması için. Gerçek API ile entegrasyon testi için `test_live.py`
 ayrı dosyada yazılabilir (bu repoda opsiyonel).
+
+pyproject `asyncio_mode = "auto"` ayarlı — async test fonksiyonları
+@pytest.mark.asyncio decoratoru GEREKSİZDİR, otomatik çalışır.
 """
 
 from __future__ import annotations
@@ -61,11 +64,9 @@ def test_haber_dataclass_alanlari(ornek_haber):
 
 # ─── Yazar testleri ──────────────────────────────────────────────────────
 
-@pytest.mark.asyncio
 async def test_ozetle_tek_mock(ornek_haber):
     """Yazar agent'ı mock API ile test."""
     client = MagicMock()
-    # resp.content[0].text, resp.usage.input_tokens, resp.usage.output_tokens
     fake_resp = MagicMock()
     fake_text = MagicMock(type="text", text="Mock özet metni.")
     fake_resp.content = [fake_text]
@@ -97,7 +98,6 @@ def test_haiku_daha_ucuz():
 
 # ─── Evaluator testleri ──────────────────────────────────────────────────
 
-@pytest.mark.asyncio
 async def test_puanla_tek_mock(ornek_ozet):
     """Evaluator tool_use çıktısı doğru parse edilmeli."""
     client = MagicMock()
@@ -117,18 +117,35 @@ async def test_puanla_tek_mock(ornek_ozet):
     assert puan.turkce_kalitesi == 7
     assert puan.ozet_netligi == 9
     assert puan.ortalama == pytest.approx(8.0)
+    assert puan.yayinlandi is False  # publisher henüz çağrılmadı
+
+
+async def test_puanla_tool_use_yoksa_notr_puan(ornek_ozet):
+    """Tool çağrısı başarısızsa nötr (5/5/5) puan dönmeli — eşik geçmez."""
+    client = MagicMock()
+    fake_resp = MagicMock()
+    fake_resp.content = []  # tool_use bloğu yok
+    fake_resp.usage = MagicMock(input_tokens=200, output_tokens=0)
+    client.messages.create = AsyncMock(return_value=fake_resp)
+
+    puan = await puanla_tek(client, ornek_ozet)
+    assert puan.ortalama == pytest.approx(5.0)
+    assert "başarısız" in puan.aciklama.lower()
 
 
 # ─── Publisher testleri ──────────────────────────────────────────────────
 
 def test_rapor_yaz_esik_filtresi(ornek_ozet):
-    """Eşik altı puanlar rapora girmemeli."""
+    """Eşik altı puanlar rapora girmemeli + yayınlanan Puan.yayinlandi=True."""
     yuksek = Puan(ornek_ozet, 9, 9, 9, "İyi", 100, 30, "claude-haiku-4-5")
     dusuk = Puan(ornek_ozet, 3, 4, 3, "Kötü", 100, 30, "claude-haiku-4-5")
 
     _, yayin = rapor_yaz([yuksek, dusuk], esik=6.5, dry_run=True)
     assert len(yayin) == 1
     assert yayin[0].ortalama == pytest.approx(9.0)
+    # yayinlandi flag'i doğru set edilmiş mi
+    assert yuksek.yayinlandi is True
+    assert dusuk.yayinlandi is False
 
 
 def test_rapor_yaz_bos_liste():
