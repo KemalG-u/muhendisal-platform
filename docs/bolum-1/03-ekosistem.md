@@ -111,8 +111,10 @@ flowchart TB
 
 **Ne zaman Claude?** — Uzun belge + RAG + agent + üretim refleksi. Platform bu yolun tam ortasında.
 
-!!! tip "Güncel fiyatlar"
-    Tablodaki rakamlar 2026 Nisan yaklaşımları; kesin rakam için [anthropic.com/pricing](https://www.anthropic.com/pricing) sayfasını aç. Fiyatlar 6 ayda 2-3 kez değişebilir — 6 ayda bir doğrula.
+!!! tip "Güncel fiyatlar ve 6-ay revizyonu"
+    Tablodaki rakamlar **2026 Nisan** yaklaşımlarıdır; kesin rakam için [anthropic.com/pricing](https://www.anthropic.com/pricing) sayfasını aç. Fiyatlar 6 ayda 2-3 kez değişebilir.
+
+    **Bu sayfa okuyan için kural:** Okuduğun tarih 2026 Ekim'den sonraysa tablodaki rakamları **doğrulamadan kullanma**. Tüm pricing/versiyon tabloları bu sayfada 6 ayda bir revize edilir; en güncel kaynak provider'ların kendi sayfasıdır. Aynı kural bu platformdaki tüm fiyat/sürüm tablolarında geçerlidir.
 
 ### 🟢 OpenAI (GPT ailesi) — pazarın liderleri
 
