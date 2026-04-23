@@ -437,6 +437,9 @@ with conn.cursor() as cur:
 | Pinecone Standard 1M | Pinecone | $200+ |
 | Supabase Pro (pgvector dahil) | pgvector managed | $25 |
 
+!!! tip "6-ay revizyon kuralı"
+    Rakamlar **2026 Nisan** yaklaşımları; 6 ayda 2-3 kez değişebilir. Provider'ın kendi sayfası en güncel — [Pinecone pricing](https://www.pinecone.io/pricing/), [Qdrant Cloud pricing](https://qdrant.tech/pricing/), [Supabase pricing](https://supabase.com/pricing) doğrulaman için. 2026 Ekim sonrası okuyorsan bu tablo bayattır.
+
 **Pratik gerçek:** Solo proje için self-host Qdrant + Hetzner VPS aylık 5 € — 1M vektöre kadar yeterli. Bu platform bu kombinasyonu varsayar.
 
 ## Karar matrisi — senin projen için hangisi

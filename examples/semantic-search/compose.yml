@@ -1,0 +1,36 @@
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      QDRANT_URL: http://qdrant:6333
+      GIT_SHA: ${GIT_SHA:-dev}
+    ports:
+      - "127.0.0.1:8000:8000"
+    depends_on:
+      qdrant:
+        condition: service_healthy
+    networks:
+      - ss
+
+  qdrant:
+    image: qdrant/qdrant:v1.17.1
+    restart: unless-stopped
+    volumes:
+      - qdrant_storage:/qdrant/storage
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c ':> /dev/tcp/127.0.0.1/6333' || exit 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    networks:
+      - ss
+
+volumes:
+  qdrant_storage:
+
+networks:
+  ss:
