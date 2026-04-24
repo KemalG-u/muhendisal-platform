@@ -262,7 +262,7 @@ Anthropic RAG konusunda **en net tavrı alan** AI şirketidir:
     **Multi-modal RAG.** PDF içinde tablo/grafik varsa metin embedding yetmez. Claude vision + OCR pipeline'ı kurarsın; görsel parçaları base64 ile prompt'a eklersin. Bölüm 7'de detay.
 
 <div class="ma-anthropic-oz-kaynak" markdown>
-**Kaynak:** [Anthropic News — Introducing Contextual Retrieval](https://www.anthropic.com/news/contextual-retrieval) (EN, ~15 dk). RAG'ın en güçlü Anthropic makalesi. Pekiştirme: [Anthropic Cookbook — contextual-embeddings](https://github.com/anthropics/anthropic-cookbook/tree/main/skills/contextual-embeddings) — aynı tekniğin çalışır Jupyter notebook'u.
+**Kaynak:** [Anthropic News — Introducing Contextual Retrieval](https://www.anthropic.com/news/contextual-retrieval) (EN, ~15 dk). RAG'ın en güçlü Anthropic makalesi. Pekiştirme: [Anthropic Cookbook — contextual-embeddings](https://github.com/anthropics/claude-cookbooks) — aynı tekniğin çalışır Jupyter notebook'u.
 </div>
 </div>
 

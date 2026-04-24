@@ -20,7 +20,7 @@ Bir AI servisi yazdın diyelim. `python chatbot.py` çalışıyor, soru soruyors
 
 İkincisi: Bölüm 9'da servisi canlıya vereceksin. Canlı servis = **HTTP üstünden konuşulan bir şey.** Docker image'ına koyacaksın, nginx'in arkasına atacaksın, bir domain'e bağlayacaksın — hepsi HTTP varsayar. Bugün öğrendiğin 15 satır, 9. Bölüm'de 3 kıta arasında çalışacak.
 
-Üçüncüsü: FastAPI **Python ekosisteminin altın standardı** oldu (2020'den beri). Type hints ile otomatik validation, Swagger UI otomatik, async default, **hız**: Django + Flask'tan belirgin üstün. Anthropic'in kendi [claude-cookbook](https://github.com/anthropics/anthropic-cookbook)'unda "deployment" örneklerinin çoğu FastAPI ile. Bu refleks = iş pazarında da değer.
+Üçüncüsü: FastAPI **Python ekosisteminin altın standardı** oldu (2020'den beri). Type hints ile otomatik validation, Swagger UI otomatik, async default, **hız**: Django + Flask'tan belirgin üstün. Anthropic'in kendi [claude-cookbook](https://github.com/anthropics/claude-cookbooks)'unda "deployment" örneklerinin çoğu FastAPI ile. Bu refleks = iş pazarında da değer.
 
 ## FastAPI kısaca — üç paragraf, matematiksiz
 
@@ -245,7 +245,7 @@ Beklenen:
 
 Anthropic FastAPI'yi **resmi olarak önermez** — Python web framework'u seçimi sana kalmış. Ama Anthropic'in kendi örneklerinde ve cookbook'ta FastAPI **en sık gördüğün framework.**
 
-**1. Cookbook örnekleri FastAPI tabanlı.** [anthropic-cookbook](https://github.com/anthropics/anthropic-cookbook) repo'sundaki deploy ve tool use notebook'larının çoğu FastAPI + uvicorn ile. "Claude'u production'a nasıl koyarım" sorusuna Anthropic'in örtük cevabı bu.
+**1. Cookbook örnekleri FastAPI tabanlı.** [claude-cookbooks](https://github.com/anthropics/claude-cookbooks) repo'sundaki deploy ve tool use notebook'larının çoğu FastAPI + uvicorn ile. "Claude'u production'a nasıl koyarım" sorusuna Anthropic'in örtük cevabı bu.
 
 **2. Claude SDK async-friendly.** Anthropic Python SDK `AsyncAnthropic` sınıfı ile gelir. FastAPI `async def` endpoint'leriyle mükemmel uyumlu — aynı event loop, aynı dosya. Blocking `time.sleep` değil, `await client.messages.create(...)` = doğru desen.
 
@@ -266,7 +266,7 @@ Anthropic FastAPI'yi **resmi olarak önermez** — Python web framework'u seçim
     **Production uvicorn.** Dev'de `--reload`, prod'da `gunicorn -w 4 -k uvicorn.workers.UvicornWorker main:app` (worker sayısı = CPU × 2 + 1 genelde). Tek process yetmez.
 
 <div class="ma-anthropic-oz-kaynak" markdown>
-**Kaynak:** [FastAPI resmi dokümanı](https://fastapi.tiangolo.com/) (EN, Türkçe çevirisi var). Başlangıç için birebir rehber. Pekiştirme: [Anthropic Cookbook — tool_use notebook](https://github.com/anthropics/anthropic-cookbook/tree/main/tool_use) — FastAPI ile Claude tool use üretim deseni.
+**Kaynak:** [FastAPI resmi dokümanı](https://fastapi.tiangolo.com/) (EN, Türkçe çevirisi var). Başlangıç için birebir rehber. Pekiştirme: [Anthropic Cookbook — tool_use notebook](https://github.com/anthropics/claude-cookbooks/tree/main/tool_use) — FastAPI ile Claude tool use üretim deseni.
 </div>
 </div>
 

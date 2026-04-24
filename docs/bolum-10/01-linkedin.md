@@ -378,5 +378,5 @@ Kanıt: pozisyon kararı + LinkedIn ekran görüntüsü + post + DM gönderim on
 
 ← [Bölüm 10 girişi](index.md) &nbsp;|&nbsp; [9.7 Portföy Paketleme](../bolum-9/07-github.md) &nbsp;|&nbsp; [Ana sayfa](../index.md)
 
-**Pekiştirme:** [LinkedIn Creator Education](https://www.linkedin.com/help/linkedin/answer/a522537) + [Justin Welsh Solopreneur newsletter](https://www.justinwelsh.me/) (LinkedIn personal brand otoritesi) + [Lenny Rachitsky newsletter](https://www.lennysnewsletter.com/) (tech career stratejisi). Üçü farklı bakış: LinkedIn resmi + kişisel brand + product-career. Hafta sonu 1 saat taraması, içerik stratejin keskinleşir.
+**Pekiştirme:** [LinkedIn Creator Education](https://www.linkedin.com/help/linkedin) + [Justin Welsh Solopreneur newsletter](https://www.justinwelsh.me/) (LinkedIn personal brand otoritesi) + [Lenny Rachitsky newsletter](https://www.lennysnewsletter.com/) (tech career stratejisi). Üçü farklı bakış: LinkedIn resmi + kişisel brand + product-career. Hafta sonu 1 saat taraması, içerik stratejin keskinleşir.
 </div>

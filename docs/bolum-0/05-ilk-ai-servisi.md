@@ -266,7 +266,7 @@ Anthropic Bölüm 0 seviyesinde bir şey demez — AI servis kurmanın Python / 
     **Observability.** Her `/chat` çağrısını logla (input hash + model + latency + token count). Datadog / Prometheus / Grafana — Bölüm 8.4 detay.
 
 <div class="ma-anthropic-oz-kaynak" markdown>
-**Kaynak:** [docs.claude.com — Client SDKs](https://docs.claude.com/en/api/client-sdks) (EN, ~10 dk). Python SDK + async kullanım örnekleri. Pekiştirme: [Anthropic Cookbook — basic usage](https://github.com/anthropics/anthropic-cookbook/tree/main/misc) — Claude'un en sade FastAPI örnekleri.
+**Kaynak:** [docs.claude.com — Client SDKs](https://docs.claude.com/en/api/client-sdks) (EN, ~10 dk). Python SDK + async kullanım örnekleri. Pekiştirme: [Anthropic Cookbook — basic usage](https://github.com/anthropics/claude-cookbooks/tree/main/misc) — Claude'un en sade FastAPI örnekleri.
 </div>
 </div>
 

@@ -522,5 +522,5 @@ Bir test ekran görüntüsü üzerinde Madde 5 pattern: PII tespit + koordinat +
 
 ← [Bölüm 7 girişi](index.md) &nbsp;|&nbsp; [Ana sayfa](../index.md) &nbsp;|&nbsp; [Bölüm 6 — Agent + MCP](../bolum-6/index.md)
 
-**Pekiştirme:** [Claude vision docs](https://docs.claude.com/en/docs/build-with-claude/vision) + [Anthropic Cookbook vision notebook'ları](https://github.com/anthropics/anthropic-cookbook/tree/main/multimodal) + [Computer use guide](https://docs.claude.com/en/docs/build-with-claude/computer-use). Üçü 2 saatte okunur; vision API refleksi oturur.
+**Pekiştirme:** [Claude vision docs](https://docs.claude.com/en/docs/build-with-claude/vision) + [Anthropic Cookbook vision notebook'ları](https://github.com/anthropics/claude-cookbooks/tree/main/multimodal) + [Computer use guide](https://docs.claude.com/en/docs/build-with-claude/computer-use). Üçü 2 saatte okunur; vision API refleksi oturur.
 </div>

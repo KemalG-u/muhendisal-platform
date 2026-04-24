@@ -252,7 +252,7 @@ Anthropic doğrudan "Docker dersi" yayınlamıyor — bu genel DevOps konusu. Am
 
 **2. Agent SDK + Docker deploy deseni.** [platform.claude.com/docs/agent-sdk](https://platform.claude.com/docs/en/agent-sdk/python) dokümantasyonunda `claude-agent-sdk` için önerilen prod deploy = Docker + systemd (veya Kubernetes CronJob). "Bundled Claude CLI" paket içinde geldiği için container image'a ekstra kurulum gerekmez — `pip install claude-agent-sdk` yeter. 6.6'daki SDK'nın Docker'ı: Dockerfile + `CMD ["python", "agent.py"]` minimal.
 
-**3. Anthropic Cookbook — third_party klasörü.** [anthropic-cookbook/third_party](https://github.com/anthropics/anthropic-cookbook/tree/main/third_party) AWS Lambda, Modal, Vercel deploy örnekleri içerir. Lambda container image deseni özellikle serverless agent için kaydadeğer — cron tabanlı pipeline'ların low-cost alternatifi.
+**3. Anthropic Cookbook — third_party klasörü.** [claude-cookbooks/third_party](https://github.com/anthropics/claude-cookbooks/tree/main/third_party) AWS Lambda, Modal, Vercel deploy örnekleri içerir. Lambda container image deseni özellikle serverless agent için kaydadeğer — cron tabanlı pipeline'ların low-cost alternatifi.
 
 ??? info "Teknik detay — isteyene (BuildKit cache, healthcheck, scan, secret)"
 

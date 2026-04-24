@@ -478,7 +478,7 @@ Bu sayfada kurduğun Qdrant, sonraki bölümde Claude'a bağlanacak:
 - 🔜 RAG pipeline (Bölüm 4)
 - 🔜 Agent + MCP (Bölüm 6)
 
-[Anthropic RAG cookbook](https://github.com/anthropics/anthropic-cookbook/tree/main/skills/retrieval_augmented_generation) Qdrant + Voyage desenini resmi referans olarak sunar.
+[Anthropic RAG cookbook](https://github.com/anthropics/claude-cookbooks) Qdrant + Voyage desenini resmi referans olarak sunar.
 
 </details>
 

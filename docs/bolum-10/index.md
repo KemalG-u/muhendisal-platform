@@ -18,7 +18,7 @@ Niye 5 sayfa, az? Çünkü teknik kısım bitti. Burası **eylem planı + toplul
 
 **10.2 — Mülakat Soruları.** En sık 30 soru: "RAG'i fine-tune'dan ne zaman tercih edersin?", "Token nedir?", "Prompt injection nasıl önlenir?", "MCP nedir?". Her birine 1-2 paragraflık model cevap (kalıp değil, refleks için).
 
-**10.3 — Açık Kaynak Katkı.** Anthropic Cookbook'a (anthropic-cookbook), LangChain, Qdrant gibi projelere ilk PR nasıl atılır. "Beginner-friendly issue" etiketleriyle başlama. İlk küçük katkıdan referans inşası.
+**10.3 — Açık Kaynak Katkı.** Anthropic Cookbook'a (claude-cookbooks), LangChain, Qdrant gibi projelere ilk PR nasıl atılır. "Beginner-friendly issue" etiketleriyle başlama. İlk küçük katkıdan referans inşası.
 
 **10.4 — İleri Konular ve Trendler.** 2026 itibarıyla yükselen konular: AI agents at scale, multimodal foundation models, on-device inference (mobile), AI safety + alignment araştırma. Hangi paper, hangi blog, hangi podcast.
 
@@ -60,7 +60,7 @@ flowchart LR
 | 👤 **Sen** | LinkedIn + GitHub + topluluk kanalları | Profil yenile, mülakat sorularını çalış, ilk açık kaynak PR'ı at |
 | 📄 **10.1 LinkedIn** | linkedin.com/in/sen | Headline + About + Featured projeyi koy |
 | 📄 **10.2 Mülakat** | Platform (30 soru) | Model cevaplar oku, sesli kendi cevabını test et |
-| 📄 **10.3 Açık kaynak** | GitHub anthropic-cookbook + benzer | İlk küçük PR (typo, doc, küçük örnek) |
+| 📄 **10.3 Açık kaynak** | GitHub claude-cookbooks + benzer | İlk küçük PR (typo, doc, küçük örnek) |
 | 📄 **10.4 İleri konular** | Platform + dış kaynaklar | 2026 trend listesi + okuma kuyruğu |
 | 🏁 **10.5 Topluluk** | Discord + Slack + Türkçe AI grupları | En az 2 topluluğa kayıt + 1 mesajla tanışma |
 | 📖 **Anthropic Academy certifications** | skilljar.com | 18 kursun tamamlanma takibi — sertifikaları LinkedIn'e ekle |

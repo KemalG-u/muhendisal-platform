@@ -79,10 +79,10 @@ flowchart LR
 
 **1. Anthropic'in embedding politikası.** Anthropic "biz LLM + tool use'a odaklanıyoruz, embedding ekosistemde yeterince güçlü, yeni bir oyuncu eklemiyoruz" duruşu aldı. Bu karar bizim için iyi — tek sağlayıcıya bağımlı kalmıyorsun. Embedding'i istediğin yerden al, Claude'u LLM olarak kullan.
 
-**2. Claude + embedding pratik örneği.** Anthropic Cookbook'ta [Contextual Retrieval](https://github.com/anthropics/anthropic-cookbook/tree/main/skills/contextual-embeddings) örneği — Claude'u **embed edilecek metni daha aranabilir hale getirmek** için kullanır (contextual chunking). Bu Bölüm 4'te yeniden karşımıza çıkacak; 3.5'te tohumlarını atıyoruz.
+**2. Claude + embedding pratik örneği.** Anthropic Cookbook'ta [Contextual Retrieval](https://github.com/anthropics/claude-cookbooks) örneği — Claude'u **embed edilecek metni daha aranabilir hale getirmek** için kullanır (contextual chunking). Bu Bölüm 4'te yeniden karşımıza çıkacak; 3.5'te tohumlarını atıyoruz.
 
 <div class="ma-anthropic-oz-kaynak" markdown>
-**Kaynak:** [Anthropic Cookbook — Contextual Embeddings](https://github.com/anthropics/anthropic-cookbook/tree/main/skills/contextual-embeddings) (İngilizce, Jupyter, ücretsiz). 3.5'ten sonra aç — embedding öncesi Claude ile "bağlam zenginleştirme" tekniği burada. Bölüm 4'te derinleşeceğiz, burada giriş okuması faydalı.
+**Kaynak:** [Anthropic Cookbook — Contextual Embeddings](https://github.com/anthropics/claude-cookbooks) (İngilizce, Jupyter, ücretsiz). 3.5'ten sonra aç — embedding öncesi Claude ile "bağlam zenginleştirme" tekniği burada. Bölüm 4'te derinleşeceğiz, burada giriş okuması faydalı.
 </div>
 </div>
 

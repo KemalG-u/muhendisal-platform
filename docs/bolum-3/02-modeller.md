@@ -84,7 +84,7 @@ flowchart TB
 | **voyage-3-context** | 1024 | 32K | ~$0.06 | Uzun kontekst işlemede optimize |
 
 !!! tip "Güncel fiyatlar ve 6-ay revizyonu"
-    Rakamlar **2026 Nisan** yaklaşımları; [voyageai.com/pricing](https://www.voyageai.com/pricing) sayfasından doğrula. 6 ayda bir revize: Ekim 2026 sonrası sayfa güncellenene dek bu tablonun güvenilirliği düşer.
+    Rakamlar **2026 Nisan** yaklaşımları; [voyageai.com/pricing](https://docs.voyageai.com/docs/pricing) sayfasından doğrula. 6 ayda bir revize: Ekim 2026 sonrası sayfa güncellenene dek bu tablonun güvenilirliği düşer.
 
 ### Güçlü yönler
 
@@ -348,7 +348,7 @@ Beklenti: **Aynı gruptaki cümleler birbirine yakın**, gruplar arası uzak.
 **Anthropic Claude ile Voyage AI resmi çift.** Platform bu çifti default seçerken 4 somut gerekçeye dayanır:
 
 1. **Docs entegrasyonu.** [docs.claude.com/embeddings](https://docs.claude.com/en/docs/build-with-claude/embeddings) sayfası Voyage örnekleri ile açılır. Öğrenci Claude öğrenirken embedding konusuna geçtiğinde aynı provider ekosistemi devam eder — öğrenme yükü düşer.
-2. **RAG cookbook'lar.** [Anthropic Cookbook](https://github.com/anthropics/anthropic-cookbook) RAG bölümünde referans notebook'lar Voyage kullanır. Platformun Bölüm 4 desenini doğrudan üstlenmesine imkân verir.
+2. **RAG cookbook'lar.** [Anthropic Cookbook](https://github.com/anthropics/claude-cookbooks) RAG bölümünde referans notebook'lar Voyage kullanır. Platformun Bölüm 4 desenini doğrudan üstlenmesine imkân verir.
 3. **Contextual Retrieval (2024 Eylül)** — Anthropic'in yayımladığı retrieval iyileştirme tekniği Voyage ile test edilmiş, Claude + Voyage birlikte %49 iyileşme. Bölüm 4.7'de detaylı.
 4. **`input_type` asimetrisi Anthropic pedagojisinin bir parçası** — model-agnostik değil, bilinçli tasarım. OpenAI'de bu yok; öğrenci `document`/`query` disiplinini Voyage üzerinden **doğru** öğrenir.
 

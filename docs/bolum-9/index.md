@@ -98,7 +98,7 @@ Deploy tarafında Anthropic **kendi ürünlerinde bir desen gösterir** — sen 
 
 **2. Introduction to Claude Cowork (Academy, ~40 dk, sertifikalı).** Yeni ürün (2025). Ekip içi Claude entegrasyonu — Slack, Notion, GitHub tool'larıyla. Portföy projeni sunarken "bu Cowork'e entegre olur" senaryosu 9.4-9.6'yı zenginleştirir.
 
-**3. Anthropic Cookbook — deployment örnekleri.** [anthropic-cookbook/third_party](https://github.com/anthropics/anthropic-cookbook/tree/main/third_party) AWS Lambda, Vercel, Modal gibi platformlarda Claude deploy örnekleri. 9.2'deki kararını destekler (Hetzner/DO dışında ilgilenirsen).
+**3. Anthropic Cookbook — deployment örnekleri.** [claude-cookbooks/third_party](https://github.com/anthropics/claude-cookbooks/tree/main/third_party) AWS Lambda, Vercel, Modal gibi platformlarda Claude deploy örnekleri. 9.2'deki kararını destekler (Hetzner/DO dışında ilgilenirsen).
 
 **4. API Keys güvenlik.** docs.claude.com/en/docs/build-with-claude/api-keys — environment variable disiplinini tekrarlar. 9.1 Docker yapılandırmamızda bu disiplin üzerine kuruluyor (`.env` dosyası asla image'a gömülmez).
 

@@ -78,7 +78,7 @@ Multimodal'da Anthropic **kısmi güçlü:** vision'da iyi (Claude 4.x Sonnet), 
 
 **2. Ses — Anthropic'in duruşu.** Claude ses dinlemiyor (2026 itibarıyla). "Ses için Whisper + metin olarak Claude'a ver" Anthropic'in önerdiği desen. Bu bölümün 7.2 yaklaşımı resmi öneriye uyar.
 
-**3. Cookbook — vision örnekleri.** [anthropic-cookbook/multimodal](https://github.com/anthropics/anthropic-cookbook/tree/main/multimodal) notebook'ları — fatura okuma, grafik yorumlama, scene description. 7.1'de işlediğimiz örneklerin kaynağı.
+**3. Cookbook — vision örnekleri.** [claude-cookbooks/multimodal](https://github.com/anthropics/claude-cookbooks/tree/main/multimodal) notebook'ları — fatura okuma, grafik yorumlama, scene description. 7.1'de işlediğimiz örneklerin kaynağı.
 
 **4. Video hakkında Anthropic'in şu andaki sınırı.** Claude doğrudan video input almıyor. "Frame extraction + çoklu görsel" tek yol. Google Gemini video'da daha ileride (doğal destek); Claude'la yapacaksan bu bölümün 7.3 desenine ihtiyacın var.
 

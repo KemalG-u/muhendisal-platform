@@ -135,7 +135,7 @@ Eski LLM sadece metin. Yeni modeller metin + görsel + ses + video **aynı için
 - [Claude vision docs](https://docs.claude.com/en/docs/build-with-claude/vision)
 - [Gemini multimodal](https://ai.google.dev/gemini-api/docs/vision)
 - [OpenAI GPT-4o](https://openai.com/index/hello-gpt-4o/)
-- [LMSYS Multimodal Arena](https://chat.lmsys.org/) — model karşılaştırma
+- [LMSYS Multimodal Arena](https://lmarena.ai/) — model karşılaştırma
 
 ## Trend 3 — Long Context + Reasoning
 
@@ -196,7 +196,6 @@ Eski LLM sadece metin. Yeni modeller metin + görsel + ses + video **aynı için
 
 ### Kaynak
 
-- [AI Engineering Podcast](https://aiengineerpodcast.com/) — haftalık, yeni araçları takibi
 - [Latent Space](https://www.latent.space/) — yazılı + podcast
 - [AI Engineer Summit](https://ai.engineer) — yıllık konferans, araç şirketleri
 
@@ -218,7 +217,7 @@ Model yetenekleri hızla artarken **kontrol** zorlaşıyor. Alignment research =
 
 1. **Red teaming refleksi** — her canlı sistemde 10 saldırı sorusu (Bölüm 8.1)
 2. **Model davranışı okuma** — "Claude bunu niye reddetti?" Anthropic Model Spec'i referans
-3. **Güvenlik açığı bildirim** — Claude'da weird behavior gördüğünde [Anthropic security team](https://www.anthropic.com/security)'e rapor
+3. **Güvenlik açığı bildirim** — Claude'da weird behavior gördüğünde [Anthropic security team](https://trust.anthropic.com/)'e rapor
 
 ### Kaynak
 
@@ -256,7 +255,7 @@ Model çağırmak hep cloud → latency + fatura + privacy. **Küçük modeller*
 ### Kaynak
 
 - [Apple Intelligence](https://www.apple.com/apple-intelligence/)
-- [Hugging Face on-device](https://huggingface.co/blog/on-device-models)
+- [Hugging Face on-device](https://huggingface.co/blog)
 - [MLX (Apple Silicon ML)](https://github.com/ml-explore/mlx)
 
 ## Trend 7 — AI Regulation

@@ -335,7 +335,7 @@ Contextual Retrieval Anthropic'in **en güçlü RAG makalesi.** Dürüst ve raka
     **Non-Claude kullanıcıları için.** Bu teknik Anthropic'e özel değil — Gemini veya GPT ile de çalışır. Ama Anthropic prompt caching yaptığı için **maliyet avantajı** diğer sağlayıcılardan fark atıyor.
 
 <div class="ma-anthropic-oz-kaynak" markdown>
-**Kaynak:** [Anthropic News — Introducing Contextual Retrieval](https://www.anthropic.com/news/contextual-retrieval) (EN, ~15 dk, blog yazısı). Ana teknik makale. **Pekiştirme:** [Cookbook — Contextual Embeddings notebook](https://github.com/anthropics/anthropic-cookbook/blob/main/skills/contextual-embeddings/guide.ipynb) — kod bazlı Jupyter, kendi Colab'inde çalıştırabilirsin.
+**Kaynak:** [Anthropic News — Introducing Contextual Retrieval](https://www.anthropic.com/news/contextual-retrieval) (EN, ~15 dk, blog yazısı). Ana teknik makale. **Pekiştirme:** [Cookbook — Contextual Embeddings notebook](https://github.com/anthropics/claude-cookbooks) — kod bazlı Jupyter, kendi Colab'inde çalıştırabilirsin.
 </div>
 </div>
 
@@ -383,5 +383,5 @@ Gist linkini kaydet: `muhendisal-notlarim/bolum-4/02-chunking/contextual-gist.tx
 
 ← [4.1 RAG Nedir](01-rag-nedir.md) &nbsp;|&nbsp; [Bölüm 4 girişi](index.md) &nbsp;|&nbsp; [Ana sayfa](../index.md)
 
-**Pekiştirme:** [Anthropic Cookbook — Contextual Embeddings](https://github.com/anthropics/anthropic-cookbook/blob/main/skills/contextual-embeddings/guide.ipynb) notebook'unu Colab'de aç, kendi API anahtarınla çalıştır. 30 dakika, kazanç ömür boyu.
+**Pekiştirme:** [Anthropic Cookbook — Contextual Embeddings](https://github.com/anthropics/claude-cookbooks) notebook'unu Colab'de aç, kendi API anahtarınla çalıştır. 30 dakika, kazanç ömür boyu.
 </div>

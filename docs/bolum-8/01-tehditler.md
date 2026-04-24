@@ -438,7 +438,7 @@ Ama **bu yeterli değil.** Claude bile %100 güvenli değildir — red team test
 **Kaynaklar:**
 - [Constitutional AI paper](https://arxiv.org/abs/2212.08073)
 - [Anthropic Usage Policies](https://www.anthropic.com/legal/aup)
-- [Red team for LLMs](https://www.anthropic.com/research/red-teaming-language-models-to-reduce-harms-methods-scaling-behaviors-and-lessons)
+- [Red team for LLMs](https://www.anthropic.com/research)
 
 </details>
 

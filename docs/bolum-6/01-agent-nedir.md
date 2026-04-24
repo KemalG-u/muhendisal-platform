@@ -290,7 +290,7 @@ Anthropic Aralık 2024'te [Building Effective Agents](https://www.anthropic.com/
     **Observability.** Her tool çağrısını (timestamp, input, output, latency, error) log'la. LangSmith, Langfuse, veya kendi DB — agent debug'ı bunsuz imkansız.
 
 <div class="ma-anthropic-oz-kaynak" markdown>
-**Kaynak:** [Anthropic — Building Effective Agents](https://www.anthropic.com/research/building-effective-agents) (EN, 20 dk okuma, bu bölümün **pusula belgesi**). Her alt sayfa bu makalenin bir fragmanı. Pekiştirme: [Anthropic Cookbook — agents examples](https://github.com/anthropics/anthropic-cookbook/tree/main/patterns/agents) — 5 workflow + 1 agent pattern'inin tam kod örnekleri.
+**Kaynak:** [Anthropic — Building Effective Agents](https://www.anthropic.com/research/building-effective-agents) (EN, 20 dk okuma, bu bölümün **pusula belgesi**). Her alt sayfa bu makalenin bir fragmanı. Pekiştirme: [Anthropic Cookbook — agents examples](https://github.com/anthropics/claude-cookbooks/tree/main/patterns/agents) — 5 workflow + 1 agent pattern'inin tam kod örnekleri.
 </div>
 </div>
 

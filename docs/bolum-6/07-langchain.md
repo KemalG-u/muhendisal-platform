@@ -412,5 +412,5 @@ Repo linkini kaydet: `muhendisal-notlarim/bolum-6/07-langchain/uc-yol-repo.txt`
 
 ← [6.6 Claude Agent SDK](06-claude-sdk.md) &nbsp;|&nbsp; [Bölüm 6 girişi](index.md) &nbsp;|&nbsp; [Ana sayfa](../index.md)
 
-**Pekiştirme:** [Building Effective Agents](https://www.anthropic.com/research/building-effective-agents) (Anthropic, 2024 Aralık, hâlâ canonical) + [docs.langchain.com — LangChain Quickstart](https://docs.langchain.com/oss/python/langchain/quickstart) + [LangGraph Tutorials](https://docs.langchain.com/oss/python/langgraph/tutorials/get-started/) üçünü birlikte oku. Framework-ihtiyaç kararı bu üç kaynağın kesişiminde netleşir.
+**Pekiştirme:** [Building Effective Agents](https://www.anthropic.com/research/building-effective-agents) (Anthropic, 2024 Aralık, hâlâ canonical) + [docs.langchain.com — LangChain Quickstart](https://docs.langchain.com/oss/python/langchain/quickstart) + [LangGraph Tutorials](https://langchain-ai.github.io/langgraph/tutorials/introduction//) üçünü birlikte oku. Framework-ihtiyaç kararı bu üç kaynağın kesişiminde netleşir.
 </div>

@@ -210,7 +210,7 @@ Anthropic Linux/VPS konusunu **doğrudan öğretmez** (OS-bağımsız bir AI fir
 
 **2. Anthropic API'ye Linux curl ile "hello world".** Anthropic API dokümanının ilk örneği curl: `curl https://api.anthropic.com/v1/messages -H "x-api-key: $API_KEY" ...`. Bu komutu VPS'te çalıştırabilmek için önce VPS'in ne olduğunu bilmek lazım.
 
-**3. Anthropic Cookbook deploy örnekleri Linux-odaklı.** [github.com/anthropics/anthropic-cookbook](https://github.com/anthropics/anthropic-cookbook) repo'sunda `third_party/` klasöründe AWS Lambda, Modal, Vercel gibi deploy örnekleri var — hepsinin temeli Linux ve shell komutları.
+**3. Anthropic Cookbook deploy örnekleri Linux-odaklı.** [github.com/anthropics/claude-cookbooks](https://github.com/anthropics/claude-cookbooks) repo'sunda `third_party/` klasöründe AWS Lambda, Modal, Vercel gibi deploy örnekleri var — hepsinin temeli Linux ve shell komutları.
 
 ??? info "Teknik detay — isteyene (parameter adları, mekanikler, edge case'ler)"
 

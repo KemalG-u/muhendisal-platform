@@ -478,7 +478,7 @@ with conn.cursor() as cur:
 
 Platform 5 neden Qdrant'ı default seçiyor:
 
-1. **Anthropic Cookbook'ta referans.** [Anthropic RAG cookbook](https://github.com/anthropics/anthropic-cookbook/tree/main/skills/retrieval_augmented_generation) Qdrant + Voyage AI örneğini merkezde kullanır. Öğrenci resmi örneklerde gördüğü araç zinciriyle ilerler.
+1. **Anthropic Cookbook'ta referans.** [Anthropic RAG cookbook](https://github.com/anthropics/claude-cookbooks) Qdrant + Voyage AI örneğini merkezde kullanır. Öğrenci resmi örneklerde gördüğü araç zinciriyle ilerler.
 
 2. **MCP server yazmak kolay.** Bölüm 6.4'te MCP server örneği Qdrant + Claude birlikte kullanır. Qdrant'ın Python SDK'sı MCP arayüzü ile doğal örtüşür.
 

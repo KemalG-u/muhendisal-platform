@@ -553,5 +553,5 @@ Kendi senaryoyu (meeting / YouTube / güvenlik) için aylık maliyet tahmini. Pr
 
 ← [7.2 Ses TTS/STT](02-ses.md) &nbsp;|&nbsp; [Bölüm 7 girişi](index.md) &nbsp;|&nbsp; [Ana sayfa](../index.md)
 
-**Pekiştirme:** [ffmpeg official docs](https://ffmpeg.org/documentation.html) + [yt-dlp GitHub](https://github.com/yt-dlp/yt-dlp) + [Anthropic Cookbook video notebook](https://github.com/anthropics/anthropic-cookbook/tree/main/multimodal). Üçü 2 saatte; video pipeline refleksi yerleşir.
+**Pekiştirme:** [ffmpeg official docs](https://ffmpeg.org/documentation.html) + [yt-dlp GitHub](https://github.com/yt-dlp/yt-dlp) + [Anthropic Cookbook video notebook](https://github.com/anthropics/claude-cookbooks/tree/main/multimodal). Üçü 2 saatte; video pipeline refleksi yerleşir.
 </div>

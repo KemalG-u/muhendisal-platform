@@ -196,7 +196,7 @@ print(f"Kaynak {len(r.source_nodes)} Node'dan sentezlendi")
 <div class="ma-anthropic-oz" markdown>
 <div class="ma-anthropic-oz-header">📖 Anthropic bu konuyu nasıl anlatıyor — öz</div>
 
-Anthropic **ne LangChain ne LlamaIndex'e** özel bağlılık göstermez — üçüncü parti kütüphaneler `anthropic-cookbook`'ta opsiyon olarak geçer, resmi bir tavsiye yok:
+Anthropic **ne LangChain ne LlamaIndex'e** özel bağlılık göstermez — üçüncü parti kütüphaneler `claude-cookbooks`'ta opsiyon olarak geçer, resmi bir tavsiye yok:
 
 **1. Anthropic resmi SDK yeterli RAG için.** `anthropic.Anthropic()` + `messages.create(...)` ile prompt caching + tool use + structured output — hepsi elden yazılabilir. Anthropic "abstraksiyon gerektirmez, bizim SDK kuvvetli" tutumunda.
 
@@ -221,7 +221,7 @@ Anthropic **ne LangChain ne LlamaIndex'e** özel bağlılık göstermez — üç
     **Memory + history.** LangChain'de `ConversationBufferMemory` + `ChatMessageHistory`. LlamaIndex'te `ChatEngine` ile benzeri. Memory ayrı bir konu (Bölüm 6 agent'ta detay).
 
 <div class="ma-anthropic-oz-kaynak" markdown>
-**Kaynak:** [LlamaIndex — Anthropic Integration](https://docs.llamaindex.ai/en/stable/examples/llm/anthropic/) (EN, ~10 dk). Resmi Claude entegrasyonu. **Pekiştirme:** [Anthropic Cookbook — third_party folder](https://github.com/anthropics/anthropic-cookbook/tree/main/third_party) — LlamaIndex + LangChain örnekleri Anthropic resmi deposu altında.
+**Kaynak:** [LlamaIndex — Anthropic Integration](https://docs.llamaindex.ai/en/stable/examples/llm/anthropic/) (EN, ~10 dk). Resmi Claude entegrasyonu. **Pekiştirme:** [Anthropic Cookbook — third_party folder](https://github.com/anthropics/claude-cookbooks/tree/main/third_party) — LlamaIndex + LangChain örnekleri Anthropic resmi deposu altında.
 </div>
 </div>
 
@@ -269,5 +269,5 @@ Repo linkini kaydet: `muhendisal-notlarim/bolum-4/07-llamaindex/uc-yol-repo.txt`
 
 ← [4.6 LangChain](06-langchain.md) &nbsp;|&nbsp; [Bölüm 4 girişi](index.md) &nbsp;|&nbsp; [Ana sayfa](../index.md)
 
-**Pekiştirme:** [LlamaIndex — Node Postprocessors](https://docs.llamaindex.ai/en/stable/module_guides/querying/node_postprocessors/root.html) sayfasını gez. `SentenceTransformerRerank`, `LongContextReorder`, `MetadataReplacementPostProcessor` gibi hazır post-process'ler var — çoğu 4.3-4.4'te elden yazdığımız şeyler.
+**Pekiştirme:** [LlamaIndex — Node Postprocessors](https://docs.llamaindex.ai/en/stable/module_guides/querying/node_postprocessors/) sayfasını gez. `SentenceTransformerRerank`, `LongContextReorder`, `MetadataReplacementPostProcessor` gibi hazır post-process'ler var — çoğu 4.3-4.4'te elden yazdığımız şeyler.
 </div>

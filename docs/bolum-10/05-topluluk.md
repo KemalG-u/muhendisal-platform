@@ -174,7 +174,7 @@ AI alanı hızlı değişiyor. Öğrenme **iş değil alışkanlık**. Haftalık
 **Önemli kaynaklar (2026):**
 
 - **Haber:** [Anthropic News](https://www.anthropic.com/news), [OpenAI Blog](https://openai.com/blog), [Hugging Face Blog](https://huggingface.co/blog)
-- **Paper:** [arxiv-sanity](https://arxiv-sanity-lite.com/) + [Papers with Code](https://paperswithcode.com/)
+- **Paper:** [Papers with Code](https://paperswithcode.com/) + [arXiv AI](https://arxiv.org/list/cs.AI/recent) (günlük son)
 - **Podcast:** Latent Space (AI engineers), TWiML, The Pragmatic Engineer (AI Engineering episodes)
 - **Newsletter:** Ben's Bites, The Rundown AI, AI Breakfast
 - **YouTube:** Andrej Karpathy (Neural Networks: Zero to Hero), Yannic Kilcher (paper açıklamaları)
@@ -297,7 +297,7 @@ Bu platformu Claude ile yazdım. Sen **öğrencisi** olarak geldin, şimdi **kul
 
 1. **[Anthropic Academy](https://www.anthropic.com/learn)** — 18+ ücretsiz kurs. Sen Bölüm 0-9'un karşılığını topladın; Academy'de eksik gördüklerini doldur (örn. "Prompt Engineering for Developers", "Building with Tool Use").
 
-2. **[Anthropic Cookbook](https://github.com/anthropics/anthropic-cookbook)** — 30+ Jupyter notebook. 3 aydan kısa aralıkla yeni eklenir. Bir tanesini her ay çalıştır → Claude'un yeni yeteneklerini deneyimle.
+2. **[Anthropic Cookbook](https://github.com/anthropics/claude-cookbooks)** — 30+ Jupyter notebook. 3 aydan kısa aralıkla yeni eklenir. Bir tanesini her ay çalıştır → Claude'un yeni yeteneklerini deneyimle.
 
 3. **[Anthropic News](https://www.anthropic.com/news)** — haftada ortalama 1 güncelleme. Yeni model, yeni özellik, yeni güvenlik bildirisi. Bunları LinkedIn'e tarihin için yorumla — authority build.
 

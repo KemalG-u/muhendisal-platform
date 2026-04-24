@@ -76,7 +76,7 @@ Her good-first-issue atlama ideal değil. 4 kriter:
 
 ## Anthropic Cookbook — hedef #1
 
-[github.com/anthropics/anthropic-cookbook](https://github.com/anthropics/anthropic-cookbook) — Anthropic'in resmi Jupyter notebook koleksiyonu. Claude kullanım örnekleri.
+[github.com/anthropics/claude-cookbooks](https://github.com/anthropics/claude-cookbooks) — Anthropic'in resmi Jupyter notebook koleksiyonu. Claude kullanım örnekleri.
 
 ### Neden Anthropic Cookbook ideal?
 
@@ -314,7 +314,7 @@ Bu tür post **mülakat DM davetleri** getirir.
 
 ### Anthropic'in açık kaynak politikası
 
-Anthropic kendi projelerine (anthropic-cookbook, anthropic-sdk-python, mcp) CLA (Contributor License Agreement) istemez; MIT lisansı + normal PR süreci. Katkı süreci standartlaşmış.
+Anthropic kendi projelerine (claude-cookbooks, anthropic-sdk-python, mcp) CLA (Contributor License Agreement) istemez; MIT lisansı + normal PR süreci. Katkı süreci standartlaşmış.
 
 [Anthropic open-source list](https://github.com/anthropics) — hepsi açık. Seç birini, 3 ay katkı.
 
@@ -348,7 +348,7 @@ Son 3 kendi commit'in Conventional Commits formatında (`feat:`, `fix:`, `docs:`
 <div class="ma-gorev" markdown>
 <div class="ma-gorev-header">🎯 Görev — bu hafta ilk PR'ı at</div>
 
-1. [Anthropic Cookbook issues](https://github.com/anthropics/anthropic-cookbook/issues) listesine git.
+1. [Anthropic Cookbook issues](https://github.com/anthropics/claude-cookbooks/issues) listesine git.
 2. Açık issue'lara bak; **documentation** / **typo** / **example improvement** türü küçük bir tane seç.
 3. (Yoksa) `skills/` dizininde bir notebook oku; Türkçe çeviri veya küçük iyileştirme (comment netlik, kullanımlar güncel) olasılığı var mı?
 4. Fork + clone + branch + değişiklik + commit (Conventional format) + push + PR.

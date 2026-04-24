@@ -328,7 +328,7 @@ Anthropic doğrudan "VPS deploy" dersi yayınlamıyor — bu genel infra konusu.
     **Graceful shutdown.** Agent servisi kapanırken ortadaki işleri bitirmeli. `docker stop` default 10 sn SIGTERM sonra SIGKILL. Python kod `signal.SIGTERM` handler + `asyncio.gather` cancel yapısı kurmalı — yoksa yarım iş DB'de kalır.
 
 <div class="ma-anthropic-oz-kaynak" markdown>
-**Kaynak:** [docs.claude.com — API administration](https://docs.claude.com/en/docs/build-with-claude/administration-api) (EN, API key yaşam döngüsü + budget alerts). Pekiştirme: [DigitalOcean Community — Initial Server Setup](https://www.digitalocean.com/community/tutorials/initial-server-setup-with-ubuntu-24-04) (EN, Ubuntu 24.04 sertleştirme canonical rehber). Caddy: [caddyserver.com/docs](https://caddyserver.com/docs/) — reverse proxy + HTTPS defaults. Cloudflare: [developers.cloudflare.com](https://developers.cloudflare.com/dns/) — DNS + proxy davranışı.
+**Kaynak:** [docs.claude.com — API administration](https://docs.claude.com/en/docs/build-with-claude/administration-api) (EN, API key yaşam döngüsü + budget alerts). Pekiştirme: [DigitalOcean Community — Initial Server Setup](https://www.digitalocean.com/community/tutorials/initial-server-setup-with-ubuntu-22-04) (EN, Ubuntu 24.04 sertleştirme canonical rehber). Caddy: [caddyserver.com/docs](https://caddyserver.com/docs/) — reverse proxy + HTTPS defaults. Cloudflare: [developers.cloudflare.com](https://developers.cloudflare.com/dns/) — DNS + proxy davranışı.
 </div>
 </div>
 
@@ -387,5 +387,5 @@ Dosyaya kaydet: `muhendisal-notlarim/bolum-9/02-cloud/deploy-kanit.txt`
 
 ← [9.1 Docker ile Paketleme](01-docker.md) &nbsp;|&nbsp; [Bölüm 9 girişi](index.md) &nbsp;|&nbsp; [Ana sayfa](../index.md)
 
-**Pekiştirme:** [DigitalOcean Initial Server Setup](https://www.digitalocean.com/community/tutorials/initial-server-setup-with-ubuntu-24-04) + [Caddy Reverse Proxy Guide](https://caddyserver.com/docs/quick-starts/reverse-proxy) + [Cloudflare DNS docs](https://developers.cloudflare.com/dns/) üçlüsünü oku. Deploy refleksi bu üç kaynağın kesişiminde olgunlaşır.
+**Pekiştirme:** [DigitalOcean Initial Server Setup](https://www.digitalocean.com/community/tutorials/initial-server-setup-with-ubuntu-22-04) + [Caddy Reverse Proxy Guide](https://caddyserver.com/docs/quick-starts/reverse-proxy) + [Cloudflare DNS docs](https://developers.cloudflare.com/dns/) üçlüsünü oku. Deploy refleksi bu üç kaynağın kesişiminde olgunlaşır.
 </div>

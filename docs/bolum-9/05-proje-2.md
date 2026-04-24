@@ -517,7 +517,7 @@ except sqlite3.OperationalError:
 - **Router** (soruya göre model seç) — hepsinin aynı pipeline'dan geçmesi gerek
 - **Prompt chaining** (bir cevap diğerinin girdisi) — var (yazar→evaluator) ama basit
 
-[Anthropic Cookbook — Agents](https://github.com/anthropics/anthropic-cookbook/tree/main/skills/agents) notebook'ları bu desenlerin canlı örneklerini verir.
+[Anthropic Cookbook — Agents](https://github.com/anthropics/claude-cookbooks/tree/main/patterns/agents) notebook'ları bu desenlerin canlı örneklerini verir.
 
 </details>
 
@@ -623,5 +623,5 @@ Kanıt: `journalctl -u icerik-agent --since "7 days ago"` çıktısı + reports/
 
 ← [9.4 Portföy Projesi 1 — RAG Chatbot](04-proje-1.md) &nbsp;|&nbsp; [Bölüm 9 girişi](index.md) &nbsp;|&nbsp; [Ana sayfa](../index.md)
 
-**Pekiştirme:** [Anthropic Building Effective Agents makalesi](https://www.anthropic.com/research/building-effective-agents) (30 dk okuma) + [Anthropic Cookbook — Agents notebook'ları](https://github.com/anthropics/anthropic-cookbook/tree/main/skills/agents) + Bölüm 6.5 (Multi-Agent Sistemler). Bu üçünün kesişiminde production agent tasarım refleksi olgunlaşır.
+**Pekiştirme:** [Anthropic Building Effective Agents makalesi](https://www.anthropic.com/research/building-effective-agents) (30 dk okuma) + [Anthropic Cookbook — Agents notebook'ları](https://github.com/anthropics/claude-cookbooks/tree/main/patterns/agents) + Bölüm 6.5 (Multi-Agent Sistemler). Bu üçünün kesişiminde production agent tasarım refleksi olgunlaşır.
 </div>

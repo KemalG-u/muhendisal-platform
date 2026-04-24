@@ -261,7 +261,7 @@ Anthropic Contextual Retrieval makalesinin **ikinci ve üçüncü ayağı** bu s
     **Cache stratejisi.** Aynı sorgular tekrar gelir — sorgu hash → top-K chunks cache (Redis, 5 dk TTL). %30+ istek cache'den karşılanır.
 
 <div class="ma-anthropic-oz-kaynak" markdown>
-**Kaynak:** [Anthropic News — Introducing Contextual Retrieval](https://www.anthropic.com/news/contextual-retrieval) (EN, §"Further boosting performance with Reranking"). **Pekiştirme:** [Cookbook — Contextual Embeddings notebook](https://github.com/anthropics/anthropic-cookbook/blob/main/skills/contextual-embeddings/guide.ipynb) hibrit + rerank kodları dahil.
+**Kaynak:** [Anthropic News — Introducing Contextual Retrieval](https://www.anthropic.com/news/contextual-retrieval) (EN, §"Further boosting performance with Reranking"). **Pekiştirme:** [Cookbook — Contextual Embeddings notebook](https://github.com/anthropics/claude-cookbooks) hibrit + rerank kodları dahil.
 </div>
 </div>
 

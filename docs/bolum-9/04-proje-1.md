@@ -536,11 +536,11 @@ rag.alanadin.com {
 <details class="ma-anthropic-oz" markdown>
 <summary><strong>🤖 Anthropic-öz: bu sayfayı Anthropic resmi kaynaklarına bağla</strong></summary>
 
-- **[Anthropic Cookbook — RAG](https://github.com/anthropics/anthropic-cookbook/tree/main/skills/retrieval_augmented_generation)** — RAG pipeline'ı için referans notebook; bu sayfadaki `_chunk_text` yaklaşımı buradan basitleştirildi.
+- **[Anthropic Cookbook — RAG](https://github.com/anthropics/claude-cookbooks)** — RAG pipeline'ı için referans notebook; bu sayfadaki `_chunk_text` yaklaşımı buradan basitleştirildi.
 - **[Anthropic Docs — Embeddings](https://docs.claude.com/en/docs/build-with-claude/embeddings)** — Voyage AI'ın Anthropic'in resmi embedding tavsiyesi olduğu ve `input_type` ayrımı burada açıklanır.
 - **[Contextual Retrieval](https://www.anthropic.com/news/contextual-retrieval)** — ileri seviye: her chunk'ı belgenin genel bağlamı ile zenginleştirmek %49'a varan retrieval iyileşmesi sağlar. Bu sayfa **uygulamadı** çünkü tek-PDF kişisel kullanımda chunk başına 3 kat maliyet artışı ekler; 4.8 HBV'deki dürüst sapma mantığı — koşula göre karar.
 - **[Streaming messages](https://docs.claude.com/en/api/messages-streaming)** — `async with client.messages.stream()` pattern'inin resmi referansı.
-- **Anthropic Academy → [Prompt Engineering](https://www.anthropic.com/learn/prompt-engineering)** kursu — `SYSTEM_PROMPT` tasarımının pedagojik temeli.
+- **Anthropic Academy → [Prompt Engineering](https://docs.claude.com/en/docs/build-with-claude/prompt-engineering/overview)** kursu — `SYSTEM_PROMPT` tasarımının pedagojik temeli.
 
 **Dürüst sapma notu:** Anthropic'in "en iyi chunking" tavsiyesi semantic chunking (tümce/paragraf sınırlarına saygılı); bu sayfadaki basit kelime-tabanlı chunker **pedagojik öncelik** — önce çalışsın, sonra iyileştirilsin. `unstructured` veya `langchain-text-splitters` kütüphanesi ile 10 satırda upgrade edilir; portföy v2'de yap.
 
@@ -688,5 +688,5 @@ Kanıt: canlı URL + GitHub repo link + 3 farklı PDF ile denenmiş ekran görü
 
 ← [9.3 CI/CD GitHub Actions](03-cicd.md) &nbsp;|&nbsp; [Bölüm 9 girişi](index.md) &nbsp;|&nbsp; [Ana sayfa](../index.md)
 
-**Pekiştirme:** [Anthropic Cookbook RAG](https://github.com/anthropics/anthropic-cookbook/tree/main/skills/retrieval_augmented_generation) + [Qdrant docs Python client](https://python-client.qdrant.tech/) + [FastAPI async docs](https://fastapi.tiangolo.com/async/) üçlüsünü oku. RAG production refleksi bu üç kaynağın kesişiminde olgunlaşır.
+**Pekiştirme:** [Anthropic Cookbook RAG](https://github.com/anthropics/claude-cookbooks) + [Qdrant docs Python client](https://python-client.qdrant.tech/) + [FastAPI async docs](https://fastapi.tiangolo.com/async/) üçlüsünü oku. RAG production refleksi bu üç kaynağın kesişiminde olgunlaşır.
 </div>

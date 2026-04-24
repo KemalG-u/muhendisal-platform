@@ -487,7 +487,7 @@ Platform boyunca öğrendiğinin özeti:
 **Paralel Anthropic kaynakları** (platform dışında kendin takip etmen gerek):
 
 - [Anthropic Academy](https://www.anthropic.com/learn) — sürekli güncellenen kurslar
-- [Anthropic Cookbook](https://github.com/anthropics/anthropic-cookbook) — üretim örnekleri
+- [Anthropic Cookbook](https://github.com/anthropics/claude-cookbooks) — üretim örnekleri
 - [Anthropic Research blog](https://www.anthropic.com/research) — ayda 1-2 yeni makale
 - [Claude in Chrome, Claude Code, Claude in Excel](https://www.anthropic.com/) — yeni ürün serisi
 

@@ -192,7 +192,7 @@ Anthropic LangChain'i **önermez de, kötülemez de.** Resmi `langchain_anthropi
 
 **1. Resmi partner package var.** `langchain_anthropic` — Anthropic + LangChain ortak maintain ediyor. `ChatAnthropic`, `AnthropicLLM`, tool use, streaming, async hepsi destekli.
 
-**2. Anthropic cookbook'ta LangChain az.** [anthropic-cookbook](https://github.com/anthropics/anthropic-cookbook) notebook'larının **%80'i raw SDK** kullanır. Mesaj: "LangChain gerekli değil, bizim SDK yeter."
+**2. Anthropic cookbook'ta LangChain az.** [claude-cookbooks](https://github.com/anthropics/claude-cookbooks) notebook'larının **%80'i raw SDK** kullanır. Mesaj: "LangChain gerekli değil, bizim SDK yeter."
 
 **3. Anthropic'in kendi felsefesi: "build on primitives".** Claude Code, Claude SDK — hepsi düşük seviyeli primitives üstüne kurulu. "Agentic pattern'leri LangChain abstraction'larıyla kurmak" yerine "primitives + kendi agent yapına kur" deniyor. Bölüm 6'da detay.
 
@@ -211,7 +211,7 @@ Anthropic LangChain'i **önermez de, kötülemez de.** Resmi `langchain_anthropi
     **LangChain'e alternatifler.** LlamaIndex (data-centric, 4.7), Haystack (Deepset, prod-odaklı), Semantic Kernel (Microsoft), DSPy (Stanford, programmable prompts). 2026'da LangChain hâlâ en yaygın ama rekabet sert.
 
 <div class="ma-anthropic-oz-kaynak" markdown>
-**Kaynak:** [python.langchain.com — Anthropic integration](https://python.langchain.com/docs/integrations/chat/anthropic/) (EN, ~15 dk). `ChatAnthropic` tüm parametreler + örnekler. Pekiştirme: [Anthropic Cookbook'taki LangChain örnekleri](https://github.com/anthropics/anthropic-cookbook/tree/main/third_party/LangChain) — Claude + LangChain birleşimi production desen.
+**Kaynak:** [python.langchain.com — Anthropic integration](https://python.langchain.com/docs/integrations/chat/anthropic/) (EN, ~15 dk). `ChatAnthropic` tüm parametreler + örnekler. Pekiştirme: [Anthropic Cookbook'taki LangChain örnekleri](https://github.com/anthropics/claude-cookbooks/tree/main/third_party) — Claude + LangChain birleşimi production desen.
 </div>
 </div>
 
