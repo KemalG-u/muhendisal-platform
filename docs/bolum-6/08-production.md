@@ -47,7 +47,7 @@ Gerçekçi bir iş senaryosu: bir blog sahibi / topluluk yöneticisi / araştır
 flowchart LR
     CLI["🎯 pipeline.py\norchestrator"]
     RADAR["🔍 radar.py\nRSS tarayıcı"]
-    YAZ["✍️ yazar.py\nSonnet 4.5"]
+    YAZ["✍️ yazar.py\nSonnet 4.6"]
     EVAL["✅ evaluator.py\nHaiku 4.5\n+ structured output"]
     PUB["📤 publisher.py\nmarkdown + email"]
     DB[("💾 taslaklar.db\nSQLite")]
@@ -109,7 +109,7 @@ Bölüm 6.7'deki üç-SDK karar matrisini uyguladık:
 
 | Agent | Model | Fiyat (1M token) | Gerekçe |
 |---|---|---|---|
-| **Yazar** | `claude-sonnet-4-5` | $3 in / $15 out | Kreatif Türkçe üretim → kalite kritik |
+| **Yazar** | `claude-sonnet-4-6` | $3 in / $15 out | Kreatif Türkçe üretim → kalite kritik |
 | **Evaluator** | `claude-haiku-4-5` | $1 in / $5 out | Kalıplı puanlama → ucuz model yeter |
 
 Günde 20 başlık varsayımıyla:
@@ -262,7 +262,7 @@ Günde 20 başlık, yılda 365 gün:
 
 | Kalem | Tutar |
 |---|---|
-| Yazar (Sonnet 4.5) | $0.075/gün × 365 = **$27.38/yıl** |
+| Yazar (Sonnet 4.6) | $0.075/gün × 365 = **$27.38/yıl** |
 | Evaluator (Haiku 4.5) | $0.011/gün × 365 = **$4.00/yıl** |
 | **Toplam LLM maliyeti** | **$31.38/yıl** |
 | VPS (SMTP + cron) | Zaten mevcut (0 ek maliyet) |

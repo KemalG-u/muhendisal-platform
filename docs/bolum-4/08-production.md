@@ -45,7 +45,7 @@ flowchart TB
   WB["🌐 webhook.py\n+ HMAC + idempotency\n(Redis 10sn + DB kalıcı)"]
   EN["🧠 engine.py\n896 satır\n9-adım state machine"]
   CS["🤖 claude_service.py\n730 satır\nsistem prompt 18K char"]
-  CLAUDE["☁️ Anthropic API\nClaude Sonnet 4.5"]
+  CLAUDE["☁️ Anthropic API\nClaude Sonnet 4.6"]
   KB["📚 Bilgi Bankası\n16 MD dosya\n1417 satır"]
   DB[("🗄️ PostgreSQL\n14 tablo + 46 endpoint")]
   GR["🛡️ Guardrail\n+ küfür filtresi\n+ 3-katman ban"]
@@ -83,7 +83,7 @@ flowchart TB
 | 🌐 **webhook.py** | ~200 satır | HMAC imza doğrulama + idempotency (aynı mesaj iki kez gelmesin) |
 | 🧠 **engine.py** | **896 satır** | 9-adım state machine — akışın motoru |
 | 🤖 **claude_service.py** | **730 satır** | Claude çağrıları + 18K+ karakter sistem prompt + IBAN talimatları |
-| ☁️ **Anthropic API** | Claude Sonnet 4.5 | Cevap üretimi + prompt caching aktif |
+| ☁️ **Anthropic API** | Claude Sonnet 4.6 | Cevap üretimi + prompt caching aktif |
 | 📚 **Bilgi bankası** | 16 MD / 1417 satır | IBAN, fiyatlar, süreç, SSS — sistem prompt'a dahil edilir |
 | 🗄️ **PostgreSQL** | 14 tablo + 46 endpoint | bagisci / kurban_kayitlari / odemeler / whatsapp_mesajlari / vb. |
 | 🛡️ **Guardrail** | Filter chain | Küfür filtresi + 3-katman ban (anlık/24 saat/kalıcı) |
@@ -218,7 +218,7 @@ HBV Chatbot **Anthropic'in önerdiği her şeyi** yapmıyor — çünkü gerçek
 
     **Anthropic rate limit marjı.** Tier 2 hesap → 1000 RPM. HBV peak trafiği ~30 RPM → 33x marj. Bayram gününde 10x trafik beklentisi bile sınırın altında kalır.
 
-    **Claude Sonnet 4.5 vs 4.6 karar.** 4.5 HBV'de test edildi, 4.6 çıktığında A/B yapılacak — hem kalite farkı hem maliyet farkı. Opus 4.7 için: fiyat performans oranı HBV için gereksiz.
+    **Claude Sonnet 4.6 vs 4.6 karar.** 4.5 HBV'de test edildi, 4.6 çıktığında A/B yapılacak — hem kalite farkı hem maliyet farkı. Opus 4.7 için: fiyat performans oranı HBV için gereksiz.
 
     **Bilgi bankası değişim yönetimi.** 16 MD dosya git altında. Pull request → code review (Kemal + vakıf yetkilisi) → main'e merge → pm2 restart. Dev ortamda preview sonra prod.
 

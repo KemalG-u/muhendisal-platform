@@ -118,7 +118,7 @@ Cevabı şu formatta ver:
 - Her cümlede kaynak numarası: [kaynak: N]"""
 
     return {
-        "model": "claude-sonnet-4-5",
+        "model": "claude-sonnet-4-6",
         "max_tokens": 500,
         "system": SISTEM,
         "messages": [{"role": "user", "content": kullanici_mesaji}],
@@ -172,7 +172,7 @@ def rag_cached(chunks, soru):
         for c in chunks
     )
     return client.messages.create(
-        model="claude-sonnet-4-5",
+        model="claude-sonnet-4-6",
         max_tokens=500,
         system=[
             {

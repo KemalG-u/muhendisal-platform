@@ -119,7 +119,7 @@ Belgede yoksa 'kaynaklarda yok' de, uydurma yapma.
 </belge>
 
 Soru: {question}""")
-llm = ChatAnthropic(model="claude-sonnet-4-5", temperature=0)
+llm = ChatAnthropic(model="claude-sonnet-4-6", temperature=0)
 
 # 4. Chain — LCEL (LangChain Expression Language)
 rag_chain = (

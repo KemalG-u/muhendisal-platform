@@ -100,7 +100,7 @@ flowchart LR
 
 **Üç katmanlı yardım var.** (1) Bu platformun tüm sayfaları Türkçe — Bölüm 0'dan 10'a her konu ana dilinde. (2) Her İngilizce teknik terim Türkçe açıklamasıyla birlikte verilir ("tool calling" = "araç çağırma", "fine-tuning" = "ince ayar"). (3) Anthropic docs'u okuman gerektiğinde Claude tam da bunu yapmak için var: sayfayı yapıştırırsın, "Türkçe özetle" dersin, anlarsın.
 
-**Altın ipucu:** Claude'un kendisi Türkçe konuşuyor. Kendi öğrendiğini test ederken "Sonnet 4.5 bana 'RAG'i Türkçe anlat' dedim — anlattı" kadar basit. Sen ilerleme aracıyla öğreniyorsun.
+**Altın ipucu:** Claude'un kendisi Türkçe konuşuyor. Kendi öğrendiğini test ederken "Sonnet 4.6 bana 'RAG'i Türkçe anlat' dedim — anlattı" kadar basit. Sen ilerleme aracıyla öğreniyorsun.
 
 ### "Yaşım geç mi? 35+/40+/50+ hayır değil mi?"
 

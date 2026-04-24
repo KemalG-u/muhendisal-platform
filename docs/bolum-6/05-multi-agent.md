@@ -106,7 +106,7 @@ import asyncio
 import anthropic
 
 client = anthropic.AsyncAnthropic()
-MODEL = "claude-sonnet-4-5"
+MODEL = "claude-sonnet-4-6"
 
 
 async def subagent_arastir(konu: str) -> dict:
@@ -287,7 +287,7 @@ Anthropic multi-agent konusunu üç kaynakla canonical hale getirdi: [Building E
 
     **Güvenlik 3 ilkesi.** Anthropic resmi tavsiye: (1) **minimum necessary permissions** — `--allowedTools` flag ile kısıtla; (2) **reversible > destructive** — `rm` yerine trash, `DROP TABLE` yerine soft delete; (3) **human approval checkpoints** — yüksek riskli adımda otomatik durma.
 
-    **Maliyet optimizasyonu.** Heterojen model: `claude-haiku-4-5` cheap/hızlı subagent'lar (sınıflandırma, kısa özet), `claude-sonnet-4-5` ana orchestrator + analiz, `claude-opus-4-5` yalnız deep reasoning gerektiren tekil subagent. Üçü karıştırılırsa maliyet %60-80 düşer — Anthropic SDK bloglarında örnek ölçümler.
+    **Maliyet optimizasyonu.** Heterojen model: `claude-haiku-4-5` cheap/hızlı subagent'lar (sınıflandırma, kısa özet), `claude-sonnet-4-6` ana orchestrator + analiz, `claude-opus-4-7` yalnız deep reasoning gerektiren tekil subagent. Üçü karıştırılırsa maliyet %60-80 düşer — Anthropic SDK bloglarında örnek ölçümler.
 
     **Observability — gerekliliği artıyor.** Multi-agent debug için LangFuse / Helicone / Arize tracer'ları yaygınlaştı. Her subagent çağrısı + token + süre ayrı span. Prod multi-agent observability'siz kırılıyor.
 

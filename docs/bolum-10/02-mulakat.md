@@ -34,7 +34,7 @@ Bu sayfadaki 30 soru **her aşamada** çıkabilir. Hepsini önce oku, sonra **ke
 
 ### 1. Prompt, token, context window nedir?
 
-**Model cevap:** Prompt = LLM'e gönderdiğin metin; sistem mesajı (rol) + kullanıcı mesajı (soru) + asistan mesajları (varsa geçmiş). Token = modelin işlediği atom birim; Türkçe'de 1 kelime ~2-3 token, İngilizce'de 1 kelime ~1.3 token. Context window = modelin tek çağrıda işleyebileceği max token; Claude Sonnet 4.5 için 200K (input + output toplam). 200K token ~150K kelime veya ~500 sayfa metin — tam bir roman okur.
+**Model cevap:** Prompt = LLM'e gönderdiğin metin; sistem mesajı (rol) + kullanıcı mesajı (soru) + asistan mesajları (varsa geçmiş). Token = modelin işlediği atom birim; Türkçe'de 1 kelime ~2-3 token, İngilizce'de 1 kelime ~1.3 token. Context window = modelin tek çağrıda işleyebileceği max token; Claude Sonnet 4.6 için 200K (input + output toplam). 200K token ~150K kelime veya ~500 sayfa metin — tam bir roman okur.
 
 **Senin örneğin:** "9.4 RAG Chatbot'umda 50 sayfalık PDF ~25K token; Claude'un 200K context'inde rahatça sığıyor."
 
@@ -129,7 +129,7 @@ Bu sayfadaki 30 soru **her aşamada** çıkabilir. Hepsini önce oku, sonra **ke
 ### 20. Yanlış karar verdiğin ve düzelttiğin bir örnek?
 
 **Model cevap (STAR):**
-- **S:** "9.5 Agent Otomasyon'u başta tüm model çağrıları için Sonnet 4.5 seçtim."
+- **S:** "9.5 Agent Otomasyon'u başta tüm model çağrıları için Sonnet 4.6 seçtim."
 - **T:** "Aylık fatura $4.20 geliyordu, optimize etmem gerekiyordu."
 - **A:** "Anthropic'in Building Effective Agents makalesinde 'heterogeneous model' pattern'ini okuyunca evaluator'ı Haiku'ya düşürdüm — puanlama basit karar, Sonnet overkill. Yazar Sonnet'ta kaldı, kalite kritik."
 - **R:** "Aylık maliyet $2.60'a indi, %38 tasarruf. 10× ölçekte $15 farkı yapacaktı. Ders: 'bir model her şey için' refleksi yanlış; her görev için doğru model."
@@ -162,7 +162,7 @@ Bu sayfadaki 30 soru **her aşamada** çıkabilir. Hepsini önce oku, sonra **ke
 
 ### 25. "100 müşteriye RAG chatbot yapacaksın, nereden başlarsın?"
 
-**Model cevap:** Önce **ölçek varsayımları**: 100 müşteri × günlük 10 soru × 30 gün = 30K sorgu/ay; context ~3K token ortalama. Maliyet tahmini: Sonnet 4.5 ile ~$180/ay, Haiku + caching'le ~$50. Adımlar: (1) **MVP** — tek müşteriyle başla, 9.4 pattern'de FastAPI + Qdrant + Claude; (2) **multi-tenancy** — Qdrant collection per müşteri, isolation katmanı; (3) **admin panel** — müşteri PDF yükler, kendi verileri; (4) **billing** — kullanıcı başı token sayaç + aylık fatura; (5) **rate limit + hard cap** müşteri başı; (6) **production checklist** (8.6 15 madde) uygulama. İlk canlı 4 hafta; 100 müşteri 2-3 ay.
+**Model cevap:** Önce **ölçek varsayımları**: 100 müşteri × günlük 10 soru × 30 gün = 30K sorgu/ay; context ~3K token ortalama. Maliyet tahmini: Sonnet 4.6 ile ~$180/ay, Haiku + caching'le ~$50. Adımlar: (1) **MVP** — tek müşteriyle başla, 9.4 pattern'de FastAPI + Qdrant + Claude; (2) **multi-tenancy** — Qdrant collection per müşteri, isolation katmanı; (3) **admin panel** — müşteri PDF yükler, kendi verileri; (4) **billing** — kullanıcı başı token sayaç + aylık fatura; (5) **rate limit + hard cap** müşteri başı; (6) **production checklist** (8.6 15 madde) uygulama. İlk canlı 4 hafta; 100 müşteri 2-3 ay.
 
 ### 26. "Agent sistemi $500/ay, %30 düşür"
 
@@ -182,7 +182,7 @@ Bu sayfadaki 30 soru **her aşamada** çıkabilir. Hepsini önce oku, sonra **ke
 
 ### 30. "Claude Sonnet outage, servisin çalışmalı — fallback planı?"
 
-**Model cevap:** 3 seviye hazırlık: (1) **Fallback zinciri** — Sonnet down → Haiku'ya düş; kalite düşer ama servis çalışır. `MODEL_ZINCIRI = ["sonnet-4-5", "haiku-4-5"]` kod. (2) **Cache fallback** — son bilinen iyi cevap Redis'te; popüler sorular için LLM çağırma bile; outage'da bu yeter. (3) **Static fallback** — "Sistem yoğun, 5 dk sonra" insan okuyabilir cevap. **Monitor**: Anthropic Status Page webhook → Slack/Telegram. Circuit breaker (pybreaker) 5 fail → 60s açık; outage'da Anthropic'e istek bile göndermiyoruz. **Post-outage**: cache rebuild + fallback Haiku cevaplarını gözden geçir, kalite düşük olanları yeniden işle. Provider lock-in endişesi varsa **multi-provider** (OpenAI adapter) eklenebilir ama genelde overkill.
+**Model cevap:** 3 seviye hazırlık: (1) **Fallback zinciri** — Sonnet down → Haiku'ya düş; kalite düşer ama servis çalışır. `MODEL_ZINCIRI = ["sonnet-4-6", "haiku-4-5"]` kod. (2) **Cache fallback** — son bilinen iyi cevap Redis'te; popüler sorular için LLM çağırma bile; outage'da bu yeter. (3) **Static fallback** — "Sistem yoğun, 5 dk sonra" insan okuyabilir cevap. **Monitor**: Anthropic Status Page webhook → Slack/Telegram. Circuit breaker (pybreaker) 5 fail → 60s açık; outage'da Anthropic'e istek bile göndermiyoruz. **Post-outage**: cache rebuild + fallback Haiku cevaplarını gözden geçir, kalite düşük olanları yeniden işle. Provider lock-in endişesi varsa **multi-provider** (OpenAI adapter) eklenebilir ama genelde overkill.
 
 ## Maaş müzakeresi — 3 refleks
 

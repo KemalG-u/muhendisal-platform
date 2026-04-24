@@ -62,7 +62,7 @@ flowchart TB
 [![License MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 **PDF yükle, Türkçe soru sor, kaynak alıntısıyla cevap al.**
-FastAPI + Qdrant + Voyage AI + Claude Sonnet 4.5 — 45+ gün canlıda.
+FastAPI + Qdrant + Voyage AI + Claude Sonnet 4.6 — 45+ gün canlıda.
 
 ![Demo](docs/demo.gif)
 
@@ -78,7 +78,7 @@ open http://localhost:8000
 
 ## Stack
 
-- **Claude Sonnet 4.5** — cevap üretimi, 200K bağlam
+- **Claude Sonnet 4.6** — cevap üretimi, 200K bağlam
 - **Qdrant 1.17** — vector DB, self-host Docker
 - **Voyage AI voyage-3** — embedding, Türkçe üstün
 - **FastAPI 0.136 + HTMX** — async backend, progressive UI
@@ -296,7 +296,7 @@ Junior/mid AI Engineer profilinde portföy işverenin gözünde daha değerli. 2
 ```
 RAG Chatbot — Türkçe PDF Asistanı                   [Canlı] [GitHub]
 ─────────────────────────────────────────────────────────────────────
-Stack: Python · FastAPI · Claude Sonnet 4.5 · Qdrant · Voyage AI · Docker
+Stack: Python · FastAPI · Claude Sonnet 4.6 · Qdrant · Voyage AI · Docker
 • 45+ gün uptime, 18 dosya, pytest 19/19 geçiyor
 • Streaming UX, Türkçe voyage-3 embedding (OpenAI'dan %30 ucuz)
 • Docker compose deploy, GitHub Actions CI/CD, Caddy HTTPS

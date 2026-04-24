@@ -108,7 +108,7 @@ Amacım üç ay sonra çalışan bir sohbet botu yapmak."""
 
 # Mesajı count_tokens API'ye gönder (ücretsiz)
 sayim = client.messages.count_tokens(
-    model="claude-sonnet-4-5",  # güncel model adını docs'tan kontrol et
+    model="claude-sonnet-4-6",  # güncel model adını docs'tan kontrol et
     messages=[{"role": "user", "content": metin}],
 )
 

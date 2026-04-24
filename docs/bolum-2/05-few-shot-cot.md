@@ -124,7 +124,7 @@ for ad, prompt in [("0-SHOT", PROMPT_0SHOT), ("FEW-SHOT (3 örnek)", PROMPT_FEWS
     print(f"🔬 STRATEJİ: {ad}")
     print('='*50)
     cevap = client.messages.create(
-        model="claude-sonnet-4-5",
+        model="claude-sonnet-4-6",
         max_tokens=50,
         temperature=0,  # tutarlılık için
         messages=[{"role": "user", "content": prompt}],
@@ -182,7 +182,7 @@ for ad, prompt in [("DİREKT (CoT yok)", PROMPT_DIREKT), ("CoT VAR", PROMPT_COT)
     print(f"🧠 STRATEJİ: {ad}")
     print('='*50)
     cevap = client.messages.create(
-        model="claude-sonnet-4-5",
+        model="claude-sonnet-4-6",
         max_tokens=500,
         temperature=0,
         messages=[{"role": "user", "content": prompt}],
@@ -236,7 +236,7 @@ Claude Sonnet 4.x ve Opus modellerinde **extended thinking** özelliği var: kul
 
 ```python
 cevap = client.messages.create(
-    model="claude-sonnet-4-5",
+    model="claude-sonnet-4-6",
     max_tokens=2000,
     thinking={"type": "enabled", "budget_tokens": 1500},  # düşünme bütçesi
     messages=[{"role": "user", "content": PROBLEM}],

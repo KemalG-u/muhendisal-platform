@@ -133,7 +133,7 @@ messages = [{"role": "user", "content": "5000 TL'lik faturanın %18 KDV'si ve to
 
 for _ in range(5):
     resp = client.messages.create(
-        model="claude-sonnet-4-5",
+        model="claude-sonnet-4-6",
         max_tokens=1024,
         tools=tools,
         messages=messages,
@@ -233,7 +233,7 @@ def kur_tablosu():
 ```python
 # 1. 'auto' (default) — Claude kendisi karar verir tool çağırıp çağırmayacağına
 resp = client.messages.create(
-    model="claude-sonnet-4-5", max_tokens=1024,
+    model="claude-sonnet-4-6", max_tokens=1024,
     tools=tools,
     tool_choice={"type": "auto"},
     messages=[{"role": "user", "content": "Merhaba, nasılsın?"}],

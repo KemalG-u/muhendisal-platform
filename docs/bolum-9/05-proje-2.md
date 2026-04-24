@@ -56,7 +56,7 @@ flowchart LR
 
     subgraph AGENTS["4 Agent"]
         RAD["📡 radar<br/>RSS tara<br/>LLM YOK"]
-        YAZ["✍️ yazar<br/>Sonnet 4.5<br/>özet üret"]
+        YAZ["✍️ yazar<br/>Sonnet 4.6<br/>özet üret"]
         EVAL["⚖️ evaluator<br/>Haiku 4.5<br/>tool_choice"]
         PUB["📬 publisher<br/>dosya + SMTP"]
     end
@@ -87,7 +87,7 @@ flowchart LR
 | Agent | LLM | Rol | Ne iş yapar |
 |---|---|---|---|
 | **radar** | ❌ Yok (deterministik) | Haber toplayıcı | RSS feed'leri tarar, son 24 saati filtreler |
-| **yazar** | Sonnet 4.5 | İçerik üretici | Her haber için 150-250 kelimelik Türkçe özet |
+| **yazar** | Sonnet 4.6 | İçerik üretici | Her haber için 150-250 kelimelik Türkçe özet |
 | **evaluator** | Haiku 4.5 | Kalite kontrol | Özeti 1-10 arası puanlar, `tool_choice` ile JSON garanti |
 | **publisher** | ❌ Yok | Yayıncı | Skor ≥ 7 olanları markdown'a + SMTP'ye yayınlar |
 
@@ -96,7 +96,7 @@ flowchart LR
 **Heterojen model tercihi — CTO disiplini:**
 
 - **radar:** LLM gereksiz (RSS parse, basit filter). `feedparser` yeterli; Claude çağrısı para yakardı.
-- **yazar:** Sonnet 4.5 — kaliteli Türkçe özet için güçlü model gerekli (dil doğruluğu + üslup).
+- **yazar:** Sonnet 4.6 — kaliteli Türkçe özet için güçlü model gerekli (dil doğruluğu + üslup).
 - **evaluator:** Haiku 4.5 — puanlama basit karar, daha küçük model yeter. Sonnet 5× pahalı, aynı kalite değil.
 - **publisher:** LLM gereksiz (format + SMTP).
 
@@ -111,7 +111,7 @@ icerik-ozet-agent/
 ├── agents/
 │   ├── __init__.py
 │   ├── radar.py          # 123 satır — RSS tarama, deterministik
-│   ├── yazar.py          # 110 satır — Sonnet 4.5 özet
+│   ├── yazar.py          # 110 satır — Sonnet 4.6 özet
 │   ├── evaluator.py      # 174 satır — Haiku 4.5 + tool_choice
 │   └── publisher.py      # 141 satır — dosya + SMTP
 ├── db/
@@ -184,7 +184,7 @@ Kurallar:
 """
 
 
-async def ozet_yaz(haber: Haber, client: AsyncAnthropic, model: str = "claude-sonnet-4-5") -> str:
+async def ozet_yaz(haber: Haber, client: AsyncAnthropic, model: str = "claude-sonnet-4-6") -> str:
     response = await client.messages.create(
         model=model,
         max_tokens=512,
@@ -468,7 +468,7 @@ except sqlite3.OperationalError:
 
 | Kalem | Aylık | Detay |
 |---|---|---|
-| Yazar (Sonnet 4.5) | $2.10 | 6000 × (400 input + 250 output) × $3/M in + $15/M out |
+| Yazar (Sonnet 4.6) | $2.10 | 6000 × (400 input + 250 output) × $3/M in + $15/M out |
 | Evaluator (Haiku 4.5) | $0.45 | 6000 × (500 input + 80 output) × $1/M + $5/M |
 | Radar | $0 | LLM yok |
 | Publisher | $0 | LLM yok |

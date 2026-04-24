@@ -194,7 +194,7 @@ def guvenli_cagir(kullanici_mesaji: str):
 
     # Katman 3 (Constitutional AI — Anthropic'in kendi savunması)
     cevap = client.messages.create(
-        model="claude-sonnet-4-5",
+        model="claude-sonnet-4-6",
         max_tokens=500,
         temperature=0,
         system=SISTEM_PROMPT,

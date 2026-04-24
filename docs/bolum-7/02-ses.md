@@ -41,7 +41,7 @@ flowchart LR
     TEXT_IN[Transkript metni]
 
     subgraph STAGE2["2️⃣ LLM (anlam + aksiyon)"]
-        CLAUDE[Claude Sonnet 4.5]
+        CLAUDE[Claude Sonnet 4.6]
     end
 
     TEXT_OUT[Cevap metni]
@@ -333,7 +333,7 @@ def voice_agent(ses_dosyasi: str) -> str:
 
     # 2. LLM
     response = claude.messages.create(
-        model="claude-sonnet-4-5",
+        model="claude-sonnet-4-6",
         max_tokens=256,
         system=SYSTEM,
         messages=[{"role": "user", "content": transcript}],

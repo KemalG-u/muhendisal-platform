@@ -304,7 +304,7 @@ Anthropic `claude-agent-sdk`'yı [platform.claude.com/docs/agent-sdk/python](htt
 
     **Hook'lar.** `ClaudeAgentOptions(hooks={"PreToolUse": [...], "PostToolUse": [...]})` — tool çağrısı öncesi/sonrası callback. Kullanım: izin denetimi, audit log, input sanitizasyonu, çıktı validasyonu.
 
-    **Model seçimi.** `ClaudeAgentOptions(model="claude-sonnet-4-5")` — varsayılan `claude-sonnet-4-5`; ucuz görev için `claude-haiku-4-5`; ağır analiz için `claude-opus-4-5`. Heterojen maliyet optimizasyonu (6.5 CTO Kararı) burada da geçerli.
+    **Model seçimi.** `ClaudeAgentOptions(model="claude-sonnet-4-6")` — varsayılan `claude-sonnet-4-6`; ucuz görev için `claude-haiku-4-5`; ağır analiz için `claude-opus-4-7`. Heterojen maliyet optimizasyonu (6.5 CTO Kararı) burada da geçerli.
 
     **OpenTelemetry.** `pip install claude-agent-sdk[otel]` → traces otomatik export. Prod multi-agent observability için altyapı hazır geliyor.
 

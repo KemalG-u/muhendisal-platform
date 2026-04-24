@@ -18,7 +18,7 @@
 
 10. Bölüm başlangıcında şunu dedim: *"Platform bittikten sonraki 6 ay en kritik."* Bu sayfa o 6 ay için **yapı** kurar. Çünkü:
 
-- **AI alanı 6 ayda değişiyor.** Bugün öğrendiğin Claude Sonnet 4.5 yerine 6 ay sonra Claude Opus 6 çıkar. Tek başına kendini güncel tutman zor; **topluluk sinyali** senin yerine haberleri filtreler.
+- **AI alanı 6 ayda değişiyor.** Bugün öğrendiğin Claude Sonnet 4.6 yerine 6 ay sonra Claude Opus 4.7 çıkar. Tek başına kendini güncel tutman zor; **topluluk sinyali** senin yerine haberleri filtreler.
 - **Imposter syndrome gerçek.** İlk işe başlayan junior AI Engineer'ların ~%80'i 3 ay içinde "ben bu işe layık değilim" hissine giriyor. Mentor + peer topluluğu bu hissi kırmak için kritik.
 - **Give first kültürü** — topluluk sana fayda sağlıyor, sen de sağla. Bu sayfayı okuyan kişi 6 ay sonra **mentor** olacak; bu rotasyonun adını koymalı.
 

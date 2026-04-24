@@ -164,7 +164,7 @@ messages = [{"role": "user", "content": "İstanbul'da yarın yağmur var mı? Va
 
 for adim in range(10):  # Güvenlik kapağı — max 10 döngü
     cevap = client.messages.create(
-        model="claude-sonnet-4-5",
+        model="claude-sonnet-4-6",
         max_tokens=1024,
         tools=tools,
         messages=messages,

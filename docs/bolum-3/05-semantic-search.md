@@ -289,7 +289,7 @@ Sadece ekonomi kategorisinde skorlu 3 sonuç döner — kategori filter + semant
 | Boyut | 3.5 Semantic Search | 9.4 RAG Chatbot |
 |---|---|---|
 | **Amaç** | Retrieval (sadece skorlu liste) | Full RAG (retrieval + LLM cevap) |
-| **LLM** | YOK | Claude Sonnet 4.5 |
+| **LLM** | YOK | Claude Sonnet 4.6 |
 | **Vector DB** | Qdrant | Qdrant |
 | **Embedding** | Voyage voyage-3 | Voyage voyage-3 |
 | **Frontend** | Yok (JSON API) | HTMX + Tailwind |
@@ -357,7 +357,7 @@ async def cevapla(sorgu: str, kaynaklar: list[dict]) -> str:
     client = AsyncAnthropic()
     context = "\n\n".join(f"[{i+1}] {k['baslik']}" for i, k in enumerate(kaynaklar))
     response = await client.messages.create(
-        model="claude-sonnet-4-5-20250929",
+        model="claude-sonnet-4-6",
         max_tokens=512,
         messages=[{"role": "user", "content": f"Kaynaklar:\n{context}\n\nSoru: {sorgu}"}],
     )

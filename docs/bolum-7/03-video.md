@@ -234,7 +234,7 @@ Türkçe, JSON formatı:
     })
 
     response = client.messages.create(
-        model="claude-sonnet-4-5",
+        model="claude-sonnet-4-6",
         max_tokens=2048,
         messages=[{"role": "user", "content": content}],
     )
@@ -309,7 +309,7 @@ def summarize(frames: list[Path], transcript: str) -> dict:
 Türkçe JSON: {{"konu", "konusmacilar", "aksiyonlar", "kararlar", "ton"}}""",
     })
     r = claude.messages.create(
-        model="claude-sonnet-4-5", max_tokens=2048,
+        model="claude-sonnet-4-6", max_tokens=2048,
         messages=[{"role": "user", "content": content}],
     )
     return json.loads(r.content[0].text)

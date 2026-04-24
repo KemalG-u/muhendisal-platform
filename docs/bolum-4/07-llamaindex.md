@@ -73,7 +73,7 @@ flowchart TB
 | 🔢 **Embedding** | `VoyageEmbedding`, `HuggingFaceEmbedding` | Embedding modeli wrapper'ı |
 | 🗄️ **VectorStoreIndex** | `VectorStoreIndex`, `QdrantVectorStore` | Tüm chunking+embedding+saklama tek çağrıda |
 | 🔍 **QueryEngine** | `index.as_query_engine(llm=...)` | Retriever + Synthesizer birleşik |
-| 🤖 **LLM wrapper** | `Anthropic(model="claude-sonnet-4-5")` | LLM çağrılarını standardize eder |
+| 🤖 **LLM wrapper** | `Anthropic(model="claude-sonnet-4-6")` | LLM çağrılarını standardize eder |
 | 💬 **Response** | `response.response` + `response.source_nodes` | Cevap + kaynak Node listesi (attribution) |
 
 </table>
@@ -93,7 +93,7 @@ from llama_index.llms.anthropic import Anthropic
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 
 # Global ayar — LLM ve embedding modeli
-Settings.llm = Anthropic(model="claude-sonnet-4-5")
+Settings.llm = Anthropic(model="claude-sonnet-4-6")
 Settings.embed_model = HuggingFaceEmbedding(
     model_name="sentence-transformers/paraphrase-multilingual-mpnet-base-v2"
 )

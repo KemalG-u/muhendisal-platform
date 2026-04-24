@@ -555,7 +555,7 @@ Bunları log'a yaz. 1 ay sonra "hangi endpoint en pahalı?" sorusunu kendi log'u
 
 ```python
 response = client.messages.create(
-    model="claude-sonnet-4-5",
+    model="claude-sonnet-4-6",
     system=[{"type": "text", "text": "...", "cache_control": {"type": "ephemeral"}}],
     ...
 )

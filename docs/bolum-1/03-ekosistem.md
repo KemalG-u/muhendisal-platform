@@ -94,7 +94,7 @@ flowchart TB
 | **Opus 4.7** | Zirve (en yeni) | Orta | 200K+ | ~$15 / ~$75 |
 | **Opus 4.6** | Çok yüksek | Orta | 200K | ~$15 / ~$75 |
 | **Sonnet 4.6** | Yüksek (dengeli) | Hızlı | 200K | ~$3 / ~$15 |
-| **Sonnet 4.5** | Yüksek | Hızlı | 200K | ~$3 / ~$15 |
+| **Sonnet 4.6** | Yüksek | Hızlı | 200K | ~$3 / ~$15 |
 | **Haiku 4.5** | Orta | Çok hızlı | 200K | ~$1 / ~$5 |
 
 **Güçlü yönler:**
@@ -331,7 +331,7 @@ Kanıt: `muhendisal-notlarim/bolum-1/03-model-karar.md` — 5 cevap + seçtiğin
 | 5 | DeepSeek'i KVKK olmadan kullanmak | Veri Çin sunucusunda, yasal risk | Ya lokal çalıştır ya veri anonimize |
 | 6 | Llama'yı laptop'ta 70B çalıştırmak | RAM yetmez, makine donar | Küçük model (8B) başla, cloud GPU sonra |
 | 7 | Hiç açık kaynak denememek | Veri gizliliği proje çıkınca hazırlıksız | Bölüm 0.3 Ollama deneyimini atlama |
-| 8 | "Claude Türkçe kötü" miti | 2024 efsanesi, Sonnet 4.5 Türkçe iyi | Kendin test et, "Türkçe özetle" yaz |
+| 8 | "Claude Türkçe kötü" miti | 2024 efsanesi, Sonnet 4.6 Türkçe iyi | Kendin test et, "Türkçe özetle" yaz |
 
 ## Anthropic-first — platformun gerekçesi, net
 

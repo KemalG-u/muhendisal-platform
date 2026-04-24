@@ -201,7 +201,7 @@ client = Anthropic()
 
 # Model başı maliyet (2026 yaklaşımları)
 FIYAT = {
-    "claude-sonnet-4-5": {"in": 3.0, "out": 15.0},  # $/M token
+    "claude-sonnet-4-6": {"in": 3.0, "out": 15.0},  # $/M token
     "claude-haiku-4-5": {"in": 1.0, "out": 5.0},
     "claude-opus-4-7": {"in": 15.0, "out": 75.0},
 }
@@ -219,9 +219,9 @@ def hesapla_maliyet(response, model: str) -> float:
 
 
 # Kullanım
-response = client.messages.create(model="claude-sonnet-4-5", ...)
-mal = hesapla_maliyet(response, "claude-sonnet-4-5")
-log.info(f"maliyet: ${mal:.4f}", extra={"user": user_id, "model": "sonnet-4-5"})
+response = client.messages.create(model="claude-sonnet-4-6", ...)
+mal = hesapla_maliyet(response, "claude-sonnet-4-6")
+log.info(f"maliyet: ${mal:.4f}", extra={"user": user_id, "model": "sonnet-4-6"})
 
 # Redis'te aylık toplam
 r.incrbyfloat(f"cost:{date.today().strftime('%Y-%m')}", mal)

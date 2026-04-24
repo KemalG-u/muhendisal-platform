@@ -165,7 +165,7 @@ from anthropic import Anthropic
 client = Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
 
 yanit = client.messages.create(
-    model="claude-sonnet-4-5-20250929",
+    model="claude-sonnet-4-6",
     max_tokens=300,
     messages=[
         {
@@ -215,15 +215,15 @@ Anthropic'in resmi dokümanı ve **Building with the Claude API** kursu bu sayfa
 
 **1. Her API çağrısında üç zorunlu parça var:** (1) hangi modeli kullanacaksın, (2) ne mesaj yollayacaksın, (3) cevap en fazla kaç token olsun (`max_tokens`). **Son maddeyi unutma** — yoksa Claude 20 sayfa cevap üretip faturayı şişirebilir. Sen bu sayfada üçünü de verdin.
 
-**2. Model adını tarihli yaz.** `claude-sonnet-4-5` (sabit isim) yerine `claude-sonnet-4-5-20250929` (tarihli snapshot) kullan — böylece Anthropic modeli yarın güncellese de kodun aynı davranır, kırılmaz.
+**2. Model adını tarihli yaz.** `claude-sonnet-4-6` (sabit isim) yerine `claude-sonnet-4-6` (tarihli snapshot) kullan — böylece Anthropic modeli yarın güncellese de kodun aynı davranır, kırılmaz.
 
 **3. Kimliğini API key ile ispatla.** Key'i koda yazma, ortam değişkenine koy. SDK zaten header'lara otomatik ekliyor; sen bu işin mekaniğiyle uğraşmıyorsun.
 
 ??? info "Teknik detay — isteyene (düz HTTP, header'lar, stop_reason, kaynaklar)"
 
-    **Messages API'nin zorunlu alanları: `model` ve `messages`.** Hiçbir çağrı bu ikisi olmadan çalışmaz. Sen bu sayfada `claude-sonnet-4-5-20250929` değerini `model`'e, bir `user` mesajını `messages`'a verdin — minimum sözleşme sağlandı. `max_tokens` da zorunlu ve bir güvenlik katmanı: model çıktı token'ı başına ücretlendirilir; `max_tokens=300` Claude'u 300 token'da keser. Geniş işlerde artırırsın (ör. 4000), küçük işlerde düşürürsün (ör. 50). Kesildiğinde `stop_reason: "max_tokens"` döner.
+    **Messages API'nin zorunlu alanları: `model` ve `messages`.** Hiçbir çağrı bu ikisi olmadan çalışmaz. Sen bu sayfada `claude-sonnet-4-6` değerini `model`'e, bir `user` mesajını `messages`'a verdin — minimum sözleşme sağlandı. `max_tokens` da zorunlu ve bir güvenlik katmanı: model çıktı token'ı başına ücretlendirilir; `max_tokens=300` Claude'u 300 token'da keser. Geniş işlerde artırırsın (ör. 4000), küçük işlerde düşürürsün (ör. 50). Kesildiğinde `stop_reason: "max_tokens"` döner.
 
-    **Tarihli snapshot neden:** Model sürümleri zamanla güncellenir. `claude-sonnet-4-5` bir takma ad — bugün A sürümüne, yarın B sürümüne işaret edebilir. Tarihli snapshot (`...-20250929`) sabittir. Yeni işlere başladığında [docs.claude.com/models](https://docs.claude.com/en/docs/about-claude/models) adresinden güncel snapshot adını al.
+    **Tarihli snapshot neden:** Model sürümleri zamanla güncellenir. `claude-sonnet-4-6` bir takma ad — bugün A sürümüne, yarın B sürümüne işaret edebilir. Tarihli snapshot (`...-20250929`) sabittir. Yeni işlere başladığında [docs.claude.com/models](https://docs.claude.com/en/docs/about-claude/models) adresinden güncel snapshot adını al.
 
     **Header mekaniği:** SDK senin yerine `x-api-key` ve `anthropic-version` header'larını ekliyor. Düz HTTP ile (ör. `curl` ile) denerken bu ikisini manuel eklemen gerekir. SDK'nin ana kazancı bu: kimlik, hata yakalama, yeniden deneme, streaming hazır gelir.
 
@@ -288,7 +288,7 @@ Görüntüyü `muhendisal-notlarim/bolum-2/01-ilk-cagri/ekran.png` olarak taşı
 <li>Anthropic modelleri uzaktaki sunucularda çalışıyor, senin bilgisayarında değil — **bu yüzden API üzerinden konuşuyoruz**, HTTPS + kimlik + sayaç gerekli.</li>
 <li>Kimlik gerektiği için **API key aldın**. Key sızdırılırsa hesabın saldırıya uğrar, bu yüzden kodun içine yazmadık, ortam değişkenine koyduk.</li>
 <li>Ortam değişkenine koyduğun için **kod güvenli**, commit etsen bile key dışarıya sızmaz — repo paylaşımı riski ortadan kalktı.</li>
-<li>Model her çağrıda tarihlidir (`claude-sonnet-4-5-20250929`) — **bu yüzden kodun zamanla kırılmaz**; Anthropic modeli güncellese bile sen aynı sürümle konuşmaya devam edersin.</li>
+<li>Model her çağrıda tarihlidir (`claude-sonnet-4-6`) — **bu yüzden kodun zamanla kırılmaz**; Anthropic modeli güncellese bile sen aynı sürümle konuşmaya devam edersin.</li>
 <li>Her çağrıda `max_tokens` verdin — **bu yüzden faturan patlamaz**; cevap uzasa da 300 token'da keser.</li>
 </ol>
 

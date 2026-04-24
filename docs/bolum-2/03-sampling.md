@@ -95,7 +95,7 @@ for temp in [0.0, 0.7, 1.0]:
 
     for deneme in range(3):
         cevap = client.messages.create(
-            model="claude-sonnet-4-5",
+            model="claude-sonnet-4-6",
             max_tokens=150,
             temperature=temp,
             messages=[{"role": "user", "content": PROMPT}],

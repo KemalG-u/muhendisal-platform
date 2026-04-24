@@ -115,7 +115,7 @@ Her agent ayrı LLM çağrısı + ayrı sorumluluk + ayrı maliyet optimizasyonu
 
 ### Ne oluyor
 
-Eski LLM sadece metin. Yeni modeller metin + görsel + ses + video **aynı içinde**. Claude Sonnet 4.5 görüntü alır (Bölüm 7 temel). GPT-4o ses + görsel. Gemini 2.5 uzun video analiz.
+Eski LLM sadece metin. Yeni modeller metin + görsel + ses + video **aynı içinde**. Claude Sonnet 4.6 görüntü alır (Bölüm 7 temel). GPT-4o ses + görsel. Gemini 2.5 uzun video analiz.
 
 ### Somut kullanım
 
@@ -364,7 +364,7 @@ Anthropic'in [Responsible Scaling Policy (RSP)](https://www.anthropic.com/respon
 
 **ASL-1:** Çok sınırlı model (GPT-2 seviyesi). Güvenlik sorunu yok.
 
-**ASL-2:** Mevcut çoğu model (Claude Sonnet 4.5, GPT-4, Gemini 2). "Meaningful autonomous capabilities" var. Standart güvenlik yeterli.
+**ASL-2:** Mevcut çoğu model (Claude Sonnet 4.6, GPT-4, Gemini 2). "Meaningful autonomous capabilities" var. Standart güvenlik yeterli.
 
 **ASL-3:** Biyolojik/kimyasal saldırıyı yardım edebilecek veya otonom replikasyon yapabilecek. **Ek güvenlik önlemleri zorunlu** — red team test, deployment restriction.
 

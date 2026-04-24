@@ -30,7 +30,7 @@ Portföyün en etkili parçası **"git, tıkla, kullan" canlı demodur**. GitHub
 | **Backend** | FastAPI 0.136 | Flask, Django | FastAPI async-native + OpenAPI otomatik + type hint valid; Claude streaming için ideal |
 | **Vector DB** | Qdrant 1.17.1 (Docker) | Pinecone, Weaviate, Chroma | Qdrant self-host ücretsiz + Rust hızı + filter zengin; Pinecone vendor lock-in; Chroma prod için çok genç |
 | **Embedding** | `voyage-3` (Voyage AI) | OpenAI `text-embedding-3`, Cohere | Voyage AI Anthropic'in resmi tavsiyesi (docs.claude.com'da önerilen); RAG için optimize |
-| **LLM** | Claude Sonnet 4.5 | GPT-4o, Gemini 2.5 | Sonnet 4.5 uzun context (200K) + streaming + tool calling + Türkçe güçlü |
+| **LLM** | Claude Sonnet 4.6 | GPT-4o, Gemini 2.5 | Sonnet 4.6 uzun context (200K) + streaming + tool calling + Türkçe güçlü |
 | **Frontend** | HTMX + Tailwind CDN | React/Next.js, Vue, Streamlit | HTMX build yok, deploy basit; Streamlit **portföy demoya uygun değil** — iş ilanı refleksi değil |
 
 </table>
@@ -58,7 +58,7 @@ flowchart TB
         ASK --> EMB2[Voyage AI embed soru]
         EMB2 --> QR[Qdrant search top-5]
         QR --> CTX[Context oluştur]
-        CTX --> CL[Claude Sonnet 4.5]
+        CTX --> CL[Claude Sonnet 4.6]
         CL -->|stream| U2
         CL --> SRC[Kaynak chunk'lar]
         SRC --> U2
@@ -274,7 +274,7 @@ def search(client: QdrantClient, vo: voyageai.Client, query: str, top_k: int = 5
 ## `app/claude.py` — streaming + kaynak gösterme
 
 ```python
-"""Claude Sonnet 4.5 ile streaming cevap + kaynak chunk'ları."""
+"""Claude Sonnet 4.6 ile streaming cevap + kaynak chunk'ları."""
 from __future__ import annotations
 
 import os
@@ -282,7 +282,7 @@ from collections.abc import AsyncIterator
 
 from anthropic import AsyncAnthropic
 
-MODEL = "claude-sonnet-4-5-20250929"
+MODEL = "claude-sonnet-4-6"
 MAX_TOKENS = 1024
 
 SYSTEM_PROMPT = """Sen bir RAG asistanısın. Kullanıcının sorusuna SADECE verilen
@@ -523,7 +523,7 @@ rag.alanadin.com {
 | Domain `.com` | 0.9 € | 11 € | Porkbun ortalama |
 | Cloudflare | 0 | 0 | Ücretsiz tier yeterli |
 | Let's Encrypt | 0 | 0 | Caddy otomatik |
-| Anthropic API (kişisel kullanım ~50 soru/gün) | 1–3 $ | 12–36 $ | Sonnet 4.5 input $3/M, output $15/M |
+| Anthropic API (kişisel kullanım ~50 soru/gün) | 1–3 $ | 12–36 $ | Sonnet 4.6 input $3/M, output $15/M |
 | Voyage AI embedding (50 PDF + 1500 sorgu) | 0.4 $ | 5 $ | voyage-3 $0.06/1M token |
 | GitHub Actions (public repo) | 0 | 0 | Sınırsız |
 | GHCR storage (image ~180 MB × 10 tag) | 0 | 0 | 500 MB ücretsiz tier |
@@ -577,7 +577,7 @@ GitHub repo README.md'si bu şablonu takip et:
 
 ## Nedir?
 
-PDF yükle → soru sor → Claude Sonnet 4.5 kaynak chunk'ları göstererek cevaplasın.
+PDF yükle → soru sor → Claude Sonnet 4.6 kaynak chunk'ları göstererek cevaplasın.
 200 sayfalık makaleyi 3 saniyede tara, spesifik sorular sor.
 
 ## Stack
@@ -585,7 +585,7 @@ PDF yükle → soru sor → Claude Sonnet 4.5 kaynak chunk'ları göstererek cev
 - FastAPI 0.136 (async backend)
 - Qdrant 1.17 (vector DB, self-hosted)
 - Voyage AI `voyage-3` (embedding, Anthropic önerisi)
-- Anthropic Claude Sonnet 4.5 (streaming)
+- Anthropic Claude Sonnet 4.6 (streaming)
 - HTMX + Tailwind CDN (frontend, build yok)
 - Docker Compose + GitHub Actions (deploy)
 
@@ -669,7 +669,7 @@ Kanıt: canlı URL + GitHub repo link + 3 farklı PDF ile denenmiş ekran görü
 <div class="ma-neden-sonuc-header">🔗 Birlikte okuma — neden ne oldu</div>
 
 - **A → B:** Portföy canlı demo = tek ikna edici kanıt; README + kod yetmez, tıklanabilir URL gerekir.
-- **B → C:** Stack kararı 5 katmanda: FastAPI (backend), Qdrant (vector DB), Voyage AI (embedding, Anthropic tavsiyesi), Claude Sonnet 4.5 (streaming LLM), HTMX (build-yok frontend). Streamlit reddedildi — iş refleksi değil.
+- **B → C:** Stack kararı 5 katmanda: FastAPI (backend), Qdrant (vector DB), Voyage AI (embedding, Anthropic tavsiyesi), Claude Sonnet 4.6 (streaming LLM), HTMX (build-yok frontend). Streamlit reddedildi — iş refleksi değil.
 - **C → D:** RAG akışı iki aşama: yükleme (PDF → chunk → embed → Qdrant) + sorgu (soru → embed → search → Claude). `input_type` ayrımı retrieval kalitesi için kritik.
 - **D → E:** Compose.yml iki servis (app + qdrant); app sadece localhost:8000 bind; Qdrant hiç expose yok; Caddy HTTPS önünde.
 - **E → F:** 9.3 pipeline bu projeye kopyalanır + 2 secret eklenir (Anthropic + Voyage); her push canlıya 5 dk'da akar.

@@ -109,7 +109,7 @@ client = anthropic.Anthropic()
 )
 def claude_cagir(prompt: str) -> str:
     response = client.messages.create(
-        model="claude-sonnet-4-5",
+        model="claude-sonnet-4-6",
         max_tokens=512,
         messages=[{"role": "user", "content": prompt}],
     )
@@ -203,7 +203,7 @@ Claude için sağlıklı timeout değerleri:
 ```python
 # Streaming
 with client.messages.stream(
-    model="claude-sonnet-4-5",
+    model="claude-sonnet-4-6",
     messages=[...],
     max_tokens=1024,
 ) as stream:
@@ -269,7 +269,7 @@ from anthropic import Anthropic, APIError
 client = Anthropic()
 
 MODEL_ZINCIRI = [
-    "claude-sonnet-4-5",    # İlk tercih (kalite)
+    "claude-sonnet-4-6",    # İlk tercih (kalite)
     "claude-haiku-4-5",     # Yedek (daha ucuz + hızlı)
 ]
 
@@ -567,7 +567,7 @@ Model zinciri (Sonnet → Haiku) kodu var. 9.5 agent DLQ tablosu oluşturuldu, s
    - `client = Anthropic(timeout=30)`
    - `@retry` decorator (exponential jitter + 3 attempt + trace log)
    - `@claude_breaker` (pybreaker 5 fail → 60s open)
-3. Fallback zinciri `MODEL_ZINCIRI = ["claude-sonnet-4-5", "claude-haiku-4-5"]`.
+3. Fallback zinciri `MODEL_ZINCIRI = ["claude-sonnet-4-6", "claude-haiku-4-5"]`.
 4. `app/errors.py` custom exception hiyerarşisi (RetryableError / PermanentError).
 5. 9.5 için `dead_letter` SQLite tablo ekle + DLQ insert helper.
 6. Test: 3 çağrıyı mock rate limit ile dene, retry + log kanıt.

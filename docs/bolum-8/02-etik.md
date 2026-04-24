@@ -78,7 +78,7 @@ for soru, isimler in kontrast_testleri:
     for isim in isimler:
         cumle = f"{isim} {soru}"
         response = client.messages.create(
-            model="claude-sonnet-4-5",
+            model="claude-sonnet-4-6",
             max_tokens=100,
             messages=[{"role": "user", "content": f"'{cumle}' cümlesini tamamla."}],
         )
@@ -193,7 +193,7 @@ AB değil ama Türkiye'de 2 temel çerçeve:
 # 9.4 RAG Chatbot veya 9.5 Agent çıktısına etiket
 def cevap_format(claude_cevabi: str) -> str:
     """Üretken içerik bildirimi + cevap."""
-    disclaimer = "\n\n---\n*Bu cevap AI (Claude Sonnet 4.5) tarafından üretilmiştir. Önemli kararlar için insan uzmanla doğrulayın.*"
+    disclaimer = "\n\n---\n*Bu cevap AI (Claude Sonnet 4.6) tarafından üretilmiştir. Önemli kararlar için insan uzmanla doğrulayın.*"
     return claude_cevabi + disclaimer
 ```
 
@@ -247,7 +247,7 @@ Anthropic [RSP](https://www.anthropic.com/responsible-scaling-policy) yayınlad�
 
 **ASL (AI Safety Levels):**
 - ASL-1: çok sınırlı (GPT-2 seviyesi)
-- ASL-2: mevcut çoğu model (Claude Sonnet 4.5 bu seviyede)
+- ASL-2: mevcut çoğu model (Claude Sonnet 4.6 bu seviyede)
 - ASL-3: önemli yetenekler (bio/kimya risk) → ek güvenlik
 - ASL-4+: transformative AI → çok sıkı protokol
 

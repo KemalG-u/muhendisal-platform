@@ -203,7 +203,7 @@ TOOL = {
 
 # tool_choice zorla — Claude serbest cevap veremez
 response = client.messages.create(
-    model="claude-sonnet-4-5",
+    model="claude-sonnet-4-6",
     tools=[TOOL],
     tool_choice={"type": "tool", "name": "musteri_destek_cevap"},
     messages=[...],

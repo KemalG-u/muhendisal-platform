@@ -232,7 +232,7 @@ async with httpx.AsyncClient(timeout=60.0) as client:
 import anthropic
 client = anthropic.AsyncAnthropic()
 cevap = await client.messages.create(
-    model="claude-sonnet-4-5",
+    model="claude-sonnet-4-6",
     max_tokens=1024,
     messages=[{"role": "user", "content": soru.mesaj}],
 )

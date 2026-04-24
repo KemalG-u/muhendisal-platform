@@ -200,7 +200,7 @@ def chat(prompt: str) -> str:
     else:
         # Prod'da: kaliteli cevap
         r = claude.messages.create(
-            model="claude-sonnet-4-5",
+            model="claude-sonnet-4-6",
             max_tokens=500,
             messages=[{"role": "user", "content": prompt}],
         )
@@ -252,7 +252,7 @@ Anthropic yerel LLM sağlamaz (cloud-only şirket) — ama bu konuda **net ve d�
 
     **GPU gereksinimleri.** CPU-only: 3B model 2-5 saniye/response. NVIDIA GPU (CUDA): 0.3-1 saniye. Apple Silicon (Metal): 0.5-2 saniye. GPU olmadan 7B+ modelleri denemek pratik değil. Llama.cpp alternatifi daha düşük seviye, Ollama'nın gerisinde.
 
-    **Kontekst uzunluğu.** Llama 3.2 default 8K token; ekstra parametre ile 128K'ya çıkarılabilir (`ollama run llama3.2 -p "..." --num_ctx 16384`). Claude Sonnet 4.x 200K, Claude Opus 1M — context window açısından Claude çok öndedir.
+    **Kontekst uzunluğu.** Llama 3.2 default 8K token; ekstra parametre ile 128K'ya çıkarılabilir (`ollama run llama3.2 -p "..." --num_ctx 16384`). Claude Sonnet 4.x 200K, Claude Opus (1M context) — context window açısından Claude çok öndedir.
 
     **Fine-tuning Ollama'da.** `ollama create` ile kendi modelini system promptla customize edebilirsin — ama bu fine-tune değil, prompt-wrap. Gerçek fine-tune için Hugging Face + LoRA + Unsloth gerek (Bölüm 5).
 

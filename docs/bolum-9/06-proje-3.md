@@ -67,7 +67,7 @@ flowchart TB
     FAPI[FastAPI /analiz]
     VAL[Pydantic + Pillow<br/>validasyon + downscale]
     RATE[slowapi<br/>10 req/min]
-    CLAUDE[Claude Sonnet 4.5<br/>vision]
+    CLAUDE[Claude Sonnet 4.6<br/>vision]
     PARSE[JSON parse<br/>Pydantic model]
     LOG[structured JSON log]
     RESP[JSON response<br/>özet+kavram+quiz]
@@ -103,7 +103,7 @@ Platform boyunca öğrendiğin parçalar birleşiyor:
 |---|---|---|
 | Web framework | **FastAPI 0.136** + uvicorn 0.46 | 9.1 |
 | Image validasyon | **Pillow 12.2** | 7.1 |
-| LLM | **anthropic 0.96** (Claude Sonnet 4.5 vision) | 7.1 |
+| LLM | **anthropic 0.96** (Claude Sonnet 4.6 vision) | 7.1 |
 | Input/output şema | **pydantic 2.11** | 8.1 |
 | Rate limit | **slowapi 0.1.9** | 8.3 |
 | Retry | **tenacity 9.1** | 8.5 |
@@ -135,7 +135,7 @@ Tam kod `examples/tahta-asistani/` klasöründe. Burada **3 kritik blok**:
 def claude_analiz(image_data: str, media_type: str) -> dict:
     """Claude vision ile tahta foto analiz -> ozet+kavram+quiz JSON."""
     response = _client.messages.create(
-        model="claude-sonnet-4-5",
+        model="claude-sonnet-4-6",
         max_tokens=2048,
         system="Sen Turkce bir ders asistanisin...",
         messages=[{
@@ -362,7 +362,7 @@ Platform'un **10 imza sayfa** omurgası tamamlandı:
 
 **Zayıf aday:** "Sadece teori biliyorum."
 
-**Güçlü aday:** "Evet — **Tahta Asistanı** projem var. Öğretmen tahta fotoğrafı atar, uygulama Claude Sonnet 4.5 vision ile özet + 3 anahtar kavram + 3 quiz üretir. FastAPI + Pydantic + pytest 14 test. 10 öğretmenlik okul için aylık $12 maliyet. [GitHub link]."
+**Güçlü aday:** "Evet — **Tahta Asistanı** projem var. Öğretmen tahta fotoğrafı atar, uygulama Claude Sonnet 4.6 vision ile özet + 3 anahtar kavram + 3 quiz üretir. FastAPI + Pydantic + pytest 14 test. 10 öğretmenlik okul için aylık $12 maliyet. [GitHub link]."
 
 **Neden güçlü:** Pratik + rakam + kullanıcı profili + kod somut.
 
@@ -372,7 +372,7 @@ Platform'un **10 imza sayfa** omurgası tamamlandı:
 
 > **Tahta Asistanı** — Türkçe AI ders asistanı  
 > Tech: FastAPI, Claude vision, pytest, Docker  
-> Claude Sonnet 4.5 ile tahta fotoğrafından ders özeti + quiz üretimi. 14 pytest test, 14/15 production checklist, ~$1/öğretmen/ay maliyet. [GitHub link]
+> Claude Sonnet 4.6 ile tahta fotoğrafından ders özeti + quiz üretimi. 14 pytest test, 14/15 production checklist, ~$1/öğretmen/ay maliyet. [GitHub link]
 
 ### LinkedIn Featured — 3+1 proje
 
@@ -407,7 +407,7 @@ Artık portföyün **4 proje**:
 
 Bu proje Anthropic Applied AI Engineer mülakatında **güçlü sinyal**:
 
-1. **Claude-first mimari** — Anthropic Sonnet 4.5 vision + Constitutional AI + Model Spec uyumu
+1. **Claude-first mimari** — Anthropic Sonnet 4.6 vision + Constitutional AI + Model Spec uyumu
 2. **Production refleksi** — 14/15 checklist + Docker + test + rate limit
 3. **Türkçe pazar** — Anthropic'in global yayılım stratejisinde niş katkı
 4. **Pedagojik değer** — AI'nın insan öğretmeni **güçlendirme** vizyonu (Anthropic değerleri)

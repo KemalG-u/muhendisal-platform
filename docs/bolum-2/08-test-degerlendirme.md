@@ -211,7 +211,7 @@ def eval_prompt(prompt_version: str = "v1"):
                 icerik=row["girdi"],
             )
             cevap = client.messages.create(
-                model="claude-sonnet-4-5",
+                model="claude-sonnet-4-6",
                 max_tokens=20,
                 temperature=0,
                 messages=[{"role": "user", "content": prompt}],

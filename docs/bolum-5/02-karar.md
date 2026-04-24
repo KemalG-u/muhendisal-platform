@@ -310,7 +310,7 @@ Claude kullanıyorsan karar ağacının **RAG** yolu %80+ olasılıkla sonuç. S
 
 ### 1. 200K context + prompt caching
 
-Claude Sonnet 4.5 + prompt caching (2024-11) ile sistem prompt %90 indirimli. **Büyük few-shot örnek seti** (50-100 örnek, 10K+ token) system prompt'a sığar + her istekte $0.003/1K token (cache'den). Bu **"mini FT"** gibi çalışır.
+Claude Sonnet 4.6 + prompt caching (2024-11) ile sistem prompt %90 indirimli. **Büyük few-shot örnek seti** (50-100 örnek, 10K+ token) system prompt'a sığar + her istekte $0.003/1K token (cache'den). Bu **"mini FT"** gibi çalışır.
 
 ### 2. Tool calling — davranış kilidi
 

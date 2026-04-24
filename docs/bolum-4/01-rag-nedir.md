@@ -126,7 +126,7 @@ def rag_cevap(soru: str) -> str:
     baglam = "\n".join(f"- {c}" for c in chunks)
 
     r = client.messages.create(
-        model="claude-sonnet-4-5",
+        model="claude-sonnet-4-6",
         max_tokens=400,
         system=(
             "Sen bir vakıf asistanısın. Aşağıdaki <baglam> içindeki bilgilerle "
@@ -211,7 +211,7 @@ async def rag_cevap_async(soru: str) -> str:
     baglam = "\n".join(f"- {c}" for c in chunks)
     client = anthropic.AsyncAnthropic()
     r = await client.messages.create(
-        model="claude-sonnet-4-5",
+        model="claude-sonnet-4-6",
         max_tokens=400,
         system="Bağlamdan cevap ver; yoksa 'bilmiyorum' de.",
         messages=[{"role": "user", "content": f"<baglam>\n{baglam}\n</baglam>\n\n{soru}"}],

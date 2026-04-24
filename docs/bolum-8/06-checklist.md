@@ -226,7 +226,7 @@ flowchart TB
 **Ne:** Ana model (Sonnet) down → Haiku fallback. 9.5 agent için dead letter queue.
 
 **Kanıt:**
-- `MODEL_ZINCIRI = ["claude-sonnet-4-5", "claude-haiku-4-5"]` kod.
+- `MODEL_ZINCIRI = ["claude-sonnet-4-6", "claude-haiku-4-5"]` kod.
 - `claude_cevapla_fallback()` fonksiyonu (try next model in chain).
 - 9.5 için: SQLite `dead_letter` tablosu `CREATE TABLE dead_letter (...)`.
 - Test: mock Sonnet down → fallback Haiku log: `"Fallback: sonnet yerine haiku kullanıldı"`.

@@ -137,7 +137,7 @@ for email in emails:
         icerik=email["icerik"],
     )
     cevap = client.messages.create(
-        model="claude-sonnet-4-5",
+        model="claude-sonnet-4-6",
         max_tokens=20,
         temperature=0,
         messages=[{"role": "user", "content": prompt}],
@@ -173,7 +173,7 @@ import anthropic
 client = anthropic.Anthropic()
 
 cevap = client.messages.create(
-    model="claude-sonnet-4-5",
+    model="claude-sonnet-4-6",
     max_tokens=20,
     temperature=0,
     system="Sen bir e-posta sınıflandırma asistanısın. Sadece kategori adını döndür.",

@@ -105,7 +105,7 @@ for rol_adi, sistem in [("Kibar garson", ROL_KIBAR_GARSON),
     print('='*50)
 
     cevap = client.messages.create(
-        model="claude-sonnet-4-5",
+        model="claude-sonnet-4-6",
         max_tokens=300,
         system=sistem,
         messages=[{"role": "user", "content": KULLANICI}],
@@ -158,7 +158,7 @@ mesajlar = [
 ]
 
 cevap = client.messages.create(
-    model="claude-sonnet-4-5",
+    model="claude-sonnet-4-6",
     max_tokens=500,
     system=SISTEM,
     messages=mesajlar,

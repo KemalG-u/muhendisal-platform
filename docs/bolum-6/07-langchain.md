@@ -26,7 +26,7 @@
 
 **Paket bölünmesi netleşti — dört ana parça.** **(1) `langchain-core`** — soyut arayüzler (Message, Tool, Model), runtime tipleri; her şey buna bağımlı. **(2) `langgraph`** — low-level state machine framework; nodes + edges + state + checkpoint. Durable execution motoru. **(3) `langchain`** — high-level agent API (`create_agent`), LangGraph üstünde hazır kalıp. **(4) Provider paketleri** — `langchain-anthropic`, `langchain-openai`, `langchain-google-genai`… her biri ayrı PyPI paketi, `pip install "langchain[anthropic]"` ile gelir. **Tek komutla her şey gelmez** — ihtiyacın olanı açıkça seç.
 
-**`create_agent` = "30 satırda agent" gerçek vaadi.** Sözdizimi basit: `agent = create_agent(model, tools, system_prompt=...)` + `agent.invoke({"messages": [HumanMessage("...")]})`. Model provider-agnostic — string format `"anthropic:claude-sonnet-4-5"` veya `ChatAnthropic` objesi; aynı agent kodunu GPT/Gemini/Mistral'e bir satırla geçirirsin. **Middleware** sistemi (2026 yeni) — `wrap_model_call`, `wrap_tool_call`, `@dynamic_prompt` ile agent davranışını kesmek-yeniden-yazmak mümkün (role-based prompting, dinamik tool enjeksiyonu, retry/fallback mantığı). LangChain'in "batarya dahil" yaklaşımı burası.
+**`create_agent` = "30 satırda agent" gerçek vaadi.** Sözdizimi basit: `agent = create_agent(model, tools, system_prompt=...)` + `agent.invoke({"messages": [HumanMessage("...")]})`. Model provider-agnostic — string format `"anthropic:claude-sonnet-4-6"` veya `ChatAnthropic` objesi; aynı agent kodunu GPT/Gemini/Mistral'e bir satırla geçirirsin. **Middleware** sistemi (2026 yeni) — `wrap_model_call`, `wrap_tool_call`, `@dynamic_prompt` ile agent davranışını kesmek-yeniden-yazmak mümkün (role-based prompting, dinamik tool enjeksiyonu, retry/fallback mantığı). LangChain'in "batarya dahil" yaklaşımı burası.
 
 **LangGraph = ne zaman?** Agent **uzun süre çalışacaksa** (saatler/günler), **kaldığı yerden devam etmeli** (checkpoint), **insan onayı beklemeli** (HITL middleware), **birden fazla agent birbiriyle konuşmalı** (supervisor pattern), **state karmaşık** (multi-field TypedDict) — LangGraph'ın `StateGraph`'ına geçiyorsun. 6.5'teki asyncio.gather orchestrator-workers deseni **manuel**; LangGraph `StateGraph` aynı deseni **checkpoint + retry + observable** olarak veriyor. Bedeli: learning curve + soyutlama yükü + LangSmith tracer kurulum. Prod long-running agent için eder; basit chat için değmez.
 
@@ -136,7 +136,7 @@ def hava_durumu(sehir: str) -> str:
 
 # ── Agent (tek satır) ──────────────────────────────────────────
 agent = create_agent(
-    model="anthropic:claude-sonnet-4-5",
+    model="anthropic:claude-sonnet-4-6",
     tools=[tcmb_kuru, hava_durumu],
     system_prompt=(
         "Sen finans + seyahat asistanısın. Türkçe, kısa, somut cevap ver. "
@@ -167,7 +167,7 @@ giderse döviz TL masrafları kontrol edilmeli.
 
 **Tasarım kararları:**
 
-- **Model string `"anthropic:claude-sonnet-4-5"`.** LangChain provider registry'si; aynı agent'ı `"openai:gpt-5"` yaparsan bütün kod değişmez (provider-agnostic değer).
+- **Model string `"anthropic:claude-sonnet-4-6"`.** LangChain provider registry'si; aynı agent'ı `"openai:gpt-5"` yaparsan bütün kod değişmez (provider-agnostic değer).
 - **`@tool` decorator minimum.** Python type hint + docstring yeter; JSON Schema otomatik (6.4 FastMCP deseni gibi).
 - **`agent.invoke({"messages":[...]})` standart imza.** Mesaj listesi giriş; `result["messages"]` çıkış — tool call'lar da listede.
 
@@ -195,7 +195,7 @@ class DestekState(TypedDict):
 
 
 # ── LLM ────────────────────────────────────────────────────────
-llm = ChatAnthropic(model="claude-sonnet-4-5", max_tokens=1024)
+llm = ChatAnthropic(model="claude-sonnet-4-6", max_tokens=1024)
 
 
 # ── Nodes ──────────────────────────────────────────────────────
@@ -364,7 +364,7 @@ Anthropic LangChain ile **partner entegrasyonu** üstünden ilişki kuruyor; can
 
 #### 1. 📝 Refleksiyon yazısı — 5 dakika
 
-> "Seçtiğim görev: [...]. Kullandığım katman: [create_agent / StateGraph]. Provider string: [`anthropic:claude-sonnet-4-5`]. Tool sayısı: [X]. Checkpoint kullandım mı: [evet/hayır + saver tipi]. Aynı görevi ham `anthropic` SDK ile ve `claude-agent-sdk` ile de yazsaydım, üç satırla karşılaştırma: [...]. Benim iş senaryom için üç SDK'dan hangisi daha uygun ve neden: [...]."
+> "Seçtiğim görev: [...]. Kullandığım katman: [create_agent / StateGraph]. Provider string: [`anthropic:claude-sonnet-4-6`]. Tool sayısı: [X]. Checkpoint kullandım mı: [evet/hayır + saver tipi]. Aynı görevi ham `anthropic` SDK ile ve `claude-agent-sdk` ile de yazsaydım, üç satırla karşılaştırma: [...]. Benim iş senaryom için üç SDK'dan hangisi daha uygun ve neden: [...]."
 
 Kaydet: `muhendisal-notlarim/bolum-6/07-langchain/refleksiyon.txt`
 
@@ -395,7 +395,7 @@ Repo linkini kaydet: `muhendisal-notlarim/bolum-6/07-langchain/uc-yol-repo.txt`
 
 - **A → B:** 2024–25 LangChain kaosundan sonra 2026'da **LangChain 1.x + LangGraph 1.x** ailesi stabilize oldu; ekosistem tekrar tutarlı.
 - **B → C:** İki kimlik netleşti: `langchain` **high-level** (`create_agent`), `langgraph` **low-level** (`StateGraph`). Agents LangGraph üstünde kurulu; durable execution + HITL + streaming + persistence ücretsiz geliyor.
-- **C → D:** Yol A — `create_agent` 30 satırda provider-agnostic agent (`anthropic:claude-sonnet-4-5` tek satır).
+- **C → D:** Yol A — `create_agent` 30 satırda provider-agnostic agent (`anthropic:claude-sonnet-4-6` tek satır).
 - **D → E:** Yol B — `StateGraph` stateful agent (`TypedDict` state + conditional edges + checkpoint + thread_id) — uzun süreli ve HITL agent'lar için zorunlu.
 - **E → F:** Üç SDK karar matrisi: **ham anthropic** (kontrol/chat), **claude-agent-sdk** (otonom iş/CI), **LangChain+LangGraph** (provider-agnostic/HITL/durable). Üçü rakip değil, **farklı soru için alternatif**.
 - **F → G:** Pratik kural: Prototipten başla → framework gereksinim kendini göstersin → sadece o zaman geç. "Framework eklemek ucuz, çıkarmak pahalı" CTO refleksi.
