@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(*)",
+      "Edit(**)",
+      "Write(**)",
+      "Read(**)",
+      "Grep(**)",
+      "Glob(**)",
+      "WebFetch(domain:*)",
+      "WebSearch",
+      "Task(*)"
+    ],
+    "deny": [],
+    "defaultMode": "bypassPermissions"
+  },
+  "autoApprove": true,
+  "bashAutoApprove": true
+}
