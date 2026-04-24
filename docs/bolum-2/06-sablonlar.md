@@ -7,6 +7,7 @@
 <span class="ma-persona ma-persona-is">🔵 iş</span>
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
+<div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~25 dakika</div>
 <div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 2.5 bitmiş — few-shot ve CoT'yi biliyorsun</div>
 <div class="ma-meta-row"><strong>🎯 Çıktı:</strong> Aynı prompt'u **100 farklı girdiyle** çağırmak için tek bir şablon dosyası kullanırsın; kendi `prompts/` klasörünü kurarsın; prompt değişikliklerini git ile versiyonlarsın.</div>
 </div>
@@ -54,7 +55,7 @@ flowchart LR
   classDef sen fill:#ddd6fe,stroke:#7c3aed,color:#111
   classDef tpl fill:#fef3c7,stroke:#ca8a04,color:#111
   classDef data fill:#dbeafe,stroke:#2563eb,color:#111
-  classDef eng fill:#dcfce7,stroke:#16a34a,color:#111
+  classDef eng fill:#fef3c7,stroke:#ca8a04,color:#111
   classDef uzak fill:#fed7aa,stroke:#ea580c,color:#111
   class S sen
   class TPL,PROMPT tpl
@@ -252,7 +253,7 @@ Anthropic 2024'te prompt yönetimine **resmi destek** ekledi:
     **A/B test deseni.** İki versiyon prompt (`email_class_v1.j2`, `email_class_v2.j2`), trafiği %50/%50 böl, kalite/maliyet karşılaştır. Bölüm 8'de production deseni.
 
 <div class="ma-anthropic-oz-kaynak" markdown>
-**Kaynak:** [docs.claude.com — Prompt templates and variables](https://docs.claude.com/en/docs/build-with-claude/prompt-engineering/prompt-templates-and-variables) (EN, ~10 dk). Anthropic Console workbench: [console.anthropic.com](https://console.anthropic.com) → "Prompts" sekmesi. Visual prompt builder + version history burada.
+**Kaynak:** [platform.claude.com — Prompt templates and variables](https://platform.claude.com/docs/en/docs/build-with-claude/prompt-engineering/prompt-templates-and-variables) (EN, ~10 dk). Anthropic Console workbench: [console.anthropic.com](https://console.anthropic.com) → "Prompts" sekmesi. Visual prompt builder + version history burada.
 </div>
 </div>
 
@@ -288,11 +289,13 @@ Repo/gist linkini kaydet: `muhendisal-notlarim/bolum-2/06-sablonlar/prompts-repo
 <div class="ma-neden-sonuc" markdown>
 <div class="ma-neden-sonuc-header">🔗 Birlikte okuma — neden ne oldu</div>
 
-- **A → B:** Prompt'lar string concat ile yazılırsa kod karışır, prompt değişikliği = kod değişikliği.
-- **B → C:** Prompt'u **ayrı dosya** olarak çıkarmak prompt'u "varlık" yapar — git'te versiyonlanır, ekip üyesi düzenleyebilir.
-- **C → D:** Jinja2 loop + condition gerektiren karmaşık şablonlarda lazım; basit `{{var}}` için Anthropic native yeterli.
-- **D → E:** Anthropic native variables + caching = **maliyet kontrolünün altın deseni** — sabit kısım cache'lenir, değişken kısım her çağrıda değişir.
-- **E → F:** Production'da prompt'lar kod kadar disiplinle yönetilir — test, A/B, version history.
+<ol class="ma-neden-sonuc-zincir" markdown>
+<li>**Prompt'lar string concat ile yazılırsa kod karışır.** Prompt değişikliği = kod değişikliği. Bu yüzden **prompt'ları ayrı dosyaya çıkarmak ilk adım.**</li>
+<li>**Prompt'u ayrı dosya yapmak onu 'varlık' haline getirir.** Git'te versiyonlanır, ekip üyesi düzenleyebilir. Bu yüzden **prompt mühendisliği yazılım geliştirme disipliniyle yürür.**</li>
+<li>**Jinja2 karmaşık şablonlarda; Anthropic native basit değişkenler için.** Her ikisini de bilmek yeterli. Bu yüzden **araç seçimi şablonun karmaşıklığına göre yapılır.**</li>
+<li>**Anthropic native variables + caching = maliyet kontrolünün altın deseni.** Sabit kısım cache'lenir, değişken kısım her çağrıda değişir. Bu yüzden **fatura optimizasyonunun ilk noktası bu desen.**</li>
+<li>**Production'da prompt'lar kod kadar disiplinle yönetilir.** Test, A/B, version history. Bu yüzden **prompt'lar repoda kodu gibi yaşar, e-postada değil.**</li>
+</ol>
 
 <div class="ma-neden-sonuc-sonuc" markdown>
 **Sonuç:** Prompt'u "kod içine string atmak" amatör; prompt'u "varlık olarak yönetmek" production. Bu sayfa o atlamayı verdi. Sıradaki iki sayfada güvenlik (2.7 prompt injection) ve ölçüm (2.8 prompt eval) — production hattını tamamlayan iki ayak.

@@ -7,6 +7,7 @@
 <span class="ma-persona ma-persona-is">🔵 iş</span>
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
+<div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~20 dakika</div>
 <div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 2.1 + 2.2 bitmiş; Python ortamın açık, Claude API anahtarı `ANTHROPIC_API_KEY` env değişkenine konulmuş</div>
 <div class="ma-meta-row"><strong>🎯 Çıktı:</strong> Aynı prompt'u 3 farklı sıcaklıkla çağırırsın, cevaplar arasındaki farkı kendi gözünle görürsün; kendi projen için **hangi sıcaklığı niye seçeceğine** karar verirsin.</div>
 </div>
@@ -55,7 +56,7 @@ flowchart LR
   classDef veri fill:#dbeafe,stroke:#2563eb,color:#111
   classDef uzak fill:#fed7aa,stroke:#ea580c,color:#111
   classDef hes fill:#fef3c7,stroke:#ca8a04,color:#111
-  classDef hed fill:#dcfce7,stroke:#16a34a,color:#111
+  classDef hed fill:#fef3c7,stroke:#ca8a04,color:#111
   class S sen
   class P,REPLY veri
   class API uzak
@@ -174,7 +175,7 @@ Anthropic sampling konusunda **en sade tavsiyeyi** verir: çoğu zaman sadece `t
     **Reasoning models özel durumu.** Anthropic'in "extended thinking" özelliği aktifse temperature etkisi azalır — model uzun düşünme zincirinde zaten kendi kendini düzeltir. 2.5 CoT sayfasında detay.
 
 <div class="ma-anthropic-oz-kaynak" markdown>
-**Kaynak:** [docs.claude.com — Messages API parameters](https://docs.claude.com/en/api/messages) (EN, ~10 dk). `temperature`, `top_p`, `top_k`'nın resmi spesifikasyonu + default değerleri burada. Pekiştirme için: **[Reduce Hallucinations](https://docs.claude.com/en/docs/test-and-evaluate/strengthen-guardrails/reduce-hallucinations)** sayfası — "düşük temperature halüsinasyonu çözmez" tezi orada anlatılır.
+**Kaynak:** [platform.claude.com — Messages API parameters](https://platform.claude.com/docs/en/api/messages) (EN, ~10 dk). `temperature`, `top_p`, `top_k`'nın resmi spesifikasyonu + default değerleri burada. Pekiştirme için: **[Reduce Hallucinations](https://platform.claude.com/docs/en/docs/test-and-evaluate/strengthen-guardrails/reduce-hallucinations)** sayfası — "düşük temperature halüsinasyonu çözmez" tezi orada anlatılır.
 </div>
 </div>
 
@@ -212,11 +213,12 @@ Gist linkini kaydet: `muhendisal-notlarim/bolum-2/03-sampling/karsilastirma-gist
 <div class="ma-neden-sonuc" markdown>
 <div class="ma-neden-sonuc-header">🔗 Birlikte okuma — neden ne oldu</div>
 
-- **A → B:** LLM her token için olasılık dağılımı üretir, çünkü mimarisi softmax ile bitiyor.
-- **B → C:** Sampling = bu dağılımdan rastgele seçim, çünkü hep en olası seçilirse model yaratıcılığını kaybeder.
-- **C → D:** `temperature` dağılımı ısıtır/soğutur, çünkü matematiksel olarak softmax içine bölen gibi etki eder.
-- **D → E:** `temperature=0` argmax yapar (hep en yüksek), `temperature=1` olduğu gibi sample eder.
-- **E → F:** Doğru sıcaklık seçimi = işin doğasına bakmak. Kod = 0, sohbet = 0.7, şiir = 1.
+<ol class="ma-neden-sonuc-zincir" markdown>
+<li>**LLM her token için olasılık dağılımı üretir.** Mimarisi softmax ile bitiyor. Bu yüzden **sampling (örnekleme) deterministik değil, istatistiksel.**</li>
+<li>**Hep en olası seçilirse model yaratıcılığını kaybeder.** Rastgele örnekleme bu yüzden var. Bu yüzden **temperature=0 tekrarlanabilir, temperature>0 çeşitli.**</li>
+<li>**`temperature` dağılımı ısıtır/soğutur.** Softmax içine bölen gibi etki eder. Bu yüzden **yüksek temperature = daha rastgele, düşük = daha öngörülü.**</li>
+<li>**Doğru sıcaklık seçimi işin doğasına bakar.** Kod = 0, sohbet = 0.7, şiir = 1. Bu yüzden **her iş için farklı temperature; tek değer herkese uymaz.**</li>
+</ol>
 
 <div class="ma-neden-sonuc-sonuc" markdown>
 **Sonuç:** Sıcaklık küçük bir parametre ama büyük bir etki. "Bot dün farklı cevap verdi" şikâyetinin %80'i sıcaklık ayar hatası. Bu sayfadan sonra bot davranışını kontrol edebiliyorsun — "rastgelelik" artık gizem değil, ayar düğmesi.

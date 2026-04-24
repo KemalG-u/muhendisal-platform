@@ -7,6 +7,7 @@
 <span class="ma-persona ma-persona-is">🔵 iş</span>
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
+<div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~30 dakika</div>
 <div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 2.6 prompt şablonları + 2.7 güvenlik bitmiş; `prompts/` klasörün var</div>
 <div class="ma-meta-row"><strong>🎯 Çıktı:</strong> Kendi promptun için **20 örneklik golden dataset** hazırlarsın; `pytest` stili prompt testleri yazarsın; LLM-as-judge ile otomatik skor alırsın; prompt değişikliklerinin **kaliteyi düşürüp yükseltmediğini** sayıyla bilirsin.</div>
 </div>
@@ -70,8 +71,8 @@ flowchart LR
   classDef data fill:#dbeafe,stroke:#2563eb,color:#111
   classDef teknik fill:#fef3c7,stroke:#ca8a04,color:#111
   classDef uzak fill:#fed7aa,stroke:#ea580c,color:#111
-  classDef karar fill:#fce7f3,stroke:#be185d,color:#111
-  classDef iyi fill:#dcfce7,stroke:#16a34a,color:#111
+  classDef karar fill:#fef3c7,stroke:#ca8a04,color:#111
+  classDef iyi fill:#fef3c7,stroke:#ca8a04,color:#111
   class S sen
   class GD,OUT,SCR data
   class PR,JDG,JDG1,JDG2,JDG3 teknik
@@ -322,7 +323,7 @@ Anthropic 2024'te eval'ı dokümantasyonun **merkez sütunlarından biri** halin
     **A/B test vs eval.** Eval = offline (prod'a çıkmadan). A/B test = online (prod'da iki prompt'u paralel canlıda, kullanıcı davranışını karşılaştır). İkisi farklı — Bölüm 8.3 A/B detay.
 
 <div class="ma-anthropic-oz-kaynak" markdown>
-**Kaynak:** [docs.claude.com — Define success criteria](https://docs.claude.com/en/docs/test-and-evaluate/define-success) ve [Develop test cases](https://docs.claude.com/en/docs/test-and-evaluate/develop-tests) (EN, toplam ~20 dk). Anthropic Console Evaluate: [console.anthropic.com](https://console.anthropic.com) → Evaluate sekmesi. Public repo: [github.com/anthropics/evals](https://github.com/anthropics/evals).
+**Kaynak:** [platform.claude.com — Define success criteria](https://platform.claude.com/docs/en/docs/test-and-evaluate/define-success) ve [Develop test cases](https://platform.claude.com/docs/en/docs/test-and-evaluate/develop-tests) (EN, toplam ~20 dk). Anthropic Console Evaluate: [console.anthropic.com](https://console.anthropic.com) → Evaluate sekmesi. Public repo: [github.com/anthropics/evals](https://github.com/anthropics/evals).
 </div>
 </div>
 
@@ -358,11 +359,13 @@ Kaydet: `muhendisal-notlarim/bolum-2/08-test-degerlendirme/repo-link.txt`
 <div class="ma-neden-sonuc" markdown>
 <div class="ma-neden-sonuc-header">🔗 Birlikte okuma — neden ne oldu</div>
 
-- **A → B:** Prompt'u "umut ile" kullanmak = rulet — bir değişiklik kaliteyi yükseltebilir de düşürebilir de, görmezsin.
-- **B → C:** Golden dataset = değişikliklerin etkisini ölçülebilir hale getirir. 20 örnek **yeterli** başlangıçta, 50-100 production'da.
-- **C → D:** Exact match sınıflandırmada iş görür ama serbest cevaplarda haksız katı; LLM-as-judge daha nüanslı ama daha pahalı. **Kombinasyon en sağlam.**
-- **D → E:** Eval CI/CD'ye girince prompt değişiklikleri **kod değişikliği disiplinine** kavuşur — kötü prompt merge edilmez.
-- **E → F:** Production'dan gelen gerçek örnekler eval'ı canlı tutar — "6 ay önceki golden" bayatlamış olur.
+<ol class="ma-neden-sonuc-zincir" markdown>
+<li>**Prompt'u 'umut ile' kullanmak = rulet.** Değişiklik kaliteyi yükseltir mi düşürür mü bilemezsin. Bu yüzden **golden dataset ile her değişiklik ölçülür.**</li>
+<li>**Golden dataset değişikliğin etkisini ölçülebilir yapar.** 20 örnek başlangıçta yeterli; 50-100 production'da. Bu yüzden **küçük başlanır, büyütülür — sıfırdan 100 örnek gerekmez.**</li>
+<li>**Exact match + LLM-as-judge kombinasyonu en sağlamdır.** Tek başına her ikisi de eksik. Bu yüzden **sınıflandırma için exact, serbest cevap için LLM-as-judge.**</li>
+<li>**Eval CI/CD'ye girince prompt değişiklikleri kod disiplinine kavuşur.** Kötü prompt merge edilmez. Bu yüzden **production kalitesi otomatik korunur.**</li>
+<li>**Production'dan gelen gerçek örnekler eval'ı canlı tutar.** '6 ay önceki golden' bayatlamış olur. Bu yüzden **eval seti düzenli güncellenir, statik değil.**</li>
+</ol>
 
 <div class="ma-neden-sonuc-sonuc" markdown>
 **Sonuç:** Eval = prompt engineering'in "test" ayağı. Bu ayak olmadan her geliştirme rulet. 2.1-2.8 Bölüm 2'nin 8 sayfası Anthropic API ile güvenli + ölçülü prompt geliştirme hattının temel kurgusunu verdi. Bölüm 3'te artık **Claude'un bilmediği verilerle** — kendi dokümantasyonunla, wiki'nle, notlarınla — cevap vermesini sağlayacağız. Embeddings ve Vector DB dünyasına.

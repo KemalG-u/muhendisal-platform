@@ -7,6 +7,7 @@
 <span class="ma-persona ma-persona-is">🔵 iş</span>
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
+<div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~30 dakika</div>
 <div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 2.4 bitmiş — sistem prompt yazabiliyor, XML tag refleksin oturmuş</div>
 <div class="ma-meta-row"><strong>🎯 Çıktı:</strong> Aynı görevi 0-shot ve 3-shot ile çağırırsın, kalite farkını sayıyla görürsün; "adım adım düşün" tekniği ile zor bir soruyu çözdürürsün; CoT'nin **ne zaman gerekli, ne zaman israf** olduğunu bilirsin.</div>
 </div>
@@ -56,7 +57,7 @@ flowchart TB
   classDef sen fill:#ddd6fe,stroke:#7c3aed,color:#111
   classDef pr fill:#dbeafe,stroke:#2563eb,color:#111
   classDef teknik fill:#fef3c7,stroke:#ca8a04,color:#111
-  classDef best fill:#dcfce7,stroke:#16a34a,color:#111
+  classDef best fill:#fef3c7,stroke:#ca8a04,color:#111
   classDef uzak fill:#fed7aa,stroke:#ea580c,color:#111
   class S sen
   class PROMPT,Q pr
@@ -281,7 +282,7 @@ Anthropic dokümantasyonu prompt engineering'in **en zengin alanı** — burası
     **CoT döküm tehlikesi.** Bazı durumlarda Claude düşünme zincirinde **yanlış varsayımlara saplanır** ve cevap yanlış çıkar. Self-consistency tekniği: aynı CoT prompt'u 3-5 kez çalıştırıp cevapları çoğunluk oyuyla seçmek — pahalı ama kritik göreve değer.
 
 <div class="ma-anthropic-oz-kaynak" markdown>
-**Kaynak:** [docs.claude.com — Multi-shot prompting](https://docs.claude.com/en/docs/build-with-claude/prompt-engineering/multishot-prompting) (EN, ~10 dk) ve [Chain of Thought](https://docs.claude.com/en/docs/build-with-claude/prompt-engineering/chain-of-thought) (EN, ~10 dk). Pekiştirme: [Extended Thinking](https://docs.claude.com/en/docs/build-with-claude/extended-thinking) — 2025-2026 reasoning models trendinin Anthropic'teki karşılığı.
+**Kaynak:** [platform.claude.com — Multi-shot prompting](https://platform.claude.com/docs/en/docs/build-with-claude/prompt-engineering/multishot-prompting) (EN, ~10 dk) ve [Chain of Thought](https://platform.claude.com/docs/en/docs/build-with-claude/prompt-engineering/chain-of-thought) (EN, ~10 dk). Pekiştirme: [Extended Thinking](https://platform.claude.com/docs/en/docs/build-with-claude/extended-thinking) — 2025-2026 reasoning models trendinin Anthropic'teki karşılığı.
 </div>
 </div>
 
@@ -317,11 +318,13 @@ Kaydet: `muhendisal-notlarim/bolum-2/05-few-shot-cot/kendi-fewshot-gist.txt`
 <div class="ma-neden-sonuc" markdown>
 <div class="ma-neden-sonuc-header">🔗 Birlikte okuma — neden ne oldu</div>
 
-- **A → B:** LLM eğitim verisinde **örnek görmeye alışık** — "şu örneklere benzer yap" insan-AI sohbet eğitiminin temel deseni.
-- **B → C:** Few-shot 3 örnekte format/tarz tutar, 5+ örnek ek getiri sağlamaz.
-- **C → D:** CoT mantık zincirini açıkça yazdırır — Claude'un ara hesapları **kendi kontrol etmesi** mümkün hale gelir, hata yakalama refleksi devreye girer.
-- **D → E:** Karmaşık görev = **few-shot + CoT** kombinasyonu. Ucuz görev = 0-shot.
-- **E → F:** Extended thinking 2025-2026'nın trendi — Claude kendisi düşünür, kullanıcı CoT istemez. Maliyet artar ama kalite belirgin.
+<ol class="ma-neden-sonuc-zincir" markdown>
+<li>**LLM eğitim verisinde örnek görmeye alışık.** "Şu örneklere benzer yap" deseni insan-AI sohbet eğitiminin temelidir. Bu yüzden **few-shot prompting en güçlü format araçlarından biri.**</li>
+<li>**Few-shot 3 örnekte format/tarz tutar; 5+ örnek ek getiri sağlamaz.** Bu yüzden **3 iyi örnek yeterli — uzun ise token boşa gider.**</li>
+<li>**CoT mantık zincirini açıkça yazdırır.** Claude ara hesapları kendi kontrol edebilir hale gelir. Bu yüzden **karmaşık görevlerde kalite belirgin artar.**</li>
+<li>**Karmaşık görev = few-shot + CoT kombinasyonu.** Ucuz görev = 0-shot. Bu yüzden **maliyeti optimize etmek için görev tipi belirleyicidir.**</li>
+<li>**Extended thinking 2025-2026'nın trendi.** Claude kendisi düşünür, kullanıcı CoT istemez. Bu yüzden **maliyet artar ama üst sınıf görevlerde kalite belirgin.**</li>
+</ol>
 
 <div class="ma-neden-sonuc-sonuc" markdown>
 **Sonuç:** Prompt engineering'in "%80 etkisi" 4 teknikten gelir: clear instructions (2.4) + examples (2.5) + CoT (2.5) + XML tags (2.4). Bu sayfa son iki tekniği eline verdi. Kalan %20 ileri konular (caching, eval, safety) — Bölüm 8 ve sonrasında.

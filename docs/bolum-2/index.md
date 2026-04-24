@@ -53,8 +53,8 @@ flowchart LR
 
   classDef user fill:#ddd6fe,stroke:#7c3aed,color:#111
   classDef page fill:#dbeafe,stroke:#2563eb,color:#111
-  classDef pilot fill:#dcfce7,stroke:#16a34a,color:#111
-  classDef goal fill:#dcfce7,stroke:#16a34a,color:#111
+  classDef pilot fill:#fef3c7,stroke:#ca8a04,color:#111
+  classDef goal fill:#fef3c7,stroke:#ca8a04,color:#111
   classDef ext fill:#fed7aa,stroke:#ea580c,color:#111
   class S user
   class P22,P23,P24,P25,P26,P278 page
@@ -99,7 +99,7 @@ Bölüm 2 Anthropic'in **en güçlü olduğu alandır**. Üç kanalda zengin iç
 
 **1. Academy — "Building with the Claude API" (~60 dk, sertifikalı).** Bizim 2.1-2.4'ü kapsayan Anthropic kursu. Biz Türkçe pratikle başlatıyoruz, bu kurs İngilizce geniş perspektif veriyor. 2.4'ten sonra aç — iki tarafın da aynı kavramları farklı örneklerle anlattığını görmek hafızaya oturtur.
 
-**2. Dokümantasyon — Prompt engineering overview ve Best practices.** [docs.claude.com/en/docs/prompt-engineering](https://docs.claude.com/en/docs/prompt-engineering) Anthropic'in **kanonik** rehberi. Her 2.x sayfasında ilgili docs alt sayfasına köprü kuruyoruz. XML tag'leri (2.4), CoT (2.5), prompt templates (2.6) hepsi docs'un adlandırmasıyla aynı — bu kasıtlı, Anthropic sözlüğüne alıştırıyor.
+**2. Dokümantasyon — Prompt engineering overview ve Best practices.** [docs.claude.com/en/docs/prompt-engineering](https://platform.claude.com/docs/en/docs/prompt-engineering) Anthropic'in **kanonik** rehberi. Her 2.x sayfasında ilgili docs alt sayfasına köprü kuruyoruz. XML tag'leri (2.4), CoT (2.5), prompt templates (2.6) hepsi docs'un adlandırmasıyla aynı — bu kasıtlı, Anthropic sözlüğüne alıştırıyor.
 
 **3. GitHub — `anthropics/courses/prompt_engineering_interactive_tutorial`.** Jupyter notebook, 9 bölüm, her bölümde çalışan kod. 2.5 (few-shot) ve 2.7-2.8 (güvenlik + test) için özellikle zengin. Bu notebook'u Colab'de aç, kendi API anahtarınla çalıştır — 2-3 saat harcadığın en iyi pratik budur. Biz bu notebook'un temel kavramlarını Türkçeleştirip senaryoluyoruz; sen Colab'de pratik etmeye devam ediyorsun.
 

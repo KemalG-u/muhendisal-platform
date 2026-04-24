@@ -7,6 +7,7 @@
 <span class="ma-persona ma-persona-is">🔵 iş</span>
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
+<div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~25 dakika</div>
 <div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 2.1 bitmiş — ilk Claude çağrını yapmış olman; Anthropic Console'da API anahtarın var</div>
 <div class="ma-meta-row"><strong>🎯 Çıktı:</strong> Bir Türkçe metnin Claude'da kaç token tuttuğunu ölçersin; aylık projenin **TL/$** olarak yaklaşık faturasını hesaplarsın; "Claude pahalı mı?" sorusuna rakamlı cevap verirsin.</div>
 </div>
@@ -50,7 +51,7 @@ flowchart LR
   classDef sen fill:#ddd6fe,stroke:#7c3aed,color:#111
   classDef veri fill:#dbeafe,stroke:#2563eb,color:#111
   classDef hes fill:#fef3c7,stroke:#ca8a04,color:#111
-  classDef hed fill:#dcfce7,stroke:#16a34a,color:#111
+  classDef hed fill:#fef3c7,stroke:#ca8a04,color:#111
   classDef uzak fill:#fed7aa,stroke:#ea580c,color:#111
   class S sen
   class TXT,CNT veri
@@ -184,7 +185,7 @@ Anthropic token + fiyat konusunu **çok şeffaf** anlatır — fiyat sayfası ve
     **Output limit:** `max_tokens` parametresi maksimum çıktıyı sınırlar. 2026 itibariyla Sonnet 4.x üst limit 8192 token (model güncellemesiyle değişebilir). Bu üst limite ulaşılırsa output kesilir; full cevap için `max_tokens` artırılır.
 
 <div class="ma-anthropic-oz-kaynak" markdown>
-**Kaynak:** [docs.claude.com — Token Counting](https://docs.claude.com/en/docs/build-with-claude/token-counting) (EN, ~10 dk). count_tokens endpoint resmi spesifikasyonu + örnek kodlar burada. Fiyat için ayrıca [anthropic.com/pricing](https://www.anthropic.com/pricing) — Anthropic fiyatları zaman zaman güncelliyor, ay başında bir kontrol et.
+**Kaynak:** [platform.claude.com — Token Counting](https://platform.claude.com/docs/en/docs/build-with-claude/token-counting) (EN, ~10 dk). count_tokens endpoint resmi spesifikasyonu + örnek kodlar burada. Fiyat için ayrıca [anthropic.com/pricing](https://www.anthropic.com/pricing) — Anthropic fiyatları zaman zaman güncelliyor, ay başında bir kontrol et.
 </div>
 </div>
 
@@ -224,11 +225,12 @@ Gist linkini şu yere kaydet: `muhendisal-notlarim/bolum-2/02-token-baglam/gist-
 <div class="ma-neden-sonuc" markdown>
 <div class="ma-neden-sonuc-header">🔗 Birlikte okuma — neden ne oldu</div>
 
-- **A → B:** LLM token-token üretir, çünkü transformer mimarisi her seferinde "bir sonraki en olası token"u tahmin eder.
-- **B → C:** Token sayısı = işlemcinin yapması gereken iş miktarı, çünkü her token için forward pass çalışır.
-- **C → D:** İş miktarı = elektrik + GPU saati = **dolar.** Anthropic bunu input/output ayırarak fiyatlar (output üretmek daha pahalı).
-- **D → E:** Türkçe metinler İngilizce'den fazla token ürettiği için **aynı içerik Türkçe'de daha pahalı.** Bu Anthropic'in tercihi değil — tokenizer'ın matematiği.
-- **E → F:** Sistem prompt'u her çağrıda göndermek faturayı patlatır — çünkü 5K token × 1000 çağrı = 5M token.
+<ol class="ma-neden-sonuc-zincir" markdown>
+<li>**LLM token-token üretir.** Transformer mimarisi her adımda "bir sonraki en olası token"u tahmin eder. Bu yüzden **cevap uzunluğu doğrudan maliyete dönüşür.**</li>
+<li>**Token sayısı = GPU saati = dolar.** Her token için forward pass çalışır. Bu yüzden **Anthropic input/output ayrı fiyatlar; output üretmek daha pahalı.**</li>
+<li>**Türkçe metinler İngilizce'den fazla token üretir.** Tokenizer'ın matematiği, Anthropic'in tercihi değil. Bu yüzden **aynı içerik Türkçe'de daha pahalıdır.**</li>
+<li>**Sistem prompt'u her çağrıda göndermek faturayı patlatır.** 5K token × 1000 çağrı = 5M token. Bu yüzden **prompt caching ile sabit kısım bir kez gönderilir.**</li>
+</ol>
 
 <div class="ma-neden-sonuc-sonuc" markdown>
 **Sonuç:** Token sayısını ölçmeden çağrı yapmak, su faturası ölçüsüz musluk açmak gibidir. Bu sayfa sana sayacı taktı; sonraki sayfalar (özellikle 2.4 sistem prompt + Bölüm 8 caching) **suyu nasıl kısacağını** öğretecek.
@@ -242,5 +244,5 @@ Gist linkini şu yere kaydet: `muhendisal-notlarim/bolum-2/02-token-baglam/gist-
 
 ← [2.1 LLM Nedir](01-llm-temelleri.md) &nbsp;|&nbsp; [Bölüm 2 girişi](index.md) &nbsp;|&nbsp; [Ana sayfa](../index.md)
 
-**Pekiştirme:** [docs.claude.com — Token Counting](https://docs.claude.com/en/docs/build-with-claude/token-counting) sayfasını aç, kendi metninle kendi count_tokens çağrını yap. Yukarıdaki Python örneğini referans alabilirsin.
+**Pekiştirme:** [platform.claude.com — Token Counting](https://platform.claude.com/docs/en/docs/build-with-claude/token-counting) sayfasını aç, kendi metninle kendi count_tokens çağrını yap. Yukarıdaki Python örneğini referans alabilirsin.
 </div>

@@ -7,6 +7,7 @@
 <span class="ma-persona ma-persona-is">🔵 iş</span>
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
+<div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~30 dakika</div>
 <div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 2.1 + 2.2 + 2.3 bitmiş; Python + API anahtarı çalışıyor</div>
 <div class="ma-meta-row"><strong>🎯 Çıktı:</strong> Claude'a sistem prompt ile "rol/kişilik" verirsin (örn: "kibar müşteri destek", "tarih uzmanı"); XML tag'leriyle yapılandırılmış prompt yazarsın; çoklu turlu sohbet kurarsın.</div>
 </div>
@@ -54,7 +55,7 @@ flowchart LR
   classDef rol fill:#fef3c7,stroke:#ca8a04,color:#111
   classDef veri fill:#dbeafe,stroke:#2563eb,color:#111
   classDef uzak fill:#fed7aa,stroke:#ea580c,color:#111
-  classDef hed fill:#dcfce7,stroke:#16a34a,color:#111
+  classDef hed fill:#fef3c7,stroke:#ca8a04,color:#111
   class S sen
   class SYS,ROLE rol
   class HIST,REPLY veri
@@ -209,7 +210,7 @@ Anthropic bu konuda **çok güçlü dokümantasyon** üretti — sistem prompt +
     **Multi-modal içerikte sistem prompt.** Görsel içeren mesajlarda sistem prompt görsel için ayrı yorumlanır — "bu görsele şu açıdan bak" talimatı sistem promptta etkili. Bölüm 7'de detay.
 
 <div class="ma-anthropic-oz-kaynak" markdown>
-**Kaynak:** [docs.claude.com — Use XML tags to structure your prompts](https://docs.claude.com/en/docs/build-with-claude/prompt-engineering/use-xml-tags) (EN, ~10 dk). XML tasarım kuralları + örnekler. Pekiştirme: [System Prompts](https://docs.claude.com/en/docs/build-with-claude/prompt-engineering/system-prompts) — sistem prompt iyi pratikleri.
+**Kaynak:** [platform.claude.com — Use XML tags to structure your prompts](https://platform.claude.com/docs/en/docs/build-with-claude/prompt-engineering/use-xml-tags) (EN, ~10 dk). XML tasarım kuralları + örnekler. Pekiştirme: [System Prompts](https://platform.claude.com/docs/en/docs/build-with-claude/prompt-engineering/system-prompts) — sistem prompt iyi pratikleri.
 </div>
 </div>
 
@@ -245,11 +246,13 @@ Gist linkini kaydet: `muhendisal-notlarim/bolum-2/04-sistem-prompt/kendi-rolum-g
 <div class="ma-neden-sonuc" markdown>
 <div class="ma-neden-sonuc-header">🔗 Birlikte okuma — neden ne oldu</div>
 
-- **A → B:** Claude eğitildiği veride **insan-AI sohbet rolleri** çok geçtiği için "rol" kavramına çok duyarlı.
-- **B → C:** Sistem prompt = rolü tek bir yerde keskin tanımlamak; user mesajına serpiştirmekten **5 kat etkili.**
-- **C → D:** XML tag'leri Claude'un eğitim verisinde **bağlam sınırı** olarak işaretlenmiş — tag'leri görünce odağını yeniler.
-- **D → E:** `messages[]` listesi sıralı bağlamı taşır; Claude history'i otomatik okur — sen state yönetmiyorsun.
-- **E → F:** Doğru sistem prompt + iyi XML yapı = **prompt yazma işinin yarısı.** Geri kalan yarısı few-shot ve CoT (2.5).
+<ol class="ma-neden-sonuc-zincir" markdown>
+<li>**Claude "rol" kavramına çok duyarlıdır.** Eğitim verisinde insan-AI sohbet rolleri çok geçti. Bu yüzden **sistem promptu rolü tek yerde net tanımlamak en etkili yöntem.**</li>
+<li>**Sistem prompt user mesajına serpiştirmekten ~5 kat etkili.** Rol her çağrıda tutarlı. Bu yüzden **sistem promptu ayrı bir varlık olarak tasarlanır.**</li>
+<li>**XML tag'leri bağlam sınırı olarak eğitimde işaretlenmiş.** Claude tag'leri görünce odağını yeniler. Bu yüzden **`<kural>`, `<örnek>`, `<kısıt>` tag'leri karışıklığı önler.**</li>
+<li>**`messages[]` listesi sıralı bağlamı taşır.** Claude history'i otomatik okur. Bu yüzden **sen state yönetmiyorsun; API her çağrıda tüm geçmişi görür.**</li>
+<li>**Doğru sistem prompt + iyi XML yapı = prompt yazma işinin yarısı.** Geri kalan yarısı few-shot ve CoT. Bu yüzden **2.5'te bu temel üstüne inşa ediliyor.**</li>
+</ol>
 
 <div class="ma-neden-sonuc-sonuc" markdown>
 **Sonuç:** "Bot saçma cevap veriyor" şikâyetlerinin %60'ı sistem prompt eksikliği veya kötü yapılandırma. Sıcaklığı ayarlamak küçük tornavida; sistem prompt **ana yapıyı** kuran çekiç. Bu sayfadan sonra bot davranışını "tasarlıyorsun", umut etmiyor.

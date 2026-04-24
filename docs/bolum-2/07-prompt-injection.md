@@ -7,6 +7,7 @@
 <span class="ma-persona ma-persona-is">🔵 iş</span>
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
+<div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~25 dakika</div>
 <div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 2.4 sistem prompt + 2.6 şablonlar bitmiş; XML tag refleksin oturmuş</div>
 <div class="ma-meta-row"><strong>🎯 Çıktı:</strong> Kendi sistem promptunu **3 farklı saldırı** (direct injection, jailbreak, exfiltration) karşısında test edersin; savunma desenlerini (XML izolasyon, input validation, output filtering) projene entegre edersin; "Claude neyi söylemez, neyi söyler" sınırını sayıyla bilirsin.</div>
 </div>
@@ -56,12 +57,12 @@ flowchart TB
   OUT -->|temiz| REPLY
   OUT -.sızıntı.-> LOG
 
-  classDef atk fill:#fecaca,stroke:#dc2626,color:#111
+  classDef atk fill:#fed7aa,stroke:#ea580c,color:#111
   classDef usr fill:#ddd6fe,stroke:#7c3aed,color:#111
   classDef def fill:#fef3c7,stroke:#ca8a04,color:#111
   classDef sys fill:#dbeafe,stroke:#2563eb,color:#111
   classDef api fill:#fed7aa,stroke:#ea580c,color:#111
-  classDef out fill:#dcfce7,stroke:#16a34a,color:#111
+  classDef out fill:#fef3c7,stroke:#ca8a04,color:#111
   class ATK atk
   class USR usr
   class INV,XML,OUT def
@@ -289,7 +290,7 @@ Anthropic prompt injection'a **kurumsal seviyede** yaklaşır — Responsible Sc
     **Anthropic'in red-team örnekleri.** [anthropic.com/research/challenges-in-red-teaming-ai-systems](https://www.anthropic.com/research/challenges-in-red-teaming-ai-systems) — Anthropic kendi modellerini saldırıya uğratıyor, bulguları paylaşıyor. Güncel saldırı kategorilerinin en iyi kaynağı.
 
 <div class="ma-anthropic-oz-kaynak" markdown>
-**Kaynak:** [docs.claude.com — Mitigate jailbreaks and prompt injections](https://docs.claude.com/en/docs/test-and-evaluate/strengthen-guardrails/mitigate-jailbreaks) (EN, ~15 dk). Anthropic'in resmi savunma rehberi: XML izolasyon, harmful string detection, constitutional approach — hepsi örnekli. Pekiştirme için: [Constitutional AI paper](https://www.anthropic.com/research/constitutional-ai-harmlessness-from-ai-feedback) — Claude'un dayanıklılığının felsefi + teknik temeli.
+**Kaynak:** [platform.claude.com — Mitigate jailbreaks and prompt injections](https://platform.claude.com/docs/en/docs/test-and-evaluate/strengthen-guardrails/mitigate-jailbreaks) (EN, ~15 dk). Anthropic'in resmi savunma rehberi: XML izolasyon, harmful string detection, constitutional approach — hepsi örnekli. Pekiştirme için: [Constitutional AI paper](https://www.anthropic.com/research/constitutional-ai-harmlessness-from-ai-feedback) — Claude'un dayanıklılığının felsefi + teknik temeli.
 </div>
 </div>
 
@@ -325,11 +326,13 @@ Gist + Gandalf seviye ekran görüntüsü: `muhendisal-notlarim/bolum-2/07-promp
 <div class="ma-neden-sonuc" markdown>
 <div class="ma-neden-sonuc-header">🔗 Birlikte okuma — neden ne oldu</div>
 
-- **A → B:** LLM sistem + user prompt'ları **aynı bağlamda** görür; aralarındaki ayrım eğitimle öğretilmiş, mimariyle garanti değil.
-- **B → C:** Kullanıcı "talimatları unut" yazarsa, bu talimat Claude'un bağlamında eşit statüde görünür — sadece eğitimi ayırıyor.
-- **C → D:** Constitutional AI eğitimi Claude'u ~%95 naif saldırıya dirençli kıldı — ama %5 kalır ve sofistike saldırılar %5'e girer.
-- **D → E:** Defense-in-depth = **tek katman yetmez.** Input validation + XML izolasyon + defensif prompt + output filtering zincir olarak çalışır.
-- **E → F:** RAG, tool use, multimodal — her yeni kanal **yeni injection yüzeyi.** Savunma tasarımı kanallarla ölçekli büyür.
+<ol class="ma-neden-sonuc-zincir" markdown>
+<li>**LLM sistem + user prompt'larını aynı bağlamda görür.** Ayrım eğitimle öğretilmiş, mimariyle garanti değil. Bu yüzden **sistem prompt güçlü olsa bile injection mümkün.**</li>
+<li>**"Talimatları unut" komutu Claude'un bağlamında eşit statüde görünür.** Sadece eğitim ayırıyor. Bu yüzden **%95 direnç var ama %5 kalır; sofistike saldırılar bu açıktan girer.**</li>
+<li>**Constitutional AI ~%95 naif saldırıya dirençli.** Ama %5 kalır. Bu yüzden **tek savunma katmanına güvenmek production'da tehlikeli.**</li>
+<li>**Defense-in-depth = tek katman yetmez.** Input validation + XML izolasyon + defensif prompt + output filtering zincir. Bu yüzden **her katman bir engel; zincir birlikte çalışır.**</li>
+<li>**RAG, tool use, multimodal = her yeni kanal yeni injection yüzeyi.** Bu yüzden **savunma tasarımı kanallarla ölçekli büyür — özellik eklenince güvenlik de eklenir.**</li>
+</ol>
 
 <div class="ma-neden-sonuc-sonuc" markdown>
 **Sonuç:** "Modeli kurdum, güvenli" = en büyük yanılsama. Güvenlik modelin dışında, **senin kurduğun katmanlarda** yaşar. Bu sayfa ilk 4 katmanı verdi; Bölüm 8'de kurumsal seviyeye (rate limit, log, monitoring, incident response) çıkacağız.
