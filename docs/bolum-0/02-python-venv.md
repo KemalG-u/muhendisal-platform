@@ -7,6 +7,7 @@
 <span class="ma-persona ma-persona-is">🔵 iş</span>
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
+<div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~25 dakika</div>
 <div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 0.1 bitmiş — terminal komutlarına aşinasın; bilgisayarında **Python 3.10+** kurulu (yoksa [python.org](https://www.python.org/downloads/) üzerinden indir, "Add Python to PATH" kutusunu işaretle)</div>
 <div class="ma-meta-row"><strong>🎯 Çıktı:</strong> Kendi `muhendisal-pratiklerim/` klasörünü kurarsın, **virtual environment** aktive edersin, Anthropic Python SDK kurarsın, `ANTHROPIC_API_KEY` ortam değişkenini ayarlarsın, **import test** başarıyla geçer.</div>
 </div>
@@ -226,7 +227,7 @@ Anthropic resmi getting started dokümantasyonu **pip + venv** ile başlatıyor 
     **Anthropic Bedrock + Vertex AI.** AWS Bedrock'tan Claude kullanmak için: `from anthropic import AnthropicBedrock`. Google Vertex için: `AnthropicVertex`. Aynı API, farklı backend.
 
 <div class="ma-anthropic-oz-kaynak" markdown>
-**Kaynak:** [docs.claude.com — Get started with the API](https://platform.claude.com/docs/en/docs/get-started) (EN, ~10 dk). Resmi quickstart + örnek kodlar. SDK GitHub: [github.com/anthropics/anthropic-sdk-python](https://github.com/anthropics/anthropic-sdk-python) — değişiklik loglarını ay başında bir gözle gez.
+**Kaynak:** [platform.claude.com/docs — Get started with the API](https://platform.claude.com/docs/en/docs/get-started) (EN, ~10 dk). Resmi quickstart + örnek kodlar. SDK GitHub: [github.com/anthropics/anthropic-sdk-python](https://github.com/anthropics/anthropic-sdk-python) — değişiklik loglarını ay başında bir gözle gez.
 </div>
 </div>
 
