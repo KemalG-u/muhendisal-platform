@@ -7,6 +7,7 @@
 <span class="ma-persona ma-persona-is">🔵 iş</span>
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
+<div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~20 dakika</div>
 <div class="ma-meta-row"><strong>📋 Önkoşul:</strong> Platform'un tamamını okudun veya bu sayfaya doğrudan geldin. İki canlı proje + LinkedIn stratejisi elinde.</div>
 <div class="ma-meta-row"><strong>🎯 Çıktı:</strong> 3 topluluk takibinde + 1 mentor arayışında + ilk 3 ay iş sonrası planın yazılı. Platform'un yolculuğu tamamlandı, **sürekli öğrenme refleksi** elinde — AI 6 ayda değişecek; nasıl güncel kalacağını biliyorsun. **Platform'un son sayfası.**</div>
 </div>
@@ -303,7 +304,7 @@ Bu platformu Claude ile yazdım. Sen **öğrencisi** olarak geldin, şimdi **kul
 
 4. **[Anthropic Research](https://www.anthropic.com/research)** — ayda 1-2 yeni makale. Derin makaleler (örn. Constitutional AI, Building Effective Agents) AI Engineer'ın **temel bilgisidir**. Her birini 1 saat oku + özet çıkar.
 
-5. **[Model Spec](https://docs.claude.com/en/docs/model-spec)** — Claude davranış tanımı. Müşteri sorusu için canlı referans.
+5. **[Model Spec](https://platform.claude.com/docs/en/docs/model-spec)** — Claude davranış tanımı. Müşteri sorusu için canlı referans.
 
 ### Anthropic ambassador / community programı
 

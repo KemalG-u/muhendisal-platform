@@ -6,6 +6,7 @@
 <span class="ma-persona ma-persona-baslangic">🟢 başlangıç</span>
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
+<div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~60 dakika</div>
 <div class="ma-meta-row"><strong>📋 Önkoşul:</strong> Bölüm 4 (RAG) tamamlanmış + 9.1 Docker + 9.2 Cloud + 9.3 CI/CD bilgisi; Anthropic API key + bir domain (opsiyonel ama önerilir); yerel makinede Docker Desktop veya engine</div>
 <div class="ma-meta-row"><strong>🎯 Çıktı:</strong> **Canlı RAG Chatbot** — `https://rag.alanadin.com` — kullanıcı PDF yüklüyor, soru soruyor, Claude **kaynak chunk göstererek** cevap veriyor. FastAPI backend + Qdrant vector DB + HTMX frontend (zero JavaScript build). Docker compose tek komutla ayağa kalkıyor, 9.3 pipeline ile otomatik deploy. Portföy README: ekran görüntüsü + demo GIF + maliyet + GitHub link. Aylık maliyet: **~$2–5** (VPS 5 € + Anthropic ~$1–3 orta kullanım).</div>
 </div>
@@ -29,7 +30,7 @@ Portföyün en etkili parçası **"git, tıkla, kullan" canlı demodur**. GitHub
 |---|---|---|---|
 | **Backend** | FastAPI 0.136 | Flask, Django | FastAPI async-native + OpenAPI otomatik + type hint valid; Claude streaming için ideal |
 | **Vector DB** | Qdrant 1.17.1 (Docker) | Pinecone, Weaviate, Chroma | Qdrant self-host ücretsiz + Rust hızı + filter zengin; Pinecone vendor lock-in; Chroma prod için çok genç |
-| **Embedding** | `voyage-3` (Voyage AI) | OpenAI `text-embedding-3`, Cohere | Voyage AI Anthropic'in resmi tavsiyesi (docs.claude.com'da önerilen); RAG için optimize |
+| **Embedding** | `voyage-3` (Voyage AI) | OpenAI `text-embedding-3`, Cohere | Voyage AI Anthropic'in resmi tavsiyesi (platform.claude.com/docs'da önerilen); RAG için optimize |
 | **LLM** | Claude Sonnet 4.6 | GPT-4o, Gemini 2.5 | Sonnet 4.6 uzun context (200K) + streaming + tool calling + Türkçe güçlü |
 | **Frontend** | HTMX + Tailwind CDN | React/Next.js, Vue, Streamlit | HTMX build yok, deploy basit; Streamlit **portföy demoya uygun değil** — iş ilanı refleksi değil |
 
@@ -65,7 +66,7 @@ flowchart TB
     end
 
     classDef upload fill:#dbeafe,stroke:#2563eb,color:#111
-    classDef query fill:#dcfce7,stroke:#16a34a,color:#111
+    classDef query fill:#fef3c7,stroke:#ca8a04,color:#111
     classDef llm fill:#fef3c7,stroke:#ca8a04,color:#111
     class UPLOAD,PARSE,CHUNK,EMB1,QS upload
     class ASK,EMB2,QR,CTX,SRC query
@@ -537,10 +538,10 @@ rag.alanadin.com {
 <summary><strong>🤖 Anthropic-öz: bu sayfayı Anthropic resmi kaynaklarına bağla</strong></summary>
 
 - **[Anthropic Cookbook — RAG](https://github.com/anthropics/claude-cookbooks)** — RAG pipeline'ı için referans notebook; bu sayfadaki `_chunk_text` yaklaşımı buradan basitleştirildi.
-- **[Anthropic Docs — Embeddings](https://docs.claude.com/en/docs/build-with-claude/embeddings)** — Voyage AI'ın Anthropic'in resmi embedding tavsiyesi olduğu ve `input_type` ayrımı burada açıklanır.
+- **[Anthropic Docs — Embeddings](https://platform.claude.com/docs/en/docs/build-with-claude/embeddings)** — Voyage AI'ın Anthropic'in resmi embedding tavsiyesi olduğu ve `input_type` ayrımı burada açıklanır.
 - **[Contextual Retrieval](https://www.anthropic.com/news/contextual-retrieval)** — ileri seviye: her chunk'ı belgenin genel bağlamı ile zenginleştirmek %49'a varan retrieval iyileşmesi sağlar. Bu sayfa **uygulamadı** çünkü tek-PDF kişisel kullanımda chunk başına 3 kat maliyet artışı ekler; 4.8 HBV'deki dürüst sapma mantığı — koşula göre karar.
-- **[Streaming messages](https://docs.claude.com/en/api/messages-streaming)** — `async with client.messages.stream()` pattern'inin resmi referansı.
-- **Anthropic Academy → [Prompt Engineering](https://docs.claude.com/en/docs/build-with-claude/prompt-engineering/overview)** kursu — `SYSTEM_PROMPT` tasarımının pedagojik temeli.
+- **[Streaming messages](https://platform.claude.com/docs/en/api/messages-streaming)** — `async with client.messages.stream()` pattern'inin resmi referansı.
+- **Anthropic Academy → [Prompt Engineering](https://platform.claude.com/docs/en/docs/build-with-claude/prompt-engineering/overview)** kursu — `SYSTEM_PROMPT` tasarımının pedagojik temeli.
 
 **Dürüst sapma notu:** Anthropic'in "en iyi chunking" tavsiyesi semantic chunking (tümce/paragraf sınırlarına saygılı); bu sayfadaki basit kelime-tabanlı chunker **pedagojik öncelik** — önce çalışsın, sonra iyileştirilsin. `unstructured` veya `langchain-text-splitters` kütüphanesi ile 10 satırda upgrade edilir; portföy v2'de yap.
 
@@ -668,13 +669,15 @@ Kanıt: canlı URL + GitHub repo link + 3 farklı PDF ile denenmiş ekran görü
 <div class="ma-neden-sonuc" markdown>
 <div class="ma-neden-sonuc-header">🔗 Birlikte okuma — neden ne oldu</div>
 
-- **A → B:** Portföy canlı demo = tek ikna edici kanıt; README + kod yetmez, tıklanabilir URL gerekir.
-- **B → C:** Stack kararı 5 katmanda: FastAPI (backend), Qdrant (vector DB), Voyage AI (embedding, Anthropic tavsiyesi), Claude Sonnet 4.6 (streaming LLM), HTMX (build-yok frontend). Streamlit reddedildi — iş refleksi değil.
-- **C → D:** RAG akışı iki aşama: yükleme (PDF → chunk → embed → Qdrant) + sorgu (soru → embed → search → Claude). `input_type` ayrımı retrieval kalitesi için kritik.
-- **D → E:** Compose.yml iki servis (app + qdrant); app sadece localhost:8000 bind; Qdrant hiç expose yok; Caddy HTTPS önünde.
-- **E → F:** 9.3 pipeline bu projeye kopyalanır + 2 secret eklenir (Anthropic + Voyage); her push canlıya 5 dk'da akar.
-- **F → G:** Maliyet aylık ~$6–8 (VPS 5 € + Anthropic $1–3 + Voyage $0.4); ölçek 100 kullanıcı olsa ~$30-50; scale sonra gelir.
-- **G → H:** README + demo GIF + LinkedIn paylaşımı = portföyün canlı kartı. "Claude + RAG + production" üçlü sinyali.
+<ol class="ma-neden-sonuc-zincir" markdown>
+<li>**A → B:** Portföy canlı demo = tek ikna edici kanıt; README + kod yetmez, tıklanabilir URL gerekir. Bu yüzden **canlı URL portföyün kalbidir.**</li>
+<li>**B → C:** Stack kararı 5 katmanda: FastAPI + Qdrant + Voyage AI + Claude Sonnet 4.6 (streaming) + HTMX. Streamlit reddedildi — iş refleksi değil. Bu yüzden **araç seçimi karar değeri taşır.**</li>
+<li>**C → D:** RAG akışı iki aşama: yükleme (PDF → chunk → embed → Qdrant) + sorgu (soru → embed → search → Claude). `input_type` ayrımı retrieval kalitesi için kritik. Bu yüzden **4 bölümün bilgisi burada birleşir.**</li>
+<li>**D → E:** Compose.yml iki servis (app + qdrant); app sadece localhost:8000 bind; Qdrant hiç expose yok; Caddy HTTPS önünde. Bu yüzden **güvenli mimari tasarımın parçası.**</li>
+<li>**E → F:** 9.3 pipeline bu projeye kopyalanır + 2 secret eklenir (Anthropic + Voyage); her push canlıya 5 dk'da akar. Bu yüzden **CI/CD şablonu tekrar kullanılır.**</li>
+<li>**F → G:** Maliyet aylık ~$6–8 (VPS 5 € + Anthropic $1–3 + Voyage $0.4); ölçek 100 kullanıcı olsa ~$30-50. Bu yüzden **maliyet öngörülür ve yönetilebilir.**</li>
+<li>**G → H:** README + demo GIF + LinkedIn paylaşımı = portföyün canlı kartı. 'Claude + RAG + production' üçlü sinyali. Bu yüzden **görünürlük teknik kalite kadar değer.**</li>
+</ol>
 
 <div class="ma-neden-sonuc-sonuc" markdown>
 **Sonuç:** İlk AI Engineer portföy projen canlıda, URL paylaşılabilir, GitHub yeşil ✓ rozetli, maliyet öngörülebilir, stack iş ilanlarında aranır. 9.1–9.3'teki desenler tek projede birleşti. **Bir sonraki:** 9.5'te agent otomasyon — aynı pipeline, farklı pattern, ikinci portföy vakası.

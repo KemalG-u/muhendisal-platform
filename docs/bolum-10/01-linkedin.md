@@ -7,6 +7,7 @@
 <span class="ma-persona ma-persona-is">🔵 iş</span>
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
+<div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~30 dakika</div>
 <div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 9.7 Portföy Paketleme okundu (profil foto + headline + About temelleri kuruldu). 9.4 + 9.5 canlıda. GitHub + LinkedIn hesapları mevcut.</div>
 <div class="ma-meta-row"><strong>🎯 Çıktı:</strong> **İçerik stratejin var** — haftalık paylaşım takvimin, 3 ay sonraki hedefin (500-1000 bağlantı, 5-10 yorum/post), DM ile iş bulma refleksin. LinkedIn ATS keyword derinleştirilmiş. Özgün kariyer pozisyonun net: junior / mid / lateral mover / freelance. **Platform kapanış bölümünün açılış sayfası** — 10.5'e kadar her sayfa iş aramana doğrudan destek.</div>
 </div>
@@ -357,14 +358,16 @@ Kanıt: pozisyon kararı + LinkedIn ekran görüntüsü + post + DM gönderim on
 <div class="ma-neden-sonuc" markdown>
 <div class="ma-neden-sonuc-header">🔗 Birlikte okuma — neden ne oldu</div>
 
-- **A → B:** 9 bölüm sonunda 2 canlı proje + paketleme var; "pasif varlık"tan "aktif görünürlük"e geçiş zamanı.
-- **B → C:** Kariyer pozisyonu (junior / mid / lateral / freelance) kararı her sonraki adımın öngörüsü.
-- **C → D:** LinkedIn 2026 algoritması: dwell time, erken engagement, yorum kalitesi — uzun teknik post'lar kazanıyor.
-- **D → E:** 20 keyword Headline + About + Experience + Skills + Featured yerleşimi; ATS + recruiter taraması ikisi birden.
-- **E → F:** 6 haftalık içerik takvimi: origin story → teknik deep-dive → maliyet → karşılaştırma → post-mortem → açık iş isteği.
-- **F → G:** DM tabanlı iş arama 2025-2026 trendi; 10-20 hedef + 3-cümle mesaj + günde 3-5 kontingent.
-- **G → H:** Creator Mode + personal brand üçlü eksende (teknik derinlik + pragmatizm + dil); 3-6 ay 300-2000 follower realistik.
-- **H → I:** Anthropic ekosistemi takip — LinkedIn yorum → 6 ay birikim → recruiter dikkati.
+<ol class="ma-neden-sonuc-zincir" markdown>
+<li>**A → B:** 9 bölüm sonunda 2 canlı proje + paketleme var; 'pasif varlık'tan 'aktif görünürlük'e geçiş zamanı. Bu yüzden **teknik birikim görünür olmalı.**</li>
+<li>**B → C:** Kariyer pozisyonu (junior / mid / lateral / freelance) kararı her sonraki adımın öngörüsü. Bu yüzden **konum kararı stratejiyi şekillendirir.**</li>
+<li>**C → D:** LinkedIn 2026 algoritması: dwell time, erken engagement, yorum kalitesi — uzun teknik post'lar kazanıyor. Bu yüzden **kaliteli içerik algoritmayı geçer.**</li>
+<li>**D → E:** 20 keyword Headline + About + Experience + Skills + Featured yerleşimi; ATS + recruiter taraması ikisi birden. Bu yüzden **keyword yerleşimi stratejik.**</li>
+<li>**E → F:** 6 haftalık içerik takvimi: origin story → teknik deep-dive → maliyet → karşılaştırma → post-mortem → açık iş isteği. Bu yüzden **takvim tutarlılığı sağlar.**</li>
+<li>**F → G:** DM tabanlı iş arama 2025-2026 trendi; 10-20 hedef + 3-cümle mesaj + günde 3-5 kontingent. Bu yüzden **DM ilan beklemekten önde.**</li>
+<li>**G → H:** Creator Mode + personal brand üçlü eksende (teknik derinlik + pragmatizm + dil); 3-6 ay 300-2000 follower realistik. Bu yüzden **kısa vadede çabuk sonuç bekleme.**</li>
+<li>**H → I:** Anthropic ekosistemi takip — LinkedIn yorum → 6 ay birikim → recruiter dikkati. Bu yüzden **ekosistem içinde görünürlük değer katar.**</li>
+</ol>
 
 <div class="ma-neden-sonuc-sonuc" markdown>
 **Sonuç:** Kariyer stratejin yazılı. Haftalık takvim hazır. İlk post yayında. DM refleksin var. Sonraki sayfalar (10.2 Mülakat, 10.3 Açık Kaynak, 10.4 İleri Konular, 10.5 Topluluk) bu stratejiyi **derinleştirir + sürdürür**.

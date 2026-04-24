@@ -7,6 +7,7 @@
 <span class="ma-persona ma-persona-is">🔵 iş</span>
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
+<div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~35 dakika</div>
 <div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 10.1 LinkedIn stratejisi uygulandı; ilk DM atıldı veya başvuru yapıldı. 9.4 + 9.5 canlıda, kendi kodun hakkında konuşacak birikimin var.</div>
 <div class="ma-meta-row"><strong>🎯 Çıktı:</strong> **30 yaygın AI Engineer mülakat sorusuna** model cevabın hazır — teknik 18, davranışsal 6, senaryo 6. STAR formatı refleksi, **kendi projenden örneklerle** her cevapta kanıt. Maaş müzakere refleksi. Mülakatçıya sorman gereken 5 soru. **Cevapları ezberleme — tez olarak kullan**, kendi örnekleriyle yaz.</div>
 </div>
@@ -289,13 +290,15 @@ Toplam süre: ~2 saat. Bitiminde `mulakat-hazirlik/` klasörü GitHub'a push + L
 <div class="ma-neden-sonuc" markdown>
 <div class="ma-neden-sonuc-header">🔗 Birlikte okuma — neden ne oldu</div>
 
-- **A → B:** Mülakat süreci tipik 3-5 aşama; teknik + davranışsal + senaryo karışık.
-- **B → C:** 18 teknik soru — prompt/token/RAG/embedding/agent/MCP/tool calling/deploy ekseninde; her biri kısa paragraf + senin projenden örnek.
-- **C → D:** 6 davranışsal soru STAR formatı; Situation + Task + Action + Result sıra + rakam.
-- **D → E:** 6 senaryo soru — "X şirket durumu, ne yaparsın?"; sistem tasarımı + trade-off refleksi.
-- **E → F:** Maaş müzakeresi sayı ver + total compensation + bandın üstü çek; "görüşürüz" yanlış.
-- **F → G:** Mülakatçıya 5 soru hazır; pasif dinleme değil aktif sorgulama.
-- **G → H:** 8 CTO tuzak; ezber yerine örnek, yalan yerine "bilmiyorum", tek kelime yerine paragraf.
+<ol class="ma-neden-sonuc-zincir" markdown>
+<li>**A → B:** Mülakat süreci tipik 3-5 aşama; teknik + davranışsal + senaryo karışık. Bu yüzden **hazırlık çok boyutlu olmalı.**</li>
+<li>**B → C:** 18 teknik soru — prompt/token/RAG/embedding/agent/MCP/tool calling/deploy ekseninde; her biri kısa paragraf + senin projenden örnek. Bu yüzden **somut örnek ezberden güçlü.**</li>
+<li>**C → D:** 6 davranışsal soru STAR formatı; Situation + Task + Action + Result sıra + rakam. Bu yüzden **STAR yapısı tutarlı hikaye kurar.**</li>
+<li>**D → E:** 6 senaryo soru — 'X şirket durumu, ne yaparsın?'; sistem tasarımı + trade-off refleksi. Bu yüzden **senaryo sorusu karar refleksini ölçer.**</li>
+<li>**E → F:** Maaş müzakeresi sayı ver + total compensation + bandın üstü çek; 'görüşürüz' yanlış. Bu yüzden **müzakereden kaçmak değer kaybettirir.**</li>
+<li>**F → G:** Mülakatçıya 5 soru hazır; pasif dinleme değil aktif sorgulama. Bu yüzden **soru sormak ilgi ve derinlik gösterir.**</li>
+<li>**G → H:** 8 CTO tuzak; ezber yerine örnek, yalan yerine 'bilmiyorum', tek kelime yerine paragraf. Bu yüzden **tuzaklar bilinince kaçınılır.**</li>
+</ol>
 
 <div class="ma-neden-sonuc-sonuc" markdown>
 **Sonuç:** 30 soruya model cevap hazır. Senin işin kendi projenden **somut örnek** ile kişiselleştirmek — ezber değil refleks. Sonraki (10.3): açık kaynak katkı; PR atarken referans inşası.

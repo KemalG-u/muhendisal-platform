@@ -7,6 +7,7 @@
 <span class="ma-persona ma-persona-is">🔵 iş</span>
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
+<div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~30 dakika</div>
 <div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 9.4 RAG Chatbot + 9.5 Agent Otomasyon projelerin canlıda çalışıyor. GitHub hesabın + LinkedIn profilin mevcut.</div>
 <div class="ma-meta-row"><strong>🎯 Çıktı:</strong> Projelerin **3 saniyede ikna eden** README'leri var; GitHub profilinde pinned 2-3 repo; LinkedIn profilin AI Engineer pozisyonuna hizalı; 20 saniyelik demo GIF'in ve başvurabileceğin 3 cümlelik Türkçe + İngilizce mesaj şablonu elinde. **Platform kapanışına bir adım** — Bölüm 10 kariyer bölümüne portföyünle giriyorsun.</div>
 </div>
@@ -31,17 +32,17 @@ GitHub repo açıldığında ilk ekranda şunlar **yukarıdan aşağı** görün
 
 ```mermaid
 flowchart TB
-    A["📛 Proje adı + badges<br/>(build, test, license, Python)"]
-    B["🎯 One-liner tag<br/>'X yapan Y'"]
-    C["🎬 Demo GIF<br/>veya ekran görüntüsü"]
-    D["⚡ Quick start<br/>3-4 komutla çalıştır"]
-    E["🏗️ Stack<br/>teknoloji listesi"]
-    F["📊 Metrikler<br/>test sayısı, uptime, maliyet"]
+    A["📛 Proje adı + badges\n(build, test, license, Python)"]
+    B["🎯 One-liner tag\n'X yapan Y'"]
+    C["🎬 Demo GIF\nveya ekran görüntüsü"]
+    D["⚡ Quick start\n3-4 komutla çalıştır"]
+    E["🏗️ Stack\nteknoloji listesi"]
+    F["📊 Metrikler\ntest sayısı, uptime, maliyet"]
 
     A --> B --> C --> D --> E --> F
 
     classDef top fill:#dbeafe,stroke:#2563eb,color:#111
-    classDef mid fill:#dcfce7,stroke:#16a34a,color:#111
+    classDef mid fill:#fef3c7,stroke:#ca8a04,color:#111
     classDef bot fill:#fef3c7,stroke:#ca8a04,color:#111
     class A,B top
     class C,D mid
@@ -528,14 +529,16 @@ Platform boyunca öğrendiğinin özeti:
 <div class="ma-neden-sonuc" markdown>
 <div class="ma-neden-sonuc-header">🔗 Birlikte okuma — neden ne oldu</div>
 
-- **A → B:** 2 canlı proje vardı ama görünür değildi; görünürlük engeli kodtan önce çözülmeli.
-- **B → C:** 3 saniye ikna kuralı: README'nin üst 3 öğesi (başlık + one-liner + demo GIF) kritik.
-- **C → D:** Demo GIF 20-30 sn; LICEcap / Peek / Kap ücretsiz araçlarla kaydet, ezgif ile sıkıştır.
-- **D → E:** GitHub profil README (özel repo trick) + 2-3 pinned repo + contribution grafiği.
-- **E → F:** LinkedIn Headline, About, Skills AI Engineer anahtar kelimelerine hizalı.
-- **F → G:** CV formatı AI Engineer için farklı: projeler üstte, ATS keyword yoğun, rakamsal metrikler.
-- **G → H:** 3-cümlelik başvuru mesajı (TR + EN) + haftalık 6 post LinkedIn serisi.
-- **H → I:** Blog opsiyonel ama güçlü — SEO + derinlik + İngilizce pratiği.
+<ol class="ma-neden-sonuc-zincir" markdown>
+<li>**A → B:** 2 canlı proje vardı ama görünür değildi; 'pasif varlık'tan 'aktif görünürlük'e geçiş zamanı. Bu yüzden **görünürlük engeli kodtan önce çözülmeli.**</li>
+<li>**B → C:** 3 saniye ikna kuralı: README'nin üst 3 öğesi (başlık + one-liner + demo GIF) kritik. Bu yüzden **ilk 3 saniye her şeyi belirler.**</li>
+<li>**C → D:** Demo GIF 20-30 sn; LICEcap / Peek / Kap ücretsiz araçlarla kaydet, ezgif ile sıkıştır. Bu yüzden **demo GIF yazıdan güçlü.**</li>
+<li>**D → E:** GitHub profil README (özel repo trick) + 2-3 pinned repo + contribution grafiği. Bu yüzden **profil sayfası özgeçmişin dijitali.**</li>
+<li>**E → F:** LinkedIn Headline, About, Skills AI Engineer anahtar kelimelerine hizalı. Bu yüzden **anahtar kelime uyumu recruiter'ı getirir.**</li>
+<li>**F → G:** CV formatı AI Engineer için farklı: projeler üstte, ATS keyword yoğun, rakamsal metrikler. Bu yüzden **standart CV AI Engineer'a uymaz.**</li>
+<li>**G → H:** 3-cümlelik başvuru mesajı (TR + EN) + haftalık 6 post LinkedIn serisi. Bu yüzden **sürekli görünürlük fırsat yaratır.**</li>
+<li>**H → I:** Blog opsiyonel ama güçlü — SEO + derinlik + İngilizce pratiği. Bu yüzden **blog uzun vadede ağırlık kazandırır.**</li>
+</ol>
 
 <div class="ma-neden-sonuc-sonuc" markdown>
 **Sonuç:** Portföyün artık **görünür**. 9.4 + 9.5 + bu sayfada paketlenmiş 3 kart birlikte AI Engineer pozisyon başvurusu için **yeterli evrak**. Bölüm 9 tamamen kapandı (9.6 Multimodal Bölüm 7 bekliyor, platform sonunda). Platform'un pratik amacı (inşa + paketle) **tamamlandı**. Sonraki aşama: kariyer ve iş başvurusu (Bölüm 10).

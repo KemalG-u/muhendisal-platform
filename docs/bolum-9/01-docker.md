@@ -7,6 +7,7 @@
 <span class="ma-persona ma-persona-is">🔵 iş</span>
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
+<div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~35 dakika</div>
 <div class="ma-meta-row"><strong>📋 Önkoşul:</strong> Docker Desktop (yerel) veya Docker Engine (VPS) kurulu; Bölüm 4–6'dan çalışan bir servisin var (referans proje: [`examples/icerik-ozet-agent/`](https://github.com/KemalG-u/muhendisal-platform/tree/main/examples/icerik-ozet-agent))</div>
 <div class="ma-meta-row"><strong>🎯 Çıktı:</strong> Servisin `Dockerfile` + `docker-compose.yml` ile paketli, `docker compose up` ile ayağa kalkıyor; image boyutu ≤ 200 MB (multi-stage build); `.env` dosyası image'a **gömülmemiş** (runtime mount); `docker compose down` + `up` ile temiz restart — yerel test artık VPS'e taşımaya hazır.</div>
 </div>
@@ -57,7 +58,7 @@ flowchart LR
     classDef src fill:#ddd6fe,stroke:#7c3aed,color:#111
     classDef build fill:#fed7aa,stroke:#ea580c,color:#111
     classDef img fill:#dbeafe,stroke:#2563eb,color:#111
-    classDef run fill:#dcfce7,stroke:#16a34a,color:#111
+    classDef run fill:#fef3c7,stroke:#ca8a04,color:#111
     classDef data fill:#fef3c7,stroke:#ca8a04,color:#111
     class SRC,DFILE src
     class BUILD build
@@ -305,12 +306,14 @@ Repo linkini kaydet: `muhendisal-notlarim/bolum-9/01-docker/docker-repo.txt`
 <div class="ma-neden-sonuc" markdown>
 <div class="ma-neden-sonuc-header">🔗 Birlikte okuma — neden ne oldu</div>
 
-- **A → B:** Yerel makinende çalışan kod başka sistemde patlar (Python sürümü, bağımlılık, env) — "benim makinemde çalışıyor" tuzağı. Docker paketleyerek bu kaosu bitirir.
-- **B → C:** Image (değişmez şablon) + Container (çalışan kopya) + Dockerfile (tarif) — üç kavram çekirdeği.
-- **C → D:** Multi-stage build image'ı %80 küçültür — builder bağımlılık derler, runtime sadece derlenen wheel'leri kopyalar. 180 MB prod hedefi.
-- **D → E:** `docker compose` çoklu servis + env + volume + restart policy tek YAML — 2026'da default, tire-siz syntax.
-- **E → F:** `.env` **runtime mount**, image'a GÖMÜLMEZ; `.dockerignore` git/venv/secret context dışında tutar.
-- **F → G:** `COPY` sırası cache-friendly (bağımlılık önce, kod sonra) → re-build saniyeler; non-root user + `VOLUME` prod disiplini.
+<ol class="ma-neden-sonuc-zincir" markdown>
+<li>**A → B:** Yerel makinende çalışan kod başka sistemde patlar (Python sürümü, bağımlılık, env) — 'benim makinemde çalışıyor' tuzağı. Docker paketleyerek bu kaosu bitirir. Bu yüzden **Docker ilk deploy adımı.**</li>
+<li>**B → C:** Image (değişmez şablon) + Container (çalışan kopya) + Dockerfile (tarif) — üç kavram çekirdeği. Bu yüzden **üç kavramı bilmek her şeyi açar.**</li>
+<li>**C → D:** Multi-stage build image'ı %80 küçültür — builder bağımlılık derler, runtime sadece derlenen wheel'leri kopyalar. 180 MB prod hedefi. Bu yüzden **multi-stage her production projede zorunlu.**</li>
+<li>**D → E:** `docker compose` çoklu servis + env + volume + restart policy tek YAML — 2026'da default, tire-siz syntax. Bu yüzden **compose single-Docker'dan üstün.**</li>
+<li>**E → F:** `.env` **runtime mount**, image'a GÖMÜLMEZ; `.dockerignore` git/venv/secret context dışında tutar. Bu yüzden **secret sızıntısı önlenebilir.**</li>
+<li>**F → G:** `COPY` sırası cache-friendly (bağımlılık önce, kod sonra) → re-build saniyeler; non-root user + `VOLUME` prod disiplini. Bu yüzden **Dockerfile sırası süreyi belirler.**</li>
+</ol>
 
 <div class="ma-neden-sonuc-sonuc" markdown>
 **Sonuç:** Artık servisin **taşınabilir bir kutuda** — image 180 MB, non-root, .env güvenli, volume ile veri persist. 9.2'de bu kutu VPS'e gidecek: SSH + git clone + `docker compose up` → ilk canlı URL. 9.3'te GitHub Actions bu kutuyu her push'ta otomatik build + deploy edecek. Docker deploy merdiveninin ilk basamağı.

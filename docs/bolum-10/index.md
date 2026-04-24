@@ -43,8 +43,8 @@ flowchart LR
 
   classDef user fill:#ddd6fe,stroke:#7c3aed,color:#111
   classDef page fill:#dbeafe,stroke:#2563eb,color:#111
-  classDef pilot fill:#dcfce7,stroke:#16a34a,color:#111
-  classDef goal fill:#dcfce7,stroke:#16a34a,color:#111
+  classDef pilot fill:#fef3c7,stroke:#ca8a04,color:#111
+  classDef goal fill:#fef3c7,stroke:#ca8a04,color:#111
   classDef ext fill:#fed7aa,stroke:#ea580c,color:#111
   class S user
   class P101,P102,P103,P104 page
@@ -89,7 +89,7 @@ Kariyer tarafında Anthropic **doğrudan ders vermez** ama ekosistemin "saygı k
 
 **3. Teaching AI Fluency.** "AI öğretmeyi öğreten" kurs. Bu ileri bir adım — sen başkalarına öğretirken gerçek anlamda öğreniyorsun. Mentorluk planın varsa bu kurs hızlandırır.
 
-**4. Claude in Slack / Cowork integration.** [docs.claude.com/en/docs/claude-in-slack](https://docs.claude.com/en/docs/claude-in-slack) — ekiple çalışma deneyimi gösterirken Claude'u Slack'e entegre etmiş olman teknik bir referans. 10.3 açık kaynak işinin bir varyantı: Anthropic'in resmi entegrasyonlarına katkı.
+**4. Claude in Slack / Cowork integration.** [platform.claude.com/docs/en/docs/claude-in-slack](https://platform.claude.com/docs/en/docs/claude-in-slack) — ekiple çalışma deneyimi gösterirken Claude'u Slack'e entegre etmiş olman teknik bir referans. 10.3 açık kaynak işinin bir varyantı: Anthropic'in resmi entegrasyonlarına katkı.
 
 **5. Anthropic blog + research.** [anthropic.com/news](https://www.anthropic.com/news) ayda 5-10 önemli post. 10.4 ileri konular için birincil kaynak. RSS abone ol, haftalık özet oku.
 

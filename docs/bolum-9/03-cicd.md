@@ -7,6 +7,7 @@
 <span class="ma-persona ma-persona-is">🔵 iş</span>
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
+<div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~40 dakika</div>
 <div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 9.1 bitmiş (Dockerfile + compose yerelde çalışıyor) + 9.2 bitmiş (VPS'te servis canlıda, SSH erişimi var) + GitHub hesabı + projenin GitHub repo'su (private veya public fark etmez)</div>
 <div class="ma-meta-row"><strong>🎯 Çıktı:</strong> `main` dalına her push → **test + lint + Docker build + GHCR push + VPS'e SSH deploy** otomatik akıyor. Başarısızsa kırmızı ✗, başarıysa yeşil ✓ — GitHub'da rozet. Manuel "SSH'la gir, git pull, docker compose up" akışı **saniyelere** iniyor. Aylık maliyet: **0 €** (GitHub Actions ücretsiz 2000 dk/ay public repo için sınırsız).</div>
 </div>
@@ -52,7 +53,7 @@ flowchart LR
     classDef run fill:#dbeafe,stroke:#2563eb,color:#111
     classDef test fill:#fef3c7,stroke:#ca8a04,color:#111
     classDef build fill:#fed7aa,stroke:#ea580c,color:#111
-    classDef vps fill:#dcfce7,stroke:#16a34a,color:#111
+    classDef vps fill:#fef3c7,stroke:#ca8a04,color:#111
     class DEV dev
     class GH,GHCR gh
     class RUN run
@@ -316,7 +317,7 @@ Claude Code dosya sistemini okur (`pyproject.toml`, `compose.yml`, `Dockerfile`)
 - Workflow içinde `ANTHROPIC_API_KEY`'i sadece integration test step'inde kullan; build step'inde verme → kaza ile cost sıçraması önlenir
 - `pytest -m "not integration"` default, `pytest -m integration` sadece `workflow_dispatch` manuel tetik
 
-**Referans:** Anthropic [Claude Code docs](https://docs.claude.com/en/docs/claude-code/overview) + [API error & rate limit handling](https://docs.claude.com/en/api/errors).
+**Referans:** Anthropic [Claude Code docs](https://platform.claude.com/docs/en/docs/claude-code/overview) + [API error & rate limit handling](https://platform.claude.com/docs/en/api/errors).
 
 </details>
 
@@ -391,13 +392,15 @@ Dosyaya kaydet: `muhendisal-notlarim/bolum-9/03-cicd/kanit/`
 <div class="ma-neden-sonuc" markdown>
 <div class="ma-neden-sonuc-header">🔗 Birlikte okuma — neden ne oldu</div>
 
-- **A → B:** Manuel deploy insan hatasına açık — otomasyon kalite kapısı kurar; test geçmeyen kod canlıya çıkmaz.
-- **B → C:** GitHub Actions = YAML + runner; ücretsiz (public repo sınırsız, private 2000 dk/ay) + native entegrasyon.
-- **C → D:** 4 secret (`ANTHROPIC_API_KEY`, `VPS_HOST`, `VPS_USER`, `SSH_PRIVATE_KEY`) Settings'te saklanır; YAML'da `${{ secrets.X }}` referansı.
-- **D → E:** Yol A (test+lint) 3 dk setup; pipeline refleksinin temeli. Yol B (full deploy) Yol A'nın üstüne inşa edilir.
-- **E → F:** `test → build → deploy` zinciri `needs:` ile bağlanır; biri kırılırsa zincir durur. Zero-downtime için `concurrency:` + multi-arch build + GHA cache.
-- **F → G:** Her commit SHA-tag ile GHCR'de saklanır — rollback SHA'yı değiştirmek kadar kolay. `latest` sadece `main`'den gelir.
-- **G → H:** 10 klasik tuzak (secret leak, flaky test, cache bozulması, direkt push) çözüldüğünde pipeline production'da 6+ ay sorunsuz akar.
+<ol class="ma-neden-sonuc-zincir" markdown>
+<li>**A → B:** Manuel deploy insan hatasına açık — otomasyon kalite kapısı kurar; test geçmeyen kod canlıya çıkmaz. Bu yüzden **CI/CD kalite garantisi.**</li>
+<li>**B → C:** GitHub Actions = YAML + runner; ücretsiz (public repo sınırsız, private 2000 dk/ay) + native entegrasyon. Bu yüzden **GHA başlangıç için ideal.**</li>
+<li>**C → D:** 4 secret (`ANTHROPIC_API_KEY`, `VPS_HOST`, `VPS_USER`, `SSH_PRIVATE_KEY`) Settings'te saklanır; YAML'da `${{ secrets.X }}` referansı. Bu yüzden **secret YAML'a asla girmez.**</li>
+<li>**D → E:** Yol A (test+lint) 3 dk setup; pipeline refleksinin temeli. Yol B (full deploy) Yol A'nın üstüne inşa edilir. Bu yüzden **adım adım kur, karmaşıklık ekle.**</li>
+<li>**E → F:** `test → build → deploy` zinciri `needs:` ile bağlanır; biri kırılırsa zincir durur. Zero-downtime için `concurrency:` + multi-arch build + GHA cache. Bu yüzden **bağımlılık zinciri güvenlik kapısı.**</li>
+<li>**F → G:** Her commit SHA-tag ile GHCR'de saklanır — rollback SHA'yı değiştirmek kadar kolay. `latest` sadece `main`'den gelir. Bu yüzden **tag disiplini rollback'i kolaylaştırır.**</li>
+<li>**G → H:** 10 klasik tuzak (secret leak, flaky test, cache bozulması, direkt push) çözüldüğünde pipeline production'da 6+ ay sorunsuz akar. Bu yüzden **tuzaklar önceden öğrenilir.**</li>
+</ol>
 
 <div class="ma-neden-sonuc-sonuc" markdown>
 **Sonuç:** `main`'e her push → 5 dakika sonra canlıda. Test kalırsa kırmızı, sebep log'da. Rollback SHA-tag ile 30 saniye. Ay sonu faturası **0 €** (GHA ücretsiz). AI Engineer refleksi kuruldu — 9.4 RAG Chatbot ve 9.5 agent otomasyon bu pipeline'ı kopyalayıp kullanacak.

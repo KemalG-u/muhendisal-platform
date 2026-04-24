@@ -7,6 +7,7 @@
 <span class="ma-persona ma-persona-is">🔵 iş</span>
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
+<div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~30 dakika</div>
 <div class="ma-meta-row"><strong>📋 Önkoşul:</strong> Platform'un büyük çoğunluğu tamamlandı. Kendi kariyer pozisyonun netleşti (10.1). Mülakat + açık kaynak refleksin var (10.2 + 10.3).</div>
 <div class="ma-meta-row"><strong>🎯 Çıktı:</strong> **7 aktif trend** hakkında net görüşün var — hangisi gerçek evrim, hangisi balon. "Generalist mı specialist mı?" kararını bilinçli yapıyorsun. 1 yıl + 3 yıl öngörülere kendi bahsini koydun. Sürekli öğrenme için **seçili 5 kaynak** takip listende. **Bu sayfa platform'un son teknik-kavramsal sayfası** — 10.5 pedagojik kapanış.</div>
 </div>
@@ -31,28 +32,28 @@ Bu platform 2026 **Nisan** itibarıyla yazıldı. Okuduğun zaman 6 ay-2 yıl so
 
 ```mermaid
 flowchart TB
-    SEN[👤 Sen<br/>AI Engineer 2026]
+    SEN[👤 Sen\nAI Engineer 2026]
 
     subgraph OLGUN["✅ Olgun — kullanıyorsun"]
-        T1[1. RAG + Agent<br/>production-ready]
-        T6[6. AI tooling<br/>MCP, observability]
+        T1[1. RAG + Agent\nproduction-ready]
+        T6[6. AI tooling\nMCP, observability]
     end
 
     subgraph YUKSELEN["🚀 Yükselen — öğren"]
-        T2[2. Agents at scale<br/>multi-agent + A2A]
-        T3[3. Multimodal<br/>vision + audio + video]
-        T4[4. Long context + reasoning<br/>1M token, o-series]
+        T2[2. Agents at scale\nmulti-agent + A2A]
+        T3[3. Multimodal\nvision + audio + video]
+        T4[4. Long context + reasoning\n1M token, o-series]
     end
 
     subgraph KESIF["🔬 Keşif — izle"]
-        T5[5. AI safety<br/>alignment research]
-        T7[7. Regulation<br/>AI Act + ülke kuralları]
+        T5[5. AI safety\nalignment research]
+        T7[7. Regulation\nAI Act + ülke kuralları]
     end
 
     subgraph YAN["⏳ Yan gelişme — takip et"]
-        Y1[On-device inference<br/>mobile LLM]
-        Y2[Open-source models<br/>Llama, Qwen, DeepSeek]
-        Y3[AI chip race<br/>Nvidia, Google TPU, Apple]
+        Y1[On-device inference\nmobile LLM]
+        Y2[Open-source models\nLlama, Qwen, DeepSeek]
+        Y3[AI chip race\nNvidia, Google TPU, Apple]
     end
 
     SEN --> OLGUN
@@ -60,7 +61,7 @@ flowchart TB
     SEN -.izle.-> KESIF
     SEN -.genel kultur.-> YAN
 
-    classDef mature fill:#dcfce7,stroke:#16a34a,color:#111
+    classDef mature fill:#fef3c7,stroke:#ca8a04,color:#111
     classDef rising fill:#dbeafe,stroke:#2563eb,color:#111
     classDef explore fill:#ddd6fe,stroke:#7c3aed,color:#111
     classDef side fill:#fef3c7,stroke:#ca8a04,color:#111
@@ -132,7 +133,7 @@ Eski LLM sadece metin. Yeni modeller metin + görsel + ses + video **aynı için
 
 ### Kaynak
 
-- [Claude vision docs](https://docs.claude.com/en/docs/build-with-claude/vision)
+- [Claude vision docs](https://platform.claude.com/docs/en/docs/build-with-claude/vision)
 - [Gemini multimodal](https://ai.google.dev/gemini-api/docs/vision)
 - [OpenAI GPT-4o](https://openai.com/index/hello-gpt-4o/)
 - [LMSYS Multimodal Arena](https://lmarena.ai/) — model karşılaştırma
@@ -172,7 +173,7 @@ Eski LLM sadece metin. Yeni modeller metin + görsel + ses + video **aynı için
 - [Anthropic prompt caching (2024-11)](https://www.anthropic.com/news/prompt-caching) — long context'i ucuzlatır
 - [OpenAI o3 system card](https://openai.com/index/o3-and-o4-mini-system-card/) — reasoning model detayı
 - [Gemini 1M context](https://blog.google/technology/ai/google-gemini-next-generation-model-february-2024/)
-- [Anthropic extended thinking](https://docs.claude.com/en/docs/build-with-claude/extended-thinking)
+- [Anthropic extended thinking](https://platform.claude.com/docs/en/docs/build-with-claude/extended-thinking)
 
 ## Trend 4 — AI Tooling Maturity
 
@@ -473,16 +474,18 @@ Haftalık 3 saat plan dosyada. 5 kaynak + takvim + ilk 2 haftanın tamamlanmış
 <div class="ma-neden-sonuc" markdown>
 <div class="ma-neden-sonuc-header">🔗 Birlikte okuma — neden ne oldu</div>
 
-- **A → B:** 2026 AI landscape 7 trend; olgun (1,6) yükselen (2,3,4) keşif (5,7) yan gelişme (edge, OSS, chip).
-- **B → C:** Agents at scale — orchestrator + specialist multi-agent + A2A protokolleri.
-- **C → D:** Multimodal — vision/audio/video tek modelde; RAG + görsel kombinasyon yaygın.
-- **D → E:** Long context + reasoning — 1M token + o-series; RAG'i öldürmez ama değiştirir.
-- **E → F:** AI tooling olgunlaştı — MCP + evals + observability + orchestration.
-- **F → G:** Alignment research sürüyor; senin için red team refleksi + Model Spec.
-- **G → H:** Edge inference niche şu an, 2027+ yaygınlaşma.
-- **H → I:** Regulation AI Act + KVKK + ülkelerin kendi çerçeveleri.
-- **I → J:** Generalist/specialist karar ağacı; çoğu için önce generalist 1-2 yıl.
-- **J → K:** 10 hipotez (1+3 yıl) kendi bahsin; 2027'de dön bak.
+<ol class="ma-neden-sonuc-zincir" markdown>
+<li>**A → B:** 2026 AI landscape 7 trend; olgun (1,6) yükselen (2,3,4) keşif (5,7) yan gelişme (edge, OSS, chip). Bu yüzden **trend haritası öncelik belirler.**</li>
+<li>**B → C:** Agents at scale — orchestrator + specialist multi-agent + A2A protokolleri. Bu yüzden **bölüm 6 bilgisi stratejik değer taşır.**</li>
+<li>**C → D:** Multimodal — vision/audio/video tek modelde; RAG + görsel kombinasyon yaygın. Bu yüzden **bölüm 7 bilgisi geleceğe hazırlar.**</li>
+<li>**D → E:** Long context + reasoning — 1M token + o-series; RAG'i öldürmez ama değiştirir. Bu yüzden **RAG hala geçerli ama evrilecek.**</li>
+<li>**E → F:** AI tooling olgunlaştı — MCP + evals + observability + orchestration. Bu yüzden **araç ekosistemi stabil dönemde.**</li>
+<li>**F → G:** Alignment research sürüyor; senin için red team refleksi + Model Spec. Bu yüzden **etik bilgi pratik değer katar.**</li>
+<li>**G → H:** Edge inference niche şu an, 2027+ yaygınlaşma. Bu yüzden **şimdi değil, gözde tut.**</li>
+<li>**H → I:** Regulation AI Act + KVKK + ülkelerin kendi çerçeveleri. Bu yüzden **hukuki çerçeve teknik kararı etkiler.**</li>
+<li>**I → J:** Generalist/specialist karar ağacı; çoğu için önce generalist 1-2 yıl. Bu yüzden **derinleşme zeminde sonra gelir.**</li>
+<li>**J → K:** 10 hipotez (1+3 yıl) kendi bahsin; 2027'de dön bak. Bu yüzden **uzun vadeli düşünmek kısa vadeli kararlara ışık tutar.**</li>
+</ol>
 
 <div class="ma-neden-sonuc-sonuc" markdown>
 **Sonuç:** Platform kapanışına **bir sayfa** kaldı. 7 trend netti, kariyer karar ağacı çizildi, 10 hipotez yazıldı, takip listesi kuruldu. Artık sürekli öğrenme **alışkanlık**. Sonraki (10.5): topluluk + platform'un resmi kapanış notu.

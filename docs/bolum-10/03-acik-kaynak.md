@@ -7,6 +7,7 @@
 <span class="ma-persona ma-persona-is">🔵 iş</span>
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
+<div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~25 dakika</div>
 <div class="ma-meta-row"><strong>📋 Önkoşul:</strong> GitHub hesap + 2-3 kendi projen (9.4 + 9.5). Git + PR süreciyle temel tanışıklık.</div>
 <div class="ma-meta-row"><strong>🎯 Çıktı:</strong> 3 ay içinde **5-10 açık kaynak PR** birikimin var. Her biri Anthropic Cookbook, Qdrant, LangChain veya benzer AI projelere. Junior + lateral mover için **en güçlü referans inşası** — CV'de "5 açık kaynak katkı" + GitHub profile "Contributed to" badge. LinkedIn DM'de "Anthropic Cookbook'a katkıda bulunuyorum" cümlesi ile mülakat daveti %30-50 artar.</div>
 </div>
@@ -362,14 +363,16 @@ Son 3 kendi commit'in Conventional Commits formatında (`feat:`, `fix:`, `docs:`
 <div class="ma-neden-sonuc" markdown>
 <div class="ma-neden-sonuc-header">🔗 Birlikte okuma — neden ne oldu</div>
 
-- **A → B:** Açık kaynak katkı CV'de 3. boyut (senin projelerin + işin + katkı); junior için altın.
-- **B → C:** Beginner-friendly etiket aramayla başla; good-first-issue + help-wanted.
-- **C → D:** Anthropic Cookbook ideal hedef — aktif, yüksek görünürlük, senin stack'in.
-- **D → E:** Qdrant + LangChain eş değerli; farklı ekosistem derinleşmeleri.
-- **E → F:** Commit hygiene + PR açıklama şablonu reviewer'ın hayatını kolaylaştırır, merge hızı 3×.
-- **F → G:** Code review alma refleksi: teşekkür + cevap + eylem; 24 saat yanıt.
-- **G → H:** 3 ay plan — ayda 1-3 PR, 5-10 toplam hedef.
-- **H → I:** GitHub profile contributions + LinkedIn featured → recruiter görünürlük.
+<ol class="ma-neden-sonuc-zincir" markdown>
+<li>**A → B:** Açık kaynak katkı CV'de 3. boyut (senin projelerin + işin + katkı); junior için altın. Bu yüzden **katkı fark yaratan kanıt.**</li>
+<li>**B → C:** Beginner-friendly etiket aramayla başla; good-first-issue + help-wanted. Bu yüzden **düşük eşik, yüksek değer.**</li>
+<li>**C → D:** Anthropic Cookbook ideal hedef — aktif, yüksek görünürlük, senin stack'in. Bu yüzden **ekosistem içi katkı double değer taşır.**</li>
+<li>**D → E:** Qdrant + LangChain eş değerli; farklı ekosistem derinleşmeleri. Bu yüzden **birden fazla repo iyi.**</li>
+<li>**E → F:** Commit hygiene + PR açıklama şablonu reviewer'ın hayatını kolaylaştırır, merge hızı 3×. Bu yüzden **iletişim kalitesi kod kalitesi kadar önemli.**</li>
+<li>**F → G:** Code review alma refleksi: teşekkür + cevap + eylem; 24 saat yanıt. Bu yüzden **hız ve naziklik kapı açar.**</li>
+<li>**G → H:** 3 ay plan — ayda 1-3 PR, 5-10 toplam hedef. Bu yüzden **plan olmadan birikim olmaz.**</li>
+<li>**H → I:** GitHub profile contributions + LinkedIn featured → recruiter görünürlük. Bu yüzden **katkı görünür yapılmalı.**</li>
+</ol>
 
 <div class="ma-neden-sonuc-sonuc" markdown>
 **Sonuç:** Açık kaynak katkı disiplini elinde. İlk PR 1 hafta içinde atıldı, 3 ay sonra 5-10 merged PR CV'de. Sonraki (10.4): İleri konular ve trendler — sürekli öğrenme ritmi için 2026 sonrası landscape.

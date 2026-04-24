@@ -7,6 +7,7 @@
 <span class="ma-persona ma-persona-is">🔵 iş</span>
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
+<div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~40 dakika</div>
 <div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 9.1 bitmiş — `Dockerfile` + `compose.yml` yerel makinede çalışıyor; kredi kartı (VPS provider için); bir **alan adı** (opsiyonel ama şiddetle önerilir, ~10 €/yıl)</div>
 <div class="ma-meta-row"><strong>🎯 Çıktı:</strong> **Canlı URL** — `https://projen.alanadin.com` — tarayıcıdan açılıyor, arkadaşın da açabiliyor. VPS'te Docker ayakta, servisini restart sonrası otomatik başlatıyor, HTTPS sertifikası Let's Encrypt, basit firewall aktif. Aylık maliyet: **~5 €** (VPS) + **10 €/yıl** (domain).</div>
 </div>
@@ -57,7 +58,7 @@ flowchart LR
     classDef dns fill:#fed7aa,stroke:#ea580c,color:#111
     classDef vps fill:#dbeafe,stroke:#2563eb,color:#111
     classDef proxy fill:#fef3c7,stroke:#ca8a04,color:#111
-    classDef app fill:#dcfce7,stroke:#16a34a,color:#111
+    classDef app fill:#fef3c7,stroke:#ca8a04,color:#111
     class USR user
     class DNS,WAF dns
     class VPS,FW vps
@@ -303,7 +304,7 @@ Yeni VPS → prod-ready 30 dakika:
 
 Anthropic doğrudan "VPS deploy" dersi yayınlamıyor — bu genel infra konusu. Ama **Anthropic ekosisteminden üç önemli kesişim** var:
 
-**1. API key güvenlik.** [docs.claude.com — API keys](https://docs.claude.com/en/docs/build-with-claude/administration-api) Anthropic'in resmi rehberi: env var'da tut, git'e commit etme, rotate et, kullanım monitörü aç. VPS'te `.env` + `env_file:` disiplini doğrudan bu rehberin uygulanışı.
+**1. API key güvenlik.** [platform.claude.com/docs — API keys](https://platform.claude.com/docs/en/docs/build-with-claude/administration-api) Anthropic'in resmi rehberi: env var'da tut, git'e commit etme, rotate et, kullanım monitörü aç. VPS'te `.env` + `env_file:` disiplini doğrudan bu rehberin uygulanışı.
 
 **2. Usage limits + alerts.** Anthropic Console → Settings → Usage → **Budget alerts**. Günlük veya aylık harcama eşiği geç → email uyarısı. Prod agent deploy ettiğinde ZORUNLU — bir bug sonsuz loop'ta 1000$'ı 1 saatte harcar. Alert kur, sonra deploy et.
 
@@ -328,7 +329,7 @@ Anthropic doğrudan "VPS deploy" dersi yayınlamıyor — bu genel infra konusu.
     **Graceful shutdown.** Agent servisi kapanırken ortadaki işleri bitirmeli. `docker stop` default 10 sn SIGTERM sonra SIGKILL. Python kod `signal.SIGTERM` handler + `asyncio.gather` cancel yapısı kurmalı — yoksa yarım iş DB'de kalır.
 
 <div class="ma-anthropic-oz-kaynak" markdown>
-**Kaynak:** [docs.claude.com — API administration](https://docs.claude.com/en/docs/build-with-claude/administration-api) (EN, API key yaşam döngüsü + budget alerts). Pekiştirme: [DigitalOcean Community — Initial Server Setup](https://www.digitalocean.com/community/tutorials/initial-server-setup-with-ubuntu-22-04) (EN, Ubuntu 24.04 sertleştirme canonical rehber). Caddy: [caddyserver.com/docs](https://caddyserver.com/docs/) — reverse proxy + HTTPS defaults. Cloudflare: [developers.cloudflare.com](https://developers.cloudflare.com/dns/) — DNS + proxy davranışı.
+**Kaynak:** [platform.claude.com/docs — API administration](https://platform.claude.com/docs/en/docs/build-with-claude/administration-api) (EN, API key yaşam döngüsü + budget alerts). Pekiştirme: [DigitalOcean Community — Initial Server Setup](https://www.digitalocean.com/community/tutorials/initial-server-setup-with-ubuntu-22-04) (EN, Ubuntu 24.04 sertleştirme canonical rehber). Caddy: [caddyserver.com/docs](https://caddyserver.com/docs/) — reverse proxy + HTTPS defaults. Cloudflare: [developers.cloudflare.com](https://developers.cloudflare.com/dns/) — DNS + proxy davranışı.
 </div>
 </div>
 
@@ -367,13 +368,15 @@ Dosyaya kaydet: `muhendisal-notlarim/bolum-9/02-cloud/deploy-kanit.txt`
 <div class="ma-neden-sonuc" markdown>
 <div class="ma-neden-sonuc-header">🔗 Birlikte okuma — neden ne oldu</div>
 
-- **A → B:** Yerel Docker (9.1) güzel ama dışarıya açık değil — VPS gerekiyor: kendi Linux sunucun, 5 €/ay.
-- **B → C:** Platform seçimi control-vs-convenience dengesi — AWS fazla, Vercel vendor lock-in, **Linux VPS** (Hetzner/DO/Contabo) doğru yol: ham kontrol + düşük maliyet + prod refleksi.
-- **C → D:** Hetzner CX22 (4 €/ay, Nuremberg) Türkiye'den ideal: coğrafi + GDPR + latency + fiyat.
-- **D → E:** Güvenlik sertleştirme atlanamaz: non-root user + SSH key-only + UFW + fail2ban. Prod'da pazarlıksız.
-- **E → F:** Docker + git clone + .env + `docker compose up` → servis ayakta. `127.0.0.1` bind + Caddy reverse proxy + Let's Encrypt ile HTTPS 15 dk.
-- **F → G:** Domain + Cloudflare DNS + Caddy = ücretsiz/ucuz standart. **İlk canlı URL.**
-- **G → H:** Toplam maliyet ~100 €/yıl. AWS benzer konfig ~330 $/yıl — 3× tasarruf.
+<ol class="ma-neden-sonuc-zincir" markdown>
+<li>**A → B:** Yerel Docker (9.1) güzel ama dışarıya açık değil — VPS gerekiyor: kendi Linux sunucun, 5 €/ay. Bu yüzden **VPS öğrenilmeden deploy tamamlanmaz.**</li>
+<li>**B → C:** Platform seçimi control-vs-convenience dengesi — AWS fazla, Vercel vendor lock-in, **Linux VPS** (Hetzner/DO/Contabo) doğru yol: ham kontrol + düşük maliyet + prod refleksi. Bu yüzden **VPS AI Engineer için standart.**</li>
+<li>**C → D:** Hetzner CX22 (4 €/ay, Nuremberg) Türkiye'den ideal: coğrafi + GDPR + latency + fiyat. Bu yüzden **coğrafya ve maliyet birlikte değerlendirilir.**</li>
+<li>**D → E:** Güvenlik sertleştirme atlanamaz: non-root user + SSH key-only + UFW + fail2ban. Prod'da pazarlıksız. Bu yüzden **güvenlik sertleştirme birinci gündür.**</li>
+<li>**E → F:** Docker + git clone + .env + `docker compose up` → servis ayakta. `127.0.0.1` bind + Caddy reverse proxy + Let's Encrypt ile HTTPS 15 dk. Bu yüzden **15 dakikada HTTPS mümkün.**</li>
+<li>**F → G:** Domain + Cloudflare DNS + Caddy = ücretsiz/ucuz standart. **İlk canlı URL.** Bu yüzden **domain sihri değil, konfigürasyon.**</li>
+<li>**G → H:** Toplam maliyet ~100 €/yıl. AWS benzer konfig ~330 $/yıl — 3× tasarruf. Bu yüzden **VPS maliyet avantajı net.**</li>
+</ol>
 
 <div class="ma-neden-sonuc-sonuc" markdown>
 **Sonuç:** Servisin canlıda. `https://projen.alanadin.com` çalışıyor, HTTPS, UFW aktif, non-root, backup açık, maliyet kontrol altında. Bir sonraki adım 9.3 CI/CD — her git push'ta otomatik build + deploy. "SSH'la gir, git pull, docker compose up" manuel akışını **saniyelere** indireceğiz.

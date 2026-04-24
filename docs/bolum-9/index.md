@@ -53,8 +53,8 @@ flowchart LR
 
   classDef user fill:#ddd6fe,stroke:#7c3aed,color:#111
   classDef page fill:#dbeafe,stroke:#2563eb,color:#111
-  classDef pilot fill:#dcfce7,stroke:#16a34a,color:#111
-  classDef goal fill:#dcfce7,stroke:#16a34a,color:#111
+  classDef pilot fill:#fef3c7,stroke:#ca8a04,color:#111
+  classDef goal fill:#fef3c7,stroke:#ca8a04,color:#111
   classDef decision fill:#fef3c7,stroke:#ca8a04,color:#111
   class S user
   class P91,P92,P93,P94,P95,P96 page
@@ -100,7 +100,7 @@ Deploy tarafında Anthropic **kendi ürünlerinde bir desen gösterir** — sen 
 
 **3. Anthropic Cookbook — deployment örnekleri.** [claude-cookbooks/third_party](https://github.com/anthropics/claude-cookbooks/tree/main/third_party) AWS Lambda, Vercel, Modal gibi platformlarda Claude deploy örnekleri. 9.2'deki kararını destekler (Hetzner/DO dışında ilgilenirsen).
 
-**4. API Keys güvenlik.** docs.claude.com/en/docs/build-with-claude/api-keys — environment variable disiplinini tekrarlar. 9.1 Docker yapılandırmamızda bu disiplin üzerine kuruluyor (`.env` dosyası asla image'a gömülmez).
+**4. API Keys güvenlik.** platform.claude.com/docs/en/docs/build-with-claude/api-keys — environment variable disiplinini tekrarlar. 9.1 Docker yapılandırmamızda bu disiplin üzerine kuruluyor (`.env` dosyası asla image'a gömülmez).
 
 **5. Status Page.** [status.anthropic.com](https://status.anthropic.com) — Anthropic'in uptime takip sayfası. 9.5 "hata yönetimi"nde "Claude aşağı mı?" sorusunun ilk bakılacak yeri.
 

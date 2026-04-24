@@ -7,6 +7,7 @@
 <span class="ma-persona ma-persona-is">🔵 iş</span>
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
+<div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~50 dakika</div>
 <div class="ma-meta-row"><strong>📋 Önkoşul:</strong> Bölüm 6 tamamlandı (agent + MCP + tool calling) + 9.1 Docker + 9.2 Cloud + 9.3 CI/CD. Anthropic API key + VPS erişimi.</div>
 <div class="ma-meta-row"><strong>🎯 Çıktı:</strong> **Saatlik cron ile çalışan** canlı multi-agent pipeline: haberleri tarar → Sonnet özet yazar → Haiku puanlar → publisher dosyaya+mail'e yayar. Referans proje (`examples/icerik-ozet-agent/`) 9 testle doğrulanmış, 4 agent + SQLite + orchestrator. Aylık maliyet ~$2.60 (heterojen model sayesinde %38 tasarruf). **Portföy projesi 2** — RAG chatbot'a simetrik ikinci kart: "bir işi yapan AI sistemi".</div>
 </div>
@@ -51,19 +52,19 @@
 
 ```mermaid
 flowchart LR
-    CRON["⏰ Cron<br/>saat başı"]
-    PIPE["🎼 pipeline.py<br/>orchestrator"]
+    CRON["⏰ Cron\nsaat başı"]
+    PIPE["🎼 pipeline.py\norchestrator"]
 
     subgraph AGENTS["4 Agent"]
-        RAD["📡 radar<br/>RSS tara<br/>LLM YOK"]
-        YAZ["✍️ yazar<br/>Sonnet 4.6<br/>özet üret"]
-        EVAL["⚖️ evaluator<br/>Haiku 4.5<br/>tool_choice"]
-        PUB["📬 publisher<br/>dosya + SMTP"]
+        RAD["📡 radar\nRSS tara\nLLM YOK"]
+        YAZ["✍️ yazar\nSonnet 4.6\nözet üret"]
+        EVAL["⚖️ evaluator\nHaiku 4.5\ntool_choice"]
+        PUB["📬 publisher\ndosya + SMTP"]
     end
 
-    DB[("💾 SQLite<br/>taslaklar.db")]
-    REP["📄 reports/<br/>YYYY-MM-DD.md"]
-    MAIL["📧 SMTP<br/>opsiyonel"]
+    DB[("💾 SQLite\ntaslaklar.db")]
+    REP["📄 reports/\nYYYY-MM-DD.md"]
+    MAIL["📧 SMTP\nopsiyonel"]
 
     CRON --> PIPE
     PIPE --> RAD --> YAZ --> EVAL
@@ -74,7 +75,7 @@ flowchart LR
 
     classDef cron fill:#fef3c7,stroke:#ca8a04,color:#111
     classDef llm fill:#dbeafe,stroke:#2563eb,color:#111
-    classDef det fill:#dcfce7,stroke:#16a34a,color:#111
+    classDef det fill:#fef3c7,stroke:#ca8a04,color:#111
     classDef out fill:#fed7aa,stroke:#ea580c,color:#111
     class CRON cron
     class YAZ,EVAL llm
@@ -603,13 +604,15 @@ Kanıt: `journalctl -u icerik-agent --since "7 days ago"` çıktısı + reports/
 <div class="ma-neden-sonuc" markdown>
 <div class="ma-neden-sonuc-header">🔗 Birlikte okuma — neden ne oldu</div>
 
-- **A → B:** 9.4 senkron web servisi, 9.5 asenkron cron otomasyonu — AI Engineer aracının iki yarısı.
-- **B → C:** 4 agent + orchestrator (radar → yazar → evaluator → publisher); LLM sadece yazar ve evaluator'da.
-- **C → D:** Heterojen model (Sonnet yazar + Haiku evaluator) %38 tasarruf — doğru model doğru işte.
-- **D → E:** `tool_choice={"type":"tool","name":"X"}` structured output garanti — regex parse riski sıfır.
-- **E → F:** 3 deploy yolu: cron (basit), systemd timer (prod), Docker + 9.3 pipeline (tam otomatik).
-- **F → G:** Maliyet ~$2.60/ay + 4 €/ay VPS = ~$7/ay; 100× ölçekte bile makul.
-- **G → H:** Building Effective Agents (Anthropic 2024-12) 7 ilkesinin canlı uygulaması.
+<ol class="ma-neden-sonuc-zincir" markdown>
+<li>**A → B:** 9.4 senkron web servisi, 9.5 asenkron cron otomasyonu — AI Engineer aracının iki yarısı. Bu yüzden **iki pattern birbirini tamamlar.**</li>
+<li>**B → C:** 4 agent + orchestrator (radar → yazar → evaluator → publisher); LLM sadece yazar ve evaluator'da. Bu yüzden **LLM her adımda değil, gerektiğinde.**</li>
+<li>**C → D:** Heterojen model (Sonnet yazar + Haiku evaluator) %38 tasarruf — doğru model doğru işte. Bu yüzden **model seçimi maliyet belirler.**</li>
+<li>**D → E:** `tool_choice={'type':'tool','name':'X'}` structured output garanti — regex parse riski sıfır. Bu yüzden **tool_choice structured output'un garantisi.**</li>
+<li>**E → F:** 3 deploy yolu: cron (basit), systemd timer (prod), Docker + 9.3 pipeline (tam otomatik). Bu yüzden **karmaşıklık ihtiyaca göre seçilir.**</li>
+<li>**F → G:** Maliyet ~$2.60/ay + 4 €/ay VPS = ~$7/ay; 100× ölçekte bile makul. Bu yüzden **heterojen model tasarrufu gerçek.**</li>
+<li>**G → H:** Building Effective Agents (Anthropic 2024-12) 7 ilkesinin canlı uygulaması. Bu yüzden **teori pratikte görünür olur.**</li>
+</ol>
 
 <div class="ma-neden-sonuc-sonuc" markdown>
 **Sonuç:** İkinci portföy projen canlıda, günlük otomatik çalışıyor. 9.4 ile birlikte iki desen elinde: senkron servis + asenkron agent. **Sonraki (9.7):** Bu iki projeyi nasıl paketleyip LinkedIn + GitHub + iş başvurularında göstereceksin.

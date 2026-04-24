@@ -7,6 +7,7 @@
 <span class="ma-persona ma-persona-is">🔵 iş</span>
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
+<div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~50 dakika</div>
 <div class="ma-meta-row"><strong>📋 Önkoşul:</strong> Bölüm 7 (multimodal) + Bölüm 8 (production) + Bölüm 9.1-9.3 (docker/cloud/CI/CD) bitti. 9.4 RAG Chatbot + 9.5 Agent Otomasyon 2 canlı portföy var. Anthropic API key. Docker kurulu.</div>
 <div class="ma-meta-row"><strong>🎯 Çıktı:</strong> **3. canlı portföy projesi** — öğretmen tahta fotoğrafı yükler → uygulama 30 saniyede ders özeti + 3 anahtar kavram + 3 quiz sorusu üretir. `examples/tahta-asistani/` referans kod: FastAPI + Claude vision + pytest (14 test) + Docker + production checklist (14/15). **Platform'un 4. çalışır-kod imza projesi** (9.4 + 9.5 + 5.4 + **9.6**). AI Engineer araç kutusu TAM: RAG + Agent + FT + Multimodal.</div>
 </div>
@@ -63,14 +64,14 @@ Dördüncüsü: **Platform %100** — 67/67 sayfa. Kemal hedefi ("sondan AI Engi
 
 ```mermaid
 flowchart TB
-    USER[📱 Öğretmen<br/>tahta fotoğrafı]
+    USER[📱 Öğretmen\ntahta fotoğrafı]
     FAPI[FastAPI /analiz]
-    VAL[Pydantic + Pillow<br/>validasyon + downscale]
-    RATE[slowapi<br/>10 req/min]
-    CLAUDE[Claude Sonnet 4.6<br/>vision]
-    PARSE[JSON parse<br/>Pydantic model]
+    VAL[Pydantic + Pillow\nvalidasyon + downscale]
+    RATE[slowapi\n10 req/min]
+    CLAUDE[Claude Sonnet 4.6\nvision]
+    PARSE[JSON parse\nPydantic model]
     LOG[structured JSON log]
-    RESP[JSON response<br/>özet+kavram+quiz]
+    RESP[JSON response\nözet+kavram+quiz]
 
     USER -->|POST multipart| FAPI
     FAPI --> RATE
@@ -84,7 +85,7 @@ flowchart TB
     classDef user fill:#ddd6fe,stroke:#7c3aed,color:#111
     classDef api fill:#dbeafe,stroke:#2563eb,color:#111
     classDef ai fill:#fed7aa,stroke:#ea580c,color:#111
-    classDef out fill:#dcfce7,stroke:#16a34a,color:#111
+    classDef out fill:#fef3c7,stroke:#ca8a04,color:#111
     class USER user
     class FAPI,VAL,RATE,PARSE,LOG api
     class CLAUDE ai
@@ -512,16 +513,18 @@ README.md production-grade (4 KB) + 14/15 production checklist dolu + platform s
 <div class="ma-neden-sonuc" markdown>
 <div class="ma-neden-sonuc-header">🔗 Birlikte okuma — neden ne oldu</div>
 
-- **A → B:** Tahta Asistanı = öğretmen fotoğraf + Claude vision + JSON özet + quiz.
-- **B → C:** Mimari: tek sunucu, FastAPI + Pydantic + slowapi + tenacity + Pillow.
-- **C → D:** Claude çağrısı 7.1 vision pattern + 8.5 retry + 8.1 JSON şeması.
-- **D → E:** Rate limit 10/min IP başı; 5 MB üstü Pillow ile 2048px downscale.
-- **E → F:** Structured JSON log + trace (istek_id) her istekte.
-- **F → G:** 14 pytest, Claude mock'lu CI/CD dostu, 0.89 s çalışıyor.
-- **G → H:** 4 CTO kanıtı (AST + ruff + pytest + pin) hepsi yeşil.
-- **H → I:** Maliyet: 1 öğretmen $1/ay, 10 öğretmenlik okul $12/ay, 500 kullanıcı SaaS $600 gelir ~$1900.
-- **I → J:** Production checklist 14/15 → GO.
-- **J → K:** Platform'un 4. çalışır kod + 10. imza sayfa — Kemal hedefi TAM karşılandı.
+<ol class="ma-neden-sonuc-zincir" markdown>
+<li>**A → B:** Tahta Asistanı = öğretmen fotoğraf + Claude vision + JSON özet + quiz. Bu yüzden **gerçek ihtiyaçtan doğan proje değer taşır.**</li>
+<li>**B → C:** Mimari: tek sunucu, FastAPI + Pydantic + slowapi + tenacity + Pillow. Bu yüzden **basit mimari iyi başlangıç.**</li>
+<li>**C → D:** Claude çağrısı 7.1 vision pattern + 8.5 retry + 8.1 JSON şeması. Bu yüzden **önceki bölümlerin bilgisi birleşir.**</li>
+<li>**D → E:** Rate limit 10/min IP başı; 5 MB üstü Pillow ile 2048px downscale. Bu yüzden **sınır koruma üretim zorunluluğu.**</li>
+<li>**E → F:** Structured JSON log + trace (istek_id) her istekte. Bu yüzden **loglama baştan kurulur.**</li>
+<li>**F → G:** 14 pytest, Claude mock'lu CI/CD dostu, 0.89 s çalışıyor. Bu yüzden **test kalitesi güvende tutar.**</li>
+<li>**G → H:** 4 CTO kanıtı (AST + ruff + pytest + pin) hepsi yeşil. Bu yüzden **kanıt olmadan iddia geçmez.**</li>
+<li>**H → I:** Maliyet: 1 öğretmen $1/ay, 10 öğretmenlik okul $12/ay, 500 kullanıcı SaaS $600 gelir ~$1900. Bu yüzden **maliyet modeli iş planı temeli.**</li>
+<li>**I → J:** Production checklist 14/15 → GO. Bu yüzden **checklist karar verir.**</li>
+<li>**J → K:** Platform'un 4. çalışır kod + 10. imza sayfa — Kemal hedefi TAM karşılandı. Bu yüzden **her sayfa portföy değeri taşır.**</li>
+</ol>
 
 <div class="ma-neden-sonuc-sonuc" markdown>
 **Sonuç:** 3. portföy projesi canlıda. 4 çalışır-kod imza (RAG + Agent + Multimodal + FT). Platform teknik olarak %100 tamam — AI Engineer araç kutusu objektif olarak hazır. Sonraki adım: LinkedIn Featured 4 proje + mülakat davetleri + ilk iş.
