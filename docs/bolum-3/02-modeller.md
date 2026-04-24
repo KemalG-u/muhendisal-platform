@@ -7,6 +7,7 @@
 <span class="ma-persona ma-persona-is">🔵 iş</span>
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
+<div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~35 dakika</div>
 <div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 3.1 okundu (embedding kavramı + kosinüs benzerliği + `document`/`query` asimetrisi). Python temel.</div>
 <div class="ma-meta-row"><strong>🎯 Çıktı:</strong> Voyage, OpenAI ve açık kaynak 3 model arasında projen için hangisini seçeceğine karar verebiliyorsun; fiyat/kalite/gizlilik üçgeninde kendi trade-off'ını biliyorsun; bir Türkçe örnekte üç modeli kıyaslayabilecek bir deneme yapmışsın.</div>
 </div>
@@ -30,20 +31,20 @@
 ```mermaid
 flowchart TB
     subgraph API["🌐 API (cloud, ücretli)"]
-        V["🟠 Voyage AI<br/>voyage-3<br/>voyage-3-large<br/>voyage-3-lite"]
-        O["🟢 OpenAI<br/>text-embedding-3-small<br/>text-embedding-3-large"]
-        C["🔵 Cohere<br/>embed-v4<br/>(alternatif)"]
+        V["🟠 Voyage AI\nvoyage-3\nvoyage-3-large\nvoyage-3-lite"]
+        O["🟢 OpenAI\ntext-embedding-3-small\ntext-embedding-3-large"]
+        C["🔵 Cohere\nembed-v4\n(alternatif)"]
     end
 
     subgraph LOCAL["💻 Açık Kaynak (lokal, ücretsiz)"]
-        BGE["⚪ BGE<br/>bge-large-v2<br/>bge-m3"]
-        E5["⚪ E5<br/>multilingual-e5-large"]
-        MINI["⚪ MiniLM<br/>all-MiniLM-L6-v2<br/>(en küçük)"]
+        BGE["⚪ BGE\nbge-large-v2\nbge-m3"]
+        E5["⚪ E5\nmultilingual-e5-large"]
+        MINI["⚪ MiniLM\nall-MiniLM-L6-v2\n(en küçük)"]
     end
 
     USER["👤 Sen"]
-    NET{"Veri dışarı<br/>gidebilir mi?"}
-    VOL{"Aylık hacim<br/>ne kadar?"}
+    NET{"Veri dışarı\ngidebilir mi?"}
+    VOL{"Aylık hacim\nne kadar?"}
 
     USER --> NET
     NET -->|"Evet, genel içerik"| VOL
@@ -54,7 +55,7 @@ flowchart TB
     VOL -->|"Çok büyük (>10M/ay)"| LOCAL
 
     classDef api fill:#fef3c7,stroke:#ca8a04,color:#111
-    classDef local fill:#dcfce7,stroke:#16a34a,color:#111
+    classDef local fill:#fef3c7,stroke:#ca8a04,color:#111
     classDef user fill:#ddd6fe,stroke:#7c3aed,color:#111
     classDef dec fill:#fed7aa,stroke:#ea580c,color:#111
     class V,O,C api
@@ -347,7 +348,7 @@ Beklenti: **Aynı gruptaki cümleler birbirine yakın**, gruplar arası uzak.
 
 **Anthropic Claude ile Voyage AI resmi çift.** Platform bu çifti default seçerken 4 somut gerekçeye dayanır:
 
-1. **Docs entegrasyonu.** [docs.claude.com/embeddings](https://docs.claude.com/en/docs/build-with-claude/embeddings) sayfası Voyage örnekleri ile açılır. Öğrenci Claude öğrenirken embedding konusuna geçtiğinde aynı provider ekosistemi devam eder — öğrenme yükü düşer.
+1. **Docs entegrasyonu.** [platform.claude.com/docs/embeddings](https://platform.claude.com/docs/en/docs/build-with-claude/embeddings) sayfası Voyage örnekleri ile açılır. Öğrenci Claude öğrenirken embedding konusuna geçtiğinde aynı provider ekosistemi devam eder — öğrenme yükü düşer.
 2. **RAG cookbook'lar.** [Anthropic Cookbook](https://github.com/anthropics/claude-cookbooks) RAG bölümünde referans notebook'lar Voyage kullanır. Platformun Bölüm 4 desenini doğrudan üstlenmesine imkân verir.
 3. **Contextual Retrieval (2024 Eylül)** — Anthropic'in yayımladığı retrieval iyileştirme tekniği Voyage ile test edilmiş, Claude + Voyage birlikte %49 iyileşme. Bölüm 4.7'de detaylı.
 4. **`input_type` asimetrisi Anthropic pedagojisinin bir parçası** — model-agnostik değil, bilinçli tasarım. OpenAI'de bu yok; öğrenci `document`/`query` disiplinini Voyage üzerinden **doğru** öğrenir.
@@ -411,13 +412,15 @@ Kanıt: Python kod + çıktı + 2-3 satır gözlem.
 <div class="ma-neden-sonuc" markdown>
 <div class="ma-neden-sonuc-header">🔗 Birlikte okuma — neden ne oldu</div>
 
-- **A → B:** 2026'da 3 embedding ailesi: Voyage (API), OpenAI (API), açık kaynak (lokal). Her biri farklı ödün alır.
-- **B → C:** Voyage AI Anthropic tavsiyesi — `input_type` asimetrisi + MTEB üst + ücretsiz 50M/ay.
-- **C → D:** OpenAI text-embedding-3 geniş ekosistem + Matryoshka + SDK v2 major bump dikkat.
-- **D → E:** Açık kaynak (BGE-M3, multilingual-e5-large) ücretsiz + lokal + gizlilik dostu; E5 prefix kuralı kritik.
-- **E → F:** Türkçe test: multilingual-e5 > voyage-3 > bge-m3 > OpenAI 3-small > MiniLM ayrım gücü sırası.
-- **F → G:** Karar matrisi: senaryoya göre (hassas veri? hacim? dil?) seç; default voyage-3.
-- **G → H:** 8 CTO tuzak: OpenAI SDK v1→v2, E5 prefix, model karıştırma, metin saklamama.
+<ol class="ma-neden-sonuc-zincir" markdown>
+<li>**A → B:** 2026'da 3 embedding ailesi: Voyage (API), OpenAI (API), açık kaynak (lokal). Her biri farklı ödün alır. Bu yüzden **senaryo önce, model sonra.**</li>
+<li>**B → C:** Voyage AI Anthropic tavsiyesi — `input_type` asimetrisi + MTEB üst + ücretsiz 50M/ay. Bu yüzden **platform default voyage-3.**</li>
+<li>**C → D:** OpenAI text-embedding-3 geniş ekosistem + Matryoshka + SDK v2 major bump dikkat. Bu yüzden **SDK sürümü pin'le.**</li>
+<li>**D → E:** Açık kaynak (BGE-M3, multilingual-e5-large) ücretsiz + lokal + gizlilik dostu; E5 prefix kuralı kritik. Bu yüzden **prefix atlama = %15 kalite kaybı.**</li>
+<li>**E → F:** Türkçe test: multilingual-e5 > voyage-3 > bge-m3 > OpenAI 3-small > MiniLM ayrım gücü sırası. Bu yüzden **Türkçe projede E5 değerlendir.**</li>
+<li>**F → G:** Karar matrisi: senaryoya göre (hassas veri? hacim? dil?) seç; default voyage-3. Bu yüzden **karar ağacını geç, seçimini yap.**</li>
+<li>**G → H:** 8 CTO tuzak: OpenAI SDK v1→v2, E5 prefix, model karıştırma, metin saklamama. Bu yüzden **değişim logla, test et.**</li>
+</ol>
 
 <div class="ma-neden-sonuc-sonuc" markdown>
 **Sonuç:** Embedding modeli bilinçli seçimin var. voyage-3 default (platformda), ama kendi projen için E5 veya BGE'ye geçiş yolun net. Sonraki sayfa (3.3): bu vektörleri **nerede** saklayacağın — vector DB karşılaştırması.

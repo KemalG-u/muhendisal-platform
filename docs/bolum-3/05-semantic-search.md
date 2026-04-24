@@ -7,6 +7,7 @@
 <span class="ma-persona ma-persona-is">🔵 iş</span>
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
+<div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~50 dakika</div>
 <div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 3.1 + 3.2 + 3.3 + 3.4 tamamlandı. Docker + Python + FastAPI refleksi (Bölüm 0 + 9.1). Voyage AI hesabı.</div>
 <div class="ma-meta-row"><strong>🎯 Çıktı:</strong> **Canlı semantic search servisi** — kendi haber/içerik koleksiyonuna soru soruyorsun, skorlu + kategoriye filtrelenmiş cevap geliyor. FastAPI + Qdrant + Voyage üçlüsü tam pipeline. Referans proje (`examples/semantic-search/`) 19 testle doğrulanmış, Docker compose tek komutla ayağa kalkıyor. **Portföy projesi 0** — 9.4 RAG chatbot'undan önce kuran retrieval omurgası.</div>
 </div>
@@ -31,20 +32,20 @@ Bölüm 3'te 4 sayfa boyunca **kavram + model + DB + kurulum** öğrettik. Bu sa
 flowchart TB
     subgraph YAZMA["1. YAZMA (başta ve periyodik)"]
         ADMIN[👤 Sen] --> EKLE[POST /toplu-ekle]
-        EKLE --> EMB_D[Voyage embed<br/>input_type=document]
-        EMB_D --> QDR_W[Qdrant upsert<br/>payload + vektör]
+        EKLE --> EMB_D[Voyage embed\ninput_type=document]
+        EMB_D --> QDR_W[Qdrant upsert\npayload + vektör]
     end
 
     subgraph ARAMA["2. ARAMA (her sorguda)"]
         USER[👤 Kullanıcı] --> ARA[POST /ara]
-        ARA --> EMB_Q[Voyage embed<br/>input_type=query]
-        EMB_Q --> QDR_R[Qdrant search<br/>+ optional filter]
-        QDR_R --> SONUC[Skorlu liste<br/>5 sonuç]
+        ARA --> EMB_Q[Voyage embed\ninput_type=query]
+        EMB_Q --> QDR_R[Qdrant search\n+ optional filter]
+        QDR_R --> SONUC[Skorlu liste\n5 sonuç]
         SONUC --> USER
     end
 
     classDef write fill:#dbeafe,stroke:#2563eb,color:#111
-    classDef read fill:#dcfce7,stroke:#16a34a,color:#111
+    classDef read fill:#fef3c7,stroke:#ca8a04,color:#111
     classDef user fill:#ddd6fe,stroke:#7c3aed,color:#111
     class EKLE,EMB_D,QDR_W write
     class ARA,EMB_Q,QDR_R,SONUC read
@@ -448,13 +449,15 @@ Kanıt: terminal çıktıları + 3 sorgu/cevap + pytest 19/19.
 <div class="ma-neden-sonuc" markdown>
 <div class="ma-neden-sonuc-header">🔗 Birlikte okuma — neden ne oldu</div>
 
-- **A → B:** Bölüm 3 kavramları (embedding + DB + kurulum) bu sayfada tek çalışan sisteme birleşti.
-- **B → C:** Mimari: yazma (document) + arama (query) asimetrisi — 3.1 kuralı pratikte.
-- **C → D:** 12 dosya / 19 test / Docker compose / pin'li `pyproject.toml` — 9.4 referans proje desenine simetri.
-- **D → E:** Deterministik ID (SHA-256) idempotent upsert sağlar, duplikasyon riski yok.
-- **E → F:** Pydantic Field validasyonu 50+ satır kod kurtarır (`min_length`, `ge`, `le` → otomatik 422).
-- **F → G:** Filter + semantik = yapısal + anlamsal birleşik sorgu (Qdrant'ın gücü, 3.3 + 3.4 tezi).
-- **G → H:** 3.5 → 9.4 geçişi 50 satırlık ekleme (claude.py). Retrieval öğren, sonra LLM ekle.
+<ol class="ma-neden-sonuc-zincir" markdown>
+<li>**A → B:** Bölüm 3 kavramları (embedding + DB + kurulum) bu sayfada tek çalışan sisteme birleşti. Bu yüzden **parçalar birleşince anlam kazanır.**</li>
+<li>**B → C:** Mimari: yazma (document) + arama (query) asimetrisi — 3.1 kuralı pratikte. Bu yüzden **input_type karıştırma burada görünür olur.**</li>
+<li>**C → D:** 12 dosya / 19 test / Docker compose / pin'li `pyproject.toml` — 9.4 referans proje desenine simetri. Bu yüzden **test yoksa proje yarım.**</li>
+<li>**D → E:** Deterministik ID (SHA-256) idempotent upsert sağlar, duplikasyon riski yok. Bu yüzden **tekrar çalıştırma güvenli olur.**</li>
+<li>**E → F:** Pydantic Field validasyonu 50+ satır kod kurtarır (`min_length`, `ge`, `le` → otomatik 422). Bu yüzden **framework'ü tam kullan.**</li>
+<li>**F → G:** Filter + semantik = yapısal + anlamsal birleşik sorgu (Qdrant'ın gücü, 3.3 + 3.4 tezi). Bu yüzden **arama kalitesi yükselir.**</li>
+<li>**G → H:** 3.5 → 9.4 geçişi 50 satırlık ekleme (claude.py). Retrieval öğren, sonra LLM ekle. Bu yüzden **temel doğru kurulursa ekleme kolaylaşır.**</li>
+</ol>
 
 <div class="ma-neden-sonuc-sonuc" markdown>
 **Sonuç:** Bölüm 3 kapandı. Embedding kavramı soyutan → pratik çalışan servise döndü. Referans proje `examples/semantic-search/` 4 CTO kanıtını geçti (AST + ruff + pytest 19/19 + pin + compose valid). **Sonraki:** Bölüm 4 RAG — bu retrieval'a Claude ekleyeceğiz.

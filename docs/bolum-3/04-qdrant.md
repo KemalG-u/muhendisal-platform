@@ -7,6 +7,7 @@
 <span class="ma-persona ma-persona-is">🔵 iş</span>
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
+<div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~40 dakika</div>
 <div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 3.1 + 3.2 + 3.3 okundu. Bölüm 0.3 (Docker) ve Bölüm 9.1 (Docker imaj yönetimi) tecrübesi. Python + pip çalışıyor.</div>
 <div class="ma-meta-row"><strong>🎯 Çıktı:</strong> Yerel makinende **çalışan Qdrant**; `http://localhost:6333` dashboard açılıyor; Python scriptinle 20 Türkçe cümleyi embed edip Qdrant'a yazdın, soru sorduğunda en alakalı 5 cümle dönüyor; production refleksleri (volume mount, healthcheck, auth) biliyorsun.</div>
 </div>
@@ -29,22 +30,22 @@
 
 ```mermaid
 flowchart LR
-    DOCKER["🐳 Docker<br/>zaten kurulu"]
-    RUN["docker run<br/>qdrant/qdrant"]
-    PORT["localhost:6333<br/>API + dashboard"]
-    SDK["qdrant-client<br/>Python SDK"]
-    COLL["Collection<br/>oluştur"]
-    UPSERT["Vektör yaz<br/>(upsert)"]
-    SEARCH["Arama<br/>(search)"]
-    PROD["🏭 Production<br/>volume + auth + backup"]
+    DOCKER["🐳 Docker\nzaten kurulu"]
+    RUN["docker run\nqdrant/qdrant"]
+    PORT["localhost:6333\nAPI + dashboard"]
+    SDK["qdrant-client\nPython SDK"]
+    COLL["Collection\noluştur"]
+    UPSERT["Vektör yaz\n(upsert)"]
+    SEARCH["Arama\n(search)"]
+    PROD["🏭 Production\nvolume + auth + backup"]
 
     DOCKER --> RUN --> PORT
     PORT --> SDK --> COLL --> UPSERT --> SEARCH
-    PORT -.dashboard.-> DASH["🖥 Web UI<br/>:6333/dashboard"]
+    PORT -.dashboard.-> DASH["🖥 Web UI\n:6333/dashboard"]
     SEARCH -.sonra.-> PROD
 
     classDef docker fill:#dbeafe,stroke:#2563eb,color:#111
-    classDef python fill:#dcfce7,stroke:#16a34a,color:#111
+    classDef python fill:#fef3c7,stroke:#ca8a04,color:#111
     classDef prod fill:#fed7aa,stroke:#ea580c,color:#111
     class DOCKER,RUN,PORT,DASH docker
     class SDK,COLL,UPSERT,SEARCH python
@@ -538,14 +539,16 @@ Kanıt: 3 soru + sonuç çıktıları + dashboard ekran görüntüsü.
 <div class="ma-neden-sonuc" markdown>
 <div class="ma-neden-sonuc-header">🔗 Birlikte okuma — neden ne oldu</div>
 
-- **A → B:** Docker ile Qdrant tek komutta ayağa kalkar; production için compose + volume + localhost bind.
-- **B → C:** Python SDK `qdrant-client==1.17.1` — sürüm pin mandatory.
-- **C → D:** Koleksiyon boyutu embedding modeliyle uyumlu olmalı (voyage-3 → 1024); `ensure_collection` idempotent deseni.
-- **D → E:** Upsert `document` modunda embed edilmiş vektör + payload (metin + kategori) birlikte.
-- **E → F:** Arama `query` modunda embed edilmiş vektör; top_k sonuç + skor + payload döner.
-- **F → G:** Filter + vektör arama = yapısal ve semantik birleşimi (Qdrant'ın gücü).
-- **G → H:** Production refleksi: volume + healthcheck + localhost bind + API key + snapshot.
-- **H → I:** 10 CTO tuzak önlemi; Qdrant-Claude zinciri Bölüm 4'te RAG pipeline'ı tamamlayacak.
+<ol class="ma-neden-sonuc-zincir" markdown>
+<li>**A → B:** Docker ile Qdrant tek komutta ayağa kalkar; production için compose + volume + localhost bind. Bu yüzden **önce çalıştır, sonra sağlamlaştır.**</li>
+<li>**B → C:** Python SDK `qdrant-client==1.17.1` — sürüm pin mandatory. Bu yüzden **pin'siz kurulum ileriki kırılmaları davet eder.**</li>
+<li>**C → D:** Koleksiyon boyutu embedding modeliyle uyumlu olmalı (voyage-3 → 1024); `ensure_collection` idempotent deseni. Bu yüzden **boyut uyumsuzluğu sessiz yanlışlık üretir.**</li>
+<li>**D → E:** Upsert `document` modunda embed edilmiş vektör + payload (metin + kategori) birlikte. Bu yüzden **payload olmadan arama anlamsız kalır.**</li>
+<li>**E → F:** Arama `query` modunda embed edilmiş vektör; top_k sonuç + skor + payload döner. Bu yüzden **skor eşiği kalitenin kilidi.**</li>
+<li>**F → G:** Filter + vektör arama = yapısal ve semantik birleşimi (Qdrant'ın gücü). Bu yüzden **salt vektör aramadan üstündür.**</li>
+<li>**G → H:** Production refleksi: volume + healthcheck + localhost bind + API key + snapshot. Bu yüzden **geliştirme alışkanlığı production alışkanlığına dönmeli.**</li>
+<li>**H → I:** 10 CTO tuzak önlemi; Qdrant-Claude zinciri Bölüm 4'te RAG pipeline'ı tamamlayacak. Bu yüzden **refleksler şimdiden yerleşmeli.**</li>
+</ol>
 
 <div class="ma-neden-sonuc-sonuc" markdown>
 **Sonuç:** Qdrant yerel makinende çalışıyor, kendi verin içinde. Embedding soyutu somutlaştı — ilk semantic search projen elde. Sonraki (3.5): 50 Türkçe başlıkla tam bir semantic search uygulaması (Bölüm 3'ün imza sayfası).

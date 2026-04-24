@@ -7,6 +7,7 @@
 <span class="ma-persona ma-persona-is">🔵 iş</span>
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
+<div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~30 dakika</div>
 <div class="ma-meta-row"><strong>📋 Önkoşul:</strong> Bölüm 2 tamamlandıysa ideal — ilk Claude API çağrın yapılmış olur. Ama zorunsuz; sayfa kavramsal anlatır, kod minimaldir.</div>
 <div class="ma-meta-row"><strong>🎯 Çıktı:</strong> Embedding'in ne olduğunu 3 cümleyle birine anlatabiliyorsun; iki metnin "anlamca ne kadar yakın" olduğunu **kosinüs benzerliği** ile ölçebilen çalışan bir Python scriptin var; `document` vs `query` asimetrisinin neden kritik olduğunu biliyorsun.</div>
 </div>
@@ -35,20 +36,20 @@ Bir metni embedding'e çevirmek demek onu **çok boyutlu uzayda bir noktaya** ye
 
 ```mermaid
 flowchart LR
-    T1["📝 Metin A<br/>'Köpek bahçede koştu'"]
-    T2["📝 Metin B<br/>'Çocuk parkta oynadı'"]
-    T3["📝 Metin C<br/>'Python programlama dili'"]
+    T1["📝 Metin A\n'Köpek bahçede koştu'"]
+    T2["📝 Metin B\n'Çocuk parkta oynadı'"]
+    T3["📝 Metin C\n'Python programlama dili'"]
 
-    EM["🧠 Embedding Modeli<br/>voyage-3 / OpenAI / BGE"]
+    EM["🧠 Embedding Modeli\nvoyage-3 / OpenAI / BGE"]
 
-    V1["🔢 Vektör A<br/>[0.12, -0.34, ...]<br/>1024 sayı"]
-    V2["🔢 Vektör B<br/>[0.15, -0.29, ...]<br/>1024 sayı"]
-    V3["🔢 Vektör C<br/>[-0.88, 0.42, ...]<br/>1024 sayı"]
+    V1["🔢 Vektör A\n[0.12, -0.34, ...]\n1024 sayı"]
+    V2["🔢 Vektör B\n[0.15, -0.29, ...]\n1024 sayı"]
+    V3["🔢 Vektör C\n[-0.88, 0.42, ...]\n1024 sayı"]
 
     SIM["📏 Kosinüs Benzerliği"]
 
-    R1["A↔B: 0.87<br/>(yakın)"]
-    R2["A↔C: 0.12<br/>(uzak)"]
+    R1["A↔B: 0.87\n(yakın)"]
+    R2["A↔C: 0.12\n(uzak)"]
 
     T1 --> EM --> V1
     T2 --> EM --> V2
@@ -63,7 +64,7 @@ flowchart LR
 
     classDef text fill:#dbeafe,stroke:#2563eb,color:#111
     classDef model fill:#fef3c7,stroke:#ca8a04,color:#111
-    classDef vec fill:#dcfce7,stroke:#16a34a,color:#111
+    classDef vec fill:#fef3c7,stroke:#ca8a04,color:#111
     classDef sim fill:#fed7aa,stroke:#ea580c,color:#111
     classDef res fill:#ddd6fe,stroke:#7c3aed,color:#111
     class T1,T2,T3 text
@@ -282,7 +283,7 @@ for i in range(5):
 <details class="ma-anthropic-oz" markdown>
 <summary><strong>🤖 Anthropic-öz: Claude + Voyage AI çifti</strong></summary>
 
-Anthropic kendi embedding modeli sunmaz. Bunun yerine **Voyage AI**'ı resmi tavsiye olarak gösterir (docs.claude.com/en/docs/build-with-claude/embeddings). Gerekçe:
+Anthropic kendi embedding modeli sunmaz. Bunun yerine **Voyage AI**'ı resmi tavsiye olarak gösterir (platform.claude.com/docs/en/docs/build-with-claude/embeddings). Gerekçe:
 
 1. **Voyage AI Anthropic dostu pedagoji izler** — `input_type` asimetrisi, 200K bağlam-uyumlu context modeli (voyage-3-context), retrieval performansı MTEB benchmark'ta sürekli ilk 3'te.
 2. **Ücretsiz tier cömert** — ayda 50M token ücretsiz (2026 itibarıyla); öğrenme + MVP için fazlasıyla yeter.
@@ -325,13 +326,15 @@ Yukarıdaki 5 cümlelik benzerlik testi çalışıyor, çıktıda A↔B ve C↔E
 <div class="ma-neden-sonuc" markdown>
 <div class="ma-neden-sonuc-header">🔗 Birlikte okuma — neden ne oldu</div>
 
-- **A → B:** Claude'un hafızası yok → kendi dokümanları okutmak için metin-sayı dönüşümü (embedding) gerek.
-- **B → C:** Embedding = metin → sabit boyutlu vektör; anlamca yakın metinler yakın vektörler verir.
-- **C → D:** Kosinüs benzerliği = iki vektörün açı yakınlığı (0-1); 1'e yakın = anlamca yakın.
-- **D → E:** voyage-3 örneği 3 cümlede 0.72 / 0.38 / 0.41 — model anlamsal yakınlığı yakaladı.
-- **E → F:** `document` (yazma) vs `query` (sorgulama) asimetrisi — karıştırma %20-30 kalite kaybı.
-- **F → G:** Boyut seçimi (384 / 1024 / 1536 / 3072) maliyet-kalite dengesi; 1024 default.
-- **G → H:** 8 CTO tuzak: asimetri ihlali, model karıştırma, hardcode key, büyüklük abartısı.
+<ol class="ma-neden-sonuc-zincir" markdown>
+<li>**A → B:** Claude'un hafızası yok → kendi dokümanları okutmak için metin-sayı dönüşümü (embedding) gerek. Bu yüzden **embedding ilk adım.**</li>
+<li>**B → C:** Embedding = metin → sabit boyutlu vektör; anlamca yakın metinler yakın vektörler verir. Bu yüzden **vektör mesafesi anlam ölçer.**</li>
+<li>**C → D:** Kosinüs benzerliği = iki vektörün açı yakınlığı (0-1); 1'e yakın = anlamca yakın. Bu yüzden **tek formül yeter.**</li>
+<li>**D → E:** voyage-3 örneği 3 cümlede 0.72 / 0.38 / 0.41 — model anlamsal yakınlığı yakaladı. Bu yüzden **API çağrısı gerçek sonuç verir.**</li>
+<li>**E → F:** `document` (yazma) vs `query` (sorgulama) asimetrisi — karıştırma %20-30 kalite kaybı. Bu yüzden **input_type seçimi kritik.**</li>
+<li>**F → G:** Boyut seçimi (384 / 1024 / 1536 / 3072) maliyet-kalite dengesi; 1024 default. Bu yüzden **varsayılan genelde yeterli.**</li>
+<li>**G → H:** 8 CTO tuzak: asimetri ihlali, model karıştırma, hardcode key, büyüklük abartısı. Bu yüzden **baştan doğru yapı kur.**</li>
+</ol>
 
 <div class="ma-neden-sonuc-sonuc" markdown>
 **Sonuç:** Embedding soyutu somuta indi. Metin → vektör → kosinüs benzerliği zincirini anlıyorsun, ilk mini deneyin çalıştı. Sonraki sayfada (3.2) **hangi** embedding modelini seçeceğine karar vereceksin — Voyage, OpenAI, BGE arasında.

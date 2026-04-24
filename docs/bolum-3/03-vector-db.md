@@ -7,6 +7,7 @@
 <span class="ma-persona ma-persona-is">🔵 iş</span>
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
+<div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~40 dakika</div>
 <div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 3.1 + 3.2 okundu (embedding + model seçimi). Docker temel bilgisi (Bölüm 0.3 ve 9.1'den).</div>
 <div class="ma-meta-row"><strong>🎯 Çıktı:</strong> 5 ciddi vector DB seçeneğini (Qdrant, Pinecone, Chroma, pgvector, Weaviate) hafıza/bütçe/ölçek üçgeninde konumlandırıyorsun; kendi projen için hangisini seçeceğini sayısal gerekçeyle söyleyebiliyorsun; platform Qdrant-first tercih gerekçesini net biliyorsun.</div>
 </div>
@@ -30,24 +31,24 @@
 ```mermaid
 flowchart TB
     subgraph SELF["💻 Self-host (Docker)"]
-        Q["🟠 Qdrant<br/>Rust, hızlı<br/>platform default"]
-        CH["🟣 Chroma<br/>Python-first<br/>embedded/Docker"]
-        W["🔵 Weaviate<br/>GraphQL + modular"]
+        Q["🟠 Qdrant\nRust, hızlı\nplatform default"]
+        CH["🟣 Chroma\nPython-first\nembedded/Docker"]
+        W["🔵 Weaviate\nGraphQL + modular"]
     end
 
     subgraph MANAGED["☁️ Managed (SaaS)"]
-        P["🟢 Pinecone<br/>enterprise, ücretli"]
-        QC["🟠 Qdrant Cloud<br/>managed versiyon"]
+        P["🟢 Pinecone\nenterprise, ücretli"]
+        QC["🟠 Qdrant Cloud\nmanaged versiyon"]
     end
 
     subgraph DB["🗄 Mevcut DB içinde"]
-        PG["🔵 pgvector<br/>PostgreSQL eklentisi"]
+        PG["🔵 pgvector\nPostgreSQL eklentisi"]
     end
 
     USER["👤 Sen"]
-    Q1{"Veri boyutu<br/>ne kadar?"}
-    Q2{"Ekip +<br/>bütçe?"}
-    Q3{"Zaten<br/>PostgreSQL?"}
+    Q1{"Veri boyutu\nne kadar?"}
+    Q2{"Ekip +\nbütçe?"}
+    Q3{"Zaten\nPostgreSQL?"}
 
     USER --> Q1
     Q1 -->|"<100K vektör"| CH
@@ -62,7 +63,7 @@ flowchart TB
     Q2 -->|"Solo, düşük bütçe"| SELF
     Q2 -->|"Ekip, enterprise"| MANAGED
 
-    classDef self fill:#dcfce7,stroke:#16a34a,color:#111
+    classDef self fill:#fef3c7,stroke:#ca8a04,color:#111
     classDef managed fill:#fef3c7,stroke:#ca8a04,color:#111
     classDef db fill:#dbeafe,stroke:#2563eb,color:#111
     classDef user fill:#ddd6fe,stroke:#7c3aed,color:#111
@@ -544,13 +545,15 @@ Kanıt dosyası: `muhendisal-notlarim/bolum-3/03-db-secimi.md`
 <div class="ma-neden-sonuc" markdown>
 <div class="ma-neden-sonuc-header">🔗 Birlikte okuma — neden ne oldu</div>
 
-- **A → B:** 5 ciddi vector DB — farklı ödünler. Self-host vs managed ilk karar düğümü.
-- **B → C:** Qdrant (Rust hızı, Docker tek komut, zengin filter) platform default tercihi — 5 somut gerekçe.
-- **C → D:** Pinecone managed SaaS; enterprise + ölçek, ama vendor lock-in + ücretli.
-- **D → E:** Chroma Python-first, öğrenme dostu, küçük projede yeter.
-- **E → F:** pgvector "Postgres zaten var" durumunda ideal — SQL + vektör karma sorgu.
-- **F → G:** Weaviate GraphQL + multi-tenant — özel ihtiyaçta.
-- **G → H:** Karar matrisi 7 senaryo; benchmark + fiyat karşılaştırma.
+<ol class="ma-neden-sonuc-zincir" markdown>
+<li>**A → B:** 5 ciddi vector DB — farklı ödünler. Self-host vs managed ilk karar düğümü. Bu yüzden **bütçe + veri gizliliği belirleyici.**</li>
+<li>**B → C:** Qdrant (Rust hızı, Docker tek komut, zengin filter) platform default tercihi — 5 somut gerekçe. Bu yüzden **lokal kur, ilerlet.**</li>
+<li>**C → D:** Pinecone managed SaaS; enterprise + ölçek, ama vendor lock-in + ücretli. Bu yüzden **kurumsal ihtiyaçta değerlendir.**</li>
+<li>**D → E:** Chroma Python-first, öğrenme dostu, küçük projede yeter. Bu yüzden **prototip için hız kazandırır.**</li>
+<li>**E → F:** pgvector 'Postgres zaten var' durumunda ideal — SQL + vektör karma sorgu. Bu yüzden **ekstra servis ekleme.**</li>
+<li>**F → G:** Weaviate GraphQL + multi-tenant — özel ihtiyaçta. Bu yüzden **standart dışı gereksinim yoksa atla.**</li>
+<li>**G → H:** Karar matrisi 7 senaryo; benchmark + fiyat karşılaştırma. Bu yüzden **sayısal gerekçeyle seç.**</li>
+</ol>
 
 <div class="ma-neden-sonuc-sonuc" markdown>
 **Sonuç:** 5 vector DB seçeneğini konumlandırıyorsun. Projen için DB seçimin yazılı + yıllık maliyet rakamlı. Sonraki (3.4): Qdrant'ı pratikte kur, kendi vektör deposunu yarat.
