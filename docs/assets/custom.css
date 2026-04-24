@@ -886,3 +886,56 @@ a.ma-ext-link:hover::after {
   .ma-aktorler { font-size: 0.82rem; }
   .ma-aktorler th, .ma-aktorler td { padding: 0.35rem 0.45rem; }
 }
+
+/* ==================================================================
+   ma-gorev — "🎯 Görev" pedagojik kutu (mavi, eylem/hedef semantiği)
+   ma-gorev-header — başlık satırı
+   B1 audit fix 2026-04-24
+   ================================================================== */
+.ma-gorev {
+  background: linear-gradient(180deg,
+    rgba(59,130,246,0.07) 0%,
+    rgba(59,130,246,0.02) 100%);
+  border: 1px solid rgba(59,130,246,0.3);
+  border-left: 4px solid #3b82f6;
+  border-radius: 6px;
+  padding: 1rem 1.15rem;
+  margin: 1.5rem 0;
+}
+.ma-gorev-header {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-weight: 600;
+  color: #1d4ed8;
+  margin-bottom: 0.6rem;
+  font-size: 1.02rem;
+}
+[data-md-color-scheme="slate"] .ma-gorev {
+  background: linear-gradient(180deg,
+    rgba(59,130,246,0.12) 0%,
+    rgba(59,130,246,0.04) 100%);
+  border-color: rgba(59,130,246,0.4);
+  border-left-color: #60a5fa;
+}
+[data-md-color-scheme="slate"] .ma-gorev-header {
+  color: #93c5fd;
+}
+
+/* ==================================================================
+   ma-cikti-kaniti-header — mevcut turuncu ma-cikti-kaniti kutusunun
+   header satırı (class bazlı; öncesinde sadece h3/h4 descendant vardı)
+   B1 audit fix 2026-04-24
+   ================================================================== */
+.ma-cikti-kaniti-header {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-weight: 600;
+  color: #c14114;
+  margin-bottom: 0.6rem;
+  font-size: 1.02rem;
+}
+[data-md-color-scheme="slate"] .ma-cikti-kaniti-header {
+  color: #fb923c;
+}
