@@ -7,6 +7,7 @@
 <span class="ma-persona ma-persona-is">🔵 iş</span>
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
+<div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~35 dakika</div>
 <div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 0.3 bitmiş (Ollama `qwen2.5:3b` indirilmiş, çalışıyor) + 0.4 bitmiş (FastAPI `uvicorn` ile açılıyor); iki ayrı terminal açabilmelisin</div>
 <div class="ma-meta-row"><strong>🎯 Çıktı:</strong> Kendi makinende **uçtan uca çalışan bir AI servisi** var — `curl -X POST http://localhost:8000/chat -d '{"mesaj":"..."}'` atınca Ollama cevap verir, FastAPI döndürür. **Bölüm 0'ın bitiş çizgisi.**</div>
 </div>
@@ -18,7 +19,7 @@
 
 Önceki dört sayfa **parça parça aktör tanıttı:** Linux (0.1), Python (0.2), Ollama (0.3), FastAPI (0.4). Tek tek çalıştılar ama **birbirleriyle konuşmadılar.** Bu sayfa onları birleştirir. Sonuçta elinde **"çağırılabilir bir AI"** var — tarayıcıdan, mobilden, başka servisten, herkesten.
 
-İkincisi: Bu sayfa **"deliller konuşsun"** anı. Bölüm 0'a başladığında "AI Engineer olacağım" dedin. Bu sayfa bittiğinde **çalışan bir AI servisi** elinde var. Gerçek. Fotoğraflayabilirsin, paylaşabilirsin, portföyüne koyabilirsin. Bölüm 1'e başlarken **boş eller** değil **bir deliller** ile giriyorsun.
+İkincisi: Bu sayfa **"deliller konuşsun"** anı. Bölüm 0'a başladığında "AI Engineer olacağım" dedin. Bu sayfa bittiğinde **çalışan bir AI servisi** elinde var. Gerçek. Fotoğraflayabilirsin, paylaşabilirsin, portföyüne koyabilirsin. Bölüm 1'e başlarken **boş eller** değil **bir delil** ile giriyorsun.
 
 Üçüncüsü: Bu iskelet **Bölüm 2 itibarıyla Claude'a geçecek.** Ollama yerine Claude API'ye `httpx.post(...)` yapacaksın, o kadar. Bugün öğrendiğin HTTP → Python → LLM → JSON → HTTP **tam olarak gerçek AI servisinin iskeletidir.** Bundan sonraki 10 bölümde bu iskeletin üstüne katmanlar kurulacak (sistem prompt, RAG, agent, multimodal, güvenlik).
 
@@ -56,14 +57,10 @@ flowchart LR
   classDef srv fill:#fed7aa,stroke:#ea580c,color:#111
   classDef fw fill:#dbeafe,stroke:#2563eb,color:#111
   classDef logic fill:#fef3c7,stroke:#ca8a04,color:#111
-  classDef llm fill:#fce7f3,stroke:#be185d,color:#111
-  classDef hed fill:#dcfce7,stroke:#16a34a,color:#111
   class USR kul
-  class UVI srv
   class FA fw
-  class CODE,HC logic
-  class OLLAMA llm
-  class RESP hed
+  class OLLAMA srv
+  class UVI,CODE,HC,RESP logic
 ```
 
 <table class="ma-aktorler" markdown>
@@ -219,6 +216,17 @@ curl -X POST http://localhost:8000/chat \
 
 Tarayıcı → `http://localhost:8000/docs` → `POST /chat` → "Try it out" → JSON'u düzenle → "Execute". Cevap altta çıkar, gerçek API gibi tarayıcıdan test ediyorsun.
 
+### Ollama vs Claude — ne zaman hangisi
+
+| Kıstas | Ollama (lokal) | Claude API |
+|---|---|---|
+| **Maliyet** | Sıfır (donanım hariç) | Token başı ücret |
+| **Hız** | Donanıma bağlı (GPU'suz yavaş) | Hızlı (Anthropic altyapısı) |
+| **Türkçe kalite** | `qwen2.5` — iyi | Claude — çok iyi |
+| **İnternet** | Offline çalışır | İnternet şart |
+| **Gizlilik** | Veriler makinende | Anthropic sunucularına gider |
+| **Ne zaman?** | Geliştirme, prototip, maliyet testi | Prod servis, kalite kritik |
+
 ### Claude'a geçiş öngörüsü (Bölüm 2'de)
 
 Bölüm 2'de `chat()` fonksiyonu değişecek, geri kalan her şey aynı kalacak:
@@ -266,7 +274,7 @@ Anthropic Bölüm 0 seviyesinde bir şey demez — AI servis kurmanın Python / 
     **Observability.** Her `/chat` çağrısını logla (input hash + model + latency + token count). Datadog / Prometheus / Grafana — Bölüm 8.4 detay.
 
 <div class="ma-anthropic-oz-kaynak" markdown>
-**Kaynak:** [docs.claude.com — Client SDKs](https://docs.claude.com/en/api/client-sdks) (EN, ~10 dk). Python SDK + async kullanım örnekleri. Pekiştirme: [Anthropic Cookbook — basic usage](https://github.com/anthropics/claude-cookbooks/tree/main/misc) — Claude'un en sade FastAPI örnekleri.
+**Kaynak:** [platform.claude.com — Client SDKs](https://platform.claude.com/docs/en/api/client-sdks) (EN, ~10 dk). Python SDK + async kullanım örnekleri. Pekiştirme: [Anthropic Cookbook — basic usage](https://github.com/anthropics/claude-cookbooks/tree/main/misc) — Claude'un en sade FastAPI örnekleri.
 </div>
 </div>
 
@@ -289,7 +297,7 @@ Kaydet: `muhendisal-notlarim/bolum-0/05-ilk-ai-servisi/refleksiyon.txt`
 | Mac | `Cmd + Shift + 4` |
 | Linux | `Shift + PrtScr` |
 
-Kaydet: `muhendisal-notlarim/bolum-0/05-ilk-ai-servisi/ucucuncan-uca.png`
+Kaydet: `muhendisal-notlarim/bolum-0/05-ilk-ai-servisi/uctan-uca.png`
 
 #### 3. 💻 GitHub repo + README + demo gif — 10 dakika
 
@@ -302,11 +310,13 @@ Repo linkini kaydet: `muhendisal-notlarim/bolum-0/05-ilk-ai-servisi/repo-link.tx
 <div class="ma-neden-sonuc" markdown>
 <div class="ma-neden-sonuc-header">🔗 Birlikte okuma — neden ne oldu</div>
 
-- **A → B:** HTTP servisi + LLM = "çağırılabilir AI" = production prototipi. Tek script'ten 10 kat üstün.
-- **B → C:** `async def` + `httpx.AsyncClient` → uvicorn event loop'unu bloklamıyor → 10 kullanıcıya aynı anda cevap.
-- **C → D:** Pydantic `Soru` + `Cevap` modelleri = hem validasyon hem otomatik dokümantasyon (`/docs`).
-- **D → E:** 5 farklı hata yolu (ConnectError, Timeout, HTTPStatusError, validasyon 422, generic 500) = her hata **anlamlı cevap + doğru status code.**
-- **E → F:** Bu iskelet Bölüm 2'de Claude'a, Bölüm 4'te RAG'e, Bölüm 6'da agent'a, Bölüm 9'da production'a evrilir. **Omurga değişmez.**
+<ol class="ma-neden-sonuc-zincir" markdown>
+<li>**HTTP servisi + LLM = çağırılabilir AI.** Terminal script = sadece sen kullanabilirsin. Bu yüzden **FastAPI arayüzüyle production prototipi oldu.**</li>
+<li>**`async def` + `httpx.AsyncClient` = bloklanmayan servis.** LLM 2–30 saniye sürer; diğer isteklerin beklemesi anlamsız. Bu yüzden **eş zamanlı birden fazla kullanıcıya cevap veriyorsun.**</li>
+<li>**Pydantic `Soru` + `Cevap` = validasyon + dokümantasyon.** Şema tanımla, FastAPI geri kalanını halleder. Bu yüzden **`/docs` Swagger UI otomatik oluşuyor.**</li>
+<li>**5 hata yolu = anlamlı hata mesajları.** ConnectError, Timeout, HTTPStatusError, 422, 500 — her biri farklı durum. Bu yüzden **kullanıcı "bir şeyler ters gitti" değil "Ollama kapalı" görüyor.**</li>
+<li>**Omurga değişmez.** Bölüm 2'de Claude'a, 4'te RAG'e, 6'da agent'a, 9'da production'a evrilir. Bu yüzden **bugün öğrendiğin iskelet 10 bölüm boyunca taşınacak.**</li>
+</ol>
 
 <div class="ma-neden-sonuc-sonuc" markdown>
 **Sonuç:** Bölüm 0 bitti. Boş bir ekrandan başladın, şimdi curl → Python → LLM → JSON → curl zinciri çalışıyor. Bölüm 1'e başlarken artık "AI nasıl çağrılır" sorusunun cevabı **senin makinendeki portföy dosyan.** Sıradaki 10 bölüm bu iskeletin üstüne inşa.

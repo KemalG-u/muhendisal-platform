@@ -7,6 +7,7 @@
 <span class="ma-persona ma-persona-is">🔵 iş</span>
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
+<div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~25 dakika</div>
 <div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 0.2 bitmiş — `venv` aktif, `pip install` çalışıyor; terminal + tarayıcı aynı anda açık</div>
 <div class="ma-meta-row"><strong>🎯 Çıktı:</strong> Kendi makinende çalışan bir **FastAPI** servisi kurarsın; `GET /` + `POST /echo` endpoint'leri yanıt verir; tarayıcıda `http://localhost:8000/docs` sayfasına girip **otomatik dokümantasyonu** görürsün; `curl` ile HTTP POST atıp JSON cevap alırsın.</div>
 </div>
@@ -29,6 +30,19 @@ Bir AI servisi yazdın diyelim. `python chatbot.py` çalışıyor, soru soruyors
 **`POST` için Pydantic modelleri var.** `class Soru(BaseModel): mesaj: str` yazıyorsun — FastAPI bu şemayı anlıyor, gelen JSON'u doğruluyor (eksik alan = otomatik hata), sonra fonksiyonuna temiz bir `Soru` nesnesi veriyor. 20 satırlık validasyon kodu yazmadın.
 
 **`uvicorn` sunucu, FastAPI ise framework.** `uvicorn main:app --reload` komutu uygulamayı başlatır, `--reload` sen kodu değiştirdikçe otomatik yeniler. Port default `8000`. Tarayıcıdan `http://localhost:8000/docs` → **Swagger UI** otomatik açılır, her endpoint'i tarayıcıdan test edebilirsin. Postman gerekmez.
+
+
+## Flask / Django / FastAPI — hangisi ne zaman
+
+| Kıstas | Flask | Django | FastAPI |
+|---|---|---|---|
+| **Öğrenme eğrisi** | Düşük | Yüksek | Orta |
+| **Async desteği** | Eklenti ile | Django 4.1+ kısmi | Native (`async def`) |
+| **Otomatik dokümantasyon** | Yok | Yok | Swagger + ReDoc |
+| **Pydantic validasyon** | Yok | Form-based | Built-in |
+| **AI servisi için** | Basit script | Admin paneli şartsa | **Tercih** |
+
+> **Sonuç:** Bu platformda FastAPI. Anthropic cookbook'larının büyük çoğunluğu FastAPI + uvicorn tabanlı; `async def` + Pydantic = Claude SDK ile doğal uyum.
 
 ## Bu sayfanın ekosistemi — kim kime ne veriyor
 
@@ -53,16 +67,10 @@ flowchart LR
   FN --> JSON
   JSON --> BROWSER
 
-  classDef cli fill:#ddd6fe,stroke:#7c3aed,color:#111
-  classDef srv fill:#fed7aa,stroke:#ea580c,color:#111
   classDef fw fill:#dbeafe,stroke:#2563eb,color:#111
   classDef logic fill:#fef3c7,stroke:#ca8a04,color:#111
-  classDef hed fill:#dcfce7,stroke:#16a34a,color:#111
-  class BROWSER cli
-  class UVI srv
-  class FA,ROUTE fw
-  class FN,PYD logic
-  class JSON hed
+  class BROWSER,FA,ROUTE fw
+  class UVI,FN,PYD,JSON logic
 ```
 
 <table class="ma-aktorler" markdown>
@@ -86,7 +94,7 @@ flowchart LR
 
 ```bash
 # venv aktif olmalı, 0.2'den hatırla
-pip install fastapi uvicorn
+pip install "fastapi[standard]"
 ```
 
 `main.py`:
@@ -158,7 +166,7 @@ curl -X POST http://localhost:8000/echo \
 Beklenen çıktı:
 
 ```json
-{"aldim":"Merhaba FastAPI","senden":"Kemal","karakter_sayisi":17}
+{"aldim":"Merhaba FastAPI","senden":"Kemal","karakter_sayisi":15}
 ```
 
 **Burada olan nedir (diyagram referansı):** curl → uvicorn (:8000) → FastAPI app → `/echo` route → Pydantic `Soru` doğrulaması → `mesaji_yansit` fonksiyonu → JSON cevap → curl'e döndü. Diyagramın tüm akışı 15 satır kodda çalıştı.
@@ -302,11 +310,13 @@ Repo linkini kaydet: `muhendisal-notlarim/bolum-0/04-fastapi/repo-link.txt`
 <div class="ma-neden-sonuc" markdown>
 <div class="ma-neden-sonuc-header">🔗 Birlikte okuma — neden ne oldu</div>
 
-- **A → B:** Python fonksiyonunu "dış dünya" doğrudan çağıramaz; araya bir **HTTP arayüzü** gerek.
-- **B → C:** FastAPI decorator'ı (`@app.post(...)`) = fonksiyonu HTTP URL'e bağlayan **tek satır.**
-- **C → D:** Pydantic model → gelen JSON'un doğru şekilde geldiğini garanti ediyor; 20 satır validation kodu yazmıyorsun.
-- **D → E:** uvicorn **ASGI sunucusu** = async fonksiyonları doğru çalıştıran event loop — LLM çağrısı I/O-ağır olduğu için kritik.
-- **E → F:** `/docs` Swagger UI = ücretsiz, otomatik, paylaşılabilir API dokümantasyonu. Frontend ekip, test ekip aynı sayfadan konuşuyor.
+<ol class="ma-neden-sonuc-zincir" markdown>
+<li>**Python fonksiyonu dışarıdan çağrılamaz.** Terminal script = sadece sen çalıştırıyorsun. Bu yüzden **araya HTTP arayüzü (FastAPI) gerek.**</li>
+<li>**FastAPI decorator = URL bağlama.** `@app.post(...)` = fonksiyonu HTTP endpoint'e bağlayan tek satır. Bu yüzden **routing kodu yazmıyorsun.**</li>
+<li>**Pydantic = otomatik validasyon.** Gelen JSON şemasını tanımlıyorsun. Bu yüzden **20 satır doğrulama kodu yazmıyorsun.**</li>
+<li>**uvicorn ASGI = bloklanmayan event loop.** LLM çağrısı I/O-ağır, async yapı şart. Bu yüzden **eş zamanlı birden fazla kullanıcıya cevap verebiliyorsun.**</li>
+<li>**`/docs` = ücretsiz dokümantasyon.** FastAPI OpenAPI schema otomatik üretiyor. Bu yüzden **Postman yerine tarayıcıdan test ediyorsun.**</li>
+</ol>
 
 <div class="ma-neden-sonuc-sonuc" markdown>
 **Sonuç:** "Python'da LLM çağırdım" ile "Python'da HTTP servisi açıp LLM çağırdım" arasında 10x kariyer farkı var. İkincisi production, birincisi script. Bu sayfa o atlamayı verdi. 0.5'te Ollama (0.3) ve FastAPI (0.4) birleşecek = uçtan uca AI servisi.

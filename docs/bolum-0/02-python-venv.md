@@ -12,7 +12,7 @@
 </div>
 
 !!! tip "Yabancı kelime mi gördün?"
-    Bu sayfadaki **italik-altı çizili** ifadelerin (venv, virtualenv, dependency, requirements gibi) üstüne mouse'unu getir — kısa tanım çıkar. Mobilde dokun.
+    Bu sayfadaki **kalın** teknik terimler (venv, virtualenv, dependency, requirements gibi) ilk geçişte hemen yanında veya altında Türkçe açıklanır.
 
 ## Neden bu sayfa?
 
@@ -28,7 +28,7 @@ Python yüklü ama "doğrudan" kullanırsan başına bela alırsın: bir projede
 
 **Aktivasyon = "şu anki terminal o venv'i kullansın" demek.** Aktivasyon olmadan `pip install` global'e yazar — istemediğin şey. Aktivasyondan sonra terminal prompt'unun başında `(venv)` görürsün, bu emin olma yolu.
 
-**`requirements.txt` = projenin paket reçetesi.** `pip freeze > requirements.txt` ile mevcut paketleri liste; `pip install -r requirements.txt` ile başka makinada aynısını kur. Repo'nuza koyduğun **tek dosya** ile tüm bağımlılıkları paylaşıyorsun — kollabarasyonun temel disiplini.
+**`requirements.txt` = projenin paket reçetesi.** `pip freeze > requirements.txt` ile mevcut paketleri liste; `pip install -r requirements.txt` ile başka makinada aynısını kur. Repo'nuza koyduğun **tek dosya** ile tüm bağımlılıkları paylaşıyorsun — takım çalışmasının ve yeniden kurulabilirliğin temel disiplini.
 
 ## Bu sayfanın ekosistemi — kim kime ne veriyor
 
@@ -54,15 +54,11 @@ flowchart TB
   ACT & ENV --> TEST
 
   classDef sen fill:#ddd6fe,stroke:#7c3aed,color:#111
-  classDef sis fill:#fed7aa,stroke:#ea580c,color:#111
-  classDef proj fill:#dbeafe,stroke:#2563eb,color:#111
-  classDef tool fill:#fef3c7,stroke:#ca8a04,color:#111
-  classDef hed fill:#dcfce7,stroke:#16a34a,color:#111
+  classDef yan fill:#fef3c7,stroke:#ca8a04,color:#111
+  classDef logic fill:#dbeafe,stroke:#2563eb,color:#111
   class S sen
-  class SYS sis
-  class PROJ,VENV,REQ proj
-  class ACT,PIP,ENV tool
-  class TEST hed
+  class SYS,PROJ,VENV,REQ,TEST yan
+  class ACT,PIP,ENV logic
 ```
 
 <table class="ma-aktorler" markdown>
@@ -109,7 +105,7 @@ pip install anthropic
 # 6. Reçete dosyasını çıkar
 pip freeze > requirements.txt
 cat requirements.txt
-# anthropic==0.40.0 gibi sürümleri görmelisin
+# anthropic==0.97.0 gibi güncel sürümleri göreceksin
 
 # 7. API anahtarını set et (oturum boyunca)
 export ANTHROPIC_API_KEY="sk-ant-api03-..."  # Anthropic Console'dan al
@@ -121,7 +117,7 @@ python -c "import anthropic; print('SDK sürüm:', anthropic.__version__)"
 **Beklenen çıktı:**
 
 ```
-SDK sürüm: 0.40.0
+SDK sürüm: 0.97.0
 ```
 
 **Windows için fark sadece aktivasyon:**
@@ -164,9 +160,15 @@ export ANTHROPIC_API_KEY="sk-ant-api03-..."
 uv run python -c "import anthropic; print('SDK sürüm:', anthropic.__version__)"
 ```
 
-**Burada olan nedir (diyagram referansı):** Aynı pipeline, daha az komut. `uv` `requirements.txt` yerine `pyproject.toml` + `uv.lock` kullanır — daha kararlı, deterministik. `uv add anthropic` 5-10 saniye, pip'in 30-60 saniyesinden çok hızlı.
+**Burada olan nedir (diyagram referansı):** Aynı pipeline, daha az komut. `uv`, `source venv/bin/activate` adımını ortadan kaldırır — `uv run` otomatik olarak izole ortamı kullanır. `uv` `requirements.txt` yerine `pyproject.toml` + `uv.lock` kullanır — daha kararlı, deterministik. `uv add anthropic` 5-10 saniye, pip'in 30-60 saniyesinden çok hızlı.
 
-**Hangisini seçmeli?** Eğer 6 ay+ AI Engineering yapacaksan **uv** öğren — gelecek bu. Eğer "şimdilik bir öğrenelim" diyorsan **pip + venv** rahat kullan — her tutorial'da, her ekipte yaygın.
+**Hangisini seçmeli?**
+
+| Durum | Önerilen | Gerekçe |
+|---|---|---|
+| 6 ay+ AI Engineering yapacaksın | **uv** | Gelecek standart, 10x hız |
+| Şimdilik öğreniyorum | **pip + venv** | Her tutorial ve ekipte yaygın |
+| Ekip ortamı, uyumluluk şart | **pip + venv** | Evrensel destek |
 
 ### .env dosyası ile API anahtarı yönetimi
 
@@ -201,11 +203,11 @@ client = anthropic.Anthropic()  # API anahtarı .env'den okundu
 
 Anthropic resmi getting started dokümantasyonu **pip + venv** ile başlatıyor — uv'yi henüz default önermiyor.
 
-**1. SDK kurulum tek satır.** `pip install anthropic` — Anthropic Python SDK 2024'te v1.0'a çıktı, kararlı. Type hints var, async destekli, tüm API endpoint'lerini kapsıyor.
+**1. SDK kurulum tek satır.** `pip install anthropic` — Anthropic Python SDK 0.x serisinde yayınlanıyor (Nisan 2026: 0.97.0), kararlı ve semver'a uygun. Type hints var, async destekli, tüm API endpoint'lerini kapsıyor.
 
 **2. API anahtarı `ANTHROPIC_API_KEY` env değişkeniyle.** SDK varsayılan olarak bu değişkeni okur — kodda `Anthropic(api_key=...)` belirtmen gerekmez. Bu disiplin **API anahtarını koddan çıkarır**, güvenliği artırır.
 
-**3. Sürüm uyumluluğu.** Python 3.8+ desteklenir, 3.10+ önerilir (type hints daha iyi). SDK semver kurallarına uyar — `0.x` dönemi geçti, breaking change için major bump yapılır.
+**3. Sürüm uyumluluğu.** Python 3.9+ zorunlu, 3.10+ önerilir (type hints daha iyi). SDK semver kurallarına uyar — `0.x` serisi devam ediyor; major bump yapılana kadar breaking change olmaz.
 
 ??? info "Teknik detay — isteyene (parameter adları, mekanikler, edge case'ler)"
 
@@ -224,7 +226,7 @@ Anthropic resmi getting started dokümantasyonu **pip + venv** ile başlatıyor 
     **Anthropic Bedrock + Vertex AI.** AWS Bedrock'tan Claude kullanmak için: `from anthropic import AnthropicBedrock`. Google Vertex için: `AnthropicVertex`. Aynı API, farklı backend.
 
 <div class="ma-anthropic-oz-kaynak" markdown>
-**Kaynak:** [docs.claude.com — Get started with the API](https://docs.claude.com/en/docs/get-started) (EN, ~10 dk). Resmi quickstart + örnek kodlar. SDK GitHub: [github.com/anthropics/anthropic-sdk-python](https://github.com/anthropics/anthropic-sdk-python) — değişiklik loglarını ay başında bir gözle gez.
+**Kaynak:** [docs.claude.com — Get started with the API](https://platform.claude.com/docs/en/docs/get-started) (EN, ~10 dk). Resmi quickstart + örnek kodlar. SDK GitHub: [github.com/anthropics/anthropic-sdk-python](https://github.com/anthropics/anthropic-sdk-python) — değişiklik loglarını ay başında bir gözle gez.
 </div>
 </div>
 
@@ -260,11 +262,13 @@ Repo linkini kaydet: `muhendisal-notlarim/bolum-0/02-python-venv/repo-link.txt`
 <div class="ma-neden-sonuc" markdown>
 <div class="ma-neden-sonuc-header">🔗 Birlikte okuma — neden ne oldu</div>
 
-- **A → B:** Sistem Python'u "ortak depo" — birden fazla projenin paket versiyonları çakışırsa kaos.
-- **B → C:** Virtual environment = her projeye özel mini Python = izolasyon = çakışma yok.
-- **C → D:** `requirements.txt` reçete = "bu projeyi kuran herkes aynı paketleri alsın" disiplini.
-- **D → E:** `ANTHROPIC_API_KEY` env değişkeni → kodda hard-code yok = güvenlik + esneklik.
-- **E → F:** `.gitignore` ile sırlar (.env) ve büyük geçici dosyalar (venv/) git'e gitmez = repo temiz.
+<ol class="ma-neden-sonuc-zincir" markdown>
+<li>**Sistem Python "ortak depo".** Birden fazla projenin paket versiyonları çakışırsa kaos — her şey bozulur. Bu yüzden **her projeye özel izolasyon gerekli.**</li>
+<li>**Virtual environment = her projeye özel mini Python.** İzolasyon = çakışma yok, sistem Python kirlenmez. Bu yüzden **ilk komut her zaman `python -m venv venv`.**</li>
+<li>**`requirements.txt` projenin paket reçetesi.** Başka makinede aynısını kurmak için tek dosya. Bu yüzden **her `pip install` sonrası `pip freeze > requirements.txt` refleksi.**</li>
+<li>**`ANTHROPIC_API_KEY` env değişkeni ile.** Kodda hard-code yok = güvenlik + esneklik. Bu yüzden **`.env` dosyası + `python-dotenv` standart desen.**</li>
+<li>**`.gitignore` ile sırlar ve büyük dosyalar git'e gitmez.** `.env` ve `venv/` klasörü repo'ya konmaz. Bu yüzden **`.gitignore` ilk commit'ten önce yazılır.**</li>
+</ol>
 
 <div class="ma-neden-sonuc-sonuc" markdown>
 **Sonuç:** "Kodum çalışıyor ama sürüm karışıklığı var" en yaygın yeni geliştirici tuzağı. Bu sayfadan sonra her projede ilk komut `python -m venv venv && source venv/bin/activate` refleksin oluyor. Geri dönmüyorsun.

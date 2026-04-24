@@ -1,7 +1,7 @@
 # Bölüm 0 — Temel Hazırlık
 
 <div class="ma-meta" markdown>
-**Persona:** Python ve Linux'u hiç görmemiş, ama komut satırına korkmayan geliştirici · **Süre:** ~2 saat (5 sayfa × ortalama 25 dk) · **Önkoşul:** Bir bilgisayar + temel internet · bir VPS (Hetzner/DigitalOcean/AWS) veya local Linux/WSL kabul · **Çıktı:** Kendi sunucunda çalışan **yerel AI servisi** — HTTP POST atınca Ollama ile cevap dönen FastAPI uygulaması
+**Persona:** Python ve Linux'u hiç görmemiş, ama komut satırına korkmayan geliştirici · **Süre:** ~2 saat (5 sayfa × ortalama 25 dk) · **Önkoşul:** Bir bilgisayar + temel internet · bir VPS (Hetzner/DigitalOcean/AWS) veya local Linux/WSL (Windows içinde Linux terminali) kabul · **Çıktı:** Kendi sunucunda çalışan **yerel AI servisi** — HTTP POST atınca Ollama ile cevap dönen FastAPI uygulaması
 </div>
 
 ## Neden bu bölüm?
@@ -48,19 +48,18 @@ flowchart LR
   classDef user fill:#ddd6fe,stroke:#7c3aed,color:#111
   classDef page fill:#dbeafe,stroke:#2563eb,color:#111
   classDef infra fill:#fed7aa,stroke:#ea580c,color:#111
-  classDef goal fill:#dcfce7,stroke:#16a34a,color:#111
   classDef yan fill:#fef3c7,stroke:#ca8a04,color:#111
   class S user
   class P01,P02,P03,P04,P05 page
   class VPS infra
-  class OUT goal
+  class OUT yan
 ```
 
 ### Aktör tablosu
 
 | Düğüm | Nerede | Ne iş yapıyor |
 |---|---|---|
-| 👤 **Sen** | Kendi bilgisayarının başında | Terminalden komut yolluyorsun, Mermaid'leri okuyorsun, sayfa sonlarında kendini test ediyorsun |
+| 👤 **Sen** | Kendi bilgisayarının başında | Terminalden komut yolluyorsun, akış diyagramlarını (şemaları) okuyorsun, sayfa sonlarında kendini test ediyorsun |
 | 📄 **0.1 Linux** | Bu platform (okuma) | 15 komut + senaryo → VPS'i "görünür" hale getirir |
 | 📄 **0.2 Python** | Bu platform (okuma) + VPS (uygulama) | `python3 -m venv`, `pip`, `requirements.txt` — izole ortam disiplini |
 | 📄 **0.3 Ollama** | VPS (11434 portunda arka plan) | Yerel LLM sunucusu. `ollama pull llama3.2` → indir, `ollama run` → konuş |
@@ -86,22 +85,17 @@ Bu beş şey, 2. bölümde Anthropic API'ye geçeceğin zaman "altın zemin" ola
 
 Anthropic dokümanı Bölüm 0 düzeyinde bir "kurulum dersi" yazmaz; "Python ve HTTP'yi biliyorsun" varsayar. Ama Quickstart rehberi iki somut önkoşul sayar, bölümümüz bu ikisini **pratikle** karşılıyor:
 
-**1. Python 3.7+ ve paket yönetimi.** Anthropic SDK `pip install anthropic` ile kurulur. Ama hangi Python'a? Sistem Python'una kurmak uzun vadede kırılır; `venv` içinde kurmak izolasyon sağlar. 0.2'de bunu pratik kuruyoruz — Anthropic'in "isolated environment önerilir" satırının arkasında duran disiplin.
+**1. Python 3.9+ ve paket yönetimi.** Anthropic SDK `pip install anthropic` ile kurulur. Ama hangi Python'a? Sistem Python'una kurmak uzun vadede kırılır; `venv` içinde kurmak izolasyon sağlar. 0.2'de bunu pratik kuruyoruz — Anthropic'in "isolated environment önerilir" satırının arkasında duran disiplin.
 
 **2. Bir HTTP isteği atabilme.** SDK aslında `requests` veya `httpx` üstüne sarmalayıcı. İlk prensibi anlamak için 0.4'te kendi FastAPI servisimizi yazıyor, 0.5'te HTTP POST'u **alıcı** olarak deneyimliyoruz. Sonra Bölüm 2'de Anthropic'e aynı iskeletle POST atacağız — tanıdık gelecek.
 
 **3. API anahtarını nerede tutacağın.** Anthropic, anahtarı kod içine koymamayı, `ANTHROPIC_API_KEY` environment değişkeni kullanmayı ısrarla vurgular. 0.2'de `venv` + `.env` + `python-dotenv` zincirini öğrendiğin için Bölüm 2'ye geçtiğinde bu alışkanlık otomatik devreye girer.
 
 <div class="ma-anthropic-oz-kaynak" markdown>
-**Kaynak:** [Anthropic API — Quickstart / Getting Started](https://docs.claude.com/en/docs/get-started) (resmi dokümantasyon, İngilizce, 10 dk okuma). Bölüm 0 bittikten **sonra** aç — oradaki her satırın altyapısı bu bölümde kurulmuş olur, okuma akıcı olur.
+**Kaynak:** [Anthropic API — Quickstart / Getting Started](https://platform.claude.com/docs/en/docs/get-started) (resmi dokümantasyon, İngilizce, 10 dk okuma). Bölüm 0 bittikten **sonra** aç — oradaki her satırın altyapısı bu bölümde kurulmuş olur, okuma akıcı olur.
 </div>
 </div>
 
-## Kural dışı yerler (Tip A bölüm girişi notu)
-
-Bu sayfa iskelette "Uygulama" bölümü içermiyor — Tip A (bölüm girişi) kuralıdır. Uygulama 5 alt sayfada. "Çıktı Kanıtı" da yok — onun yerine yukarıdaki **bölüm sonu çıktısı** var (beş maddelik liste); her alt sayfa kendi mini kanıtını içerir.
-
----
 
 <div class="ma-sonraki" markdown>
 **Bir sonraki adım →** [0.1 VPS ve Linux Komutları](01-vps-linux.md) — 20 dk, 15 komutta yetkin ol
