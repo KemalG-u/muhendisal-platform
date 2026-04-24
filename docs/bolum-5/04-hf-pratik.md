@@ -7,6 +7,7 @@
 <span class="ma-persona ma-persona-is">🔵 iş</span>
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
+<div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~50 dakika</div>
 <div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 5.1 + 5.2 + 5.3 okundu; hyperparameter mantığı elinde. Google hesabı (Colab için), HF hesabı (model indirme + adapter push).</div>
 <div class="ma-meta-row"><strong>🎯 Çıktı:</strong> **İlk LoRA adapter'ın Colab T4 üstünde eğitildi** — Qwen2.5-1.5B + 50 Türkçe örnek + 20 dakikada tamamlandı. Base model vs fine-tuned model karşılaştırma testin var. HF Hub'a push edildi (public veya private). **3. pratik imza** (9.4 RAG + 9.5 Agent + 5.4 FT). Mülakatta "FT denediniz mi?" sorusuna EVET + somut demo.</div>
 </div>
@@ -628,17 +629,19 @@ HuggingFace Hub'da `https://huggingface.co/USERNAME/qwen-tr-musteri-destek-v1` U
 <div class="ma-neden-sonuc" markdown>
 <div class="ma-neden-sonuc-header">🔗 Birlikte okuma — neden ne oldu</div>
 
-- **A → B:** 50 örnekli Türkçe instruction FT hedef; Qwen2.5-1.5B + QLoRA + T4.
-- **B → C:** Colab kurulum: transformers 5.6.1 + peft 0.19.1 + trl 1.2.0 + bitsandbytes.
-- **C → D:** Veri sentetik üretim (Claude ile 30 sn); chat template format (Qwen).
-- **D → E:** BitsAndBytesConfig NF4 + double quantization; model 1 GB'a düşer.
-- **E → F:** LoRA config r=8 + QKVO target; %0.14 parametre eğitilir.
-- **F → G:** TrainingArguments: LR 2e-4, 3 epoch, batch 2 × accumulation 8 = 16.
-- **G → H:** SFTTrainer orchestrator; 15-25 dakika eğitim; loss 3.2 → 1.2.
-- **H → I:** Base vs FT karşılaştırma test; domain ton + format farkı görünür.
-- **I → J:** HF Hub push + model card + apache-2.0 license + şeffaf README.
-- **J → K:** 4 CTO kanıtı: notebook çalıştı + adapter file + evaluation + HF URL.
-- **K → L:** LinkedIn post + portföy 3. madde + CV HF link.
+<ol class="ma-neden-sonuc-zincir" markdown>
+<li>**A → B:** 50 örnekli Türkçe instruction FT hedef; Qwen2.5-1.5B + QLoRA + T4. Bu yüzden **küçük model + az veri = erişilebilir başlangıç.**</li>
+<li>**B → C:** Colab kurulum: transformers 5.6.1 + peft 0.19.1 + trl 1.2.0 + bitsandbytes. Bu yüzden **pin'li sürümler kırılmayı önler.**</li>
+<li>**C → D:** Veri sentetik üretim (Claude ile 30 sn); chat template format (Qwen). Bu yüzden **gerçek veri yoksa Claude üretir.**</li>
+<li>**D → E:** BitsAndBytesConfig NF4 + double quantization; model 1 GB'a düşer. Bu yüzden **4-bit quantization T4'ü kurtarır.**</li>
+<li>**E → F:** LoRA config r=8 + QKVO target; %0.14 parametre eğitilir. Bu yüzden **tam FT'nin binde biri parametre.**</li>
+<li>**F → G:** TrainingArguments: LR 2e-4, 3 epoch, batch 2 × accumulation 8 = 16. Bu yüzden **efektif batch boyutu bellek sınırını aşar.**</li>
+<li>**G → H:** SFTTrainer orchestrator; 15-25 dakika eğitim; loss 3.2 → 1.2. Bu yüzden **loss düşüşü öğrenmenin kanıtı.**</li>
+<li>**H → I:** Base vs FT karşılaştırma test; domain ton + format farkı görünür. Bu yüzden **karşılaştırma olmadan iyileşme bilinmez.**</li>
+<li>**I → J:** HF Hub push + model card + apache-2.0 license + şeffaf README. Bu yüzden **portföy kamuya açık olunca değer kazanır.**</li>
+<li>**J → K:** 4 CTO kanıtı: notebook çalıştı + adapter file + evaluation + HF URL. Bu yüzden **kanıtsız iddia iş görüşmesinde geçmez.**</li>
+<li>**K → L:** LinkedIn post + portföy 3. madde + CV HF link. Bu yüzden **teknik çalışma görünür olmalı.**</li>
+</ol>
 
 <div class="ma-neden-sonuc-sonuc" markdown>
 **Sonuç:** Bölüm 5 TAM KAPANDI (5/5). Bu 3. pratik imza + 5. genel imza sayfası platformda. AI Engineer araç kutusun 3 deneyle sağlam: RAG (9.4) + Agent (9.5) + FT (5.4). Sonraki (Bölüm 7): Multimodal — vision + audio.

@@ -39,9 +39,9 @@ flowchart LR
 
   classDef user fill:#ddd6fe,stroke:#7c3aed,color:#111
   classDef page fill:#dbeafe,stroke:#2563eb,color:#111
-  classDef pilot fill:#dcfce7,stroke:#16a34a,color:#111
+  classDef pilot fill:#fef3c7,stroke:#ca8a04,color:#111
   classDef infra fill:#fed7aa,stroke:#ea580c,color:#111
-  classDef goal fill:#dcfce7,stroke:#16a34a,color:#111
+  classDef goal fill:#fef3c7,stroke:#ca8a04,color:#111
   class S user
   class P51,P53,P54 page
   class P52 pilot
@@ -80,7 +80,7 @@ flowchart LR
 **3. Claude Code'un yaklaşımı.** Anthropic'in kendi kod asistanı Claude Code hiç fine-tune kullanmıyor — sistem prompt + tool use + MCP ile çözüyor. Bu bölümün "%90 projede FT gereksiz" tezi Anthropic'in kendi ürün disiplininin yansıması.
 
 <div class="ma-anthropic-oz-kaynak" markdown>
-**Kaynak:** [docs.claude.com — Prompt Engineering Overview](https://docs.claude.com/en/docs/prompt-engineering/overview) (İngilizce, ~10 dk). Fine-tune konusundaki Anthropic duruşunu docs'ta açık okuyabilirsin — "before considering fine-tuning" paragrafı 5.2 karar ağacımızla uyumlu.
+**Kaynak:** [platform.claude.com/docs — Prompt Engineering Overview](https://platform.claude.com/docs/en/docs/prompt-engineering/overview) (İngilizce, ~10 dk). Fine-tune konusundaki Anthropic duruşunu docs'ta açık okuyabilirsin — "before considering fine-tuning" paragrafı 5.2 karar ağacımızla uyumlu.
 </div>
 </div>
 

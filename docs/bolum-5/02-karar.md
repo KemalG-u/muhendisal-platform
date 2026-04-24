@@ -7,6 +7,7 @@
 <span class="ma-persona ma-persona-is">🔵 iş</span>
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
+<div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~30 dakika</div>
 <div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 5.1 okundu (prompt ↔ RAG ↔ FT üçgeni + 3 FT biçimi + maliyetler).</div>
 <div class="ma-meta-row"><strong>🎯 Çıktı:</strong> **10 kriterli karar ağacı** elinde; yeni proje geldiğinde 5 dakikada "prompt / RAG / FT / hybrid" kararını **gerekçeli** verebiliyorsun. 5 somut senaryo (müşteri destek, hukuki doküman, tıbbi tanı, finansal analiz, yaratıcı yazım) üzerinde pratik uyguladın. Mülakattaki "FT mi RAG mi?" sorusuna (10.2) derinleşmiş cevap. **Bölüm 5'in karar-odaklı sayfası.**</div>
 </div>
@@ -151,17 +152,17 @@ On-prem + API kullanmaya direnç yüksekse FT + self-host Llama/Qwen tek seçene
 flowchart TB
     START["🆕 Yeni AI projesi"]
 
-    Q1{"Veri ayda 1'den<br/>sık değişiyor mu?"}
-    Q2{"Kaynak alıntı<br/>gerekli mi?"}
-    Q3{"Davranış mı<br/>bilgi mi?"}
-    Q4{"Bakım için<br/>5+ kişi var mı?"}
+    Q1{"Veri ayda 1'den\nsık değişiyor mu?"}
+    Q2{"Kaynak alıntı\ngerekli mi?"}
+    Q3{"Davranış mı\nbilgi mi?"}
+    Q4{"Bakım için\n5+ kişi var mı?"}
     Q5{"Bütçe $5K+/ay mı?"}
 
-    PROMPT["🎯 Prompt Engineering<br/>yeter"]
+    PROMPT["🎯 Prompt Engineering\nyeter"]
     RAG["📚 RAG"]
-    RAG_PROMPT["📚 RAG + Prompt<br/>caching"]
-    FT_LORA["🔧 LoRA/QLoRA<br/>dene"]
-    HYBRID["🔀 RAG + FT<br/>(ileri)"]
+    RAG_PROMPT["📚 RAG + Prompt\ncaching"]
+    FT_LORA["🔧 LoRA/QLoRA\ndene"]
+    HYBRID["🔀 RAG + FT\n(ileri)"]
 
     START --> Q1
     Q1 -->|Evet| RAG
@@ -177,9 +178,9 @@ flowchart TB
     Q5 -->|Hayır| PROMPT
 
     classDef q fill:#dbeafe,stroke:#2563eb,color:#111
-    classDef result fill:#dcfce7,stroke:#16a34a,color:#111
+    classDef result fill:#fef3c7,stroke:#ca8a04,color:#111
     classDef warning fill:#fef3c7,stroke:#ca8a04,color:#111
-    classDef advanced fill:#fee2e2,stroke:#dc2626,color:#111
+    classDef advanced fill:#fed7aa,stroke:#ea580c,color:#111
     class Q1,Q2,Q3,Q4,Q5 q
     class PROMPT,RAG,RAG_PROMPT result
     class FT_LORA warning
@@ -389,13 +390,15 @@ Bir arkadaş veya kendi düşündüğün bir proje — "AI sistemi istiyorum" de
 <div class="ma-neden-sonuc" markdown>
 <div class="ma-neden-sonuc-header">🔗 Birlikte okuma — neden ne oldu</div>
 
-- **A → B:** AI Engineer'ı junior'dan ayıran: doğru soru sorma + karar refleksi.
-- **B → C:** 10 kriter: değişim sıklığı + kaynak + veri + davranış/bilgi + latency + maliyet + niş + bakım + gizlilik + geri alınabilirlik.
-- **C → D:** Karar ağacı 5 soruda sonuç; çoğu yol RAG veya prompt'a çıkar.
-- **D → E:** 5 senaryo (müşteri destek, hukuk, tıp, kişisel finans, yaratıcı); her birinde karar ağacı uygulandı.
-- **E → F:** Hybrid (RAG + FT) ileri seviye; tekil yetiyorsa tekil; hukuk/tıp büyük projelerde anlamlı.
-- **F → G:** Claude kullanıyorsan karar ağacı %80+ RAG'e çıkar; FT gerekiyorsa Llama/Qwen self-host.
-- **G → H:** 8 CTO tuzak; en yaygını "ilk denemede hybrid" ve "müşteri FT dedi diye FT".
+<ol class="ma-neden-sonuc-zincir" markdown>
+<li>**A → B:** AI Engineer'ı junior'dan ayıran: doğru soru sorma + karar refleksi. Bu yüzden **karar çerçevesi kod yazmaktan önce gelir.**</li>
+<li>**B → C:** 10 kriter: değişim sıklığı + kaynak + veri + davranış/bilgi + latency + maliyet + niş + bakım + gizlilik + geri alınabilirlik. Bu yüzden **tek kriter yetmez.**</li>
+<li>**C → D:** Karar ağacı 5 soruda sonuç; çoğu yol RAG veya prompt'a çıkar. Bu yüzden **FT nadir seçilen seçenek.**</li>
+<li>**D → E:** 5 senaryo (müşteri destek, hukuk, tıp, kişisel finans, yaratıcı); her birinde karar ağacı uygulandı. Bu yüzden **soyut kural somut senaryoda pekişir.**</li>
+<li>**E → F:** Hybrid (RAG + FT) ileri seviye; tekil yetiyorsa tekil; hukuk/tıp büyük projelerde anlamlı. Bu yüzden **karmaşıklık ancak zorunluysa eklenir.**</li>
+<li>**F → G:** Claude kullanıyorsan karar ağacı %80+ RAG'e çıkar; FT gerekiyorsa Llama/Qwen self-host. Bu yüzden **provider seçimi karar ağacını etkiler.**</li>
+<li>**G → H:** 8 CTO tuzak; en yaygını 'ilk denemede hybrid' ve 'müşteri FT dedi diye FT'. Bu yüzden **talepten değil, gereksinimden hareket et.**</li>
+</ol>
 
 <div class="ma-neden-sonuc-sonuc" markdown>
 **Sonuç:** Karar refleksi kuruldu. Yeni proje için 5 dakika → karar. Sonraki (5.3): LoRA + QLoRA matematik sezgi — eğer FT'ye girersen ne yapıyorsun.
@@ -409,5 +412,5 @@ Bir arkadaş veya kendi düşündüğün bir proje — "AI sistemi istiyorum" de
 
 ← [5.1 Fine-tuning Nedir](01-finetune-nedir.md) &nbsp;|&nbsp; [Bölüm 5 girişi](index.md) &nbsp;|&nbsp; [Ana sayfa](../index.md)
 
-**Pekiştirme:** [OpenAI fine-tuning docs](https://platform.openai.com/docs/guides/fine-tuning) + [Anthropic Claude best practices](https://docs.claude.com/en/docs/build-with-claude/prompt-engineering/overview) + [HuggingFace Smol Course](https://huggingface.co/learn/cookbook). Üç farklı bakış: provider-specific + framework-agnostic + hands-on.
+**Pekiştirme:** [OpenAI fine-tuning docs](https://platform.openai.com/docs/guides/fine-tuning) + [Anthropic Claude best practices](https://platform.claude.com/docs/en/docs/build-with-claude/prompt-engineering/overview) + [HuggingFace Smol Course](https://huggingface.co/learn/cookbook). Üç farklı bakış: provider-specific + framework-agnostic + hands-on.
 </div>
