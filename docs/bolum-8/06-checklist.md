@@ -273,7 +273,7 @@ flowchart TB
 
 ## CHECKLIST — 15 madde form
 
-<table class="ma-aktorci" markdown>
+<table class="ma-aktorler" markdown>
 
 | # | Madde | Durum | Kanıt yerleşimi |
 |---|---|---|---|
@@ -304,7 +304,7 @@ flowchart TB
 
 ## GO / NO-GO karar matrisi
 
-<table class="ma-aktorci" markdown>
+<table class="ma-aktorler" markdown>
 
 | Tamamlanan | Karar | Aksiyon |
 |---|---|---|
@@ -312,6 +312,8 @@ flowchart TB
 | 13-14/15 | ⚠️ CONDITIONAL GO | Eksik maddeler **MUSKİN** olmamalı. Kabul edilebilir olan tek kategori: gelecek 7 gün içinde tamamlanır. |
 | 10-12/15 | 🛑 NO-GO | Canlıya çıkma. 1-2 hafta daha çalış. |
 | <10/15 | 🛑 Başa dön | Bölüm 8'i yeniden oku + uygula. |
+
+</table>
 
 **MUSTN'T BE incomplete (ASLA eksik kalamaz) 5 madde:**
 

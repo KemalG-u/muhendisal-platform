@@ -88,6 +88,8 @@ flowchart LR
 | **r=32** | 256K | Büyük domain kayması; dikkat — overfit riski |
 | **r=64+** | 512K+ | Nadir; full FT'ye yaklaşıyor, avantajı azalıyor |
 
+</table>
+
 **Rule of thumb:** Küçük veri seti (500-1000 örnek) → r=8. Büyük veri (5000+) → r=16. Veri 200 altı → r=4, overfit engelle.
 
 **Alpha parametresi (scaling):** Genelde `alpha = 2 × r`. Yani r=8 için alpha=16. Gradient büyüklüğü kontrolü.
@@ -196,6 +198,8 @@ Tam precision (FP16):  P × 2 bytes
 | **A100 80 GB** | 80 GB | 70B rahat | $2-3/saat kiralık |
 | **H100 80 GB** | 80 GB | 70B + eğitim hızlı | $4-5/saat kiralık |
 | **RunPod / Lambda Labs** | değişken | kiralama platformları | $0.3-5/saat |
+
+</table>
 
 **5.4 sayfası için:** Colab T4 (ücretsiz) + Qwen 2.5-1.5B veya TinyLlama 1.1B seçim. İlk FT deneyimi için ideal.
 

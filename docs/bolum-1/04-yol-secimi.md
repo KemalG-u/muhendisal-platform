@@ -86,6 +86,8 @@ Kod hiç yazmadın veya çok az yazdın. AI/ChatGPT/Claude'u duydun, ilgini çek
 | 5 | Bölüm 4 kalan + RAG projesi | 5 sayfa + proje | **Portföy 1:** PDF yükle → soru sor chatbot'u (kendi makinende çalışıyor) |
 | 6 | Bölüm 9 (9.1 + 9.2 + 9.4) | 3 sayfa | **Portföy 1 canlı URL:** arkadaşına link atıp "bak bu benim projem" diyebiliyorsun |
 
+</table>
+
 **6 hafta sonunda:** 1 canlı portföy projesi, GitHub'da temiz repo, LinkedIn'de "ilk AI projemi deploy ettim" postu. **Bu seviyede AI Engineer iş başvurusu erken** — ama "ben bu işi yapabiliyorum"a somut kanıt. Sonraki 6 hafta Bölüm 5 + 6 + 8 + kalan proje → persona-2'ye (iş) geçmek için zemin.
 
 ### Kod sıfır öğrenci için özel notlar
@@ -118,6 +120,8 @@ Zaten bir iş hayatında (yazılım, mühendislik, muhasebe, ne olursa). AI alan
 | 4 | Bölüm 6 (Agent + MCP) | MCP server yazmış + basit agent kurmuş |
 | 5 | Bölüm 9 (Deploy) | **Portföy 1 canlı URL** + **Portföy 2 taslağı** (agent) |
 | 6 | Bölüm 8 + Bölüm 10 | **Portföy 2 canlı** + CV güncelleme + LinkedIn profili revize |
+
+</table>
 
 **6 hafta sonunda:** 2 canlı portföy projesi, LinkedIn'de 5+ içerik (hafta 1 post), aktif iş başvuruları. **8. haftadan itibaren görüşme davetleri bekle** — erken olabilir, normal de olur.
 

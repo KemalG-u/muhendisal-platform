@@ -115,6 +115,8 @@ URL Claude sunucularından erişilebilir olmalı (public). Internal URL'ler çal
 | Caching | Yok | CDN cache avantajı |
 | Gizlilik | Daha kontrollü | URL public = görsel public |
 
+</table>
+
 **Pratik kural:** Kullanıcı yüklüyorsa base64; zaten public'se URL.
 
 ## Kısıtlar — 2026 Claude vision

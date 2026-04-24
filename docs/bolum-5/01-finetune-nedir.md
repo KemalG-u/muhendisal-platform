@@ -134,6 +134,8 @@ Fine-tune iki alt tür:
 | **Instruction tuning** | Model "komut → cevap" formatına geçer | "Özet yap: [metin]" → "Özet şu:" |
 | **Continued pre-training** | Modele yeni dil/domain metin "okut" | Tıp literatürü yüz milyon token |
 
+</table>
+
 **%95 geliştirici sadece instruction tuning yapar.** Continued pre-training ciddi compute + veri ister.
 
 ## Veri hazırlama — formatlar
@@ -242,6 +244,8 @@ Kendin kod yazmadan:
 | **AWS Bedrock** | Claude (sınırlı), Llama, Titan | Provisioned throughput gerekli |
 | **Azure OpenAI** | GPT-4o fine-tuning | Azure enterprise fiyatı |
 | **Anthropic** | **Henüz genel kullanıma açık değil** (2026 Nisan) | - |
+
+</table>
 
 **Uyarı — Anthropic FT 2026 itibarıyla:** Claude fine-tuning'i Anthropic tarafından **selective access** ile enterprise müşterilere sunuluyor. Claude 3 Haiku için AWS Bedrock'ta sınırlı FT var. Claude 4 Sonnet için public FT **yok** — Constitutional AI + Model Spec ile davranış tanımlıdır; müşteri FT ile bu tanımı bozmasın. Bu tasarım tercih, eksik değil.
 

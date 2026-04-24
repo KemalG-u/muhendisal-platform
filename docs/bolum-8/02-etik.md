@@ -133,6 +133,8 @@ AB AI Act **4 kategoride** AI sınıflandırıyor:
 | 🟡 **Limited-risk** | Chatbot, deepfake, emotion recognition | Şeffaflık: "Ben AI'yım" bildirme |
 | 🟢 **Minimal-risk** | Spam filtre, oyun AI, öneri | Kısıtlama yok |
 
+</table>
+
 ### Uygulama takvimi
 
 - **Şubat 2025:** Yasak kategoriler yürürlüğe girdi (sosyal skor, biyometrik yüz tanıma vb)

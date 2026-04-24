@@ -169,6 +169,8 @@ AI alanı hızlı değişiyor. Öğrenme **iş değil alışkanlık**. Haftalık
 | **Cuma** | 1 saat | Bir araç/library dene (küçük deney) |
 | **Pazar** | 30 dk | Haftanın özeti, LinkedIn post taslak |
 
+</table>
+
 **Önemli kaynaklar (2026):**
 
 - **Haber:** [Anthropic News](https://www.anthropic.com/news), [OpenAI Blog](https://openai.com/blog), [Hugging Face Blog](https://huggingface.co/blog)
