@@ -7,6 +7,7 @@
 <span class="ma-persona ma-persona-is">🔵 iş</span>
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
+<div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~35 dakika</div>
 <div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 4.2 bitmiş; Qdrant'ta contextual chunks var, Anthropic API aktif</div>
 <div class="ma-meta-row"><strong>🎯 Çıktı:</strong> Aynı sorguya **3 farklı retrieval** (vektör, BM25, hibrit) ile karşılık getirir ve karşılaştırırsın; **re-ranker** ile top-20'yi top-3'e indirirsin; "hibrit ve rerank ne zaman gerekli" sorusuna somut rakamla cevap verirsin.</div>
 </div>
@@ -55,7 +56,7 @@ flowchart LR
   classDef hes fill:#fef3c7,stroke:#ca8a04,color:#111
   classDef db fill:#fed7aa,stroke:#ea580c,color:#111
   classDef fuse fill:#dbeafe,stroke:#2563eb,color:#111
-  classDef rer fill:#dcfce7,stroke:#16a34a,color:#111
+  classDef rer fill:#fef3c7,stroke:#ca8a04,color:#111
   class Q inp
   class E hes
   class VEC,BM db
@@ -291,11 +292,13 @@ Gist linkini kaydet: `muhendisal-notlarim/bolum-4/03-retrieval/search-endpoint-g
 <div class="ma-neden-sonuc" markdown>
 <div class="ma-neden-sonuc-header">🔗 Birlikte okuma — neden ne oldu</div>
 
-- **A → B:** Vektör arama "anlamsal" ama kelime tam-eşleşmesinde zayıf — IBAN/kod/isim soruları kaçar.
-- **B → C:** BM25 "kelime" ama anlamsal genelleme yapmaz — "kurban = sığır" eşleştirmesi yok.
-- **C → D:** İki yöntemin eksikleri **birbirine zıt** → birleşim her durum için güçlü.
-- **D → E:** RRF rank-temelli birleşim = skalaları farklı iki sistemi eşit ağırlıkla karıştırır.
-- **E → F:** Rerank = top-20'yi **sorguyla ikişer ikişer karşılaştır** — cross-encoder modeli, embedding'den çok daha keskin. Pahalı ama kritik işlerde mecburi.
+<ol class="ma-neden-sonuc-zincir" markdown>
+<li>**A → B:** Vektör arama 'anlamsal' ama kelime tam-eşleşmesinde zayıf — IBAN/kod/isim soruları kaçar. Bu yüzden **tek yöntemle üretim RAG olmaz.**</li>
+<li>**B → C:** BM25 'kelime' ama anlamsal genelleme yapmaz — 'kurban = sığır' eşleştirmesi yok. Bu yüzden **hibrit kaçınılmaz.**</li>
+<li>**C → D:** İki yöntemin eksikleri birbirine zıt → birleşim her durum için güçlü. Bu yüzden **RRF standart yöntem oldu.**</li>
+<li>**D → E:** RRF rank-temelli birleşim = skalaları farklı iki sistemi eşit ağırlıkla karıştırır. Bu yüzden **skor normalizasyonu gerekmez.**</li>
+<li>**E → F:** Rerank = top-20'yi sorguyla ikişer ikişer karşılaştır — cross-encoder modeli, embedding'den çok daha keskin. Pahalı ama kritik işlerde mecburi. Bu yüzden **kalite eğrisi %65'ten %92'ye çıkar.**</li>
+</ol>
 
 <div class="ma-neden-sonuc-sonuc" markdown>
 **Sonuç:** "Sadece vektör RAG" = naif RAG. Production RAG = hibrit + rerank. Bu sayfa 2-kanallı pipeline'ı kurdu; kalite eğrisi %65'ten %92'ye çıktı. 4.4'te bu chunks'ı Claude'a **doğru prompt yapısıyla** vermeyi öğreneceğiz.

@@ -7,6 +7,7 @@
 <span class="ma-persona ma-persona-is">🔵 iş</span>
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
+<div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~30 dakika</div>
 <div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 4.3 bitmiş; hibrit retrieval'dan top-K chunks alıyorsun; 2.4 XML tag refleksin var</div>
 <div class="ma-meta-row"><strong>🎯 Çıktı:</strong> Retrieval'dan gelen chunks'ı Claude'a **doğru yapıyla** verirsin; sistem prompt + XML şablon + kaynak gösterme disiplinini kurarsın; **prompt caching** ile sabit bağlamı %90 ucuzlatırsın.</div>
 </div>
@@ -54,7 +55,7 @@ flowchart TB
   classDef veri fill:#dbeafe,stroke:#2563eb,color:#111
   classDef tmpl fill:#fef3c7,stroke:#ca8a04,color:#111
   classDef uzak fill:#fed7aa,stroke:#ea580c,color:#111
-  classDef cache fill:#dcfce7,stroke:#16a34a,color:#111
+  classDef cache fill:#fef3c7,stroke:#ca8a04,color:#111
   classDef hed fill:#ddd6fe,stroke:#7c3aed,color:#111
   class CH veri
   class SYS,TMPL tmpl
@@ -283,7 +284,7 @@ Context engineering Anthropic'in **prompt mühendisliğinin tepe noktası** olar
     **Streaming + caching uyumlu.** `client.messages.stream()` + `cache_control` beraber çalışır. Streaming UX hızlandırır, caching maliyet düşürür — ikisi birden production ideali.
 
 <div class="ma-anthropic-oz-kaynak" markdown>
-**Kaynak:** [docs.claude.com — Prompt Caching](https://docs.claude.com/en/docs/build-with-claude/prompt-caching) (EN, ~15 dk). Tüm cache_control parametre detayları. **Pekiştirme:** [docs.claude.com — Use XML Tags](https://docs.claude.com/en/docs/build-with-claude/prompt-engineering/use-xml-tags) — neden XML Claude'da bu kadar güçlü çalışıyor, örneklerle.
+**Kaynak:** [platform.claude.com/docs — Prompt Caching](https://platform.claude.com/docs/en/docs/build-with-claude/prompt-caching) (EN, ~15 dk). Tüm cache_control parametre detayları. **Pekiştirme:** [platform.claude.com/docs — Use XML Tags](https://platform.claude.com/docs/en/docs/build-with-claude/prompt-engineering/use-xml-tags) — neden XML Claude'da bu kadar güçlü çalışıyor, örneklerle.
 </div>
 </div>
 
@@ -313,11 +314,13 @@ Gist linkini kaydet: `muhendisal-notlarim/bolum-4/04-context-eng/ask-endpoint-gi
 <div class="ma-neden-sonuc" markdown>
 <div class="ma-neden-sonuc-header">🔗 Birlikte okuma — neden ne oldu</div>
 
-- **A → B:** Aynı chunks + farklı prompt yapısı = 2-3 kat kalite farkı. Yapı **ne olduğu kadar** önemli.
-- **B → C:** Sistem prompt = rol + kural (değişmez). Kullanıcı mesajı = chunks + soru (değişken). Bu ayrım Claude'un odaklanmasını kolaylaştırır.
-- **C → D:** XML tag = Claude eğitim verisinde bağlam sınırı; `<kaynak numara='N'>...</kaynak>` yapısı attribution için pratik zemin.
-- **D → E:** Prompt caching = sabit kısım 1024+ token ise 5 dakika saklanır, %90 ucuz. 1 satır kod, büyük tasarruf.
-- **E → F:** Attribution (kaynak gösterme) = kullanıcı güveni + debug kolaylığı + hukuki uyum. Claude talimatlı üretir.
+<ol class="ma-neden-sonuc-zincir" markdown>
+<li>**A → B:** Aynı chunks + farklı prompt yapısı = 2-3 kat kalite farkı. Yapı **ne olduğu kadar** önemli. Bu yüzden **mühendisliğin yarısı format seçimi.**</li>
+<li>**B → C:** Sistem prompt = rol + kural (değişmez). Kullanıcı mesajı = chunks + soru (değişken). Bu ayrım Claude'un odaklanmasını kolaylaştırır. Bu yüzden **sorumluluk ayrımı net olmalı.**</li>
+<li>**C → D:** XML tag = Claude eğitim verisinde bağlam sınırı; `<kaynak numara='N'>...</kaynak>` yapısı attribution için pratik zemin. Bu yüzden **XML tag neden kullan?**</li>
+<li>**D → E:** Prompt caching = sabit kısım 1024+ token ise 5 dakika saklanır, %90 ucuz. 1 satır kod, büyük tasarruf. Bu yüzden **uzun sistem promptu varsa mutlaka ekle.**</li>
+<li>**E → F:** Attribution (kaynak gösterme) = kullanıcı güveni + debug kolaylığı + hukuki uyum. Claude talimatlı üretir. Bu yüzden **yanıt izlenebilirliği şart.**</li>
+</ol>
 
 <div class="ma-neden-sonuc-sonuc" markdown>
 **Sonuç:** Context engineering RAG'ın **görünmeyen yarısı** — iyi chunks + iyi yapı = production RAG. İyi chunks + kötü yapı = hayal kırıklığı. Bu sayfa yapıyı kurdu. 4.5'te şimdi bu pipeline'ın **kalitesini nasıl ölçeceğini** öğreneceksin — "iyi mi çalışıyor?" sorusuna rakamlı cevap.

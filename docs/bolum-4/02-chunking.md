@@ -7,6 +7,7 @@
 <span class="ma-persona ma-persona-is">🔵 iş</span>
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
+<div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~35 dakika</div>
 <div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 4.1 naif RAG çalıştı; Claude API + Python embedder hazır</div>
 <div class="ma-meta-row"><strong>🎯 Çıktı:</strong> Aynı belgeyi **4 farklı stratejiyle** bölersin, her birinin aynı soruya dönen cevap kalitesini karşılaştırırsın; **Anthropic Contextual Retrieval** tekniğini kendi belgelerine uygularsın; "hangi chunking ne zaman" sorusuna somut cevap verirsin.</div>
 </div>
@@ -56,7 +57,7 @@ flowchart TB
 
   classDef veri fill:#dbeafe,stroke:#2563eb,color:#111
   classDef basit fill:#fef3c7,stroke:#ca8a04,color:#111
-  classDef yeni fill:#dcfce7,stroke:#16a34a,color:#111
+  classDef yeni fill:#fef3c7,stroke:#ca8a04,color:#111
   classDef db fill:#fed7aa,stroke:#ea580c,color:#111
   classDef hes fill:#ddd6fe,stroke:#7c3aed,color:#111
   class DOC veri
@@ -365,11 +366,13 @@ Gist linkini kaydet: `muhendisal-notlarim/bolum-4/02-chunking/contextual-gist.tx
 <div class="ma-neden-sonuc" markdown>
 <div class="ma-neden-sonuc-header">🔗 Birlikte okuma — neden ne oldu</div>
 
-- **A → B:** Embedding modeli "anlamı vektöre çevirir" — ama **belirsiz metin = belirsiz vektör.**
-- **B → C:** Cümleleri ortadan kesen chunking = chunk'lar anlamını kaybediyor = retrieval zayıf.
-- **C → D:** Cümle/paragraf sınırları doğal anlam sınırlarıyla örtüşür → chunks tam anlamlı olur.
-- **D → E:** "Bu chunk ne hakkında?" sorusu **embedding dışında** — ama Claude'la chunk'a başlık üretip embedding'e eklersen, vektör uzayı bu sinyali de görür.
-- **E → F:** Contextual = "embedding vektörüne chunk'ın bağlamını zorla" — %49 daha az arama hatası, bir kerelik kurulum maliyeti.
+<ol class="ma-neden-sonuc-zincir" markdown>
+<li>**A → B:** Embedding modeli 'anlamı vektöre çevirir' — ama **belirsiz metin = belirsiz vektör.** Bu yüzden **chunk kalitesi retrieval kalitesini belirler.**</li>
+<li>**B → C:** Cümleleri ortadan kesen chunking = chunk'lar anlamını kaybediyor = retrieval zayıf. Bu yüzden **doğal sınırları koru.**</li>
+<li>**C → D:** Cümle/paragraf sınırları doğal anlam sınırlarıyla örtüşür → chunks tam anlamlı olur. Bu yüzden **semantik bölme ilk tercih.**</li>
+<li>**D → E:** 'Bu chunk ne hakkında?' sorusu embedding dışında — ama Claude'la chunk'a başlık üretip embedding'e eklersen, vektör uzayı bu sinyali de görür. Bu yüzden **bağlam zenginleştirme değer katar.**</li>
+<li>**E → F:** Contextual = 'embedding vektörüne chunk'ın bağlamını zorla' — %49 daha az arama hatası, bir kerelik kurulum maliyeti. Bu yüzden **maliyet/kazanç net.**</li>
+</ol>
 
 <div class="ma-neden-sonuc-sonuc" markdown>
 **Sonuç:** Chunking "sonra optimize ederiz" denilip ertelenen alan — ama ertelenirse RAG'ın tavanı düşer. Bu sayfa dört basit stratejiyi + Anthropic'in güçlü beşincisini eline verdi. 4.3'te **retrieval tarafına** geçiyoruz: iyi chunk'lar var, nasıl doğru olanları buluruz?

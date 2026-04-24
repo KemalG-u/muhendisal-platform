@@ -7,6 +7,7 @@
 <span class="ma-persona ma-persona-is">🔵 iş</span>
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
+<div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~25 dakika</div>
 <div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 4.1-4.5 elden RAG bitmiş + 4.6 LangChain denemiş; ikisinin **felsefi** farkını anlamaya hazırsın</div>
 <div class="ma-meta-row"><strong>🎯 Çıktı:</strong> Aynı RAG'i **LlamaIndex ile 15 satırda** kurarsın; LangChain ile yan yana koyarsın; ikisinin **felsefi farkını** (chain vs index, agent vs document) kendi cümlelerinle anlatırsın; kendi projen için hangisi daha uygun kararını verirsin.</div>
 </div>
@@ -55,7 +56,7 @@ flowchart TB
   classDef parse fill:#fef3c7,stroke:#ca8a04,color:#111
   classDef idx fill:#fed7aa,stroke:#ea580c,color:#111
   classDef llm fill:#dbeafe,stroke:#2563eb,color:#111
-  classDef hed fill:#dcfce7,stroke:#16a34a,color:#111
+  classDef hed fill:#fef3c7,stroke:#ca8a04,color:#111
   class DOC doc
   class NP,NODES,EMB parse
   class IDX idx
@@ -251,11 +252,13 @@ Repo linkini kaydet: `muhendisal-notlarim/bolum-4/07-llamaindex/uc-yol-repo.txt`
 <div class="ma-neden-sonuc" markdown>
 <div class="ma-neden-sonuc-header">🔗 Birlikte okuma — neden ne oldu</div>
 
-- **A → B:** LangChain "chain/agent" merkezli düşünür; RAG bir alt desen.
-- **B → C:** LlamaIndex "index/document" merkezli düşünür; RAG ana iş.
-- **C → D:** Kavramsal olarak LlamaIndex'in soyutlamaları RAG ihtiyaçlarıyla **daha dar örtüşür** — ezberlemesi kolay.
-- **D → E:** LangChain **çok amaçlı geniş** (agent + tool + memory + RAG); LlamaIndex **RAG-odaklı derin**.
-- **E → F:** Her iki kütüphane de Anthropic tarafından resmi desteklenir; seçim "hangi zihinsel modele yakın hissediyorsun" sorusuna iner.
+<ol class="ma-neden-sonuc-zincir" markdown>
+<li>**A → B:** LangChain 'chain/agent' merkezli düşünür; RAG bir alt desen. Bu yüzden **geniş ama RAG-odaklı değil.**</li>
+<li>**B → C:** LlamaIndex 'index/document' merkezli düşünür; RAG ana iş. Bu yüzden **RAG projelerinde zihinsel model daha dar, daha net.**</li>
+<li>**C → D:** Kavramsal olarak LlamaIndex'in soyutlamaları RAG ihtiyaçlarıyla daha dar örtüşür — ezberlemesi kolay. Bu yüzden **RAG-yoğun projede LlamaIndex öne geçiyor.**</li>
+<li>**D → E:** LangChain **çok amaçlı geniş** (agent + tool + memory + RAG); LlamaIndex **RAG-odaklı derin.** Bu yüzden **seçim projenin önceliğine bağlı.**</li>
+<li>**E → F:** Her iki kütüphane de Anthropic tarafından resmi desteklenir; seçim 'hangi zihinsel modele yakın hissediyorsun' sorusuna iner. Bu yüzden **ikisi de geçerli yol.**</li>
+</ol>
 
 <div class="ma-neden-sonuc-sonuc" markdown>
 **Sonuç:** Üç yolu da gördün — **elden** (4.1-4.4), **LangChain** (4.6), **LlamaIndex** (4.7). Her seçim bir değiş-tokuş. Kurumsal RAG'da LlamaIndex 2026'da öne geçiyor, agent-yoğun senaryolarda LangChain güçlü kalıyor, hassas kontrol gerektiren üretimde elden vazgeçilmez. 4.8'de **gerçek bir HBV üretim vakası** ile bu seçimin nasıl yapıldığını göreceğiz.

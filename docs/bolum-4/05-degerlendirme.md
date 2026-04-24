@@ -7,6 +7,7 @@
 <span class="ma-persona ma-persona-is">🔵 iş</span>
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
+<div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~35 dakika</div>
 <div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 4.1-4.4 bitmiş; çalışan bir RAG iskeletin var (chunking + embedding + retrieval + context engineering)</div>
 <div class="ma-meta-row"><strong>🎯 Çıktı:</strong> **20 soru-cevap çiftli golden dataset** hazırlarsın; her RAG çıktısını 3 metrikte ölçersin (retrieval accuracy + faithfulness + answer relevancy); prompt veya chunking değişince skorun **düştüğünü mü yükseldiğini mi** sayıyla bilirsin.</div>
 </div>
@@ -56,8 +57,8 @@ flowchart LR
   classDef sen fill:#ddd6fe,stroke:#7c3aed,color:#111
   classDef data fill:#dbeafe,stroke:#2563eb,color:#111
   classDef run fill:#fef3c7,stroke:#ca8a04,color:#111
-  classDef met fill:#fce7f3,stroke:#be185d,color:#111
-  classDef hed fill:#dcfce7,stroke:#16a34a,color:#111
+  classDef met fill:#fef3c7,stroke:#ca8a04,color:#111
+  classDef hed fill:#fef3c7,stroke:#ca8a04,color:#111
   class S sen
   class GD data
   class RAG run
@@ -244,7 +245,7 @@ Anthropic 2024-2025'te eval'e büyük yatırım yaptı — Console'da "Evaluate"
     **Anthropic Console Evaluate.** console.anthropic.com → Workbench → "Evaluate" sekmesi. Görsel A/B test, 2 prompt sürümünü aynı test setinde çalıştırıp yan yana gösterir. Non-developer ekip üyeleri prompt değişikliğini test edebilir.
 
 <div class="ma-anthropic-oz-kaynak" markdown>
-**Kaynak:** [docs.claude.com — Test and Evaluate](https://docs.claude.com/en/docs/test-and-evaluate/develop-tests) (EN, ~15 dk). Full eval metodolojisi. Pekiştirme: [anthropic-evals GitHub](https://github.com/anthropics/evals) — Anthropic'in kendi modelini değerlendirmek için kullandığı açık kaynak eval set'i. Kendi eval set'ini bu formatta yapman önerilir.
+**Kaynak:** [platform.claude.com/docs — Test and Evaluate](https://platform.claude.com/docs/en/docs/test-and-evaluate/develop-tests) (EN, ~15 dk). Full eval metodolojisi. Pekiştirme: [anthropic-evals GitHub](https://github.com/anthropics/evals) — Anthropic'in kendi modelini değerlendirmek için kullandığı açık kaynak eval set'i. Kendi eval set'ini bu formatta yapman önerilir.
 </div>
 </div>
 
@@ -274,11 +275,13 @@ Repo linkini kaydet: `muhendisal-notlarim/bolum-4/05-degerlendirme/eval-repo-lin
 <div class="ma-neden-sonuc" markdown>
 <div class="ma-neden-sonuc-header">🔗 Birlikte okuma — neden ne oldu</div>
 
-- **A → B:** RAG 3 aşamalı, her aşama bozulabilir. Ayrı ölçmeden "bozuk" demek yetmez.
-- **B → C:** Golden dataset = sınav cevap anahtarı. Yatırımı büyük, kazancı büyük.
-- **C → D:** LLM-as-judge = insan puanının %90 ucuz versiyonu, 100 örneği 5 dk'da puanlıyor.
-- **D → E:** 3 metrik (retrieval + faithfulness + relevancy) = hangi aşama bozuk tanısı.
-- **E → F:** A/B test = "bu değişiklik skoru artırdı mı?" — her chunking/prompt değişikliğinden sonra sorulan soru.
+<ol class="ma-neden-sonuc-zincir" markdown>
+<li>**A → B:** RAG 3 aşamalı, her aşama bozulabilir. Ayrı ölçmeden 'bozuk' demek yetmez. Bu yüzden **aşama bazlı metrik şart.**</li>
+<li>**B → C:** Golden dataset = sınav cevap anahtarı. Yatırımı büyük, kazancı büyük. Bu yüzden **100 örnek başlangıç için yeterli.**</li>
+<li>**C → D:** LLM-as-judge = insan puanının %90 ucuz versiyonu, 100 örneği 5 dk'da puanlıyor. Bu yüzden **insandan önce modeli dene.**</li>
+<li>**D → E:** 3 metrik (retrieval + faithfulness + relevancy) = hangi aşama bozuk tanısı. Bu yüzden **tek metrik yeterli değil.**</li>
+<li>**E → F:** A/B test = 'bu değişiklik skoru artırdı mı?' — her chunking/prompt değişikliğinden sonra sorulan soru. Bu yüzden **değişim ölçülmeden uygulanmaz.**</li>
+</ol>
 
 <div class="ma-neden-sonuc-sonuc" markdown>
 **Sonuç:** "Gözle bakarak RAG kalite kontrolü" ile "sayıyla ölçülen RAG kalite kontrolü" arasında production-grade servis ile yan proje farkı var. Bu sayfadan sonra chatbotun kalitesi hakkında **rakam** üretebiliyorsun. Bu rakam vakıfa/müdüre/müşteriye verilen söz. 4.6-4.7'de LangChain/LlamaIndex'le aynı iskeletin hazır kütüphane sürümünü göreceğiz.

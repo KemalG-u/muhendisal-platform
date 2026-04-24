@@ -7,6 +7,7 @@
 <span class="ma-persona ma-persona-is">🔵 iş</span>
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
+<div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~30 dakika</div>
 <div class="ma-meta-row"><strong>📋 Önkoşul:</strong> Bölüm 2 (Claude API çağrısı) + Bölüm 3 (embedding ve Qdrant kavramı); `ANTHROPIC_API_KEY` aktif</div>
 <div class="ma-meta-row"><strong>🎯 Çıktı:</strong> RAG'ın 3 adımını (Embed → Retrieve → Generate) kendi cümlelerinle anlatırsın; fine-tune / context stuffing / RAG üçlüsünü **karar tablosu** üstünden karşılaştırabilirsin; 20 satırlık **naif RAG** prototipini kendi metinlerinle çalıştırırsın.</div>
 </div>
@@ -59,8 +60,8 @@ flowchart LR
   classDef hes fill:#fef3c7,stroke:#ca8a04,color:#111
   classDef db fill:#fed7aa,stroke:#ea580c,color:#111
   classDef kul fill:#ddd6fe,stroke:#7c3aed,color:#111
-  classDef llm fill:#fce7f3,stroke:#be185d,color:#111
-  classDef hed fill:#dcfce7,stroke:#16a34a,color:#111
+  classDef llm fill:#fef3c7,stroke:#ca8a04,color:#111
+  classDef hed fill:#fef3c7,stroke:#ca8a04,color:#111
   class DOC,PROMPT veri
   class CHUNK,QEMB,RET hes
   class VDB db
@@ -298,11 +299,13 @@ Gist linkini kaydet: `muhendisal-notlarim/bolum-4/01-rag-nedir/kendi-rag-gist.tx
 <div class="ma-neden-sonuc" markdown>
 <div class="ma-neden-sonuc-header">🔗 Birlikte okuma — neden ne oldu</div>
 
-- **A → B:** Claude genel bilgiye sahip ama **senin belgelerine sahip değil** — eğitim verisine girmemiş bilgiler gözünden kaçar.
-- **B → C:** Fine-tune pahalı + yavaş + güncel tutmak zor → **bilgi eklemenin yanlış aracı.**
-- **C → D:** Context stuffing = "her çağrıda tüm PDF'i prompt'a yapıştır" → context window + maliyet duvarına çarpar.
-- **D → E:** RAG = "soruyla alakalı 3-10 parçayı akıllıca getir" → hem hızlı hem ucuz hem güncel.
-- **E → F:** Kaliteli RAG ≠ "naif RAG". 4.2-4.5 üretim seviyesine tırmanıyor; her basamak bir hata noktasını çözüyor.
+<ol class="ma-neden-sonuc-zincir" markdown>
+<li>**A → B:** Claude genel bilgiye sahip ama **senin belgelerine sahip değil** — eğitim verisine girmemiş bilgiler gözünden kaçar. Bu yüzden **kendi verini sen vermelisin.**</li>
+<li>**B → C:** Fine-tune pahalı + yavaş + güncel tutmak zor → bilgi eklemenin yanlış aracı. Bu yüzden **RAG daha pratik seçenek.**</li>
+<li>**C → D:** Context stuffing = 'her çağrıda tüm PDF'i prompt'a yapıştır' → context window + maliyet duvarına çarpar. Bu yüzden **akıllı getirme şart.**</li>
+<li>**D → E:** RAG = 'soruyla alakalı 3-10 parçayı akıllıca getir' → hem hızlı hem ucuz hem güncel. Bu yüzden **RAG endüstri standardı oldu.**</li>
+<li>**E → F:** Kaliteli RAG ≠ naif RAG. 4.2-4.5 üretim seviyesine tırmanıyor; her basamak bir hata noktasını çözüyor. Bu yüzden **temeli doğru kur.**</li>
+</ol>
 
 <div class="ma-neden-sonuc-sonuc" markdown>
 **Sonuç:** RAG bu bölümde öğreneceğin en değerli araç. Portföyündeki RAG projesi = iş görüşmesinde gösterebileceğin **en güçlü kanıt** (çünkü gerçek kurumsal senaryo). Bu sayfa kavramın iskeletini kurdu; 4.2 chunking = RAG'ı iyi yapan ya da berbat eden ilk ayar düğmesi.

@@ -7,6 +7,7 @@
 <span class="ma-persona ma-persona-is">🔵 iş</span>
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
+<div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~30 dakika</div>
 <div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 4.1-4.5 bitmiş; kendi RAG iskeletini elden yazmış, neyin ne yaptığını biliyorsun</div>
 <div class="ma-meta-row"><strong>🎯 Çıktı:</strong> Aynı RAG'i **LangChain ile 20 satırda** kurarsın; elden yazdığın ile karşılaştırırsın; LangChain'in **kazandırdığı ve götürdüğü** şeyleri sayıyla bilirsin; kendi projen için **seçim** yaparsın (elden vs LangChain).</div>
 </div>
@@ -56,7 +57,7 @@ flowchart LR
   classDef src fill:#fed7aa,stroke:#ea580c,color:#111
   classDef lc fill:#dbeafe,stroke:#2563eb,color:#111
   classDef db fill:#fef3c7,stroke:#ca8a04,color:#111
-  classDef out fill:#dcfce7,stroke:#16a34a,color:#111
+  classDef out fill:#fef3c7,stroke:#ca8a04,color:#111
   class DOC src
   class L,SP,E,R,PR,CH lc
   class VS db
@@ -241,11 +242,13 @@ Repo linkini kaydet: `muhendisal-notlarim/bolum-4/06-langchain/karsilastirma-rep
 <div class="ma-neden-sonuc" markdown>
 <div class="ma-neden-sonuc-header">🔗 Birlikte okuma — neden ne oldu</div>
 
-- **A → B:** Elden yazdın, her katmanı biliyorsun — abstraction'ları okuyunca şok olmuyorsun.
-- **B → C:** LangChain'in 200→20 satır kazancı = **prototip hızı.** 10 fikri hafta sonu deneyebilirsin.
-- **C → D:** LangSmith observability = "neden yanlış?" sorusunu 30 saniyede cevaplama.
-- **D → E:** LangChain her iş için doğru değil — seçim kriterleri listede. **Araç seçmek = mühendisliğin yarısı.**
-- **E → F:** Resmi `langchain_anthropic` partner paketi = Anthropic ile birlikte maintain. Güvenli köprü.
+<ol class="ma-neden-sonuc-zincir" markdown>
+<li>**A → B:** Elden yazdın, her katmanı biliyorsun — abstraction'ları okuyunca şok olmuyorsun. Bu yüzden **temel önce, kütüphane sonra.**</li>
+<li>**B → C:** LangChain'in 200→20 satır kazancı = **prototip hızı.** 10 fikri hafta sonu deneyebilirsin. Bu yüzden **hız bazen en değerli kaynak.**</li>
+<li>**C → D:** LangSmith observability = 'neden yanlış?' sorusunu 30 saniyede cevaplama. Bu yüzden **görünürlük üretim zorunluluğu.**</li>
+<li>**D → E:** LangChain her iş için doğru değil — seçim kriterleri listede. **Araç seçmek = mühendisliğin yarısı.** Bu yüzden **kullan ne zaman, kullanma ne zaman? ikisi birlikte önemli.**</li>
+<li>**E → F:** Resmi `langchain_anthropic` partner paketi = Anthropic ile birlikte maintain. Güvenli köprü. Bu yüzden **topluluk değil, resmi paket tercih et.**</li>
+</ol>
 
 <div class="ma-neden-sonuc-sonuc" markdown>
 **Sonuç:** Artık iki ayağın var — elden (derin anlayış) ve LangChain (hızlı prototip). Gerçek dünyada mühendis her ikisini de bilen kişi, sadece birini savunan değil. 4.7'de LlamaIndex'e de kısa bakış sonra 4.8'de HBV production case'i (Kemal'in gerçek projesi).

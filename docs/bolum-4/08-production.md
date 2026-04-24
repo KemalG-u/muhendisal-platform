@@ -7,6 +7,7 @@
 <span class="ma-persona ma-persona-is">🔵 iş</span>
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
+<div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~45 dakika</div>
 <div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 4.1-4.7 bitmiş; RAG'ın teknik katmanlarını anlıyorsun, kendi basit RAG'ini çalıştırabiliyorsun</div>
 <div class="ma-meta-row"><strong>🎯 Çıktı:</strong> Gerçek bir üretim RAG projesinin (HBV Kurban Chatbot, 2026) **ham gerçeklerini** görürsün — 18 dosya / 4K satır / 14 tablo / 46 endpoint yapısı, %87 test skoru, 4 kritik bug, 7 blocker. "Naif RAG" ile "production RAG" arasındaki mesafeyi rakamla bilirsin. Kendi projende benzer hataları **önceden** görürsün.</div>
 </div>
@@ -61,10 +62,10 @@ flowchart TB
   classDef kul fill:#ddd6fe,stroke:#7c3aed,color:#111
   classDef platform fill:#fed7aa,stroke:#ea580c,color:#111
   classDef kod fill:#dbeafe,stroke:#2563eb,color:#111
-  classDef llm fill:#fce7f3,stroke:#be185d,color:#111
+  classDef llm fill:#fef3c7,stroke:#ca8a04,color:#111
   classDef veri fill:#fef3c7,stroke:#ca8a04,color:#111
-  classDef db fill:#dcfce7,stroke:#16a34a,color:#111
-  classDef guv fill:#fecaca,stroke:#dc2626,color:#111
+  classDef db fill:#fef3c7,stroke:#ca8a04,color:#111
+  classDef guv fill:#fed7aa,stroke:#ea580c,color:#111
   class U kul
   class META platform
   class WB,EN,CS kod
@@ -223,7 +224,7 @@ HBV Chatbot **Anthropic'in önerdiği her şeyi** yapmıyor — çünkü gerçek
     **Bilgi bankası değişim yönetimi.** 16 MD dosya git altında. Pull request → code review (Kemal + vakıf yetkilisi) → main'e merge → pm2 restart. Dev ortamda preview sonra prod.
 
 <div class="ma-anthropic-oz-kaynak" markdown>
-**Kaynak:** [Anthropic — Building Effective Agents](https://www.anthropic.com/research/building-effective-agents) (EN, ~20 dk). Anthropic'in üretim AI ürünleri için "karmaşıklık ekleme" yerine "sadelik tutma" tezi. HBV kararlarıyla birebir örtüşür. **Pekiştirme:** [docs.claude.com — Prompt Caching best practices](https://docs.claude.com/en/docs/build-with-claude/prompt-caching) — HBV cache stratejisinin teorisi.
+**Kaynak:** [Anthropic — Building Effective Agents](https://www.anthropic.com/research/building-effective-agents) (EN, ~20 dk). Anthropic'in üretim AI ürünleri için "karmaşıklık ekleme" yerine "sadelik tutma" tezi. HBV kararlarıyla birebir örtüşür. **Pekiştirme:** [platform.claude.com/docs — Prompt Caching best practices](https://platform.claude.com/docs/en/docs/build-with-claude/prompt-caching) — HBV cache stratejisinin teorisi.
 </div>
 </div>
 
@@ -261,11 +262,13 @@ Dosya yolunu kaydet: `muhendisal-notlarim/bolum-4/08-production/preflight-link.t
 <div class="ma-neden-sonuc" markdown>
 <div class="ma-neden-sonuc-header">🔗 Birlikte okuma — neden ne oldu</div>
 
-- **A → B:** "20 satır naif RAG" ile "4000 satır üretim RAG" arasında **200 kat** fark var — çoğu state machine + hata yönetimi + veri modelinde.
-- **B → C:** Default değer (`TRUE vs FALSE`) = prompt'tan **çok daha belirleyici** — kod yapısı RAG'ın gerçek omurgası.
-- **C → D:** Tek "%80 accuracy" → kategorik kırılım → zayıf kategoride %60 gizli. Eval **kategorik olmazsa yanıltıcı**.
-- **D → E:** Maliyet + rate limit monitoring **teknik borç değil, temel sistem** — atlanınca üretim sessizce durur.
-- **E → F:** Solo geliştiricinin %50 zamanı **koordinasyonda** geçer (HBV'nin 7 blocker'ı = 5'i insan/organizasyon). Takvim kod için değil, iletişim için.
+<ol class="ma-neden-sonuc-zincir" markdown>
+<li>**A → B:** '20 satır naif RAG' ile '4000 satır üretim RAG' arasında **200 kat** fark var — çoğu state machine + hata yönetimi + veri modelinde. Bu yüzden **prototip ≠ üretim.**</li>
+<li>**B → C:** Default değer (TRUE vs FALSE) = prompt'tan **çok daha belirleyici** — kod yapısı RAG'ın gerçek omurgası. Bu yüzden **varsayılanlar en önemli kararlar.**</li>
+<li>**C → D:** Tek '%80 accuracy' → kategorik kırılım → zayıf kategoride %60 gizli. Eval **kategorik olmazsa yanıltıcı.** Bu yüzden **bütün ortalama yeter değil.**</li>
+<li>**D → E:** Maliyet + rate limit monitoring **teknik borç değil, temel sistem** — atlanınca üretim sessizce durur. Bu yüzden **monitoring baştan kurulur.**</li>
+<li>**E → F:** Solo geliştiricinin %50 zamanı **koordinasyonda** geçer (HBV'nin 7 blocker'ı = 5'i insan/organizasyon). Takvim kod için değil, iletişim için. Bu yüzden **teknik kapasite yetmez, organizasyonel kapasite şart.**</li>
+</ol>
 
 <div class="ma-neden-sonuc-sonuc" markdown>
 **Sonuç:** RAG'ın **çekirdeği** (4.1-4.7) ile **çevresi** (bu sayfa) ayrı dünyalar. Kitabi RAG özgün mühendislik becerisi, üretim RAG özgün mühendislik + tavizler + organizasyon. HBV vakası bu gerçeği **rakamla, tarihle, hatayla** gösterdi. Bölüm 4 tamamlandı. Bölüm 5'te "RAG vs Fine-tuning" karşılaştırmasına geçiyoruz; Bölüm 4'ün dersleri o tercihin zeminini kurdu.
