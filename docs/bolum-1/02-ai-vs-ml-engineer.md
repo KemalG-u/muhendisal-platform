@@ -7,6 +7,7 @@
 <span class="ma-persona ma-persona-is">🔵 iş</span>
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
+<div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~30 dakika</div>
 <div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 1.1 okundu (AI Engineer tanımı netleşti). Kod tecrübesi zorunlu değil — ayrımı anlamak için gerek yok.</div>
 <div class="ma-meta-row"><strong>🎯 Çıktı:</strong> Bir müşteri destek chatbot'u senaryosunda ML Engineer ve AI Engineer'ın hangi adımı yaptığını saat saat anlatabiliyorsun; iki rolün araç setleri, beceri ağırlığı, kariyer yolu ve maaş bandı arasındaki farkı kendi cümlelerinle ayırabiliyorsun; sen ikisinden hangisine daha yakınsın net.</div>
 </div>
@@ -38,23 +39,43 @@ Diyelim ki **BankaX** müşteri destek maliyetini düşürmek için bir chatbot 
 ```mermaid
 flowchart TB
     subgraph ML["🧪 ML Engineer işleri (hafta 1-8)"]
-        ML1["1. Geçmiş müşteri<br/>yazışmalarını topla<br/>(50K konuşma)"]
-        ML2["2. Veriyi etiketle<br/>(niyet sınıfları:<br/>bloke, borç, şifre)"]
-        ML3["3. Base model seç +<br/>fine-tune et<br/>(BERT-Turkish)"]
-        ML4["4. Model değerlendir<br/>(F1, recall, confusion)"]
-        ML5["5. Model versiyonlama<br/>+ teslim<br/>(MLflow / S3)"]
+        ML1["1. Geçmiş müşteri
+yazışmalarını topla
+(50K konuşma)"]
+        ML2["2. Veriyi etiketle
+(niyet sınıfları:
+bloke, borç, şifre)"]
+        ML3["3. Base model seç +
+fine-tune et
+(BERT-Turkish)"]
+        ML4["4. Model değerlendir
+(F1, recall, confusion)"]
+        ML5["5. Model versiyonlama
++ teslim
+(MLflow / S3)"]
     end
 
     subgraph AI["⚙️ AI Engineer işleri (hafta 6-12)"]
-        AI1["1. Claude API +<br/>fine-tuned model<br/>birlikte kullan"]
-        AI2["2. Prompt yaz<br/>sistem + kullanıcı<br/>talimatları"]
-        AI3["3. RAG kur:<br/>bankacılık FAQ +<br/>kurallar"]
-        AI4["4. FastAPI +<br/>Docker + deploy"]
-        AI5["5. Monitoring<br/>maliyet + log<br/>+ fallback"]
+        AI1["1. Claude API +
+fine-tuned model
+birlikte kullan"]
+        AI2["2. Prompt yaz
+sistem + kullanıcı
+talimatları"]
+        AI3["3. RAG kur:
+bankacılık FAQ +
+kurallar"]
+        AI4["4. FastAPI +
+Docker + deploy"]
+        AI5["5. Monitoring
+maliyet + log
++ fallback"]
     end
 
-    USER["👥 Müşteri<br/>'Kartım bloke'"]
-    PROD["🌐 Prod sistem<br/>bot.bankax.com"]
+    USER["👥 Müşteri
+'Kartım bloke'"]
+    PROD["🌐 Prod sistem
+bot.bankax.com"]
 
     ML1 --> ML2 --> ML3 --> ML4 --> ML5
     ML5 -.teslim.-> AI1
@@ -64,7 +85,7 @@ flowchart TB
 
     classDef ml fill:#fef3c7,stroke:#ca8a04,color:#111
     classDef ai fill:#dbeafe,stroke:#2563eb,color:#111
-    classDef usr fill:#dcfce7,stroke:#16a34a,color:#111
+    classDef usr fill:#fed7aa,stroke:#ea580c,color:#111
     class ML1,ML2,ML3,ML4,ML5 ml
     class AI1,AI2,AI3,AI4,AI5 ai
     class USER,PROD usr
@@ -300,13 +321,15 @@ Yukarıdaki 5 soruya kendi cevabını yaz (dosyana). Hangi role daha yakınsın?
 <div class="ma-neden-sonuc" markdown>
 <div class="ma-neden-sonuc-header">🔗 Birlikte okuma — neden ne oldu</div>
 
-- **A → B:** Tek cümlelik ayrım: ML model üretir, AI modeli ürüne çevirir.
-- **B → C:** BankaX senaryosu iki rolün 5+5 somut işini dakika dakika gösterir — soyut değil.
-- **C → D:** 12 boyutta karşılaştırma (dil, donanım, matematik, maaş, formal eğitim) — tablo kendi konumunu bulmayı kolaylaştırır.
-- **D → E:** 5-soru karar ağacı motivasyon tabanlı — korkuya değil, zevk ve ritim tercihine yaslanır.
-- **E → F:** 4 kariyer geçiş senaryosu (backend, frontend, data, sıfırdan) + ters yön (ML→AI) — her profile yol haritası.
-- **F → G:** 2026 maaş bantları neredeyse eşit; AI Engineer yükselişte.
-- **G → H:** MLOps gri alanı iki rolün kesişimi; bu platform Bölüm 9 ile o tarafa köprü atar.
+<ol class="ma-neden-sonuc-zincir" markdown>
+<li>**Tek cümlelik ayrım: ML model üretir, AI modeli ürüne çevirir.** Her şey bu cümleden çıkar. Bu yüzden **role özgü araç ve beceri seti ayrışır.**</li>
+<li>**BankaX senaryosu iki rolü somutlaştırır.** 5+5 iş dakika dakika gösterildi. Bu yüzden **soyut tanım yerine gerçek iş akışı görünür.**</li>
+<li>**12 boyutlu tablo karar kolaylaştırır.** Dil, donanım, matematik, maaş, formal eğitim. Bu yüzden **kendi konumunu tabloda bulabiliyorsun.**</li>
+<li>**Karar ağacı motivasyon tabanlıdır.** Korku değil, zevk ve ritim tercihine yaslanır. Bu yüzden **yanlış role giren kişi tükenir, doğru role giren ilerler.**</li>
+<li>**4 kariyer geçiş senaryosu her profile yol haritası verir.** Backend, frontend, data, sıfırdan. Bu yüzden **hangi geçmişten gelirsen gel, platforma giriş noktası net.**</li>
+<li>**2026 maaş bantları neredeyse eşit.** AI Engineer yükselişte; MCP + agent talebi büyüyor. Bu yüzden **maaş farkı karar kriteri olmaktan çıktı.**</li>
+<li>**MLOps iki rolün kesişimidir.** Bu platform Bölüm 9 ile o tarafa köprü atar. Bu yüzden **AI Engineer bitince MLOps'a geçiş 3-4 ay.**</li>
+</ol>
 
 <div class="ma-neden-sonuc-sonuc" markdown>
 **Sonuç:** "AI Engineer" ile "ML Engineer" birbirini tamamlayan iki rol. Sen birini seçtin mi — en azından şimdi — platformun geri kalanı daha anlamlı ilerler. **Bir sonraki:** 2026 ekosistem haritası — hangi modeller, hangi provider'lar, hangi lisanslar.

@@ -7,6 +7,7 @@
 <span class="ma-persona ma-persona-is">🔵 iş</span>
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
+<div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~30 dakika</div>
 <div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 1.1 okundu (AI Engineer tanımı içselleştirildi). 1.2 + 1.3 önerilir ama zorunlu değil.</div>
 <div class="ma-meta-row"><strong>🎯 Çıktı:</strong> Sen üç personadan (🟢 başlangıç / 🔵 iş / 🟣 kişisel) hangisi olduğuna net karar vermişsin; önündeki 6 haftalık plan yazılı; haftalık çıkış kriterleri ve portföy projesi somut.</div>
 </div>
@@ -47,7 +48,7 @@ flowchart TB
     T3 --> O3["📦 1-2 iç proje\n(kendi sorun odaklı)"]
 
     classDef q fill:#fef3c7,stroke:#ca8a04,color:#111
-    classDef p1 fill:#dcfce7,stroke:#16a34a,color:#111
+    classDef p1 fill:#fed7aa,stroke:#ea580c,color:#111
     classDef p2 fill:#dbeafe,stroke:#2563eb,color:#111
     classDef p3 fill:#ddd6fe,stroke:#7c3aed,color:#111
     class Q q
@@ -336,12 +337,14 @@ Eğer Bölüm 0'ı henüz geçmediysen şimdi [Bölüm 0'a](../bolum-0/index.md)
 <div class="ma-neden-sonuc" markdown>
 <div class="ma-neden-sonuc-header">🔗 Birlikte okuma — neden ne oldu</div>
 
-- **A → B:** 3 persona (🟢/🔵/🟣) farklı motivasyon + zaman + hedef demektir; genel plan yerine kişisel plan gerek.
-- **B → C:** 🟢 için 6 hafta = 1 canlı portföy; 🔵 için 6 hafta yoğun = 2 canlı portföy + LinkedIn; 🣣 için proje-odaklı zaman.
-- **C → D:** İş persona'sı için **LinkedIn haftalık ritüel** zorunlu — sessiz kalan aday görünmez.
-- **D → E:** Her persona için haftalık + aylık ritüel (pazartesi hedefle, pazar gözden geçir, ayda plan revize).
-- **E → F:** 8 klasik tuzak (perfektionizm, kur-bırak, burnout, karşılaştırma) önceden tanı → kaçınma yolu net.
-- **F → G:** Anthropic Academy persona'ya göre kurslar; platform + Academy iki yol birleşir.
+<ol class="ma-neden-sonuc-zincir" markdown>
+<li>**3 persona farklı motivasyon + zaman + hedef demektir.** Genel plan işe yaramaz. Bu yüzden **kişisel plan = platformu bitirmenin panzehiri.**</li>
+<li>**Her personanın 6 haftası farklıdır.** 🟢 1 portföy; 🔵 2 portföy + LinkedIn; 🟣 proje-odaklı. Bu yüzden **çıkış kriteri somut yazılmalı.**</li>
+<li>**İş persona'sı için LinkedIn ritüeli zorunludur.** Sessiz kalan aday görünmez. Bu yüzden **haftalık 1 içerik paylaşımı = kariyer yatırımı.**</li>
+<li>**Haftalık + aylık ritüel sürekliliği sağlar.** Pazartesi hedefle, pazar gözden geçir, ayda revize et. Bu yüzden **tempo sabit kalır, tükenme önlenir.**</li>
+<li>**8 klasik tuzak önceden tanındığında kaçınılabilir.** Perfektionizm, kur-bırak, burnout, karşılaştırma. Bu yüzden **tuzakları isimle bilmek yeterli uyarı.**</li>
+<li>**Anthropic Academy persona'ya göre kurslar sunar.** Platform + Academy iki yol birleşir. Bu yüzden **sertifika isteyen öğrenci ekstra kaynak bulur.**</li>
+</ol>
 
 <div class="ma-neden-sonuc-sonuc" markdown>
 **Sonuç:** Artık yazılı bir planın var. Persona seçildi, saatler ayrıldı, 6 haftalık hedef somut, portföy projeleri belirli. **Yola çıkıyoruz. Bölüm 0 hazırlık, Bölüm 2 ilk API çağrısı, Bölüm 9 canlı URL, Bölüm 10 iş başvuruları.**

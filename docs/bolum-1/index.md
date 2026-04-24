@@ -40,7 +40,7 @@ flowchart LR
 
   classDef user fill:#ddd6fe,stroke:#7c3aed,color:#111
   classDef page fill:#dbeafe,stroke:#2563eb,color:#111
-  classDef goal fill:#dcfce7,stroke:#16a34a,color:#111
+  classDef goal fill:#fef3c7,stroke:#ca8a04,color:#111
   classDef ext fill:#fed7aa,stroke:#ea580c,color:#111
   class S user
   class P11,P12,P13,P14 page

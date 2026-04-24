@@ -7,6 +7,7 @@
 <span class="ma-persona ma-persona-is">🔵 iş</span>
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
+<div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~35 dakika</div>
 <div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 1.1 + 1.2 okundu önerilir (AI Engineer tanımı + ML ayrımı). Teknik tecrübe zorunsuz.</div>
 <div class="ma-meta-row"><strong>🎯 Çıktı:</strong> 2026'da hangi şirketin hangi modeli sunduğunu biliyorsun; açık kaynak vs kapalı model ayrımını yapabiliyorsun; kendi projen için hangi modeli seçeceğine yön veren 5 kriteri kullanabiliyorsun; Türkiye'den ödeme/erişim/KVKK açısından ne işlediğini somut olarak biliyorsun.</div>
 </div>
@@ -62,8 +63,8 @@ flowchart TB
     LOCAL -.yok.-> O
     LOCAL -.yok.-> G
 
-    classDef closed fill:#fee2e2,stroke:#dc2626,color:#111
-    classDef open fill:#dcfce7,stroke:#16a34a,color:#111
+    classDef closed fill:#fed7aa,stroke:#ea580c,color:#111
+    classDef open fill:#fef3c7,stroke:#ca8a04,color:#111
     classDef user fill:#ddd6fe,stroke:#7c3aed,color:#111
     classDef route fill:#fef3c7,stroke:#ca8a04,color:#111
     class A,O,G closed
@@ -101,7 +102,7 @@ flowchart TB
 - En uzun dürüstlük refleksi ("emin değilim" der)
 - 200K token bağlam (≈500 sayfa) — RAG + uzun belge işlemede üstün
 - **MCP (Model Context Protocol)** — kendi çıkardığı protokol, endüstri standardı oldu
-- [Claude Code](https://docs.claude.com/en/docs/claude-code/overview) CLI + [Artifacts](https://www.anthropic.com/news/artifacts) özellikleri
+- [Claude Code](https://platform.claude.com/docs/en/docs/claude-code/overview) CLI + [Artifacts](https://www.anthropic.com/news/artifacts) özellikleri
 - Türkçe performansı çok iyi (bu platform o yüzden Türkçe)
 
 **Zayıf yönler:**
@@ -397,13 +398,15 @@ Sonraki: **kendi yolun, kendi planın.**
 <div class="ma-neden-sonuc" markdown>
 <div class="ma-neden-sonuc-header">🔗 Birlikte okuma — neden ne oldu</div>
 
-- **A → B:** 2026'da 5 büyük provider + 3 başlı açık kaynak var; tek cevap "ChatGPT" değil.
-- **B → C:** Kapalı (Anthropic/OpenAI/Google) vs Açık (Meta/DeepSeek/Qwen/Mistral) ayrımı başlangıç karar noktası.
-- **C → D:** 5 kriterli karar matrisi (gizlilik, bütçe, kalite, hız, donanım) proje başına doğru modeli gösterir.
-- **D → E:** 1000 çağrılık örnek — aynı iş $0 (lokal) ile $40 (Opus) arasında; seçim finansal.
-- **E → F:** Türkiye perspektifi (ödeme, gecikme, KVKK) seçimi bölgesel şekillendirir.
-- **F → G:** Anthropic-first 5 gerekçeyle meşru — MCP + uzun bağlam + Türkçe + Academy + ürün refleksi.
-- **G → H:** Sonraki adım: kendi projen için model seçimi (bu sayfada) + persona seçimi (1.4'te).
+<ol class="ma-neden-sonuc-zincir" markdown>
+<li>**2026'da 5 büyük provider + 3+ açık kaynak var.** Tek cevap "ChatGPT" değil. Bu yüzden **model seçimi projeye özel bir karar.**</li>
+<li>**Kapalı vs Açık ayrımı başlangıç kararı.** Anthropic/OpenAI/Google API-only; Llama/Qwen kendi makinende. Bu yüzden **gizlilik veya bütçe kısıtı seçimi doğrudan şekillendirir.**</li>
+<li>**5 kriterli karar matrisi proje odaklı.** Gizlilik, bütçe, kalite, hız, donanım. Bu yüzden **her proje için hangi modelin uygun olduğu sistematik oturur.**</li>
+<li>**1000 çağrılık maliyet $0 ile $40 arasında değişir.** Aynı iş için model seçimi finansal. Bu yüzden **bütçe hesabı projenin başında yapılır.**</li>
+<li>**Türkiye perspektifi seçimi şekillendirir.** Ödeme yöntemi, gecikme, KVKK. Bu yüzden **Türkiye'den geliştiren için bölgesel kısıtlar karar faktörü.**</li>
+<li>**Anthropic-first 5 gerekçeyle meşru.** MCP + uzun bağlam + Türkçe + Academy + ürün refleksi. Bu yüzden **bu platform Claude-öncelikli pedagoji ile yürür.**</li>
+<li>**Sonraki adım kişisel model seçimi.** Bu sayfanın matrisi + 1.4'ün persona planı birleşince somut yol çıkar. Bu yüzden **1.4'ü bitirmeden Bölüm 2'ye geçme.**</li>
+</ol>
 
 <div class="ma-neden-sonuc-sonuc" markdown>
 **Sonuç:** AI ekosistemi net görünür oldu; hangi provider ne sunuyor, senin projen hangisine oturur biliyorsun. 1.4'te bu bilgi plan haline dönüşecek.

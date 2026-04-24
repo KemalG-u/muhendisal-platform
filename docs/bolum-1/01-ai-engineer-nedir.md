@@ -7,6 +7,7 @@
 <span class="ma-persona ma-persona-is">🔵 iş</span>
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
+<div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~20 dakika</div>
 <div class="ma-meta-row"><strong>📋 Önkoşul:</strong> Yok. Kod bilmesen de, İngilizcen yetersizse de bu sayfa seninle konuşur. Bir bilgisayar + internet yeter.</div>
 <div class="ma-meta-row"><strong>🎯 Çıktı:</strong> "AI Engineer" teriminin 2026'da ne demek olduğunu kendi cümlelerinle anlatabiliyorsun; sen bu yoldan ilerlemek istiyor musun, buna net cevap verebiliyorsun; kod/İngilizce eksiğinle bu platformu bitirebilir misin sorusuna rakamlı yanıtın var.</div>
 </div>
@@ -63,7 +64,7 @@ flowchart LR
     classDef you fill:#ddd6fe,stroke:#7c3aed,color:#111
     classDef text fill:#fef3c7,stroke:#ca8a04,color:#111
     classDef code fill:#dbeafe,stroke:#2563eb,color:#111
-    classDef deploy fill:#dcfce7,stroke:#16a34a,color:#111
+    classDef deploy fill:#fef3c7,stroke:#ca8a04,color:#111
     classDef user fill:#fed7aa,stroke:#ea580c,color:#111
     class AE you
     class PR,RAG text
@@ -260,13 +261,15 @@ Kanıt: dosya + ekran görüntüsü (Console dashboard).
 <div class="ma-neden-sonuc" markdown>
 <div class="ma-neden-sonuc-header">🔗 Birlikte okuma — neden ne oldu</div>
 
-- **A → B:** AI Engineer 2023 sonrası ortaya çıkan bir rol; model eğitmez, entegre eder.
-- **B → C:** Günlük iş 4 katmandan oluşur (prompt + API + RAG/agent + deploy) — bu platform sırayla öğretir.
-- **C → D:** Rol ML Engineer'dan farklıdır (eğitmek değil kullanmak); matematik hafif, mühendislik ağır.
-- **D → E:** 2026'da iş ilanlarının %95'i Python + LLM prompt bekler; RAG/deploy/Git yetkinlikleri hızla yükseliyor.
-- **E → F:** Portföyde 3 kanıt gerek: canlı URL + agent/otomasyon + temiz GitHub repo. Platform bu üçünü üretir.
-- **F → G:** 6 ay günde 45 dk = gerçekçi hedef. "3 günde" yalan, "3 yılda" gereksiz.
-- **G → H:** Claude-first seçimi MCP protokolü + dürüstlük refleksi + Academy köprüleri nedeniyle.
+<ol class="ma-neden-sonuc-zincir" markdown>
+<li>**AI Engineer 2023 sonrası ortaya çıktı.** Model eğitmez; önceden eğitilmiş modeli entegre eder. Bu yüzden **6-12 ayda ulaşılabilir bir rol.**</li>
+<li>**Günlük iş 4 katmandan oluşur.** Prompt + API + RAG/agent + deploy — bu platform sırayla öğretir. Bu yüzden **her bölüm bir katmanı verir.**</li>
+<li>**ML Engineer'dan farkı nettir.** ML eğitir, AI kullanır; matematik hafif, mühendislik ağır. Bu yüzden **bu platform matematik öğretmez, entegrasyon öğretir.**</li>
+<li>**İş ilanlarının %95'i Python + LLM prompt bekler.** RAG/deploy/Git hızla yükseliyor. Bu yüzden **platform bu beş yetkinliği sırayla verir.**</li>
+<li>**Portföyde 3 kanıt gerek.** Canlı URL + agent/otomasyon + temiz GitHub repo. Bu yüzden **her bölümde 1 proje disiplini şart.**</li>
+<li>**6 ay günde 45 dk = gerçekçi hedef.** "3 günde" yalan, "3 yılda" gereksiz. Bu yüzden **tempo düşürülse de süreklilik kesilmez.**</li>
+<li>**Claude-first seçimi nedeni:** MCP + uzun bağlam + Türkçe + Academy + ürün refleksi. Bu yüzden **platform Anthropic-öncelikli pedagoji ile yürür.**</li>
+</ol>
 
 <div class="ma-neden-sonuc-sonuc" markdown>
 **Sonuç:** "AI Engineer nedir" sorusunun cevabı artık belirsiz değil. Sen bu platformu okuyarak — kod ve İngilizce sıfır bile olsa — 6 ay boyunca disiplinle ilerlersen, Bölüm 10'da somut portföy elinde. **Yolun başındasın, haritan var.**
