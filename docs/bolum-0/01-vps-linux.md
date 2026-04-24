@@ -7,12 +7,13 @@
 <span class="ma-persona ma-persona-is">🔵 iş</span>
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
+<div class="ma-meta-row"><strong>⏱️ Süre:</strong> 60–90 dakika (VPS kurulumu + 15 komut pratiği + çıktı kanıtı)</div>
 <div class="ma-meta-row"><strong>📋 Önkoşul:</strong> Yok — sıfırdan başlıyorsun. Bilgisayarında bir terminal uygulaması olması yeter (Mac/Linux'ta hazır; Windows için [Windows Terminal](https://aka.ms/terminal) indirmen gerek)</div>
 <div class="ma-meta-row"><strong>🎯 Çıktı:</strong> Bir VPS'e **SSH ile bağlanırsın**; **15 temel Linux komutunu** kendi cümlelerinle anlatabilirsin; bir dosya oluşturur, içine yazı yazar, kaydeder, görüntülersin; `systemctl status` ile canlı bir servisin durumunu sorgulayabilirsin.</div>
 </div>
 
 !!! tip "Yabancı kelime mi gördün?"
-    Bu sayfadaki **italik-altı çizili** ifadelerin (SSH, shell, systemd gibi) üstüne mouse'unu getir — kısa tanım çıkar. Mobilde dokun.
+    Bu sayfadaki **kalın** teknik terimler (SSH, shell, systemd gibi) ilk geçişte hemen yanında veya altında Türkçe açıklanır.
 
 ## Neden bu sayfa?
 
@@ -51,15 +52,13 @@ flowchart LR
   SVC -.log.-> SHELL
 
   classDef usr fill:#ddd6fe,stroke:#7c3aed,color:#111
-  classDef net fill:#fef3c7,stroke:#ca8a04,color:#111
   classDef srv fill:#fed7aa,stroke:#ea580c,color:#111
   classDef sys fill:#dbeafe,stroke:#2563eb,color:#111
-  classDef hed fill:#dcfce7,stroke:#16a34a,color:#111
   class USR usr
-  class SSH net
+  class SSH sys
   class VPS,PROC srv
   class SHELL,FS sys
-  class SVC hed
+  class SVC srv
 ```
 
 <table class="ma-aktorler" markdown>
@@ -71,7 +70,7 @@ flowchart LR
 | 🖥️ **VPS** | Hetzner/DO/AWS data center | Her zaman açık Linux makinesi, Ubuntu 24.04 LTS gibi |
 | ⚡ **bash shell** | VPS'te seni karşılar | Komut satırı — senin yazdığın her satırı çalıştırır |
 | 📁 **Dosya sistemi** | `/home`, `/etc`, `/var` gibi klasörler | Her şey dosya — config, log, uygulama, kod hepsi |
-| ⚙️ **systemd** | init system (PID 1) | Servisleri başlatır, durdurur, izler, log'lar |
+| ⚙️ **systemd** | init system (PID 1 — Linux'un ilk ve ana süreç yöneticisi) | Servisleri başlatır, durdurur, izler, log'lar |
 | 🚀 **Servisler** | `nginx`, `postgres`, `clawdbot-mcp` vb. | AI botların, API'ler, veritabanları — 7/24 çalışır |
 
 </table>
@@ -82,7 +81,7 @@ flowchart LR
 ### Yol A — Hetzner VPS al + SSH bağlan (15 dakika, ~$5/ay)
 
 1. [hetzner.com/cloud](https://www.hetzner.com/cloud) → hesap aç (kart lazım)
-2. "New project" → "Create server" → **CX22** (€4.51/ay) veya **CPX11** (~€4.99/ay) seç
+2. "New project" → "Create server" → **CX22** (2 vCPU, 4 GB RAM, ~€3.79/ay — bu kurs için yeter) seç
 3. OS: **Ubuntu 24.04 LTS**, lokasyon: **Helsinki** (veya Nuremberg — AB içi, KVKK dostu)
 4. **SSH Key** bölümü: Yeni anahtar ekle:
 
@@ -104,10 +103,10 @@ flowchart LR
 
    ```bash
    ssh root@95.217.x.x
-   # "yes" yaz (ilk bağlantıda), Enter
+   # Şu çıkar: "Are you sure you want to continue connecting (yes/no/[fingerprint])?" → yes yaz
    ```
 
-7. Prompt değişir: `root@ubuntu-8gb:~#` — **içerideisin.** Senin bilgisayarın gibi komut yazabilirsin.
+7. Prompt değişir: `root@ubuntu-8gb:~#` — **İçeridesin.** Senin bilgisayarın gibi komut yazabilirsin.
 
 **Burada olan nedir (diyagram referansı):** Diyagramın **sol yarısı** tamamlandı. `👤 Sen` → `🔐 SSH` → `🖥️ VPS` → `⚡ bash shell` zinciri kuruldu. Şimdi Yol B'de **sağ yarıya** (dosya sistemi + systemd) geçelim.
 
@@ -185,7 +184,7 @@ journalctl -u nginx -n 50     # son 50 log satırı
 
 # --- 15. İnternet erişim kontrol ---
 curl https://api.anthropic.com # cevap döner mi?
-curl -I https://wiki.oluk.org  # sadece HTTP header
+curl -I https://api.anthropic.com  # sadece HTTP header
 ping 8.8.8.8                  # ping (Ctrl+C ile dur)
 ```
 
@@ -197,7 +196,7 @@ ping 8.8.8.8                  # ping (Ctrl+C ile dur)
 |---|---|---|
 | `Permission denied (publickey)` | SSH key yanlış | `~/.ssh/id_ed25519.pub`'u Hetzner panelden tekrar ekle |
 | `bash: komut: command not found` | Paket kurulu değil | `apt install paket-adı` veya `sudo apt install ...` |
-| `rm -rf /` komutunu çalıştırdın | Tüm sistem silindi 💀 | Yeniden VPS kur — bu geri alınamaz |
+| `rm -rf /yanlış/yol` komutu girdin | Yanlış yol silinir, geri dönüş yok | Komutu yazmadan önce yolu iki kez kontrol et; `rm` öncesi `ls` ile doğrula |
 | Terminal'den çıkınca bot durdu | Terminal process'leri kapatıyor | `systemd` servisi veya `pm2`/`tmux`/`nohup` kullan |
 | `Disk full` | `/var/log` şişmiş | `journalctl --vacuum-time=7d` + `docker system prune` |
 
@@ -206,7 +205,7 @@ ping 8.8.8.8                  # ping (Ctrl+C ile dur)
 
 Anthropic Linux/VPS konusunu **doğrudan öğretmez** (OS-bağımsız bir AI firması) ama ekosistemi Linux üzerinde yaşar:
 
-**1. Claude Code SSH ile VPS'te çalışır.** [docs.claude.com/en/docs/claude-code/overview](https://docs.claude.com/en/docs/claude-code/overview) — Claude Code'u VPS'te kurarsan, herhangi bir yerden SSH ile bağlanıp AI destekli kod yazabilirsin. Bu sayfadaki SSH bağlantı disiplini Bölüm 6 agent'larının önkoşulu.
+**1. Claude Code SSH ile VPS'te çalışır.** [code.claude.com/docs/en/overview](https://code.claude.com/docs/en/overview) — Claude Code'u VPS'te kurarsan, herhangi bir yerden SSH ile bağlanıp AI destekli kod yazabilirsin. Bu sayfadaki SSH bağlantı disiplini Bölüm 6 agent'larının önkoşulu.
 
 **2. Anthropic API'ye Linux curl ile "hello world".** Anthropic API dokümanının ilk örneği curl: `curl https://api.anthropic.com/v1/messages -H "x-api-key: $API_KEY" ...`. Bu komutu VPS'te çalıştırabilmek için önce VPS'in ne olduğunu bilmek lazım.
 
@@ -229,7 +228,7 @@ Anthropic Linux/VPS konusunu **doğrudan öğretmez** (OS-bağımsız bir AI fir
     **Disk monitoring.** `df -h` disk doluluk; `du -sh /path` klasör boyutu; `ncdu /path` interaktif görünüm (önce `apt install ncdu`). Disk %90+ dolarsa servis kasar.
 
 <div class="ma-anthropic-oz-kaynak" markdown>
-**Kaynak:** [docs.claude.com — Claude Code overview](https://docs.claude.com/en/docs/claude-code/overview) (EN, ~10 dk). VPS + Linux + Claude Code'un birlikte kullanımı burada. Genel Linux öğrenimi için: [The Missing Semester](https://missing.csail.mit.edu) — MIT'nin ücretsiz 11 dersi, 2.sınıf öğrencilerine verilen shell/git/terminal pratik kursu. Pekiştirme için en iyi kaynak.
+**Kaynak:** [code.claude.com — Claude Code overview](https://code.claude.com/docs/en/overview) (EN, ~10 dk). VPS + Linux + Claude Code'un birlikte kullanımı burada. Genel Linux öğrenimi için: [The Missing Semester](https://missing.csail.mit.edu) — MIT'nin ücretsiz 9 dersi, 2.sınıf öğrencilerine verilen shell/git/terminal pratik kursu. Pekiştirme için en iyi kaynak.
 </div>
 </div>
 
@@ -283,5 +282,5 @@ Kaydet: `muhendisal-notlarim/bolum-0/01-vps-linux/ilk-vps-gist.txt`
 
 ← [Bölüm 0 girişi](index.md) &nbsp;|&nbsp; [Ana sayfa](../index.md)
 
-**Pekiştirme:** [missing.csail.mit.edu](https://missing.csail.mit.edu) — MIT'nin "The Missing Semester" dersi. Ders 1 (Course overview + the shell) ve Ders 4 (Data Wrangling) — iki saatte seni shell ustası yapar. VPS'te pratik yaparken kaynak olarak aç.
+**Pekiştirme:** [missing.csail.mit.edu](https://missing.csail.mit.edu) — MIT'nin "The Missing Semester" dersi. Shell, Vim, Data Wrangling ve Git dersleri — toplam 4 saat ile güçlü bir VPS disiplini kazanırsın. VPS'te pratik yaparken kaynak olarak aç.
 </div>
