@@ -14,6 +14,69 @@
 !!! tip "Yabancı kelime mi gördün?"
     **Prompt injection** = kullanıcı input'u içine gizlenen komut; LLM'i sistem prompt'tan saptırır. **Jailbreak** = LLM'in güvenlik kurallarını bypass etmek. **PII** (Personally Identifiable Information) = kişisel kimlik verisi; TC kimlik, email, telefon, adres. **Sanitization** = input'u temizleme/doğrulama. **OWASP** = web güvenliği standart kurumu; LLM için ayrı Top 10 listesi çıkardı. **Red team** = saldırgan gibi davranan test ekibi.
 
+## Bu sayfanın ekosistemi — saldırı yüzeyi
+
+<div class="ma-ekosistem" markdown>
+<div class="ma-ekosistem-header">🗺️ Ekosistem — tehdit aktörleri + savunma hatları</div>
+
+```mermaid
+flowchart LR
+    ATK["🎭 Saldırgan\n(kötü niyetli user)"]
+    NORMAL["👤 Normal kullanıcı\n(iyi niyetli)"]
+
+    subgraph SAVUNMA["Savunma hatları"]
+        VAL["✅ Input validation\n(len + regex)"]
+        GUARD["🛡️ Guardrail\n(Haiku filter)"]
+        RATE["⏱️ Rate limit\n(IP + key)"]
+    end
+
+    APP["🌐 Uygulaman\nFastAPI / Next.js"]
+    CLAUDE["🧠 Claude\n(Constitutional AI)"]
+    LOG["📊 Log + trace\n(audit trail)"]
+    DB[("💾 PII / secret\nveritabanı")]
+
+    ATK -->|"prompt injection\ndata exfil\nXSS payload"| APP
+    NORMAL -->|"gerçek istek"| APP
+    APP --> VAL
+    VAL -->|"temiz"| GUARD
+    GUARD -->|"zararsız"| RATE
+    RATE -->|"kota içi"| CLAUDE
+    CLAUDE -->|"yanıt"| APP
+    APP -->|"sanitize edilmiş"| NORMAL
+    APP -.->|"her istek"| LOG
+    CLAUDE -.->|"tool call"| DB
+    DB -.->|"log"| LOG
+
+    style ATK fill:#fecaca,stroke:#dc2626
+    style NORMAL fill:#ddd6fe,stroke:#7c3aed
+    style APP fill:#dbeafe,stroke:#2563eb
+    style VAL fill:#dcfce7,stroke:#16a34a
+    style GUARD fill:#dcfce7,stroke:#16a34a
+    style RATE fill:#dcfce7,stroke:#16a34a
+    style CLAUDE fill:#fed7aa,stroke:#ea580c
+    style LOG fill:#fef3c7,stroke:#ca8a04
+    style DB fill:#fef3c7,stroke:#ca8a04
+```
+
+</div>
+
+<table class="ma-aktorler" markdown>
+
+| Aktör | Rol | Tehdit boyutu |
+|---|---|---|
+| 🎭 Saldırgan | Prompt injection, PII exfil, output XSS, fatura saldırısı | OWASP LLM01-10 |
+| 👤 Normal kullanıcı | Gerçek iş yapar — yanlış pozitiflerden etkilenmesin | UX zarar görmesin |
+| ✅ Input validation | Uzunluk, karakter set, regex — en ucuz savunma | LLM01 + LLM05 |
+| 🛡️ Guardrail (Haiku) | Zararlı niyet tespiti — düşük maliyet LLM filter | LLM01 + LLM02 |
+| ⏱️ Rate limit | IP/key bazlı kota — fatura şoku engeli | LLM10 |
+| 🧠 Claude + CAI | Constitutional AI built-in güvenlik — ek güvence | temel savunma |
+| 📊 Log + trace | Her istek/yanıt + tool çağrısı — post-mortem + forensic | hepsi |
+| 💾 PII / secret DB | Claude tool call ile erişebilir — **en kritik korunan** | LLM02 + LLM06 |
+
+</table>
+
+**Burada olan nedir:** Tehdit yüzeyi 3 katmanlı — (1) giriş (validation + guardrail), (2) model (CAI), (3) çıkış (sanitize + log). Her katman %100 değil ama üçü birlikte **savunma derinliği (defense-in-depth)**. En kritik varlık: **PII/secret DB**, Claude tool call ile erişebildiği için özel izin + denetim gerek.
+
 ## 3 gerçek vaka — "bende olmaz" yanılgısı
 
 Aşağıdakiler kurgu değil. 2024-2025'te gerçekleşmiş, kamuya açık olaylar:

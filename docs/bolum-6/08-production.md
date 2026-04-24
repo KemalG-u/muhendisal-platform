@@ -41,7 +41,10 @@ Gerçekçi bir iş senaryosu: bir blog sahibi / topluluk yöneticisi / araştır
 
 **4/5 sinyal aktif → multi-agent doğru seçim.** HBV chatbot'u (4.8) ile zıtlık: HBV'de 5/5 workflow sinyali (state machine, sabit adım, ucuz LLM yeter) → deterministic workflow doğruydu.
 
-## Mimari — 4 modül + DB + orchestrator
+## Bu sayfanın ekosistemi — 4 modül + DB + orchestrator
+
+<div class="ma-ekosistem" markdown>
+<div class="ma-ekosistem-header">🗺️ Ekosistem — içerik özet pipeline mimarisi</div>
 
 ```mermaid
 flowchart LR
@@ -72,6 +75,8 @@ flowchart LR
     class RPT out
     class DB data
 ```
+
+</div>
 
 <table class="ma-aktorler" markdown>
 

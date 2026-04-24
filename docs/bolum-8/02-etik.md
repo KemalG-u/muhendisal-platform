@@ -22,6 +22,68 @@
 
 Üçüncüsü: **Üretken içerik etiketlemesi** hızlı değişiyor. 2026'da çoğu ülke "AI üretti" beyanını zorunlu kılmaya başladı. LinkedIn, X, GPT-Store platformları otomatik etiketleme yapıyor. Kendi projenin bu uyuma nasıl girdiğini bilmen gerek. Uyumsuzluk = platform ban, marka zararı.
 
+## Bu sayfanın ekosistemi
+
+<div class="ma-ekosistem" markdown>
+<div class="ma-ekosistem-header">🗺️ Ekosistem — etik sorumluluk zinciri</div>
+
+```mermaid
+flowchart LR
+    USER["👤 Son kullanıcı\n(etkilenen)"]
+    DEV["👨‍💻 Sen\n(AI Engineer)"]
+    COMP["🏢 Şirket\n(data controller)"]
+
+    subgraph MODEL["Model zinciri"]
+        ANT["🟠 Anthropic\n(CAI + safety)"]
+        DATA["📄 Eğitim verisi\n(varsayılan bias)"]
+    end
+
+    subgraph REG["Düzenleyici"]
+        EU["🇪🇺 AI Act\n(risk kategorisi)"]
+        KVKK["🇹🇷 KVKK\n(PII + açık rıza)"]
+        AUDIT["🔍 Denetçi\n(post-hoc)"]
+    end
+
+    DATA --> ANT
+    ANT -->|"Claude API"| DEV
+    DEV -->|"sistem prompt\n+ tool config"| COMP
+    COMP -->|"ürün"| USER
+    USER -->|"veri (PII)"| COMP
+    COMP -.->|"transparency"| USER
+    EU -.->|"uyum zorunlu"| COMP
+    KVKK -.->|"PII kuralı"| COMP
+    AUDIT -.->|"ex-post denetim"| COMP
+    AUDIT -.->|"model kartı"| ANT
+
+    style USER fill:#ddd6fe,stroke:#7c3aed
+    style DEV fill:#ddd6fe,stroke:#7c3aed
+    style COMP fill:#dbeafe,stroke:#2563eb
+    style ANT fill:#fed7aa,stroke:#ea580c
+    style DATA fill:#fed7aa,stroke:#ea580c
+    style EU fill:#fef3c7,stroke:#ca8a04
+    style KVKK fill:#fef3c7,stroke:#ca8a04
+    style AUDIT fill:#fef3c7,stroke:#ca8a04
+```
+
+</div>
+
+<table class="ma-aktorler" markdown>
+
+| Aktör | Rol | Sorumluluk |
+|---|---|---|
+| 👤 Son kullanıcı | AI çıktısından doğrudan etkilenen | Şeffaflık + itiraz hakkı |
+| 👨‍💻 Sen (AI Engineer) | Sistem prompt, tool config, bias testi, log | **Bireysel etik filter** |
+| 🏢 Şirket | Data controller — KVKK/GDPR karşısında hukuki sahip | Uyum zorunluluğu |
+| 🟠 Anthropic | Model sağlayıcı — CAI + Usage Policy + transparency hub | Model kartı + safety research |
+| 📄 Eğitim verisi | Varsayılan bias + temsil sorunu (cinsiyet/ırk/dil) | Anthropic'in ayıklaması |
+| 🇪🇺 AI Act | 4 risk kategorisi (yasak/high/limited/minimal) | Şubat 2025+ yürürlük |
+| 🇹🇷 KVKK | PII işleme + açık rıza + veri lokalizasyonu | Türk şirket için baz |
+| 🔍 Denetçi | Ex-post audit — incident sonrası inceleme | Model + şirket ikisi |
+
+</table>
+
+**Burada olan nedir:** Etik sorumluluk **ortak ama orantısız** — son kullanıcı zarar görür, şirket hukuken cevap verir, sen pratik karar alırsın, Anthropic model seviyesi savunma koyar, düzenleyici dışarıdan denetler. Kritik nokta: sen **kişisel olarak** filtre rolündesin — "bu prompt etik mi, bu tool call güvenli mi" kararları platform seviyesi değil, senin kodunda olur.
+
 ## Bias — 3 somut tür
 
 ### Tür 1 — Dil önyargısı

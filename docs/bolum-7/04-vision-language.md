@@ -291,6 +291,24 @@ response = client.messages.create(
 
 **Trend:** Açık ağırlık VLM'ler kapalı olanlara **3-6 ay gecikmeli** ama hızla yaklaşıyor. 2027'de açık kaynak %90 kalite seviyesi bekleniyor.
 
+<div class="ma-anthropic-oz" markdown>
+<div class="ma-anthropic-oz-header">📖 Anthropic bu konuyu nasıl anlatıyor — öz</div>
+
+Anthropic Model Overview + Claude Sonnet 4.6 System Card + Vision dokümanı vision-language konumlandırmasını 4 madde altında çerçeveliyor:
+
+**1. Vision "ayrı model" değil, Sonnet/Opus'un yerleşik kapasitesi.** GPT-4V veya Gemini Vision gibi ayrı bir "vision model" yok — Claude Sonnet 4.6 ve Opus 4.7 metin + image'i aynı çağrıda alır. Tek model + tek API + tek fiyat. Bu Claude vision'ı **entegrasyon kolaylığı** açısından fark ettiriyor.
+
+**2. Belge + tablo + grafik Claude'un güçlü yanı.** DocVQA (94%), ChartQA (88%) gibi belge-ağırlıklı benchmark'larda Claude rakiplerine eşit veya üstünde. Anthropic system card'ı bunu **enterprise kullanım** için işaret ediyor — fatura, sözleşme, rapor analizi senaryoları hedef.
+
+**3. Computer use — vision + agent birleşimi.** Claude 4 ailesinden beri "computer use" beta modu var: ekran görüntüsü → Claude karar → mouse/keyboard komutu → tekrar ekran görüntüsü. Vision burada **agent gözü** — sadece içerik anlama değil, GUI etkileşimi için zorunlu girdi. Bu Gemini veya GPT'de yok (en azından standart API'de).
+
+**4. Açık kaynak alternatifleri ciddi ama niş.** Qwen2-VL 72B ve LLaVA-Med gibi açık kaynak vision modelleri Claude'a yaklaşıyor; Anthropic bu gerçeği cookbook'un third_party klasöründe zımnen kabul ediyor. Anthropic'in pozisyonu: **"Claude'u seç çünkü reasoning + vision + tool use tek pakette; açık kaynak seç çünkü ucuz ve customizable"** — iki ayrı optimizasyon problemi.
+
+<div class="ma-anthropic-oz-kaynak" markdown>
+**Kaynak:** [docs.claude.com — Models Overview](https://docs.claude.com/en/docs/about-claude/models/overview) (EN, ~10 dk) + [Claude Sonnet 4.5 System Card](https://www.anthropic.com/claude-sonnet-4-5-system-card) (PDF, EN, ~40 sayfa, vision benchmark sayısal veriler).
+</div>
+</div>
+
 ## 9.6 İMZA için hazırlık
 
 Bu sayfa Bölüm 7'nin **kavramsal imza**sı. **Pratik imza** 9.6 **Multimodal Proje** (31. tur). Oraya giriş olarak sen kendi seçimini yap:

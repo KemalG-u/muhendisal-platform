@@ -210,7 +210,21 @@ Bölüm 10 (Proje Bitişi) — **tam bir mini-proje kılavuzu**.
 - Çıktı kanıtı **tek seçenek** (canlı deploy URL)
 - Neden-sonuç zinciri tüm kurs boyunca öğrenilenleri toplar
 
-### Tip D — Referans/Sözlük Sayfaları (varsa)
+### Tip E — Kariyer / Meta Sayfaları (Bölüm 10 sosyal odaklı)
+
+Bölüm 10'un bazı sayfaları **teknik aktör ekosistemine değil sosyal süreçlere** odaklı: LinkedIn stratejisi, mülakat hazırlığı, açık kaynak katkı süreci, topluluk + haftalık öğrenme düzeni. Bu sayfalarda "kullanıcı–servis–API" tarzı ekosistem diyagramı **pedagojik değeri düşük**, zorlanmış görünür.
+
+**Uygulanan sayfalar (4):** `10/01-linkedin.md`, `10/02-mulakat.md`, `10/03-acik-kaynak.md`, `10/05-topluluk.md`
+
+**Farklılıklar:**
+- Ekosistem diyagramı **opsiyonel** (teknik aktör çıkarılamıyorsa yaz**ma**, zorlama görünür)
+- Bunun yerine **süreç zaman çizelgesi** veya **haftalık ritim tablosu** kabul edilir
+- Aktör tablosu formatı da gevşer — "rol + ne yap + ne zaman" kolonları (zaman odaklı)
+- Anthropic öz, neden-sonuç, **çıktı kanıtı**, sonraki adım **zorunlu** kalır (diğer kurallar) — sosyal sayfalarda bile somut çıktı dosyası üretilir (örn. `mulakat-hazirlik/cevaplar.md` + `star.md` + `tanitim.md`)
+
+**Not:** `10/04-ileri-konular.md` ve `10/06-platform-kapanisi.md` bu istisnaya **girmez** — içerikleri teknik aktör içerir (trendler, imza proje özeti).
+
+### Tip F — Referans/Sözlük Sayfaları (varsa)
 
 Terim sözlüğü, komut referansı gibi statik referanslar. 64 sayfanın parçası değil ama gerekirse eklenecek.
 

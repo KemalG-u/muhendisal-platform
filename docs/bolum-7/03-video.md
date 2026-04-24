@@ -478,6 +478,24 @@ for frame, sozlu in aligned:
 | 7 | Güvenlik kamera KVKK | Hukuki ceza | Kayıt izni + yüz maskeleme |
 | 8 | Prompt caching yok | 10× fatura | System prompt cache_control |
 
+<div class="ma-anthropic-oz" markdown>
+<div class="ma-anthropic-oz-header">📖 Anthropic bu konuyu nasıl anlatıyor — öz</div>
+
+Anthropic Vision dokümantasyonu ve multimodal kullanım kılavuzu video'yu şöyle ele alır:
+
+**1. Native video yok, frame-based yaklaşım resmi öneri.** Claude Messages API doğrudan video kabul etmez. Anthropic resmi öneri: **frame'lere ayır (ffmpeg), her frame'i ayrı image block olarak gönder**. Bir video içeriğini "N adet image + metadata" olarak Claude'a sunuyorsun. Anthropic cookbook'ta bu desen örneklendi.
+
+**2. Frame frekansı kullanım senaryosuna bağlı.** Hareket ağırlıklı içerik için 1-2 FPS yeter (spor, trafik). Slayt/belge içerikli video için 0.2-0.5 FPS (her 2-5 saniyede bir frame) — çünkü aynı görsel çoğu frame'de tekrarlı, token israfı. Claude token sayacı her frame'i ayrı fatura der; frame stratejisi maliyetin %80'ini belirler.
+
+**3. Audio ayrı bir pipeline — Whisper + Claude + resenkron.** Video'nun ses kısmı 7.2'deki pipeline (Whisper transcript). Claude hem frame'leri hem transcript'i aynı mesajda alabilir; Anthropic bu multimodal birleşimi "video understanding" senaryosu olarak cookbook multimodal klasöründe gösteriyor.
+
+**4. Native video desteği yol haritası belirsiz.** Anthropic News'te 2025-2026 boyunca native video endpoint'i için somut açıklama yok. Gemini'nin video kabul etmesi tercih değil — Anthropic reasoning odaklı kalmayı seçti. Bu yüzden frame-based desen **kısa-orta vadede kalıcı**.
+
+<div class="ma-anthropic-oz-kaynak" markdown>
+**Kaynak:** [docs.claude.com — Vision](https://docs.claude.com/en/docs/build-with-claude/vision) (EN, ~12 dk) + [Anthropic Cookbook — multimodal](https://github.com/anthropics/claude-cookbooks/tree/main/multimodal) (Jupyter, EN). Image block yapısı + batch frame pattern örnekleri.
+</div>
+</div>
+
 ## Anthropic video geleceği
 
 **2026 Nisan durum:** Claude native video API yok. Frame-based pattern standart.

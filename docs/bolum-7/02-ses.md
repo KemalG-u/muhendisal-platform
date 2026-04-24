@@ -428,6 +428,24 @@ ffmpeg -i telefon.mp3 -ar 16000 -ac 1 -af "highpass=f=200,lowpass=f=3000" temiz.
 | 7 | Fatura alarm yok | 2 saatlik demo $50 | Hard cap + monitoring |
 | 8 | Gizlilik (KVKK) düşünülmemiş | Kullanıcı ses kayıt onaysız | Açık rıza + ses silme policy |
 
+<div class="ma-anthropic-oz" markdown>
+<div class="ma-anthropic-oz-header">📖 Anthropic bu konuyu nasıl anlatıyor — öz</div>
+
+Anthropic Claude API referans dokümanı ve Model Overview sayfası Claude'un ses modalitesini şöyle konumlandırır:
+
+**1. Native ses desteği yok, niyetli sıralama.** Claude Messages API sadece **text + image** kabul eder. Ses için STT (speech-to-text) ile metne dönüştürüp Claude'a göndermek, Claude'un cevabını TTS (text-to-speech) ile seslendirmek **resmi desen**. Anthropic bu sıralamayı kolay entegre edilsin diye açık bırakmış; her müşteri kendi STT/TTS sağlayıcısını seçer.
+
+**2. OpenAI Whisper birinci tercih kullanımda.** Anthropic cookbook'undaki multimodal örneklerde pipeline genellikle Whisper + Claude + ElevenLabs/OpenAI TTS birleşimi. Açık kaynak Whisper (local çalıştırılabilir, Türkçe %95+ WER) + Claude (düşünme) + herhangi bir TTS (ses üretimi) — 3 parçalı modüler.
+
+**3. Voice agent için Pipecat + LiveKit ekosistem önerisi.** Anthropic developer advocacy ekibi Pipecat (Python voice framework) ve LiveKit (WebRTC altyapı) gibi **3. parti orkestrasyon** araçlarını öneriyor. Kendi voice agent framework'leri yok; olgun ekosistemin üstünde Claude "beyin" olarak kullanılıyor.
+
+**4. Sessizliğin stratejik anlamı.** Ses modalitesinin yokluğu **eksiklik değil tercih** — Claude'un diferansiyel değeri *reasoning* + *tool use* + *vision* üçgeninde. Ses olgun bir problem (Whisper + ElevenLabs çözdü), Anthropic bunu tekrar çözmek yerine *audio reasoning* (duygu, niyet, konuşmacı) gibi farklılaşmaya doğru gidebilir.
+
+<div class="ma-anthropic-oz-kaynak" markdown>
+**Kaynak:** [docs.claude.com — Messages API](https://docs.claude.com/en/api/messages) (EN, ~10 dk) + [docs.claude.com — Models Overview](https://docs.claude.com/en/docs/about-claude/models/overview) (EN, ~8 dk). Claude'un kabul ettiği content block'ların tam listesi + multimodal yol haritası.
+</div>
+</div>
+
 ## Anthropic ekosistemi — Claude + ses geleceği
 
 Anthropic Claude **2026 Nisan itibarıyla** native voice desteği sunmuyor. 3. parti STT/TTS gerekli. Bu bilinçli sıralama:

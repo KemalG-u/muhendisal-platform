@@ -40,6 +40,59 @@
 
 **Uyarı:** Bu **üretim modeli değil** — 50 örnek deney seviyesi. Amaç: pratik refleks + ilk FT deneyimi + CV sinyali.
 
+## Bu sayfanın ekosistemi
+
+<div class="ma-ekosistem" markdown>
+<div class="ma-ekosistem-header">🗺️ Ekosistem — LoRA eğitimi sırasında kim ne yapar</div>
+
+```mermaid
+flowchart LR
+    S["👤 Sen\n(Colab sekmesi)"]
+    COLAB["📓 Google Colab\nT4 GPU (ücretsiz)"]
+    VERI["📄 50 örnek\nJSONL Türkçe"]
+    HF_BASE["🤗 HF Hub\nQwen 2.5-1.5B base"]
+    TRL["⚙️ PEFT + TRL\nQLoRA + SFTTrainer"]
+    HF_OUT["🤗 HF Hub\nsenin adapter'ın"]
+    TEST["🧪 Test hücresi\nbase vs FT"]
+
+    S -->|"1. notebook aç"| COLAB
+    S -->|"2. veri upload"| VERI
+    VERI --> COLAB
+    COLAB -->|"3. from_pretrained"| HF_BASE
+    HF_BASE --> TRL
+    COLAB -->|"4. trainer.train"| TRL
+    TRL -->|"5. ~20 dk eğitim"| TRL
+    TRL -->|"6. push_to_hub"| HF_OUT
+    COLAB --> TEST
+    TEST -->|"7. 3 soru × 2 model"| S
+
+    style S fill:#ddd6fe,stroke:#7c3aed
+    style COLAB fill:#dbeafe,stroke:#2563eb
+    style TEST fill:#dbeafe,stroke:#2563eb
+    style HF_BASE fill:#fed7aa,stroke:#ea580c
+    style HF_OUT fill:#fed7aa,stroke:#ea580c
+    style TRL fill:#fed7aa,stroke:#ea580c
+    style VERI fill:#fef3c7,stroke:#ca8a04
+```
+
+</div>
+
+<table class="ma-aktorler" markdown>
+
+| Aktör | Rol | Nerede |
+|---|---|---|
+| 👤 Sen | Notebook'u çalıştır, sonucu doğrula | Tarayıcı sekmesi |
+| 📓 Google Colab | T4 GPU + Python runtime (ücretsiz ~12 saat) | bulut |
+| 📄 50 örnek JSONL | Senin hazırladığın Türkçe instruction verisi | Colab FS upload |
+| 🤗 HF Hub (base) | Qwen 2.5-1.5B-Instruct ağırlıkları (~3 GB) | huggingface.co |
+| ⚙️ PEFT + TRL | QLoRA config + SFTTrainer (auto chat template) | Colab pip |
+| 🤗 HF Hub (adapter) | Eğittiğin adapter (~30 MB) — CV link | huggingface.co/USERNAME |
+| 🧪 Test hücresi | Aynı sorularda base vs FT model karşılaştırma | Notebook son hücre |
+
+</table>
+
+**Burada olan nedir:** Colab GPU'yu rent ediyor, HF Hub model deposunu, PEFT/TRL eğitim orchestrator'ı. Sen sadece veri + config veriyorsun. Çıktı: HF Hub'da senin adına adapter + CV sinyali. **Toplam maliyet: $0.**
+
 ## Adım 0 — Hazırlık (10 dk)
 
 ### Google Colab hesabı

@@ -253,6 +253,23 @@ Anthropic'e doğrudan başvurursan (Applied AI Engineer rol) 5 aşama: recruiter
 
 </details>
 
+## Çıktı kanıtları — 3 kanıt
+
+<div class="ma-cikti-kaniti" markdown>
+<div class="ma-cikti-kaniti-header">📏 Çıktı — 3 kanıt</div>
+
+Mülakat hazırlığı soyut kalmasın; bitiminde elinde somut kanıt olsun.
+
+**1. Cevaplar markdown** — `mulakat-hazirlik/cevaplar.md` dosyasında en az **10 teknik soru** için kendi cümlelerinle yazılmış cevap. Kopya-yapıştır değil — her cevabın sonunda kendi projenden (RAG chatbot veya agent) somut örnek. Her cevap 3-5 cümle.
+
+**2. STAR örnekleri** — `mulakat-hazirlik/star.md` dosyasında **3 davranışsal soru** için STAR (Situation-Task-Action-Result) formatında senin gerçek hikayen. Okuyan "bu kişi gerçekten yaşamış" dediğinde kanıt tam.
+
+**3. 60 saniye tanıtım** — `mulakat-hazirlik/tanitim.md` + opsiyonel ses kaydı (`tanitim.mp3`). İlk 60 saniyede kim olduğun, niye AI Engineer, hangi 3 proje portföyün, ne arıyorsun. Aynası karşında sesli oku, kendini dinle, mülakatta kim olduğunu karşındaki **tam** bilsin.
+
+Toplam süre: ~2 saat. Bitiminde `mulakat-hazirlik/` klasörü GitHub'a push + LinkedIn'de pinned featured gist.
+
+</div>
+
 ## Görev — 2 saat kendi cevabını yaz
 
 <div class="ma-gorev" markdown>
