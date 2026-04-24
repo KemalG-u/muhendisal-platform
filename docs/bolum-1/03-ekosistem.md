@@ -31,21 +31,21 @@
 ```mermaid
 flowchart TB
     subgraph KAPALI["🔒 KAPALI MODELLER (API-only)"]
-        A["🟠 Anthropic<br/>Claude 4.6/4.7<br/>Opus • Sonnet • Haiku"]
-        O["🟢 OpenAI<br/>GPT-5 • GPT-4o<br/>o-serisi<br/>(reasoning)"]
-        G["🔵 Google<br/>Gemini 2.5<br/>Pro • Flash • Nano"]
+        A["🟠 Anthropic\nClaude 4.6/4.7\nOpus • Sonnet • Haiku"]
+        O["🟢 OpenAI\nGPT-5 • GPT-4o\no-serisi\n(reasoning)"]
+        G["🔵 Google\nGemini 2.5\nPro • Flash • Nano"]
     end
 
     subgraph ACIK["🔓 AÇIK KAYNAK / AÇIK AĞIRLIK"]
-        M["🔵 Meta<br/>Llama 4<br/>7B • 70B • 405B"]
-        D["🟣 DeepSeek<br/>V3.2<br/>(Çin)"]
-        Q["🟠 Qwen<br/>Qwen 3.5/3.6<br/>(Alibaba)"]
-        MS["⚪ Mistral<br/>Mistral Large<br/>Codestral"]
+        M["🔵 Meta\nLlama 4\n7B • 70B • 405B"]
+        D["🟣 DeepSeek\nV3.2\n(Çin)"]
+        Q["🟠 Qwen\nQwen 3.5/3.6\n(Alibaba)"]
+        MS["⚪ Mistral\nMistral Large\nCodestral"]
     end
 
-    USER["👤 Sen<br/>Proje yapıcısın"]
-    CLOUD["☁️ Cloud<br/>API çağrısı"]
-    LOCAL["💻 Lokal<br/>Ollama + GPU"]
+    USER["👤 Sen\nProje yapıcısın"]
+    CLOUD["☁️ Cloud\nAPI çağrısı"]
+    LOCAL["💻 Lokal\nOllama + GPU"]
 
     USER --> CLOUD
     USER --> LOCAL
