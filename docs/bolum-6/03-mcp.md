@@ -7,6 +7,7 @@
 <span class="ma-persona ma-persona-is">🔵 iş</span>
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
+<div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~35 dakika</div>
 <div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 6.2 bitmiş — tool calling + JSON Schema + `tool_choice` mekaniği oturmuş; Claude Desktop kurulu (ücretsiz [claude.ai/download](https://claude.ai/download))</div>
 <div class="ma-meta-row"><strong>🎯 Çıktı:</strong> **MCP'nin ne olduğunu ve tool calling'den farkını** tek cümleyle anlatabiliyorsun; **3 primitive** (Resources/Tools/Prompts) tanımını örneklerle ayırt ediyorsun; **hazır bir MCP server'ı** (Filesystem) Claude Desktop'a bağlayıp "Masaüstümdeki dosyaları listele" demek işlediğini görüyorsun.</div>
 </div>
@@ -62,7 +63,7 @@ flowchart LR
   classDef user fill:#ddd6fe,stroke:#7c3aed,color:#111
   classDef host fill:#dbeafe,stroke:#2563eb,color:#111
   classDef wire fill:#fed7aa,stroke:#ea580c,color:#111
-  classDef server fill:#dcfce7,stroke:#16a34a,color:#111
+  classDef server fill:#fef3c7,stroke:#ca8a04,color:#111
   classDef data fill:#fef3c7,stroke:#ca8a04,color:#111
   class U user
   class HOST,CLIENT host
@@ -179,7 +180,7 @@ Bu desen benim `mcp.oluk.org` sunucumun Claude Desktop'tan nasıl bağlanacağı
 <div class="ma-anthropic-oz" markdown>
 <div class="ma-anthropic-oz-header">📖 Anthropic bu konuyu nasıl anlatıyor — öz</div>
 
-Anthropic MCP'yi [Anthropic Academy — Introduction to Model Context Protocol](https://anthropic.skilljar.com/) kursunda (~45 dk, sertifikalı) anlatıyor. Resmi metin [modelcontextprotocol.io](https://modelcontextprotocol.io) + [docs.claude.com'da MCP bölümü](https://docs.claude.com/en/docs/mcp).
+Anthropic MCP'yi [Anthropic Academy — Introduction to Model Context Protocol](https://anthropic.skilljar.com/) kursunda (~45 dk, sertifikalı) anlatıyor. Resmi metin [modelcontextprotocol.io](https://modelcontextprotocol.io) + [platform.claude.com/docs'da MCP bölümü](https://platform.claude.com/docs/en/docs/mcp).
 
 **1. Üç primitive'in isim seçimi bilinçli.** Anthropic REST API metaforunu kasıtlı kullanıyor: Resource = GET (bağlam yükle), Tool = POST (yan etki). Prompt üçüncü bir konsept — önceden düşünülmüş çağrı şablonu. Bu ayrım geliştirici zihninde "ne zaman ne" refleksi kurar.
 
@@ -234,12 +235,14 @@ Kaydet: `muhendisal-notlarim/bolum-6/03-mcp/vaka-calismasi-repo.txt`
 <div class="ma-neden-sonuc" markdown>
 <div class="ma-neden-sonuc-header">🔗 Birlikte okuma — neden ne oldu</div>
 
-- **A → B:** Tool calling (6.2) taşınabilir değil — Python dosyanda esir. MCP bu eksiği protokol standardıyla kapatır.
-- **B → C:** MCP = "AI için USB-C" — bir kere yaz, her LLM istemcisi kullansın. Anthropic'in 2024 Kasım'dan beri süren en büyük ekosistem hamlesi.
-- **C → D:** Tool calling API feature, MCP protocol standard — **ikisi birlikte çalışır**, birbirini yerine geçmez.
-- **D → E:** 3 primitive (Tools/Resources/Prompts) aynı şey değil — Tool = Claude kararlı, Resource = kullanıcı seçimli, Prompt = slash-command.
-- **E → F:** Host (Claude Desktop) ↔ Client ↔ Server; JSON-RPC 2.0 üstünde stdio veya Streamable HTTP. Kendi server'ın subprocess olarak başlatılıyor.
-- **F → G:** Hazır server (filesystem) 5 dakikada bağlanır, hammer ikonu görünür, Claude dosyalarına erişir — MCP'nin ne kazandırdığı somut olarak çıkar.
+<ol class="ma-neden-sonuc-zincir" markdown>
+<li>**A → B:** Tool calling (6.2) taşınabilir değil — Python dosyanda esir. MCP bu eksiği protokol standardıyla kapatır. Bu yüzden **MCP = taşınabilirlik.**</li>
+<li>**B → C:** MCP = 'AI için USB-C' — bir kere yaz, her LLM istemcisi kullansın. Anthropic'in 2024 Kasım'dan beri süren en büyük ekosistem hamlesi. Bu yüzden **standart olmak değer katar.**</li>
+<li>**C → D:** Tool calling API feature, MCP protocol standard — **ikisi birlikte çalışır**, birbirini yerine geçmez. Bu yüzden **ikisini de bilmek şart.**</li>
+<li>**D → E:** 3 primitive (Tools/Resources/Prompts) aynı şey değil — Tool = Claude kararlı, Resource = kullanıcı seçimli, Prompt = slash-command. Bu yüzden **primitive karıştırma hata üretir.**</li>
+<li>**E → F:** Host (Claude Desktop) ↔ Client ↔ Server; JSON-RPC 2.0 üstünde stdio veya Streamable HTTP. Kendi server'ın subprocess olarak başlatılıyor. Bu yüzden **mimari net anlaşılmalı.**</li>
+<li>**F → G:** Hazır server (filesystem) 5 dakikada bağlanır, hammer ikonu görünür, Claude dosyalarına erişir — MCP'nin ne kazandırdığı somut olarak çıkar. Bu yüzden **tüketici olmak başlangıç noktası.**</li>
+</ol>
 
 <div class="ma-neden-sonuc-sonuc" markdown>
 **Sonuç:** MCP = Anthropic ekosisteminde **vazgeçilmez refleks**. Tüketici olmayı 15 dakikada öğrendin; 6.4'te üretici olacaksın — kendi MCP server'ını Python `mcp` kütüphanesi ile yazıp, `mcp.oluk.org` tarzı bir canlı servis çıkaracaksın. Bölüm 6'nın imza sayfası sıradaki sayfa.

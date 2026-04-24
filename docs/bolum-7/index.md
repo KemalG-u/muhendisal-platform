@@ -39,9 +39,9 @@ flowchart LR
 
   classDef user fill:#ddd6fe,stroke:#7c3aed,color:#111
   classDef page fill:#dbeafe,stroke:#2563eb,color:#111
-  classDef pilot fill:#dcfce7,stroke:#16a34a,color:#111
+  classDef pilot fill:#fef3c7,stroke:#ca8a04,color:#111
   classDef infra fill:#fed7aa,stroke:#ea580c,color:#111
-  classDef goal fill:#dcfce7,stroke:#16a34a,color:#111
+  classDef goal fill:#fef3c7,stroke:#ca8a04,color:#111
   class S user
   class P71,P72,P73 page
   class P74 pilot
@@ -74,7 +74,7 @@ flowchart LR
 
 Multimodal'da Anthropic **kısmi güçlü:** vision'da iyi (Claude 4.x Sonnet), ses doğrudan yok. Dürüst pozisyon:
 
-**1. Vision — docs.claude.com/en/docs/build-with-claude/vision.** Claude'un desteklediği formatlar, boyut limitleri, pratik best practices. 7.1'deki kodlar bu sayfaya birebir uyar. JPG/PNG/WEBP, max 5MB, base64 veya URL. Türkçe metin içeren görseller OCR'de iyi.
+**1. Vision — platform.claude.com/docs/en/docs/build-with-claude/vision.** Claude'un desteklediği formatlar, boyut limitleri, pratik best practices. 7.1'deki kodlar bu sayfaya birebir uyar. JPG/PNG/WEBP, max 5MB, base64 veya URL. Türkçe metin içeren görseller OCR'de iyi.
 
 **2. Ses — Anthropic'in duruşu.** Claude ses dinlemiyor (2026 itibarıyla). "Ses için Whisper + metin olarak Claude'a ver" Anthropic'in önerdiği desen. Bu bölümün 7.2 yaklaşımı resmi öneriye uyar.
 
@@ -83,7 +83,7 @@ Multimodal'da Anthropic **kısmi güçlü:** vision'da iyi (Claude 4.x Sonnet), 
 **4. Video hakkında Anthropic'in şu andaki sınırı.** Claude doğrudan video input almıyor. "Frame extraction + çoklu görsel" tek yol. Google Gemini video'da daha ileride (doğal destek); Claude'la yapacaksan bu bölümün 7.3 desenine ihtiyacın var.
 
 <div class="ma-anthropic-oz-kaynak" markdown>
-**Kaynak:** [docs.claude.com — Vision](https://docs.claude.com/en/docs/build-with-claude/vision) (İngilizce, ~10 dk). 7.1'den önce aç — görsel kabiliyetinin sınırları ve kalıpları buradan net oturur.
+**Kaynak:** [platform.claude.com/docs — Vision](https://platform.claude.com/docs/en/docs/build-with-claude/vision) (İngilizce, ~10 dk). 7.1'den önce aç — görsel kabiliyetinin sınırları ve kalıpları buradan net oturur.
 </div>
 </div>
 

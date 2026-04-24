@@ -7,6 +7,7 @@
 <span class="ma-persona ma-persona-is">🔵 iş</span>
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
+<div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~30 dakika</div>
 <div class="ma-meta-row"><strong>📋 Önkoşul:</strong> Bölüm 2 bitmiş (sistem prompt + few-shot + prompt-caching); Bölüm 4 bitmiş (retrieve + generate ayrımı net)</div>
 <div class="ma-meta-row"><strong>🎯 Çıktı:</strong> **Workflow** ile **Agent**'ın farkını bir paragrafta anlatabilirsin; ReAct döngüsünü (Think → Act → Observe → Loop) kendi kodunla yazarsın; **"bu projede agent gerekli mi?"** sorusuna 5 kriterle cevap verebilirsin — **çoğu durumda "hayır" doğru cevap**tır.</div>
 </div>
@@ -58,7 +59,7 @@ flowchart TB
 
   classDef task fill:#ddd6fe,stroke:#7c3aed,color:#111
   classDef decide fill:#fef3c7,stroke:#ca8a04,color:#111
-  classDef wf fill:#dcfce7,stroke:#16a34a,color:#111
+  classDef wf fill:#fef3c7,stroke:#ca8a04,color:#111
   classDef ag fill:#fed7aa,stroke:#ea580c,color:#111
   classDef out fill:#dbeafe,stroke:#2563eb,color:#111
   class TASK task
@@ -322,11 +323,13 @@ Repo linkini kaydet: `muhendisal-notlarim/bolum-6/01-agent-nedir/repo-link.txt`
 <div class="ma-neden-sonuc" markdown>
 <div class="ma-neden-sonuc-header">🔗 Birlikte okuma — neden ne oldu</div>
 
-- **A → B:** "Agent" sektörde modaya döndü ama çoğu proje workflow'la yeter. Karıştırmak = gereksiz maliyet + kırılganlık.
-- **B → C:** Anthropic Aralık 2024 makalesi bu karışıklığı temizledi — 5 workflow pattern + 1 agent kategorisi net ayrıldı.
-- **C → D:** ReAct = agent'ın DNA'sı — Think/Act/Observe/Loop. 40 satır Python'da kurulabiliyor.
-- **D → E:** Workflow vs agent seçimi 5-kriter ile netleşiyor; çoğu zaman 4+/5 workflow lehine çıkar (3 kat ucuz, öngörülebilir, debug kolay).
-- **E → F:** HBV deterministik workflow = doğru seçim (4.8'de kanıtlı, 100+ bağışçı canlıda). Claude Desktop'ta "özet + email at" = agent doğru.
+<ol class="ma-neden-sonuc-zincir" markdown>
+<li>'Agent' sektörde modaya döndü ama çoğu proje workflow'la yeter. Karıştırmak = gereksiz maliyet + kırılganlık. Bu yüzden **önce workflow mu agent mi? sorusunu sor.**</li>
+<li>**B → C:** Anthropic Aralık 2024 makalesi bu karışıklığı temizledi — 5 workflow pattern + 1 agent kategorisi net ayrıldı. Bu yüzden **terminoloji karmaşası bitti.**</li>
+<li>**C → D:** ReAct = agent'ın DNA'sı — Think/Act/Observe/Loop. 40 satır Python'da kurulabiliyor. Bu yüzden **mekanizme anlaşılınca korku azalır.**</li>
+<li>**D → E:** Workflow vs agent seçimi 5-kriter ile netleşiyor; çoğu zaman 4+/5 workflow lehine çıkar (3 kat ucuz, öngörülebilir, debug kolay). Bu yüzden **varsayılan workflow olmalı.**</li>
+<li>**E → F:** HBV deterministik workflow = doğru seçim (4.8'de kanıtlı, 100+ bağışçı canlıda). Claude Desktop'ta 'özet + email at' = agent doğru. Bu yüzden **bağlam seçimi belirler.**</li>
+</ol>
 
 <div class="ma-neden-sonuc-sonuc" markdown>
 **Sonuç:** Bu sayfadan sonra "agent" kelimesini duyduğunda sorduğun ilk soru "bu gerçekten agent mı yoksa workflow mu?" oluyor. %70 ihtimalle workflow cevabı çıkıyor — 2026 AI mühendisliğinin en değerli refleksi. 6.2'de tool calling **mekaniği** çalışılacak, 6.3-6.4'te MCP ile tool'lara **platform** kazandıracağız.

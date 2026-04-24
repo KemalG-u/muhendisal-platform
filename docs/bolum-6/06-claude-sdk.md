@@ -7,6 +7,7 @@
 <span class="ma-persona ma-persona-is">🔵 iş</span>
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
+<div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~30 dakika</div>
 <div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 6.2 (ham `anthropic` SDK + tool calling) + 6.4 (MCP server) bitmiş; Python 3.10+; `ANTHROPIC_API_KEY` env aktif</div>
 <div class="ma-meta-row"><strong>🎯 Çıktı:</strong> `claude-agent-sdk`'nın **ham `anthropic` SDK'dan nasıl farklı olduğunu** karar matrisi ile ayırıyorsun; `query()` ile tek seferlik agent görevi koşturuyorsun; `ClaudeSDKClient` + `@tool` ile **kendi in-process MCP tool'larını** Claude Code agent'ına eklemiş oluyorsun. Ne zaman bu SDK ne zaman ham SDK — karar pekişiyor.</div>
 </div>
@@ -59,7 +60,7 @@ flowchart TB
   classDef app fill:#ddd6fe,stroke:#7c3aed,color:#111
   classDef sdk fill:#dbeafe,stroke:#2563eb,color:#111
   classDef bin fill:#fed7aa,stroke:#ea580c,color:#111
-  classDef tools fill:#dcfce7,stroke:#16a34a,color:#111
+  classDef tools fill:#fef3c7,stroke:#ca8a04,color:#111
   classDef api fill:#fef3c7,stroke:#ca8a04,color:#111
   class APP app
   class QAPI,OPTS sdk
@@ -341,12 +342,14 @@ Repo linkini kaydet: `muhendisal-notlarim/bolum-6/06-claude-sdk/proje-repo.txt`
 <div class="ma-neden-sonuc" markdown>
 <div class="ma-neden-sonuc-header">🔗 Birlikte okuma — neden ne oldu</div>
 
-- **A → B:** Ham SDK (6.2) agent için **boilerplate yüksek** — file/bash/web/MCP/subagent elle yazılıyor. `claude-agent-sdk` Claude Code'u alt süreç olarak başlatır; bu kapasiteler **hazır gelir.**
-- **B → C:** SDK adı "Agent SDK" **yanıltıcı değil ama spesifik** — yeni bir agent framework değil, Claude Code'un programatik arayüzü. 6.6'nın net tezi bu.
-- **C → D:** İki giriş noktası: `query()` tek seferlik iterator + `ClaudeSDKClient` interactive oturum + custom tools.
-- **D → E:** `@tool` + `create_sdk_mcp_server` = **in-process MCP server** — 6.4'teki subprocess MCP'nin aynı süreç içi versiyonu.
-- **E → F:** Karar matrisi: **chat/content** = ham SDK; **otonom iş** (CI/CD, cron, IDE) = `claude-agent-sdk`.
-- **F → G:** `ResultMessage.total_cost_usd` + `permission_mode` + `allowed_tools` → prod agent'ın üç temel güvenlik/maliyet direkt.
+<ol class="ma-neden-sonuc-zincir" markdown>
+<li>**A → B:** Ham SDK (6.2) agent için **boilerplate yüksek** — file/bash/web/MCP/subagent elle yazılıyor. `claude-agent-sdk` Claude Code'u alt süreç olarak başlatır; bu kapasiteler **hazır gelir.** Bu yüzden **SDK seçimi iş yüküne göre.**</li>
+<li>**B → C:** SDK adı 'Agent SDK' **yanıltıcı değil ama spesifik** — yeni bir agent framework değil, Claude Code'un programatik arayüzü. Bu yüzden **ne olduğunu net anlamak şart.**</li>
+<li>**C → D:** İki giriş noktası: `query()` tek seferlik iterator + `ClaudeSDKClient` interactive oturum + custom tools. Bu yüzden **kullanım senaryosu giriş noktasını belirler.**</li>
+<li>**D → E:** `@tool` + `create_sdk_mcp_server` = **in-process MCP server** — 6.4'teki subprocess MCP'nin aynı süreç içi versiyonu. Bu yüzden **MCP bilgisi burada da işe yarar.**</li>
+<li>**E → F:** Karar matrisi: **chat/content** = ham SDK; **otonom iş** (CI/CD, cron, IDE) = `claude-agent-sdk`. Bu yüzden **doğru SDK yanlış araç seçimini önler.**</li>
+<li>**F → G:** `ResultMessage.total_cost_usd` + `permission_mode` + `allowed_tools` → prod agent'ın üç temel güvenlik/maliyet direkt. Bu yüzden **üretimde bu üçü zorunlu.**</li>
+</ol>
 
 <div class="ma-neden-sonuc-sonuc" markdown>
 **Sonuç:** Anthropic'in Claude Code tarafındaki gücü (subagent + MCP + built-in tools) artık Python/TypeScript kodundan 50 satırda sürülebilir. Hangi SDK ne zaman: kendi uygulamanda chat → ham; dosya+bash+web otonom iş → agent SDK. 6.7'de LangChain/LangGraph'a geçip **üçüncü seçeneği** — provider-agnostic, durable execution, HITL ihtiyaçları olan framework dünyasını — eksiksiz karşılaştıracağız. Üç SDK karar matrisi 6.7 sonunda tamamlanmış olacak.

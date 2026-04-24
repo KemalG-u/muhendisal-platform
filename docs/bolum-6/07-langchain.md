@@ -7,6 +7,7 @@
 <span class="ma-persona ma-persona-is">🔵 iş</span>
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
+<div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~30 dakika</div>
 <div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 6.1–6.6 bitmiş — ham `anthropic` SDK ile tool calling, multi-agent patternleri, `claude-agent-sdk` refleksleri oturmuş; Python 3.10+; `ANTHROPIC_API_KEY` aktif</div>
 <div class="ma-meta-row"><strong>🎯 Çıktı:</strong> LangChain 1.x'te `create_agent` ile Anthropic-bağlı agent kurup çalıştırıyorsun; LangGraph `StateGraph` ile custom stateful agent mimarisi yazabiliyorsun; **üç SDK karar matrisini** (ham `anthropic` + `claude-agent-sdk` + LangChain/LangGraph) tek bakışta çözüyorsun — hangi senaryoya hangisini seçeceğin refleks.</div>
 </div>
@@ -64,7 +65,7 @@ flowchart TB
   classDef app fill:#ddd6fe,stroke:#7c3aed,color:#111
   classDef hi fill:#dbeafe,stroke:#2563eb,color:#111
   classDef lo fill:#fed7aa,stroke:#ea580c,color:#111
-  classDef core fill:#dcfce7,stroke:#16a34a,color:#111
+  classDef core fill:#fef3c7,stroke:#ca8a04,color:#111
   classDef api fill:#fef3c7,stroke:#ca8a04,color:#111
   classDef obs fill:#ddd6fe,stroke:#7c3aed,color:#111
   class APP app
@@ -393,12 +394,14 @@ Repo linkini kaydet: `muhendisal-notlarim/bolum-6/07-langchain/uc-yol-repo.txt`
 <div class="ma-neden-sonuc" markdown>
 <div class="ma-neden-sonuc-header">🔗 Birlikte okuma — neden ne oldu</div>
 
-- **A → B:** 2024–25 LangChain kaosundan sonra 2026'da **LangChain 1.x + LangGraph 1.x** ailesi stabilize oldu; ekosistem tekrar tutarlı.
-- **B → C:** İki kimlik netleşti: `langchain` **high-level** (`create_agent`), `langgraph` **low-level** (`StateGraph`). Agents LangGraph üstünde kurulu; durable execution + HITL + streaming + persistence ücretsiz geliyor.
-- **C → D:** Yol A — `create_agent` 30 satırda provider-agnostic agent (`anthropic:claude-sonnet-4-6` tek satır).
-- **D → E:** Yol B — `StateGraph` stateful agent (`TypedDict` state + conditional edges + checkpoint + thread_id) — uzun süreli ve HITL agent'lar için zorunlu.
-- **E → F:** Üç SDK karar matrisi: **ham anthropic** (kontrol/chat), **claude-agent-sdk** (otonom iş/CI), **LangChain+LangGraph** (provider-agnostic/HITL/durable). Üçü rakip değil, **farklı soru için alternatif**.
-- **F → G:** Pratik kural: Prototipten başla → framework gereksinim kendini göstersin → sadece o zaman geç. "Framework eklemek ucuz, çıkarmak pahalı" CTO refleksi.
+<ol class="ma-neden-sonuc-zincir" markdown>
+<li>**A → B:** 2024–25 LangChain kaosundan sonra 2026'da **LangChain 1.x + LangGraph 1.x** ailesi stabilize oldu; ekosistem tekrar tutarlı. Bu yüzden **2025 öncesi deneyim güncel değil.**</li>
+<li>**B → C:** İki kimlik netleşti: `langchain` **high-level** (`create_agent`), `langgraph` **low-level** (`StateGraph`). Bu yüzden **hangisini kullanacağın önce netleşmeli.**</li>
+<li>**C → D:** Yol A — `create_agent` 30 satırda provider-agnostic agent (`anthropic:claude-sonnet-4-6` tek satır). Bu yüzden **prototip hızı en yüksek.**</li>
+<li>**D → E:** Yol B — `StateGraph` stateful agent (`TypedDict` state + conditional edges + checkpoint + thread_id) — uzun süreli ve HITL agent'lar için zorunlu. Bu yüzden **karmaşık iş akışı LangGraph ister.**</li>
+<li>**E → F:** Üç SDK karar matrisi: **ham anthropic** (kontrol/chat), **claude-agent-sdk** (otonom iş/CI), **LangChain+LangGraph** (provider-agnostic/HITL/durable). Üçü rakip değil, **farklı soru için alternatif.** Bu yüzden **bağlam seçimi belirler.**</li>
+<li>**F → G:** Pratik kural: Prototipten başla → framework gereksinim kendini göstersin → sadece o zaman geç. 'Framework eklemek ucuz, çıkarmak pahalı' CTO refleksi. Bu yüzden **erken karmaşıklık pahalıya mal olur.**</li>
+</ol>
 
 <div class="ma-neden-sonuc-sonuc" markdown>
 **Sonuç:** Bölüm 6'nın teknik zirvesi. Üç ayrı mimari akım (ham SDK + Claude Code ekosistemi + LangChain/LangGraph ekosistemi) üzerinde refleks kazandın. Artık bir iş probleminde "hangi araç" sorusu karar matrisiyle cevaplanıyor. Son sayfa (6.8) KarıncaAI production vakası — Kemal'in **gerçek multi-agent orkestrasyon** projesi: karar matrisi "prod'da" nasıl görünür, bu üç SDK'nın hangisine dayandı, neden; 4.8 HBV imza sayfasıyla simetri. Bölüm 6'nın kapanış savunması.

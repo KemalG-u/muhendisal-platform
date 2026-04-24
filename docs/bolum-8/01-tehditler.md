@@ -7,6 +7,7 @@
 <span class="ma-persona ma-persona-is">🔵 iş</span>
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
+<div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~35 dakika</div>
 <div class="ma-meta-row"><strong>📋 Önkoşul:</strong> Bölüm 2 + Bölüm 4 veya 6. Kullanıcı input'u alan bir AI servisin var (9.4 RAG Chatbot tipik).</div>
 <div class="ma-meta-row"><strong>🎯 Çıktı:</strong> **OWASP LLM Top 10**'un 5 kritik maddesini kendi sistemine uygulayabiliyorsun: prompt injection'a karşı input sanitization, jailbreak için system prompt sertleştirme, PII maskelemesi, output filtering, rate limit. 3 gerçek vakayı (hikaye) biliyorsun — "bende olmaz" yanılgısı kırık.</div>
 </div>
@@ -47,12 +48,12 @@ flowchart LR
     CLAUDE -.->|"tool call"| DB
     DB -.->|"log"| LOG
 
-    style ATK fill:#fecaca,stroke:#dc2626
+    style ATK fill:#fed7aa,stroke:#ea580c
     style NORMAL fill:#ddd6fe,stroke:#7c3aed
     style APP fill:#dbeafe,stroke:#2563eb
-    style VAL fill:#dcfce7,stroke:#16a34a
-    style GUARD fill:#dcfce7,stroke:#16a34a
-    style RATE fill:#dcfce7,stroke:#16a34a
+    style VAL fill:#fef3c7,stroke:#ca8a04
+    style GUARD fill:#fef3c7,stroke:#ca8a04
+    style RATE fill:#fef3c7,stroke:#ca8a04
     style CLAUDE fill:#fed7aa,stroke:#ea580c
     style LOG fill:#fef3c7,stroke:#ca8a04
     style DB fill:#fef3c7,stroke:#ca8a04
@@ -233,7 +234,7 @@ def cevabi_temizle(cevap: str) -> str:
     """Output sanitization: link ve hassas kelime kontrolü."""
     # Beyaz liste dışı link varsa uyar veya sil
     for url in URL_PATTERN.findall(cevap):
-        if not url.startswith(("https://senin-domain.com", "https://docs.claude.com")):
+        if not url.startswith(("https://senin-domain.com", "https://platform.claude.com/docs")):
             cevap = cevap.replace(url, "[LINK KALDIRILDI]")
 
     # Hassas kelime varsa loglala (üretim hatası kontrol et)
@@ -547,13 +548,15 @@ Kanıt: Before/after tablo + commit diff + 10 red team sorusu log'u.
 <div class="ma-neden-sonuc" markdown>
 <div class="ma-neden-sonuc-header">🔗 Birlikte okuma — neden ne oldu</div>
 
-- **A → B:** 3 gerçek vaka (Chevrolet $1, Samsung kod sızıntısı, Air Canada mahkeme) gösterdi ki "bende olmaz" yanılgı.
-- **B → C:** OWASP LLM Top 10 endüstri standart — LLM01 injection, LLM02 PII, LLM05 output, LLM10 tüketim en kritik.
-- **C → D:** Prompt injection 3 yol (direkt, dolaylı/RAG, multi-turn); savunma 4 katman (system + Pydantic + output + tool_choice).
-- **D → E:** PII maskelemesi presidio + custom TC recognizer; KVKK Madde 6+9 + GDPR Article 22 mandat.
-- **E → F:** Output handling XSS/SQL; bleach + parameterize ile önlenir; RAG'de javascript: protokolü dikkat.
-- **F → G:** Unbounded consumption fatura şoku; Anthropic Console hard cap; detay 8.3'te.
-- **G → H:** Red team testi haftada 1 saat; 10 soru ile kendi sistemine saldır.
+<ol class="ma-neden-sonuc-zincir" markdown>
+<li>**A → B:** 3 gerçek vaka (Chevrolet $1, Samsung kod sızıntısı, Air Canada mahkeme) gösterdi ki 'bende olmaz' yanılgı. Bu yüzden **güvenlik baştan kurulur.**</li>
+<li>**B → C:** OWASP LLM Top 10 endüstri standart — LLM01 injection, LLM02 PII, LLM05 output, LLM10 tüketim en kritik. Bu yüzden **standart referans alınır.**</li>
+<li>**C → D:** Prompt injection 3 yol (direkt, dolaylı/RAG, multi-turn); savunma 4 katman (system + Pydantic + output + tool_choice). Bu yüzden **tek katman yetmez.**</li>
+<li>**D → E:** PII maskelemesi presidio + custom TC recognizer; KVKK Madde 6+9 + GDPR Article 22 mandat. Bu yüzden **yasal yükümlülük teknik çözüm gerektirir.**</li>
+<li>**E → F:** Output handling XSS/SQL; bleach + parameterize ile önlenir; RAG'de javascript: protokolü dikkat. Bu yüzden **çıktı temizleme ihmal edilmez.**</li>
+<li>**F → G:** Unbounded consumption fatura şoku; Anthropic Console hard cap; detay 8.3'te. Bu yüzden **hard cap üretim zorunluluğu.**</li>
+<li>**G → H:** Red team testi haftada 1 saat; 10 soru ile kendi sistemine saldır. Bu yüzden **saldırgan düşünme savunmayı güçlendirir.**</li>
+</ol>
 
 <div class="ma-neden-sonuc-sonuc" markdown>
 **Sonuç:** Canlı AI servisinin **saldırı yüzeyi** net. 4 katman savunma + red team refleksi + Constitutional AI avantajı birlikte güvenli sistem. Sonraki (8.2): etik, önyargı, AI Act, Anthropic'in bu alandaki duruşu.

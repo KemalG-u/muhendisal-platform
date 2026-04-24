@@ -7,6 +7,7 @@
 <span class="ma-persona ma-persona-is">🔵 iş</span>
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
+<div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~30 dakika</div>
 <div class="ma-meta-row"><strong>📋 Önkoşul:</strong> Bölüm 2 (Claude API) + 7.1 (vision). Test için 30 sn-2 dk Türkçe ses kaydı (kendi telefonunla record et).</div>
 <div class="ma-meta-row"><strong>🎯 Çıktı:</strong> **Ses pipeline'ı üç aşama** kuruldu — (1) STT: Whisper ile Türkçe ses → metin, (2) LLM: Claude ile anlam/aksiyon, (3) TTS: ElevenLabs/Fish ile metin → ses. Maliyet tahmini her aşama için net. Self-host (faster-whisper) vs managed (OpenAI Whisper API) karar refleksi. Türkçe ses kalite gerçekliği: orta-iyi, bazı istisnalar. **Voice agent** (10.4 Trend 3) için temel.</div>
 </div>
@@ -32,10 +33,10 @@
 ```mermaid
 flowchart LR
     USER[🎤 Kullanıcı konuşur]
-    MIC[Ses kaydı<br/>WAV/MP3]
+    MIC[Ses kaydı\nWAV/MP3]
 
     subgraph STAGE1["1️⃣ STT (Speech-to-Text)"]
-        WHISPER[Whisper large v3<br/>veya Deepgram<br/>veya OpenAI Whisper API]
+        WHISPER[Whisper large v3\nveya Deepgram\nveya OpenAI Whisper API]
     end
 
     TEXT_IN[Transkript metni]
@@ -47,10 +48,10 @@ flowchart LR
     TEXT_OUT[Cevap metni]
 
     subgraph STAGE3["3️⃣ TTS (Text-to-Speech)"]
-        TTS[ElevenLabs veya<br/>Fish Audio veya<br/>OpenAI TTS]
+        TTS[ElevenLabs veya\nFish Audio veya\nOpenAI TTS]
     end
 
-    AUDIO_OUT[Ses dosyası<br/>MP3]
+    AUDIO_OUT[Ses dosyası\nMP3]
     SPEAKER[🔊 Kullanıcı dinler]
 
     USER --> MIC --> WHISPER
@@ -61,7 +62,7 @@ flowchart LR
     classDef user fill:#ddd6fe,stroke:#7c3aed,color:#111
     classDef stt fill:#fef3c7,stroke:#ca8a04,color:#111
     classDef llm fill:#dbeafe,stroke:#2563eb,color:#111
-    classDef tts fill:#dcfce7,stroke:#16a34a,color:#111
+    classDef tts fill:#fef3c7,stroke:#ca8a04,color:#111
     class USER,MIC,SPEAKER user
     class WHISPER,TEXT_IN stt
     class CLAUDE,TEXT_OUT llm
@@ -442,7 +443,7 @@ Anthropic Claude API referans dokümanı ve Model Overview sayfası Claude'un se
 **4. Sessizliğin stratejik anlamı.** Ses modalitesinin yokluğu **eksiklik değil tercih** — Claude'un diferansiyel değeri *reasoning* + *tool use* + *vision* üçgeninde. Ses olgun bir problem (Whisper + ElevenLabs çözdü), Anthropic bunu tekrar çözmek yerine *audio reasoning* (duygu, niyet, konuşmacı) gibi farklılaşmaya doğru gidebilir.
 
 <div class="ma-anthropic-oz-kaynak" markdown>
-**Kaynak:** [docs.claude.com — Messages API](https://docs.claude.com/en/api/messages) (EN, ~10 dk) + [docs.claude.com — Models Overview](https://docs.claude.com/en/docs/about-claude/models/overview) (EN, ~8 dk). Claude'un kabul ettiği content block'ların tam listesi + multimodal yol haritası.
+**Kaynak:** [platform.claude.com/docs — Messages API](https://platform.claude.com/docs/en/api/messages) (EN, ~10 dk) + [platform.claude.com/docs — Models Overview](https://platform.claude.com/docs/en/docs/about-claude/models/overview) (EN, ~8 dk). Claude'un kabul ettiği content block'ların tam listesi + multimodal yol haritası.
 </div>
 </div>
 
@@ -525,15 +526,17 @@ Yukarıdaki minimal kod örneğini çalıştır — telefon kaydını input olar
 <div class="ma-neden-sonuc" markdown>
 <div class="ma-neden-sonuc-header">🔗 Birlikte okuma — neden ne oldu</div>
 
-- **A → B:** Voice agent 3 aşama: STT + LLM + TTS; her biri farklı vendor.
-- **B → C:** STT seçenekleri: OpenAI Whisper API (basit), faster-whisper self-host (ucuz), Deepgram (gerçek zamanlı).
-- **C → D:** TTS seçenekleri: ElevenLabs (premium), Fish Audio (Türkçe fiyat-kalite), OpenAI TTS (orta).
-- **D → E:** Türkçe STT kalite: temiz %95, gürültülü %75-85; post-process Claude ile düzelt.
-- **E → F:** Türkçe TTS: ElevenLabs ile Fish eş, ElevenLabs premium maliyet.
-- **F → G:** Voice agent latency: basit 4-6 sn, streaming ile 1-2 sn.
-- **G → H:** Maliyet örnekleri: 1000 konuşma/gün self-host pipeline ~$200/ay.
-- **H → I:** Claude ses: 2026'da 3. parti; 2027'de Anthropic native bekleniyor.
-- **I → J:** Pipecat + LiveKit framework'leri voice orchestration için hazır.
+<ol class="ma-neden-sonuc-zincir" markdown>
+<li>**A → B:** Voice agent 3 aşama: STT + LLM + TTS; her biri farklı vendor. Bu yüzden **parça parça optimize edilir.**</li>
+<li>**B → C:** STT seçenekleri: OpenAI Whisper API (basit), faster-whisper self-host (ucuz), Deepgram (gerçek zamanlı). Bu yüzden **ihtiyaç vendor seçimini belirler.**</li>
+<li>**C → D:** TTS seçenekleri: ElevenLabs (premium), Fish Audio (Türkçe fiyat-kalite), OpenAI TTS (orta). Bu yüzden **Türkçe için Fish değerlendir.**</li>
+<li>**D → E:** Türkçe STT kalite: temiz %95, gürültülü %75-85; post-process Claude ile düzelt. Bu yüzden **post-processing kalite artırır.**</li>
+<li>**E → F:** Türkçe TTS: ElevenLabs ile Fish eş, ElevenLabs premium maliyet. Bu yüzden **bütçe kısıtı Fish'e işaret eder.**</li>
+<li>**F → G:** Voice agent latency: basit 4-6 sn, streaming ile 1-2 sn. Bu yüzden **streaming kullanıcı deneyimini kurtarır.**</li>
+<li>**G → H:** Maliyet örnekleri: 1000 konuşma/gün self-host pipeline ~$200/ay. Bu yüzden **ölçek maliyet planlaması gerektirir.**</li>
+<li>**H → I:** Claude ses: 2026'da 3. parti; 2027'de Anthropic native bekleniyor. Bu yüzden **mevcut provider kilidi uzun vadeli değil.**</li>
+<li>**I → J:** Pipecat + LiveKit framework'leri voice orchestration için hazır. Bu yüzden **tekerlek yeniden icat etme.**</li>
+</ol>
 
 <div class="ma-neden-sonuc-sonuc" markdown>
 **Sonuç:** Ses pipeline refleksi elinde — STT + LLM + TTS vendor seçimi, Türkçe realite, maliyet tahmini, minimal voice agent kod. Sonraki (7.3): video — frame extraction + Claude vision + batch analiz. Platform'un son teknik bölümü kapanışa yakın.

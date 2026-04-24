@@ -7,6 +7,7 @@
 <span class="ma-persona ma-persona-is">🔵 iş</span>
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
+<div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~30 dakika</div>
 <div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 8.1-8.4 okundu. Canlı projen (9.4 veya 9.5) log üretiyor, Anthropic Console hard cap açık.</div>
 <div class="ma-meta-row"><strong>🎯 Çıktı:</strong> 3 seviye hata savunma kuruldu — **retry** (geçici hataları otomatik tekrarla), **circuit breaker** (tekrar başarısızlıkta servisi geçici kapat), **fallback** (Sonnet çalışmazsa Haiku'ya düş). Tenacity library refleksi. Timeout disiplin. 9.4 + 9.5 için ayrı hata desenleri. **Sessiz başarısızlık** (9.5 cron) riski sıfırlandı.</div>
 </div>
@@ -40,20 +41,20 @@ flowchart TB
     ERR["❌ API Hatası"]
 
     subgraph TRANSIENT["🔄 Geçici — retry uygula"]
-        T1["429 Rate Limit<br/>exponential backoff"]
-        T2["500/502/503<br/>hemen + backoff"]
-        T3["Timeout<br/>backoff + timeout artır"]
+        T1["429 Rate Limit\nexponential backoff"]
+        T2["500/502/503\nhemen + backoff"]
+        T3["Timeout\nbackoff + timeout artır"]
     end
 
     subgraph PERM["🛑 Kalıcı — retry YOK"]
-        P1["400 Bad Request<br/>senin hatan, düzelt"]
-        P2["401/403 Auth<br/>key yanlış"]
-        P3["404 Not Found<br/>endpoint yok"]
+        P1["400 Bad Request\nsenin hatan, düzelt"]
+        P2["401/403 Auth\nkey yanlış"]
+        P3["404 Not Found\nendpoint yok"]
     end
 
     subgraph DEGRAD["⚠️ Bozulma — fallback"]
-        D1["Sonnet down<br/>→ Haiku'ya düş"]
-        D2["Qdrant down<br/>→ cached response"]
+        D1["Sonnet down\n→ Haiku'ya düş"]
+        D2["Qdrant down\n→ cached response"]
     end
 
     ERR --> T1
@@ -66,7 +67,7 @@ flowchart TB
     ERR --> D2
 
     classDef tr fill:#fef3c7,stroke:#ca8a04,color:#111
-    classDef pr fill:#fee2e2,stroke:#dc2626,color:#111
+    classDef pr fill:#fed7aa,stroke:#ea580c,color:#111
     classDef dg fill:#ddd6fe,stroke:#7c3aed,color:#111
     class T1,T2,T3 tr
     class P1,P2,P3 pr
@@ -580,14 +581,16 @@ Model zinciri (Sonnet → Haiku) kodu var. 9.5 agent DLQ tablosu oluşturuldu, s
 <div class="ma-neden-sonuc" markdown>
 <div class="ma-neden-sonuc-header">🔗 Birlikte okuma — neden ne oldu</div>
 
-- **A → B:** 4 hata tipi (geçici/kalıcı/bozulma) farklı savunma gerekir; retry her yere uygulanmaz.
-- **B → C:** Tenacity + `retry_if_exception_type` + jitter + `before_sleep_log` — 4 satır decorator.
-- **C → D:** Timeout retry olmadan anlamsız (30 sn hedef, Haiku 10-15, Opus 45-60).
-- **D → E:** Circuit breaker (pybreaker) peş peşe 5 fail → 60s kapalı; retry ile birlikte tamamlayıcı.
-- **E → F:** Fallback model zinciri (Sonnet → Haiku); graceful degradation (Qdrant ölü → LLM tek başına).
-- **F → G:** 9.5 agent DLQ SQLite tablo; sessiz başarısızlık engeli.
-- **G → H:** Graceful shutdown lifespan + systemd SIGTERM + TimeoutStopSec=30.
-- **H → I:** Custom exception hiyerarşisi (RetryableError / PermanentError) retry decorator'ı kalibre eder.
+<ol class="ma-neden-sonuc-zincir" markdown>
+<li>**A → B:** 4 hata tipi (geçici/kalıcı/bozulma) farklı savunma gerekir; retry her yere uygulanmaz. Bu yüzden **hata tipi önce belirlenmeli.**</li>
+<li>**B → C:** Tenacity + `retry_if_exception_type` + jitter + `before_sleep_log` — 4 satır decorator. Bu yüzden **kütüphane boilerplate kaldırır.**</li>
+<li>**C → D:** Timeout retry olmadan anlamsız (30 sn hedef, Haiku 10-15, Opus 45-60). Bu yüzden **timeout + retry birlikte kurulur.**</li>
+<li>**D → E:** Circuit breaker (pybreaker) peş peşe 5 fail → 60s kapalı; retry ile birlikte tamamlayıcı. Bu yüzden **circuit breaker kaskad başarısızlık önler.**</li>
+<li>**E → F:** Fallback model zinciri (Sonnet → Haiku); graceful degradation (Qdrant ölü → LLM tek başına). Bu yüzden **hizmet tamamen durmaz.**</li>
+<li>**F → G:** 9.5 agent DLQ SQLite tablo; sessiz başarısızlık engeli. Bu yüzden **başarısız işler kaybolmaz.**</li>
+<li>**G → H:** Graceful shutdown lifespan + systemd SIGTERM + TimeoutStopSec=30. Bu yüzden **kapatma da hata değil.**</li>
+<li>**H → I:** Custom exception hiyerarşisi (RetryableError / PermanentError) retry decorator'ı kalibre eder. Bu yüzden **exception sınıfı retry kararını verir.**</li>
+</ol>
 
 <div class="ma-neden-sonuc-sonuc" markdown>
 **Sonuç:** 3 seviye hata savunması aktif. 429/500/timeout otomatik retry, outage'da circuit açar, ana model down ise yedeğe düşer. Canlı projen **dayanıklı**. Sonraki (8.6): Bölüm 8 imza sayfası — 15 maddeli production checklist, senin projene birebir çalıştırma.

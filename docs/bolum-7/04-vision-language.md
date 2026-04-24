@@ -7,6 +7,7 @@
 <span class="ma-persona ma-persona-is">🔵 iş</span>
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
+<div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~30 dakika</div>
 <div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 7.1 + 7.2 + 7.3 okundu. Test için 5 görsel (OCR + diyagram + fotoğraf + grafik + Türkçe metin içeren).</div>
 <div class="ma-meta-row"><strong>🎯 Çıktı:</strong> 4 vision model karşılaştırma refleksin elinde — **Claude Sonnet 4.6** vs **GPT-4o** vs **Gemini 2.5 Pro** vs **Qwen2-VL** (açık kaynak). 5 benchmark (OCR, Türkçe, diyagram, chart, sahne) üzerinde model seçim matrisi. **Mülakatta "hangi vision model?"** sorusuna **gerekçeli** cevap. **Bölüm 7 kavramsal İMZA** — 9.6 pratik imza için zemin.</div>
 </div>
@@ -58,7 +59,7 @@ flowchart TB
     end
 
     classDef c fill:#fed7aa,stroke:#ea580c,color:#111
-    classDef g fill:#dcfce7,stroke:#16a34a,color:#111
+    classDef g fill:#fef3c7,stroke:#ca8a04,color:#111
     classDef m fill:#dbeafe,stroke:#2563eb,color:#111
     classDef q fill:#ddd6fe,stroke:#7c3aed,color:#111
     class C1,C2,C3,C4 c
@@ -67,7 +68,7 @@ flowchart TB
     class Q1,Q2,Q3,Q4 q
 ```
 
-**Fiyat nüansı (2026 Nisan):** Pricing aylık değişir; bu rakamlar **referans** — projede karar anında [claude.com](https://docs.claude.com), [openai.com/api/pricing](https://openai.com/api/pricing), [ai.google.dev/pricing](https://ai.google.dev/pricing) kontrol.
+**Fiyat nüansı (2026 Nisan):** Pricing aylık değişir; bu rakamlar **referans** — projede karar anında [claude.com](https://platform.claude.com/docs), [openai.com/api/pricing](https://openai.com/api/pricing), [ai.google.dev/pricing](https://ai.google.dev/pricing) kontrol.
 
 </div>
 
@@ -305,7 +306,7 @@ Anthropic Model Overview + Claude Sonnet 4.6 System Card + Vision dokümanı vis
 **4. Açık kaynak alternatifleri ciddi ama niş.** Qwen2-VL 72B ve LLaVA-Med gibi açık kaynak vision modelleri Claude'a yaklaşıyor; Anthropic bu gerçeği cookbook'un third_party klasöründe zımnen kabul ediyor. Anthropic'in pozisyonu: **"Claude'u seç çünkü reasoning + vision + tool use tek pakette; açık kaynak seç çünkü ucuz ve customizable"** — iki ayrı optimizasyon problemi.
 
 <div class="ma-anthropic-oz-kaynak" markdown>
-**Kaynak:** [docs.claude.com — Models Overview](https://docs.claude.com/en/docs/about-claude/models/overview) (EN, ~10 dk) + [Claude Sonnet 4.5 System Card](https://www.anthropic.com/claude-sonnet-4-5-system-card) (PDF, EN, ~40 sayfa, vision benchmark sayısal veriler).
+**Kaynak:** [platform.claude.com/docs — Models Overview](https://platform.claude.com/docs/en/docs/about-claude/models/overview) (EN, ~10 dk) + [Claude Sonnet 4.5 System Card](https://www.anthropic.com/claude-sonnet-4-5-system-card) (PDF, EN, ~40 sayfa, vision benchmark sayısal veriler).
 </div>
 </div>
 
@@ -374,15 +375,17 @@ Kendi kullanım alanların (mevcut ve gelecek projelerin) için "hangi model" ka
 <div class="ma-neden-sonuc" markdown>
 <div class="ma-neden-sonuc-header">🔗 Birlikte okuma — neden ne oldu</div>
 
-- **A → B:** 4 ana VLM 2026 Nisan: Claude Sonnet 4.6, GPT-4o, Gemini 2.5 Pro, Qwen2-VL.
-- **B → C:** 5 benchmark karşılaştırma: MMMU, DocVQA, MathVista, ChartQA, Türkçe — her modelin güçlü tarafı farklı.
-- **C → D:** Claude genel + Türkçe + belge önde; GPT-4o matematik; Gemini grafik + uzun context; Qwen açık kaynak + on-prem.
-- **D → E:** Kullanım × model matrisi: 10 senaryo, her biri için tercih + alternatif.
-- **E → F:** 5 test senaryosu detay — Türkçe ürün (Claude) + matematik (GPT) + grafik (Gemini) + hukuki belge (Claude) + on-prem sağlık (Qwen).
-- **F → G:** Maliyet 1K istek/ay: Gemini $7 < GPT-4o $9 < Claude $12 < Qwen self-host $50+ flat.
-- **G → H:** Computer use Claude'un özel yeri; 2026'da tek; rakipler 1-2 yılda.
-- **H → I:** Açık ağırlık VLM ekosistemi büyüme — Qwen / LLaVA / MiniCPM-V.
-- **I → J:** 9.6 imza için 5 proje aday; öğrenci birini seçer.
+<ol class="ma-neden-sonuc-zincir" markdown>
+<li>**A → B:** 4 ana VLM 2026 Nisan: Claude Sonnet 4.6, GPT-4o, Gemini 2.5 Pro, Qwen2-VL. Bu yüzden **seçenekleri bilmek karar verdirir.**</li>
+<li>**B → C:** 5 benchmark karşılaştırma: MMMU, DocVQA, MathVista, ChartQA, Türkçe — her modelin güçlü tarafı farklı. Bu yüzden **tek benchmark yetmez.**</li>
+<li>**C → D:** Claude genel + Türkçe + belge önde; GPT-4o matematik; Gemini grafik + uzun context; Qwen açık kaynak + on-prem. Bu yüzden **senaryo modeli belirler.**</li>
+<li>**D → E:** Kullanım × model matrisi: 10 senaryo, her biri için tercih + alternatif. Bu yüzden **matris hızlı karar için araç.**</li>
+<li>**E → F:** 5 test senaryosu detay — Türkçe ürün (Claude) + matematik (GPT) + grafik (Gemini) + hukuki belge (Claude) + on-prem sağlık (Qwen). Bu yüzden **gerçek senaryo soyutu kapatır.**</li>
+<li>**F → G:** Maliyet 1K istek/ay: Gemini $7 < GPT-4o $9 < Claude $12 < Qwen self-host $50+ flat. Bu yüzden **maliyet karar faktörü.**</li>
+<li>**G → H:** Computer use Claude'un özel yeri; 2026'da tek; rakipler 1-2 yılda. Bu yüzden **computer use için Claude seç.**</li>
+<li>**H → I:** Açık ağırlık VLM ekosistemi büyüme — Qwen / LLaVA / MiniCPM-V. Bu yüzden **on-prem ihtiyaçta seçenek var.**</li>
+<li>**I → J:** 9.6 imza için 5 proje aday; öğrenci birini seçer. Bu yüzden **bu bilgi portföye dönüşür.**</li>
+</ol>
 
 <div class="ma-neden-sonuc-sonuc" markdown>
 **Sonuç:** Bölüm 7 kavramsal imza kapandı. Model seçim refleksi + 4 vendor karşılaştırma + kullanım alanına göre karar matrisi. Bölüm 7 → 5/5 TAM. Sonraki (9.6): multimodal pratik imza — senin seçtiğin projeyi canlıya çıkar.

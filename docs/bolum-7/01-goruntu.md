@@ -7,6 +7,7 @@
 <span class="ma-persona ma-persona-is">🔵 iş</span>
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
+<div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~35 dakika</div>
 <div class="ma-meta-row"><strong>📋 Önkoşul:</strong> Bölüm 2 (Claude API). Test için 1-2 örnek görsel (JPG/PNG) — ekran görüntüsü, belge, grafik, fotoğraf.</div>
 <div class="ma-meta-row"><strong>🎯 Çıktı:</strong> Claude Sonnet 4.x vision ile **5 pratik kullanım** elinde: (1) belge OCR + yapılandırma, (2) UI mockup → kod, (3) ürün görsel → açıklama, (4) grafik veri çıkarma, (5) PII tespit. Image token maliyeti hesaplama refleksi. Base64 vs URL tercih kriterleri. **Multimodal refleksi** açıldı — metin dışına çıktın.</div>
 </div>
@@ -492,7 +493,7 @@ Claude vision evrimini hızlı takip etmek gerek:
 
 ### Computer use — vision'ın ileri uzantısı
 
-[Claude computer use](https://docs.claude.com/en/docs/build-with-claude/computer-use) — Claude bilgisayar ekranını **görür** + fare + klavye simüle eder. Agent otomasyonu için radikal değişim.
+[Claude computer use](https://platform.claude.com/docs/en/docs/build-with-claude/computer-use) — Claude bilgisayar ekranını **görür** + fare + klavye simüle eder. Agent otomasyonu için radikal değişim.
 
 **Use case'ler:**
 
@@ -559,15 +560,17 @@ Bir test ekran görüntüsü üzerinde Madde 5 pattern: PII tespit + koordinat +
 <div class="ma-neden-sonuc" markdown>
 <div class="ma-neden-sonuc-header">🔗 Birlikte okuma — neden ne oldu</div>
 
-- **A → B:** Multimodal 2026 trend (10.4 Trend 2); AI Engineer araç kutusu metin dışına çıkıyor.
-- **B → C:** Claude vision base64 ve URL iki yol; kullanıcı yüklediyse base64, CDN'deyse URL.
-- **C → D:** Kısıtlar: 5 MB, 8000×8000 piksel, per request 100 image; image tokens = (w×h)/750.
-- **D → E:** 5 pratik use case: OCR, UI→kod, ürün açıklama, grafik analiz, PII tespit.
-- **E → F:** Prompt engineering vision: net referans + çoklu etiket + chain-of-thought + olumsuz talimat.
-- **F → G:** Maliyet: 1000 görsel/gün ~$9 (prompt caching ile 10× ucuz).
-- **G → H:** Visual RAG: CLIP/SigLIP embedding + Qdrant; ürün arama + benzer görsel.
-- **H → I:** Türkçe multimodal realite: iyi PDF/ürün; orta reçete; zayıf karmaşık jargon.
-- **I → J:** 8 CTO tuzak: prompt caching yok, PII taraması yok, çoklu görsel etiket eksikliği.
+<ol class="ma-neden-sonuc-zincir" markdown>
+<li>**A → B:** Multimodal 2026 trend (10.4 Trend 2); AI Engineer araç kutusu metin dışına çıkıyor. Bu yüzden **görsel desteği bilmek zorunlu oldu.**</li>
+<li>**B → C:** Claude vision base64 ve URL iki yol; kullanıcı yüklediyse base64, CDN'deyse URL. Bu yüzden **veri kaynağı yöntemi belirler.**</li>
+<li>**C → D:** Kısıtlar: 5 MB, 8000×8000 piksel, per request 100 image; image tokens = (w×h)/750. Bu yüzden **kısıtları bilmek hata önler.**</li>
+<li>**D → E:** 5 pratik use case: OCR, UI→kod, ürün açıklama, grafik analiz, PII tespit. Bu yüzden **senaryo çeşitliliği değer gösterir.**</li>
+<li>**E → F:** Prompt engineering vision: net referans + çoklu etiket + chain-of-thought + olumsuz talimat. Bu yüzden **metin promptu gibi ama farklı incelik.**</li>
+<li>**F → G:** Maliyet: 1000 görsel/gün ~$9 (prompt caching ile 10× ucuz). Bu yüzden **caching görsel işlemde kritik.**</li>
+<li>**G → H:** Visual RAG: CLIP/SigLIP embedding + Qdrant; ürün arama + benzer görsel. Bu yüzden **Bölüm 3 bilgisi görsel alana taşınır.**</li>
+<li>**H → I:** Türkçe multimodal realite: iyi PDF/ürün; orta reçete; zayıf karmaşık jargon. Bu yüzden **Türkçe sınırları önceden bilinmeli.**</li>
+<li>**I → J:** 8 CTO tuzak: prompt caching yok, PII taraması yok, çoklu görsel etiket eksikliği. Bu yüzden **üretimde tuzaklar kaçınılmaz değil.**</li>
+</ol>
 
 <div class="ma-neden-sonuc-sonuc" markdown>
 **Sonuç:** Claude vision pratik refleksi var. Base64 vs URL, 5 use case, prompt pattern, maliyet tahmini, Türkçe sınırı — hepsi somut. Sonraki (7.2): ses — Whisper STT + ElevenLabs TTS + Türkçe durum.
@@ -581,5 +584,5 @@ Bir test ekran görüntüsü üzerinde Madde 5 pattern: PII tespit + koordinat +
 
 ← [Bölüm 7 girişi](index.md) &nbsp;|&nbsp; [Ana sayfa](../index.md) &nbsp;|&nbsp; [Bölüm 6 — Agent + MCP](../bolum-6/index.md)
 
-**Pekiştirme:** [Claude vision docs](https://docs.claude.com/en/docs/build-with-claude/vision) + [Anthropic Cookbook vision notebook'ları](https://github.com/anthropics/claude-cookbooks/tree/main/multimodal) + [Computer use guide](https://docs.claude.com/en/docs/build-with-claude/computer-use). Üçü 2 saatte okunur; vision API refleksi oturur.
+**Pekiştirme:** [Claude vision docs](https://platform.claude.com/docs/en/docs/build-with-claude/vision) + [Anthropic Cookbook vision notebook'ları](https://github.com/anthropics/claude-cookbooks/tree/main/multimodal) + [Computer use guide](https://platform.claude.com/docs/en/docs/build-with-claude/computer-use). Üçü 2 saatte okunur; vision API refleksi oturur.
 </div>

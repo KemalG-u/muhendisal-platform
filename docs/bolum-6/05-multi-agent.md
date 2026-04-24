@@ -7,6 +7,7 @@
 <span class="ma-persona ma-persona-is">🔵 iş</span>
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
+<div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~35 dakika</div>
 <div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 6.1 (Agent + ReAct) + 6.2 (tool calling) + 6.4 (MCP server) bitmiş — tek agent + tool kullanma refleksin var; Python `anthropic` SDK veya Claude Code kurulu</div>
 <div class="ma-meta-row"><strong>🎯 Çıktı:</strong> Bir görevin **tek agent'la** mı **multi-agent'la** mı çözüleceğini 5-sinyal karar matrisiyle tespit ediyorsun; Python'da **orchestrator-workers pattern**'inde 3 paralel subagent çalıştırıp sonucu birleştiriyorsun; Claude Code'da `.claude/agents/` ile kendi özel subagent'ını tanımlayıp tetikliyorsun.</div>
 </div>
@@ -66,7 +67,7 @@ flowchart TB
   classDef user fill:#ddd6fe,stroke:#7c3aed,color:#111
   classDef orch fill:#dbeafe,stroke:#2563eb,color:#111
   classDef plan fill:#fed7aa,stroke:#ea580c,color:#111
-  classDef sub fill:#dcfce7,stroke:#16a34a,color:#111
+  classDef sub fill:#fef3c7,stroke:#ca8a04,color:#111
   classDef out fill:#fef3c7,stroke:#ca8a04,color:#111
   class U user
   class ORCH,MERGE orch
@@ -322,12 +323,14 @@ Repo linkini kaydet: `muhendisal-notlarim/bolum-6/05-multi-agent/proje-repo.txt`
 <div class="ma-neden-sonuc" markdown>
 <div class="ma-neden-sonuc-header">🔗 Birlikte okuma — neden ne oldu</div>
 
-- **A → B:** Tek agent büyük görevlerde **bağlam şişmesi + kalite düşüşü** yaşıyor — multi-agent'ın ihtiyacı buradan doğar.
-- **B → C:** Anthropic 2026 Mart'ta **5-katman mimari** yayınladı (MCP → Skills → Agent → Subagents → Agent Teams) — Claude Code'un kendisi bu mimari üstünde çalışıyor.
-- **C → D:** 5 pattern (sequential/operator/split-merge/agent-teams/headless) + karar matrisi — "işçiler konuşacak mı" ana soru.
-- **D → E:** Orchestrator-workers en yaygın üretim deseni — orchestrator 200k context plana ayırıyor, subagent taze 200k alıyor = **context isolation**.
-- **E → F:** Anthropic "single-threaded master loop" felsefesi — karmaşık framework yerine sadelik, **debug edilebilirlik** birinci önem.
-- **F → G:** 5-sinyal karar kuralı ile "yanlışlıkla multi-agent'a kaymak" tuzağından kaçıyorsun; Python SDK + asyncio.gather ile ham pattern kurabiliyorsun; Claude Code `.claude/agents/` ile proje-özgü subagent tanımlıyorsun.
+<ol class="ma-neden-sonuc-zincir" markdown>
+<li>**A → B:** Tek agent büyük görevlerde **bağlam şişmesi + kalite düşüşü** yaşıyor — multi-agent'ın ihtiyacı buradan doğar. Bu yüzden **bağlam izolasyonu multi-agent'ın özü.**</li>
+<li>**B → C:** Anthropic 2026 Mart'ta **5-katman mimari** yayınladı — Claude Code'un kendisi bu mimari üstünde çalışıyor. Bu yüzden **referans mimari hazır.**</li>
+<li>**C → D:** 5 pattern (sequential/operator/split-merge/agent-teams/headless) + karar matrisi — 'işçiler konuşacak mı' ana soru. Bu yüzden **pattern seçimi önce sorulur.**</li>
+<li>**D → E:** Orchestrator-workers en yaygın üretim deseni — orchestrator plan, subagent taze context alır = **context isolation.** Bu yüzden **plan + iş ayrımı temel prensip.**</li>
+<li>**E → F:** Anthropic 'single-threaded master loop' felsefesi — karmaşık framework yerine sadelik, **debug edilebilirlik** birinci önem. Bu yüzden **sadelik tercih edilir.**</li>
+<li>**F → G:** 5-sinyal karar kuralı ile 'yanlışlıkla multi-agent'a kaymak' tuzağından kaçıyorsun; Python SDK + asyncio.gather ile ham pattern kurabiliyorsun. Bu yüzden **ham kurulum anlayışı sağlar.**</li>
+</ol>
 
 <div class="ma-neden-sonuc-sonuc" markdown>
 **Sonuç:** Multi-agent bir araç, ama **ilk refleks değil.** Doğru seçim matrisini bilmek + pattern'i ham SDK ile kurabilmek + Claude Code subagent'larını proje-özgü tanımlayabilmek — bu üçü birlikte AI Engineer'ı multi-agent hype'ından ayırıyor. 6.6'da Claude Agent SDK, 6.7'de LangChain Agents karşılaştırması ile bu mimari kararı framework boyutunda sınayacağız. 6.8 KarıncaAI vakası gerçek üretim multi-agent (KarıncaAI'nın 5 agent'lı içerik orkestrasyonu) olacak — Bölüm 6'nın kapanış savunması.

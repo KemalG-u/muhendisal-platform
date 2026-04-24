@@ -7,6 +7,7 @@
 <span class="ma-persona ma-persona-is">🔵 iş</span>
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
+<div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~30 dakika</div>
 <div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 6.1 bitmiş — workflow/agent/ReAct ayrımı net; Anthropic SDK kurulu + `ANTHROPIC_API_KEY` env aktif</div>
 <div class="ma-meta-row"><strong>🎯 Çıktı:</strong> Claude API'nin `tools` parametresini **JSON Schema** ile doğru tanımlarsın; `tool_use` cevabını parse eder, tool'u çalıştırır, sonucu `tool_result` ile geri yollarsın; **3 farklı tool** (hesap, hava, veritabanı) ile kendi mini-agent'ını canlıya geçersin.</div>
 </div>
@@ -59,7 +60,7 @@ flowchart LR
   classDef cfg fill:#fed7aa,stroke:#ea580c,color:#111
   classDef llm fill:#dbeafe,stroke:#2563eb,color:#111
   classDef exec fill:#fef3c7,stroke:#ca8a04,color:#111
-  classDef out fill:#dcfce7,stroke:#16a34a,color:#111
+  classDef out fill:#fef3c7,stroke:#ca8a04,color:#111
   class U user
   class SYS,TDEF cfg
   class API,TU llm
@@ -286,7 +287,7 @@ resp = client.messages.create(
 <div class="ma-anthropic-oz" markdown>
 <div class="ma-anthropic-oz-header">📖 Anthropic bu konuyu nasıl anlatıyor — öz</div>
 
-Anthropic [Tool Use Overview](https://docs.claude.com/en/docs/build-with-claude/tool-use/overview) dokümanında tool calling'i **Claude 4 serisinin en gelişmiş kapasitelerinden** olarak tanıtıyor.
+Anthropic [Tool Use Overview](https://platform.claude.com/docs/en/docs/build-with-claude/tool-use/overview) dokümanında tool calling'i **Claude 4 serisinin en gelişmiş kapasitelerinden** olarak tanıtıyor.
 
 **1. Parallel tool use default açık.** Claude 3.5'ten itibaren bir adımda birden fazla tool çağırabilir. `disable_parallel_tool_use=True` ile kapatabilirsin (basit ReAct'ta sıralılık istersen).
 
@@ -311,7 +312,7 @@ Anthropic [Tool Use Overview](https://docs.claude.com/en/docs/build-with-claude/
     **Token verimliliği.** Claude 4 serisi tool use'da **token-efficient mode** (`anthropic-beta: token-efficient-tools-2025-02-19`) — %14 token tasarrufu, yüksek hacimli agent'larda fark ediyor.
 
 <div class="ma-anthropic-oz-kaynak" markdown>
-**Kaynak:** [docs.claude.com — Tool Use Overview](https://docs.claude.com/en/docs/build-with-claude/tool-use/overview) (EN, ~30 dk). Tüm parametreler + örnekler + best practices. Pekiştirme: [Anthropic Cookbook — tool_use klasörü](https://github.com/anthropics/claude-cookbooks/tree/main/tool_use) — 8 farklı tool use deseni, parallel calling, JSON mode, customer service agent.
+**Kaynak:** [platform.claude.com/docs — Tool Use Overview](https://platform.claude.com/docs/en/docs/build-with-claude/tool-use/overview) (EN, ~30 dk). Tüm parametreler + örnekler + best practices. Pekiştirme: [Anthropic Cookbook — tool_use klasörü](https://github.com/anthropics/claude-cookbooks/tree/main/tool_use) — 8 farklı tool use deseni, parallel calling, JSON mode, customer service agent.
 </div>
 </div>
 
@@ -341,11 +342,13 @@ Repo linkini kaydet: `muhendisal-notlarim/bolum-6/02-tool-calling/mini-agent-rep
 <div class="ma-neden-sonuc" markdown>
 <div class="ma-neden-sonuc-header">🔗 Birlikte okuma — neden ne oldu</div>
 
-- **A → B:** LLM canlı veriye ulaşamaz + gerçek dünyayı değiştiremez — tool calling bu iki eksiği kapatıyor.
-- **B → C:** Protokol iki adımlı: Claude `tool_use` → sen çalıştır → `tool_result` geri.
-- **C → D:** `description` alanı Claude'un tool seçim motoru — muğlak yazım = yanlış seçim = agent halüsinasyonu.
-- **D → E:** `tool_choice` 4 modu (auto/any/tool/none) ile Claude'un özerliğini kontrol ediyorsun.
-- **E → F:** 7 yaygın tuzak (muğlak description, çok fazla tool, enum kullanmama, …) — bu sayfayla birlikte CTO refleksi kazanıyorsun.
+<ol class="ma-neden-sonuc-zincir" markdown>
+<li>**A → B:** LLM canlı veriye ulaşamaz + gerçek dünyayı değiştiremez — tool calling bu iki eksiği kapatıyor. Bu yüzden **tool calling agent'ın gözü ve eli.**</li>
+<li>**B → C:** Protokol iki adımlı: Claude `tool_use` → sen çalıştır → `tool_result` geri. Bu yüzden **kontrol her zaman uygulamanda.**</li>
+<li>**C → D:** `description` alanı Claude'un tool seçim motoru — muğlak yazım = yanlış seçim = agent halüsinasyonu. Bu yüzden **description en kritik alan.**</li>
+<li>**D → E:** `tool_choice` 4 modu (auto/any/tool/none) ile Claude'un özerliğini kontrol ediyorsun. Bu yüzden **esneklik tam sende.**</li>
+<li>**E → F:** 7 yaygın tuzak (muğlak description, çok fazla tool, enum kullanmama…) — bu sayfayla birlikte CTO refleksi kazanıyorsun. Bu yüzden **tuzakları önceden bilmek kurtarır.**</li>
+</ol>
 
 <div class="ma-neden-sonuc-sonuc" markdown>
 **Sonuç:** Tool calling mekaniği tüm Anthropic agent ekosisteminin temel taşı. 6.3-6.4'te MCP ile tool'lara **taşınabilir standart** getireceğiz — kendi yazdığın tool'ları Claude Desktop'ta başkalarının da kullanabilmesi. 6.5-6.8'de multi-agent + production dersleri.

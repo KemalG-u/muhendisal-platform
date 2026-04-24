@@ -7,6 +7,7 @@
 <span class="ma-persona ma-persona-is">🔵 iş</span>
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
+<div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~45 dakika</div>
 <div class="ma-meta-row"><strong>📋 Önkoşul:</strong> Bölüm 6'nın 6.1–6.7 hepsi bitmiş — agent/tool/MCP/multi-agent/SDK karar refleksi oturmuş; 4.8 HBV imza sayfası okunmuş (bu sayfa HBV ile **CTO simetrisi** kurar)</div>
 <div class="ma-meta-row"><strong>🎯 Çıktı:</strong> Çalışır durumda bir **multi-agent içerik pipeline**'ının **tam anatomisi** — neden bu pattern, neden bu SDK, neden heterojen model seçimi; klonlayıp kendi varyantını 1–2 saatte deploy ediyorsun. Bölüm 6 boyunca öğrendiğin 7 sayfanın **tek bir gerçek projede** sentezi.</div>
 </div>
@@ -67,7 +68,7 @@ flowchart LR
     CLI -->|"tümü + flag"| DB
 
     classDef orch fill:#dbeafe,stroke:#2563eb,color:#111
-    classDef agent fill:#dcfce7,stroke:#16a34a,color:#111
+    classDef agent fill:#fef3c7,stroke:#ca8a04,color:#111
     classDef out fill:#fef3c7,stroke:#ca8a04,color:#111
     classDef data fill:#fed7aa,stroke:#ea580c,color:#111
     class CLI orch
@@ -394,7 +395,7 @@ Anthropic'in [Building Effective Agents](https://www.anthropic.com/research/buil
     **LangGraph'a geçmek ne zaman değer.** Üç sinyal: (a) uzun süreli kullanıcı oturumu (bu proje yok), (b) multi-provider deneme (bu proje planlamıyor), (c) HITL onay adımı (bu proje publisher eşik ile otomatik). **Yok.** LangGraph eklemek bu projeye 3× soyutlama getirir, 0× değer. 6.7'deki "framework-first yanlış" kuralı.
 
 <div class="ma-anthropic-oz-kaynak" markdown>
-**Kaynak:** [Anthropic — Building Effective Agents](https://www.anthropic.com/research/building-effective-agents) (referans metin, 2024 Aralık). Pekiştirme: [Anthropic Academy — Introduction to Subagents](https://anthropic.skilljar.com/) (~30 dk, sertifikalı). Kod referansı: [anthropics/claude-cookbooks — agents klasörü](https://github.com/anthropics/claude-cookbooks/tree/main/patterns/agents). Fiyat doğrulama: [docs.claude.com/en/docs/about-claude/pricing](https://docs.claude.com/en/docs/about-claude/pricing).
+**Kaynak:** [Anthropic — Building Effective Agents](https://www.anthropic.com/research/building-effective-agents) (referans metin, 2024 Aralık). Pekiştirme: [Anthropic Academy — Introduction to Subagents](https://anthropic.skilljar.com/) (~30 dk, sertifikalı). Kod referansı: [anthropics/claude-cookbooks — agents klasörü](https://github.com/anthropics/claude-cookbooks/tree/main/patterns/agents). Fiyat doğrulama: [platform.claude.com/docs/en/docs/about-claude/pricing](https://platform.claude.com/docs/en/docs/about-claude/pricing).
 </div>
 </div>
 
@@ -432,13 +433,15 @@ Bu fork **AI Engineer başvurularında gösterebileceğin somut eser** — müla
 <div class="ma-neden-sonuc" markdown>
 <div class="ma-neden-sonuc-header">🔗 Birlikte okuma — neden ne oldu</div>
 
-- **A → B:** Bölüm 6 boyunca 7 sayfa teori kurduk; AI Engineer mülakatlarında ayırt edici soru "gerçek bir agent sistemi kurdun mu" — bu sayfa o sorunun cevabı.
-- **B → C:** Görev tanımı (içerik özet pipeline) 6.1'deki 5-sinyal kontrolünde 4/5 agent — multi-agent doğru seçim. 4.8 HBV (5/5 workflow) ile simetri.
-- **C → D:** 5 CTO kararı — (1) ham SDK, (2) heterojen model, (3) orchestrator-workers + evaluator-optimizer hibrit, (4) structured output, (5) Semaphore rate limit — her biri Bölüm 6'nın bir sayfasının doğrudan karşılığı.
-- **D → E:** 4 modül anatomisi — radar (deterministic, LLM yok), yazar (Sonnet, kreatif), evaluator (Haiku + tool_choice, kalıplı), publisher (dosya + SMTP, dış bağımlılık min).
-- **E → F:** Maliyet hesabı: $2.60/ay, %38 heterojen-model tasarrufu. 45 dk manuel iş → 1 dk agent iş, $31/yıl.
-- **F → G:** HBV vs içerik özet CTO simetrisi — doğru pattern seçimi hayat kurtarır, yanlış pattern en pahalı hata.
-- **G → H:** `git clone + uv sync + .env + uv run pipeline.py` → 5 dakikada çalışan sistem + 9 test + ruff temiz = öğrencinin fork'layıp **kendi varyantını deploy edeceği portföy tohumu**.
+<ol class="ma-neden-sonuc-zincir" markdown>
+<li>**A → B:** Bölüm 6 boyunca 7 sayfa teori kurduk; AI Engineer mülakatlarında ayırt edici soru 'gerçek bir agent sistemi kurdun mu' — bu sayfa o sorunun cevabı. Bu yüzden **pratik kanıt teoriden değerli.**</li>
+<li>**B → C:** Görev tanımı (içerik özet pipeline) 6.1'deki 5-sinyal kontrolünde 4/5 agent — multi-agent doğru seçim. 4.8 HBV (5/5 workflow) ile simetri. Bu yüzden **doğru pattern seçildi.**</li>
+<li>**C → D:** 5 CTO kararı — ham SDK, heterojen model, orchestrator-workers + evaluator-optimizer hibrit, structured output, Semaphore rate limit — her biri Bölüm 6'nın bir sayfasının karşılığı. Bu yüzden **teori pratikte görünür olur.**</li>
+<li>**D → E:** 4 modül anatomisi — radar (deterministic, LLM yok), yazar (Sonnet), evaluator (Haiku + tool_choice), publisher (dosya + SMTP). Bu yüzden **modül ayrımı sorumluluk netler.**</li>
+<li>**E → F:** Maliyet hesabı: $2.60/ay, %38 heterojen-model tasarrufu. 45 dk manuel iş → 1 dk agent iş, $31/yıl. Bu yüzden **rakamlar karar verdirir.**</li>
+<li>**F → G:** HBV vs içerik özet CTO simetrisi — doğru pattern seçimi hayat kurtarır, yanlış pattern en pahalı hata. Bu yüzden **pattern bilgisi mühendislik değeri.**</li>
+<li>**G → H:** `git clone + uv sync + .env + uv run pipeline.py` → 5 dakikada çalışan sistem + 9 test + ruff temiz = öğrencinin fork'layıp **kendi varyantını deploy edeceği portföy tohumu.** Bu yüzden **tekrar üretebilirlik portföy kanıtı.**</li>
+</ol>
 
 <div class="ma-neden-sonuc-sonuc" markdown>
 **Sonuç:** Bölüm 6'nın sentezi ve kapanışı — ham `anthropic` SDK + orchestrator-workers + evaluator-optimizer + heterojen model + structured output + rate limit koruması + maliyet şeffaflığı hepsi tek projede. 4.8 HBV (workflow) + 6.8 bu proje (multi-agent) birlikte pattern-görev eşleştirmesi refleksini kapatıyor. Artık gerçek bir iş senaryosunda "hangi pattern, hangi SDK, hangi model" sorusu karar matrisiyle **cevaplanıyor**. Bir sonraki adım — **Bölüm 9 Deploy + Portföy** — üç portföy projesini (bu + 6.4 MCP server + 4.8 HBV alternatifi) production'a çıkarıp kamuya açık hâle getirmek.

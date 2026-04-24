@@ -7,6 +7,7 @@
 <span class="ma-persona ma-persona-is">🔵 iş</span>
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
+<div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~30 dakika</div>
 <div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 8.1 + 8.2 + 8.3 okundu. Canlı projen (9.4 veya 9.5) çalışıyor.</div>
 <div class="ma-meta-row"><strong>🎯 Çıktı:</strong> **JSON structured log** format uyguluyorsun (python-json-logger veya structlog); her istek için trace_id + user_id + token_usage + latency kaydı var; PII log'ta maskelenmiş; **3 kritik metrik** (error rate, p95 latency, token/saat) sürekli görünür. Küçük proje için basit dosya log + `jq`, orta-büyük için Grafana + Loki mimarisi biliyorsun. 24/7 agent (9.5) için journalctl refleksin var.</div>
 </div>
@@ -37,14 +38,14 @@
 ```mermaid
 flowchart TB
     subgraph OBS["Observability — 3 boyut"]
-        LOG[📝 LOG<br/>Ne oldu?<br/>discrete events]
-        MET[📊 METRIC<br/>Ne kadar oldu?<br/>time series]
-        TRA[🔗 TRACE<br/>Nasıl oldu?<br/>request path]
+        LOG[📝 LOG\nNe oldu?\ndiscrete events]
+        MET[📊 METRIC\nNe kadar oldu?\ntime series]
+        TRA[🔗 TRACE\nNasıl oldu?\nrequest path]
     end
 
     Q1["❓ Kullanıcı X neden 500 aldı?"]
     Q2["❓ p95 latency son 1 saatte arttı mı?"]
-    Q3["❓ /ara endpoint → Claude → Qdrant<br/>    zincirinde darboğaz nerede?"]
+    Q3["❓ /ara endpoint → Claude → Qdrant\n    zincirinde darboğaz nerede?"]
 
     Q1 -->|cevap| LOG
     Q2 -->|cevap| MET
@@ -626,15 +627,17 @@ Heartbeat cron 2 saat uyarı kurulu VEYA Uptime Kuma VEYA Sentry DSN aktif. Test
 <div class="ma-neden-sonuc" markdown>
 <div class="ma-neden-sonuc-header">🔗 Birlikte okuma — neden ne oldu</div>
 
-- **A → B:** Log/metric/trace 3 boyutu farklı sorulara cevap; canlı proje için üçü de gerekli.
-- **B → C:** Structured JSON log — grep yerine jq, filtre kolay, metric üretimi doğrudan.
-- **C → D:** python-json-logger basit + yaygın; structlog modern, bind context + async.
-- **D → E:** Trace ID middleware — bir isteğin tüm log hikayesi `jq 'select(.trace_id==X)'`.
-- **E → F:** PII maskeleme presidio 8.1'den devam; log KVKK/GDPR uyumu.
-- **F → G:** RotatingFileHandler + logrotate disk taşmayı önler; 14 gün backup.
-- **G → H:** 3 kritik metrik (error rate, p95 latency, token/saat) — küçük proje jq cron, orta-büyük Grafana+Loki.
-- **H → I:** 24/7 agent (9.5) heartbeat + Uptime Kuma + Sentry sessiz başarısızlığı yakalar.
-- **I → J:** Alert: email resmi, Telegram anlık, Slack ekip; solo → Telegram.
+<ol class="ma-neden-sonuc-zincir" markdown>
+<li>**A → B:** Log/metric/trace 3 boyutu farklı sorulara cevap; canlı proje için üçü de gerekli. Bu yüzden **üçü birlikte kurulur.**</li>
+<li>**B → C:** Structured JSON log — grep yerine jq, filtre kolay, metric üretimi doğrudan. Bu yüzden **format seçimi debug hızını belirler.**</li>
+<li>**C → D:** python-json-logger basit + yaygın; structlog modern, bind context + async. Bu yüzden **başla basitle, büyürken geç.**</li>
+<li>**D → E:** Trace ID middleware — bir isteğin tüm log hikayesi `jq 'select(.trace_id==X)'`. Bu yüzden **trace ID olmadan izleme kördür.**</li>
+<li>**E → F:** PII maskeleme presidio 8.1'den devam; log KVKK/GDPR uyumu. Bu yüzden **log da kişisel veri içerebilir.**</li>
+<li>**F → G:** RotatingFileHandler + logrotate disk taşmayı önler; 14 gün backup. Bu yüzden **disk yönetimi logging'in parçası.**</li>
+<li>**G → H:** 3 kritik metrik (error rate, p95 latency, token/saat) — küçük proje jq cron, orta-büyük Grafana+Loki. Bu yüzden **ölçek araç seçimini belirler.**</li>
+<li>**H → I:** 24/7 agent heartbeat + Uptime Kuma + Sentry sessiz başarısızlığı yakalar. Bu yüzden **heartbeat yoksa çöküş fark edilmez.**</li>
+<li>**I → J:** Alert: email resmi, Telegram anlık, Slack ekip; solo → Telegram. Bu yüzden **alert kanalı proje tipine uygun.**</li>
+</ol>
 
 <div class="ma-neden-sonuc-sonuc" markdown>
 **Sonuç:** Canlı proje artık **gözlemlenebilir**. Hata olsa öğrenirsin, trend değişse görürsün, agent sessiz kalsa alarm çalar. Sonraki (8.5): hata yönetimi — log'da görülen hataları nasıl **önlemeye** çevireceğin.

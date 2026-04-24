@@ -43,8 +43,8 @@ flowchart LR
 
   classDef user fill:#ddd6fe,stroke:#7c3aed,color:#111
   classDef page fill:#dbeafe,stroke:#2563eb,color:#111
-  classDef pilot fill:#dcfce7,stroke:#16a34a,color:#111
-  classDef goal fill:#dcfce7,stroke:#16a34a,color:#111
+  classDef pilot fill:#fef3c7,stroke:#ca8a04,color:#111
+  classDef goal fill:#fef3c7,stroke:#ca8a04,color:#111
   class S user
   class P81,P82,P83,P84,P85 page
   class P86 pilot
@@ -81,7 +81,7 @@ Bu çıktı **Bölüm 9 (Deploy) için ön koşul.** Deploy etmeden önce güven
 
 Anthropic production güvenliğine **son derece ağırlık verir** — şirket kültüründe AI safety merkezi. Kullanılabilir kaynaklar:
 
-**1. API Best Practices — docs.claude.com/en/api/overview.** Rate limit, error codes, retry stratejisi. 8.3 ve 8.5'in temel referansı. Anthropic'in 429 response'a karşı `Retry-After` header önerisi ve exponential backoff deseni burada.
+**1. API Best Practices — platform.claude.com/docs/en/api/overview.** Rate limit, error codes, retry stratejisi. 8.3 ve 8.5'in temel referansı. Anthropic'in 429 response'a karşı `Retry-After` header önerisi ve exponential backoff deseni burada.
 
 **2. Constitutional AI — anthropic.com/research.** Anthropic'in model güvenliği felsefesi. 8.2 etik bölümünün arka planı. Kısa okuma değil ama fikir çerçevesi oturması için ilk 2 sayfası yeter.
 
@@ -92,7 +92,7 @@ Anthropic production güvenliğine **son derece ağırlık verir** — şirket k
 **5. Responsible Scaling Policy — anthropic.com/rsp.** Anthropic'in kendi iç güvenlik disiplini dokümanı. Kendi projen için ilham kaynağı olarak faydalı — enterprise müşterisi seninle konuşurken bu dokümanı referans gösterebilirsin.
 
 <div class="ma-anthropic-oz-kaynak" markdown>
-**Kaynak:** [docs.claude.com — API Overview (errors & rate limits)](https://docs.claude.com/en/api/errors) (İngilizce, ~15 dk). 8.3 ve 8.5 için birincil referans — Anthropic'in beklediği retry/backoff deseni net yazılı.
+**Kaynak:** [platform.claude.com/docs — API Overview (errors & rate limits)](https://platform.claude.com/docs/en/api/errors) (İngilizce, ~15 dk). 8.3 ve 8.5 için birincil referans — Anthropic'in beklediği retry/backoff deseni net yazılı.
 </div>
 </div>
 

@@ -7,6 +7,7 @@
 <span class="ma-persona ma-persona-is">🔵 iş</span>
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
+<div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~25 dakika</div>
 <div class="ma-meta-row"><strong>📋 Önkoşul:</strong> Bölüm 8'in tamamı (8.1-8.5) okundu. Canlı projen (9.4 veya 9.5) deploy edilmiş veya edilmek üzere.</div>
 <div class="ma-meta-row"><strong>🎯 Çıktı:</strong> **15 maddeli pre-launch checklist** senin projene çalıştırılmış, her maddenin yanında **kanıt** (komut çıktısı, screenshot, commit SHA). Canlıya çıkmaya **objektif olarak** hazır — 15 madde dolu ise "GO", herhangi biri eksik ise "NO-GO". Bu sayfa Bölüm 8'in imza sayfası — 5 kategoride (güvenlik/maliyet/observability/hata/deploy) her biri 3 madde. **Platform'un ikinci imza sayfası** (ilki 9.4 RAG Chatbot portföy).</div>
 </div>
@@ -31,7 +32,7 @@ Bu sayfa **objektif** test — 15 madde, her biri evet/hayır cevabı, her biri 
 
 ```mermaid
 flowchart TB
-    CHECKLIST[📋 Production Checklist<br/>15 madde]
+    CHECKLIST[📋 Production Checklist\n15 madde]
 
     subgraph K1["🔐 Güvenlik (3)"]
         G1[Prompt injection savunma]
@@ -70,7 +71,7 @@ flowchart TB
     CHECKLIST --> K5
 
     classDef cat fill:#dbeafe,stroke:#2563eb,color:#111
-    classDef item fill:#dcfce7,stroke:#16a34a,color:#111
+    classDef item fill:#fef3c7,stroke:#ca8a04,color:#111
     class K1,K2,K3,K4,K5 cat
     class G1,G2,G3,M1,M2,M3,O1,O2,O3,H1,H2,H3,D1,D2,D3 item
 ```
@@ -454,7 +455,7 @@ Senin projen **Claude kullanıyorsa** Anthropic'in sağladığı güvenlik refle
 
 ### Anthropic Console Claude's Operational Checklist (yayın yok, önerilir)
 
-Anthropic resmi olarak "müşteri deploy checklist'i" yayınlamadı (2026 itibarıyla). Ama [Anthropic blog posts](https://www.anthropic.com/news) + [Claude docs](https://docs.claude.com/) + community blog'lar (Simon Willison vs) ipuçları verir. Bu sayfanın 15 maddesi **endüstri standartı**na yakın.
+Anthropic resmi olarak "müşteri deploy checklist'i" yayınlamadı (2026 itibarıyla). Ama [Anthropic blog posts](https://www.anthropic.com/news) + [Claude docs](https://platform.claude.com/docs/) + community blog'lar (Simon Willison vs) ipuçları verir. Bu sayfanın 15 maddesi **endüstri standartı**na yakın.
 
 </details>
 
@@ -512,15 +513,17 @@ Toplam: X/15. GO/NO-GO kararı yazılı.
 <div class="ma-neden-sonuc" markdown>
 <div class="ma-neden-sonuc-header">🔗 Birlikte okuma — neden ne oldu</div>
 
-- **A → B:** Bölüm 8 kavramları (güvenlik + etik + maliyet + observability + hata) checklist'e dönüştü.
-- **B → C:** 5 kategori × 3 madde = 15 madde; her madde kanıt gerektirir.
-- **C → D:** G1-G2-G3 güvenlik (prompt injection + PII + secret); MUSTN'T BE incomplete.
-- **D → E:** M1-M2-M3 maliyet (hard cap + rate limit + budget); fatura şoku engeli.
-- **E → F:** O1-O2-O3 observability (log + metric + heartbeat); sessiz başarısızlık engeli.
-- **F → G:** H1-H2-H3 hata yönetimi (retry + circuit + fallback); outage dayanıklılığı.
-- **G → H:** D1-D2-D3 deploy (Docker + CI/CD + rollback); standart production refleksi.
-- **H → I:** GO/NO-GO karar matrisi; 5 zorunlu madde + 10 tolere edilebilir.
-- **I → J:** Launch sonrası 10 dk/2 saat/24 saat/1 hafta gözlem + post-mortem.
+<ol class="ma-neden-sonuc-zincir" markdown>
+<li>**A → B:** Bölüm 8 kavramları (güvenlik + etik + maliyet + observability + hata) checklist'e dönüştü. Bu yüzden **soyut → somut kontrol listesi.**</li>
+<li>**B → C:** 5 kategori × 3 madde = 15 madde; her madde kanıt gerektirir. Bu yüzden **iddia değil, kanıt sayılır.**</li>
+<li>**C → D:** G1-G2-G3 güvenlik (prompt injection + PII + secret); MUSTN'T BE incomplete. Bu yüzden **güvenlik zorunlu, tercihli değil.**</li>
+<li>**D → E:** M1-M2-M3 maliyet (hard cap + rate limit + budget); fatura şoku engeli. Bu yüzden **maliyet kontrol sistematik.**</li>
+<li>**E → F:** O1-O2-O3 observability (log + metric + heartbeat); sessiz başarısızlık engeli. Bu yüzden **görünmez hata yakalanır.**</li>
+<li>**F → G:** H1-H2-H3 hata yönetimi (retry + circuit + fallback); outage dayanıklılığı. Bu yüzden **sistem tek nokta hataya dayanır.**</li>
+<li>**G → H:** D1-D2-D3 deploy (Docker + CI/CD + rollback); standart production refleksi. Bu yüzden **deploy sürecinde sürpriz olmaz.**</li>
+<li>**H → I:** GO/NO-GO karar matrisi; 5 zorunlu madde + 10 tolere edilebilir. Bu yüzden **ne zaman deploy? sorusu netleşir.**</li>
+<li>**I → J:** Launch sonrası 10 dk/2 saat/24 saat/1 hafta gözlem + post-mortem. Bu yüzden **deploy bitti ≠ iş bitti.**</li>
+</ol>
 
 <div class="ma-neden-sonuc-sonuc" markdown>
 **Sonuç:** Bölüm 8 kapandı — TAM 7/7. Canlıya çıkış **objektif kriter** ile yapılıyor. 15 madde checklist platform'un ikinci imza sayfası (ilki 9.4 RAG portföy). Kemal hedefi ("sondan AI Engineer çıkar") kriterleri daha da netleşti — 2 canlı proje + 15/15 checklist + LinkedIn strateji + topluluk bağlantısı.

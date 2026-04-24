@@ -59,9 +59,9 @@ flowchart LR
 
   classDef user fill:#ddd6fe,stroke:#7c3aed,color:#111
   classDef page fill:#dbeafe,stroke:#2563eb,color:#111
-  classDef pilot fill:#dcfce7,stroke:#16a34a,color:#111
+  classDef pilot fill:#fef3c7,stroke:#ca8a04,color:#111
   classDef infra fill:#fed7aa,stroke:#ea580c,color:#111
-  classDef goal fill:#dcfce7,stroke:#16a34a,color:#111
+  classDef goal fill:#fef3c7,stroke:#ca8a04,color:#111
   classDef ext fill:#fed7aa,stroke:#ea580c,color:#111
   class S user
   class P61,P62,P63,P65,P66,P67 page
@@ -111,7 +111,7 @@ Bölüm 6 **Anthropic'in en kalın ve en güncel teknik koleksiyonu.** 4 Academy
 
 **4. Introduction to Agent Skills (~45 dk, sertifikalı).** "Skills" Anthropic'in yeni kavramı (2025) — MCP tool'larının üstüne "yetenek paketi" katmanı. 6.6 Agent SDK ile birleşik okuma.
 
-**5. Docs — MCP Resources + Tools + Prompts.** [docs.claude.com/en/docs/mcp](https://docs.claude.com/en/docs/mcp) Anthropic'in canonical MCP dokümantasyonu. 3 primitive'in tam spesifikasyonu burada. 6.3-6.4'te referans.
+**5. Docs — MCP Resources + Tools + Prompts.** [platform.claude.com/docs/en/docs/mcp](https://platform.claude.com/docs/en/docs/mcp) Anthropic'in canonical MCP dokümantasyonu. 3 primitive'in tam spesifikasyonu burada. 6.3-6.4'te referans.
 
 **6. GitHub — anthropics/mcp-server ve ekosistem sunucuları.** Claude'un desteklediği örnek MCP server'lar (Slack, Google Drive, GitHub, Postgres). 6.4'te kendi server'ını yazarken örnek olarak oku.
 

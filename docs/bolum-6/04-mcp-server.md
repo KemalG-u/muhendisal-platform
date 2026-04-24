@@ -7,6 +7,7 @@
 <span class="ma-persona ma-persona-is">🔵 iş</span>
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
+<div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~45 dakika</div>
 <div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 6.3 bitmiş — MCP 3 primitive + host/client/server mimarisi + Claude Desktop config ediyorsun; Python 3.10+ ve `uv` ya da `pip` kurulu</div>
 <div class="ma-meta-row"><strong>🎯 Çıktı:</strong> Python `mcp` SDK (`FastMCP`) ile **kendi MCP server'ın** ayakta — **3 gerçek Tool** + **1 Resource** + **1 Prompt** sunuyor; Claude Desktop'a bağladığında 🔨 ikonunda görünüyor; "TCMB kurunu göster" dediğinde senin yazdığın fonksiyon çalışıp cevabı Claude aracılığıyla döndürüyor. Portföye **GitHub repo** + **30 saniyelik demo GIF** çıktı olarak kalıyor.</div>
 </div>
@@ -56,7 +57,7 @@ flowchart TB
 
   classDef dev fill:#ddd6fe,stroke:#7c3aed,color:#111
   classDef lib fill:#fed7aa,stroke:#ea580c,color:#111
-  classDef proc fill:#dcfce7,stroke:#16a34a,color:#111
+  classDef proc fill:#fef3c7,stroke:#ca8a04,color:#111
   classDef client fill:#dbeafe,stroke:#2563eb,color:#111
   classDef user fill:#fef3c7,stroke:#ca8a04,color:#111
   class DEV dev
@@ -379,7 +380,7 @@ flowchart LR
 
   classDef c fill:#dbeafe,stroke:#2563eb,color:#111
   classDef m fill:#fed7aa,stroke:#ea580c,color:#111
-  classDef d fill:#dcfce7,stroke:#16a34a,color:#111
+  classDef d fill:#fef3c7,stroke:#ca8a04,color:#111
   class CD,MR c
   class CF,NGINX,SYS m
   class FMCP,DB d
@@ -488,12 +489,14 @@ Repo linkini kaydet: `muhendisal-notlarim/bolum-6/04-mcp-server/github-repo.txt`
 <div class="ma-neden-sonuc" markdown>
 <div class="ma-neden-sonuc-header">🔗 Birlikte okuma — neden ne oldu</div>
 
-- **A → B:** MCP'de tüketici olmak (6.3) kolay; **üretici olmak** ekosistemde değerli iş — iş ilanlarında arananı bu taraf.
-- **B → C:** `FastMCP` decorator + type hint = otomatik JSON Schema; 6.2'deki elle şema artık yok. 7 satırda hello world server.
-- **C → D:** 3 gerçek tool (`tcmb_kuru` + `hava_durumu` + `notlarim_ara`) + 1 Resource + 1 Prompt ile üç primitive'in hepsine dokunuyorsun — senaryolar gerçek, Claude Desktop'ta canlı çalışıyor.
-- **D → E:** Transport kararı: `mcp.run()` stdio default (yerel) ↔ `transport="streamable-http"` uzak. Tek satır parametre değişikliği.
-- **E → F:** `mcp.oluk.org` canlı örneği — 3 katmanlı production mimari (Cloudflare → nginx → systemd → FastMCP). Yerel server'dan production'a yol haritası.
-- **F → G:** 10 yaygın tuzak (docstring eksik, print stdout, göreli yol, env var hardcoded…) — bu sayfayla birlikte kendi server'ını yazarken otomatik kaçınıyorsun.
+<ol class="ma-neden-sonuc-zincir" markdown>
+<li>**A → B:** MCP'de tüketici olmak (6.3) kolay; **üretici olmak** ekosistemde değerli iş — iş ilanlarında arananı bu taraf. Bu yüzden **yapanlar fark yaratır.**</li>
+<li>**B → C:** `FastMCP` decorator + type hint = otomatik JSON Schema; 6.2'deki elle şema artık yok. 7 satırda hello world server. Bu yüzden **boilerplate sıfıra indi.**</li>
+<li>**C → D:** 3 gerçek tool + 1 Resource + 1 Prompt ile üç primitive'in hepsine dokunuyorsun — senaryolar gerçek, Claude Desktop'ta canlı çalışıyor. Bu yüzden **kavram elle tutulur hale gelir.**</li>
+<li>**D → E:** Transport kararı: `mcp.run()` stdio default (yerel) ↔ `transport='streamable-http'` uzak. Tek satır parametre değişikliği. Bu yüzden **yerel→production geçiş kolay.**</li>
+<li>**E → F:** `mcp.oluk.org` canlı örneği — 3 katmanlı production mimari (Cloudflare → nginx → systemd → FastMCP). Yerel server'dan production'a yol haritası. Bu yüzden **gerçek referans soyutu kapatır.**</li>
+<li>**F → G:** 10 yaygın tuzak (docstring eksik, print stdout, göreli yol, env var hardcoded…) — bu sayfayla birlikte kendi server'ını yazarken otomatik kaçınıyorsun. Bu yüzden **tuzak listesi üretim kalitesini artırır.**</li>
+</ol>
 
 <div class="ma-neden-sonuc-sonuc" markdown>
 **Sonuç:** Bölüm 6'nın imza sayfası. Kendi MCP server'ın ayakta, Claude Desktop'a bağlı, 🔨 ikonunda görünüyor — GitHub'a yüklü repo + demo GIF portföyde. Bu tek sayfa AI Engineer başvurunda bir cümlenin altını dolduruyor: **"MCP server yazdım, Claude ekosistemine entegre ettim."** Bundan sonra multi-agent mimari (6.5), Claude Agent SDK (6.6), LangChain Agents karşılaştırma (6.7) ve KarıncaAI production vakası (6.8) kalıyor.

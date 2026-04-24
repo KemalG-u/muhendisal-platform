@@ -7,6 +7,7 @@
 <span class="ma-persona ma-persona-is">🔵 iş</span>
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
+<div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~35 dakika</div>
 <div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 7.1 (Claude vision) + 7.2 (ses pipeline) okundu. Bir test video (30 sn - 5 dk MP4, Türkçe konuşma içerirse bonus).</div>
 <div class="ma-meta-row"><strong>🎯 Çıktı:</strong> Video → frame extraction (ffmpeg) → Claude vision batch → özet pipeline kuruldu. Ses varsa paralel Whisper transcribe. "10 dk video → 30 sn okuma özeti" bir dakikanın altında. Maliyet tahmini net. Anthropic henüz native video API sunmuyor; frame-based yaklaşım 2026-2027 standart.</div>
 </div>
@@ -39,18 +40,18 @@ flowchart TB
     VIDEO[🎬 Video.mp4]
 
     subgraph EXTRACT["ffmpeg — parçala"]
-        F1[Frame extraction<br/>her 10 sn 1 frame]
-        F2[Audio extract<br/>WAV 16kHz mono]
+        F1[Frame extraction\nher 10 sn 1 frame]
+        F2[Audio extract\nWAV 16kHz mono]
     end
 
     subgraph PROCESS["Paralel işle"]
-        CV[Claude vision<br/>N frame batch]
-        STT[Whisper<br/>transkript]
+        CV[Claude vision\nN frame batch]
+        STT[Whisper\ntranskript]
     end
 
-    MERGE[Birleştir<br/>görsel özet + transkript]
-    CLAUDE[Claude Sonnet<br/>son özet]
-    OUTPUT[📝 Video özeti<br/>+ aksiyonlar]
+    MERGE[Birleştir\ngörsel özet + transkript]
+    CLAUDE[Claude Sonnet\nson özet]
+    OUTPUT[📝 Video özeti\n+ aksiyonlar]
 
     VIDEO --> F1 --> CV
     VIDEO --> F2 --> STT
@@ -58,10 +59,10 @@ flowchart TB
     STT --> MERGE
     MERGE --> CLAUDE --> OUTPUT
 
-    classDef v fill:#fee2e2,stroke:#dc2626,color:#111
+    classDef v fill:#fed7aa,stroke:#ea580c,color:#111
     classDef ff fill:#fed7aa,stroke:#ea580c,color:#111
     classDef ai fill:#dbeafe,stroke:#2563eb,color:#111
-    classDef out fill:#dcfce7,stroke:#16a34a,color:#111
+    classDef out fill:#fef3c7,stroke:#ca8a04,color:#111
     class VIDEO v
     class F1,F2 ff
     class CV,STT,CLAUDE ai
@@ -492,7 +493,7 @@ Anthropic Vision dokümantasyonu ve multimodal kullanım kılavuzu video'yu şö
 **4. Native video desteği yol haritası belirsiz.** Anthropic News'te 2025-2026 boyunca native video endpoint'i için somut açıklama yok. Gemini'nin video kabul etmesi tercih değil — Anthropic reasoning odaklı kalmayı seçti. Bu yüzden frame-based desen **kısa-orta vadede kalıcı**.
 
 <div class="ma-anthropic-oz-kaynak" markdown>
-**Kaynak:** [docs.claude.com — Vision](https://docs.claude.com/en/docs/build-with-claude/vision) (EN, ~12 dk) + [Anthropic Cookbook — multimodal](https://github.com/anthropics/claude-cookbooks/tree/main/multimodal) (Jupyter, EN). Image block yapısı + batch frame pattern örnekleri.
+**Kaynak:** [platform.claude.com/docs — Vision](https://platform.claude.com/docs/en/docs/build-with-claude/vision) (EN, ~12 dk) + [Anthropic Cookbook — multimodal](https://github.com/anthropics/claude-cookbooks/tree/main/multimodal) (Jupyter, EN). Image block yapısı + batch frame pattern örnekleri.
 </div>
 </div>
 
@@ -548,16 +549,18 @@ Kendi senaryoyu (meeting / YouTube / güvenlik) için aylık maliyet tahmini. Pr
 <div class="ma-neden-sonuc" markdown>
 <div class="ma-neden-sonuc-header">🔗 Birlikte okuma — neden ne oldu</div>
 
-- **A → B:** Video multimodal 3. boyut; Anthropic native API yok → frame-based pattern.
-- **B → C:** 2 paralel yol: ffmpeg frame + audio; Claude vision + Whisper; sonunda meta birleşim.
-- **C → D:** Frame extraction: fps sampling + keyframe (scene change) + karma yaklaşım.
-- **D → E:** Audio extract WAV 16kHz mono → Whisper; verbose_json ile timestamp'lı segment.
-- **E → F:** Claude vision batch 30-60 frame safe; 100+ için batch + meta.
-- **F → G:** 5 use case: meeting / YouTube / güvenlik / eğitim quiz / sosyal post.
-- **G → H:** Maliyet: 5 dk video $0.17; 100 video/ay ~$25-85.
-- **H → I:** Timestamp hizalama — frame ile transcript segment eşle; Claude'a zengin bağlam.
-- **I → J:** Türkçe fırsat (YouTube pazar); sınır (Whisper %85+ aksan sert).
-- **J → K:** Anthropic 2027'de native video (%55 bahis); Gemini şu an uzun video önde.
+<ol class="ma-neden-sonuc-zincir" markdown>
+<li>**A → B:** Video multimodal 3. boyut; Anthropic native API yok → frame-based pattern. Bu yüzden **çözüm yolu kendine özgü.**</li>
+<li>**B → C:** 2 paralel yol: ffmpeg frame + audio; Claude vision + Whisper; sonunda meta birleşim. Bu yüzden **paralel işleme süreyi kısaltır.**</li>
+<li>**C → D:** Frame extraction: fps sampling + keyframe (scene change) + karma yaklaşım. Bu yüzden **strateji içerik türüne göre seçilir.**</li>
+<li>**D → E:** Audio extract WAV 16kHz mono → Whisper; verbose_json ile timestamp'lı segment. Bu yüzden **timestamp hizalama bağlamı zenginleştirir.**</li>
+<li>**E → F:** Claude vision batch 30-60 frame safe; 100+ için batch + meta. Bu yüzden **büyük video bölünerek işlenir.**</li>
+<li>**F → G:** 5 use case: meeting / YouTube / güvenlik / eğitim quiz / sosyal post. Bu yüzden **senaryo yelpazesi geniş.**</li>
+<li>**G → H:** Maliyet: 5 dk video $0.17; 100 video/ay ~$25-85. Bu yüzden **maliyet yönetilebilir.**</li>
+<li>**H → I:** Timestamp hizalama — frame ile transcript segment eşle; Claude'a zengin bağlam. Bu yüzden **hizalama kaliteyi artırır.**</li>
+<li>**I → J:** Türkçe fırsat (YouTube pazar); sınır (Whisper %85+ aksan sert). Bu yüzden **Türkçe gerçekçi beklenti şart.**</li>
+<li>**J → K:** Anthropic 2027'de native video (%55 bahis); Gemini şu an uzun video önde. Bu yüzden **ekosistem takip edilmeli.**</li>
+</ol>
 
 <div class="ma-neden-sonuc-sonuc" markdown>
 **Sonuç:** Video pipeline kuruldu — frame + audio + Claude + transcript + özet. Sonraki (7.4 İMZA): Claude vs GPT-4V vs Gemini vision karşılaştırma — model seçim refleksi.

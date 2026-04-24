@@ -7,6 +7,7 @@
 <span class="ma-persona ma-persona-is">🔵 iş</span>
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
+<div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~30 dakika</div>
 <div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 8.1 + 8.2 okundu (teknik + etik güvenlik). 9.4 veya 9.5 canlıda. Anthropic Console erişimi.</div>
 <div class="ma-meta-row"><strong>🎯 Çıktı:</strong> **3 katmanlı maliyet savunma** kuruldu — Anthropic Console hard cap ($100/ay) + client-side rate limit (slowapi) + user başı token cap. **4 katman secret management** uygulandı: `.env` + GitHub Secrets + systemd env + secret manager. git history'den key silme refleksi (BFG) ve detect-secrets pre-commit hook aktif. Canlı projende bir gecede $4000 fatura imkansız.</div>
 </div>
@@ -39,16 +40,16 @@ flowchart TB
     CONSOLE[💳 Anthropic Console]
 
     subgraph L1["Katman 1 — Client-side"]
-        RL[⚡ slowapi<br/>10 req/min/IP]
-        UC[👤 User cap<br/>1000 token/gün/user]
+        RL[⚡ slowapi\n10 req/min/IP]
+        UC[👤 User cap\n1000 token/gün/user]
     end
 
     subgraph L2["Katman 2 — Alert"]
-        ALERT[📧 Budget alert<br/>$50: SMS<br/>$75: API pause]
+        ALERT[📧 Budget alert\n$50: SMS\n$75: API pause]
     end
 
     subgraph L3["Katman 3 — Hard stop"]
-        HC[🛑 Console hard cap<br/>$100/ay max]
+        HC[🛑 Console hard cap\n$100/ay max]
     end
 
     USER --> APP
@@ -61,8 +62,8 @@ flowchart TB
     HC -.$100 aşıldı.-> STOP((API durdu))
 
     classDef layer fill:#dbeafe,stroke:#2563eb,color:#111
-    classDef critical fill:#fee2e2,stroke:#dc2626,color:#111
-    classDef good fill:#dcfce7,stroke:#16a34a,color:#111
+    classDef critical fill:#fed7aa,stroke:#ea580c,color:#111
+    classDef good fill:#fef3c7,stroke:#ca8a04,color:#111
     class RL,UC,ALERT,HC layer
     class STOP critical
     class USER,APP,CLAUDE,CONSOLE good
@@ -531,14 +532,16 @@ Console → Limits → Monthly spending limit $100 set. Alert thresholds $25/$50
 <div class="ma-neden-sonuc" markdown>
 <div class="ma-neden-sonuc-header">🔗 Birlikte okuma — neden ne oldu</div>
 
-- **A → B:** Twitter bot $4200 (8.1) + Replit $15K (bu sayfa) fatura şoku gerçek risk.
-- **B → C:** 3 katmanlı savunma: Console hard cap + client rate limit + budget alert.
-- **C → D:** slowapi + Redis backend multi-worker rate limit; IP + user ID iki katman.
-- **D → E:** Token budget Redis sayacı: günde N token/user sınır.
-- **E → F:** 4 katman secret: `.env` + GitHub Secrets + systemd + vault (enterprise).
-- **F → G:** API key rotation 90-180 gün; zero-downtime iki key geçişi.
-- **G → H:** Sızıntı sonrası: revoke + BFG + force push + usage audit; pre-commit detect-secrets önceden yakalar.
-- **H → I:** 10 CTO tuzak + Anthropic Console 5 aktif alan.
+<ol class="ma-neden-sonuc-zincir" markdown>
+<li>**A → B:** Twitter bot $4200 + Replit $15K fatura şoku gerçek risk. Bu yüzden **maliyet kontrolü güvenlik kadar kritik.**</li>
+<li>**B → C:** 3 katmanlı savunma: Console hard cap + client rate limit + budget alert. Bu yüzden **tek katman yetmez.**</li>
+<li>**C → D:** slowapi + Redis backend multi-worker rate limit; IP + user ID iki katman. Bu yüzden **katmanlı rate limit fatura şoku önler.**</li>
+<li>**D → E:** Token budget Redis sayacı: günde N token/user sınır. Bu yüzden **kullanıcı bazlı kota şeffaf.**</li>
+<li>**E → F:** 4 katman secret: `.env` + GitHub Secrets + systemd + vault (enterprise). Bu yüzden **secret güvenliği katmanlı olmalı.**</li>
+<li>**F → G:** API key rotation 90-180 gün; zero-downtime iki key geçişi. Bu yüzden **rotasyon planlanmalı, ani değil.**</li>
+<li>**G → H:** Sızıntı sonrası: revoke + BFG + force push + usage audit; pre-commit detect-secrets önceden yakalar. Bu yüzden **sızıntı senaryosu önceden hazırlanır.**</li>
+<li>**H → I:** 10 CTO tuzak + Anthropic Console 5 aktif alan. Bu yüzden **tuzak listesi rutin kontrol listesi.**</li>
+</ol>
 
 <div class="ma-neden-sonuc-sonuc" markdown>
 **Sonuç:** Canlı proje fatura + secret tarafı güvenli. Bir gecede $4000 fatura mümkün değil; API key sızıntısı scan bot'lardan önce yakalanır. Sonraki (8.4): loglama + izleme — bu korumaların **gerçekten çalıştığını** görmek.
