@@ -412,5 +412,5 @@ Bir arkadaş veya kendi düşündüğün bir proje — "AI sistemi istiyorum" de
 
 ← [5.1 Fine-tuning Nedir](01-finetune-nedir.md) &nbsp;|&nbsp; [Bölüm 5 girişi](index.md) &nbsp;|&nbsp; [Ana sayfa](../index.md)
 
-**Pekiştirme:** [OpenAI fine-tuning docs](https://platform.openai.com/docs/guides/fine-tuning) + [Anthropic Claude best practices](https://platform.claude.com/docs/en/docs/build-with-claude/prompt-engineering/overview) + [HuggingFace Smol Course](https://huggingface.co/learn/cookbook). Üç farklı bakış: provider-specific + framework-agnostic + hands-on.
+**Pekiştirme:** [OpenAI fine-tuning docs](https://platform.openai.com/docs/guides/fine-tuning) + [Anthropic Claude Prompting Best Practices](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices) + [HuggingFace Smol Course](https://huggingface.co/learn/cookbook). Üç farklı bakış: sağlayıcıya özel + çerçeve bağımsız + uygulamalı.
 </div>

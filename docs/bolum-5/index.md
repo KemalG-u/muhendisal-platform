@@ -80,7 +80,7 @@ flowchart LR
 **3. Claude Code'un yaklaşımı.** Anthropic'in kendi kod asistanı Claude Code hiç fine-tune kullanmıyor — sistem prompt + tool use + MCP ile çözüyor. Bu bölümün "%90 projede FT gereksiz" tezi Anthropic'in kendi ürün disiplininin yansıması.
 
 <div class="ma-anthropic-oz-kaynak" markdown>
-**Kaynak:** [platform.claude.com/docs — Prompt Engineering Overview](https://platform.claude.com/docs/en/docs/prompt-engineering/overview) (İngilizce, ~10 dk). Fine-tune konusundaki Anthropic duruşunu docs'ta açık okuyabilirsin — "before considering fine-tuning" paragrafı 5.2 karar ağacımızla uyumlu.
+**Kaynak:** [platform.claude.com — Prompt Engineering Best Practices](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices) (İngilizce, ~15 dk). Fine-tune konusundaki Anthropic duruşunu doc'ta açıkça okuyabilirsin — "before considering fine-tuning" paragrafı 5.2 karar ağacımızla uyumlu.
 </div>
 </div>
 

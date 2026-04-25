@@ -367,7 +367,7 @@ LoRA ile FT edersin — ne alacaksın, ne kaybedeceksin?
 
 Anthropic Claude'a direkt FT sunmasa da:
 
-1. **Model Spec feedback** — [platform.claude.com/docs/en/docs/model-spec](https://platform.claude.com/docs/en/docs/model-spec) → davranış önerilerini Anthropic'e ilet
+1. **Model Spec geri bildirimi** — [platform.claude.com/docs/en/about-claude/model-spec](https://platform.claude.com/docs/en/about-claude/model-spec) → davranış önerilerini Anthropic'e ilet
 2. **Cookbook contributions** — senin use case'in örneği cookbook'a eklenir → gelecek Claude eğitiminde etkili
 3. **Academy courses** — kullanım pattern'leri dolaylı olarak model kalitesini etkiler (Anthropic prompt engineering araştırması)
 
