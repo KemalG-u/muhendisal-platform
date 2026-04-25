@@ -8,7 +8,7 @@
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
 <div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~25 dakika</div>
-<div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 0.1 bitmiş — terminal komutlarına aşinasın; bilgisayarında **Python 3.10+** kurulu (yoksa [python.org](https://www.python.org/downloads/) üzerinden indir, "Add Python to PATH" kutusunu işaretle)</div>
+<div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 0.1 bitmiş — terminal komutlarına aşinasın; bilgisayarında **Python 3.10+** kurulu (yoksa [python.org](https://www.python.org/downloads/) üzerinden indir, "Add Python to PATH" — Python'u sistem yoluna ekle — kutusunu işaretle)</div>
 <div class="ma-meta-row"><strong>🎯 Çıktı:</strong> Kendi `muhendisal-pratiklerim/` klasörünü kurarsın, **virtual environment** aktive edersin, Anthropic Python SDK kurarsın, `ANTHROPIC_API_KEY` ortam değişkenini ayarlarsın, **import test** başarıyla geçer.</div>
 </div>
 
@@ -17,19 +17,19 @@
 
 ## Neden bu sayfa?
 
-Python yüklü ama "doğrudan" kullanırsan başına bela alırsın: bir projede `requests==2.20`, başka projede `requests==2.31` lazımsa ve **global** kurarsan biri diğerini bozar. Çözüm: **her projeye özel izole bir Python ortamı** = virtual environment (kısaca **venv**).
+Python kurulu ama sistem genelinde doğrudan kullanırsan zamanla başın ağrır: bir projede `requests==2.20`, başka projede `requests==2.31` lazımsa ve **sistem geneline (global)** kurarsan biri diğerini bozar. Çözüm: **her projeye özel izole bir Python ortamı** = virtual environment (kısaca **venv** — sanal ortam).
 
-İkincisi: Anthropic SDK + diğer paketleri (FastAPI, anthropic, jinja2, qdrant-client...) sırayla kuracaksın. Hangi sürümü kurduğunu, **3 ay sonra** veya **başka bir bilgisayarda** tekrar nasıl kuracağını bilmek için `requirements.txt` lazım. Bu sayfa o disiplini kuruyor.
+İkincisi: Anthropic SDK + diğer paketleri (FastAPI, anthropic, jinja2, qdrant-client...) sırayla kuracaksın. Hangi paketi hangi sürümle kurduğunu hatırlamanın tek yolu var: `requirements.txt` (paket reçetesi). Bu dosya sayesinde 3 ay sonra ya da başka bir bilgisayarda aynı kurulumu tekrar yapabilirsin. Bu sayfa o disiplini kuruyor.
 
-Üçüncüsü: 2025-2026'da `uv` denen **10 kat daha hızlı** yeni bir paket yöneticisi yaygınlaştı (pip yerine). Geleneksel `pip + venv` ile başlayacaksın (her yerde çalışır), `uv`'yi opsiyonel olarak tanıtacağım — çünkü 6 ay sonra muhtemelen ana akım olacak.
+Üçüncüsü: 2025-2026'da `uv` denen **10 kat daha hızlı** yeni bir paket yöneticisi yaygınlaştı (pip yerine). Geleneksel `pip + venv` ile başlayacaksın (her yerde çalışır), `uv`'yi opsiyonel olarak tanıtacağım — çünkü 2026 ortasında zaten yaygınlaştı; ekiplerin önemli bir kısmı buna geçti.
 
 ## Virtual environment kısaca — üç paragraf, matematiksiz
 
-**Virtual environment = projenin kendi izole "Python kopyası".** Sistem Python'unu bozmadan, her projede farklı paket sürümleri kullanabilmek için. Komut: `python -m venv venv` — `venv` adında bir klasör oluşur, içinde minik bir Python kopyası ve paket klasörü. Bu klasörü `git`'e koyma (`.gitignore`'a ekle), büyük ve geçici.
+**Virtual environment = projenin kendi izole "Python kopyası".** Sistem Python'unu bozmadan, her projede farklı paket sürümleri kullanabilmek için. Komutu yazıyorsun: `python -m venv venv`. İlk `venv` Python'un yerleşik aracının adı, ikinci `venv` ise oluşturmak istediğin klasörün adı (istersen `.venv` veya başka isim de verebilirsin). İçinde minik bir Python kopyası ve paket klasörü oluşur. Bu klasörü `git`'e koyma (`.gitignore`'a ekle), büyük ve geçici.
 
-**Aktivasyon = "şu anki terminal o venv'i kullansın" demek.** Aktivasyon olmadan `pip install` global'e yazar — istemediğin şey. Aktivasyondan sonra terminal prompt'unun başında `(venv)` görürsün, bu emin olma yolu.
+**Aktivasyon = "şu anki terminal o venv'i kullansın" demek.** Aktivasyon olmadan `pip install` sistem geneline yazar — istemediğin şey. Aktivasyondan sonra terminal prompt'unun başında `(venv)` görürsün, bu emin olma yolu.
 
-**`requirements.txt` = projenin paket reçetesi.** `pip freeze > requirements.txt` ile mevcut paketleri liste; `pip install -r requirements.txt` ile başka makinada aynısını kur. Repo'nuza koyduğun **tek dosya** ile tüm bağımlılıkları paylaşıyorsun — takım çalışmasının ve yeniden kurulabilirliğin temel disiplini.
+**`requirements.txt` = projenin paket reçetesi.** `pip freeze > requirements.txt` ile mevcut paketleri listele; `pip install -r requirements.txt` ile başka makinede aynısını kur. Repona koyduğun **tek dosya** ile tüm bağımlılıkları paylaşıyorsun — takım çalışmasının ve yeniden kurulabilirliğin temel disiplini.
 
 ## Bu sayfanın ekosistemi — kim kime ne veriyor
 
@@ -135,7 +135,7 @@ $env:ANTHROPIC_API_KEY = "sk-ant-api03-..."
 
 ### Yol B — Modern uv (10x hızlı, 2025-2026 trend)
 
-[uv](https://github.com/astral-sh/uv) Astral şirketinin ürünü; pip + venv + virtualenv + pip-tools'u tek araçta birleştiriyor, **Rust ile yazılmış**, çok hızlı.
+[uv](https://github.com/astral-sh/uv) Astral şirketinin ürünü (Nisan 2026 itibarıyla 0.11.x serisi); `pip`, `venv`, `virtualenv` (eski sanal ortam aracı) ve `pip-tools`'u tek araçta birleştiriyor, **Rust ile yazılmış**, çok hızlı.
 
 ```bash
 # 1. uv kur (tek seferlik)
@@ -197,18 +197,28 @@ import anthropic
 client = anthropic.Anthropic()  # API anahtarı .env'den okundu
 ```
 
-**KRİTİK:** `.env` dosyasını **ASLA git'e koymayın.** API anahtarı sızdı = parayı kaybedersin. Anthropic Console'da anahtar oluştururken **kullanım limiti koy** (örn: aylık $20) — sızdırma durumunda zarar limitlenir.
+**KRİTİK:** `.env` dosyasını **ASLA git'e (GitHub gibi yerlere) koyma.** API anahtarı sızarsa, başkası senin hesabınla çağrı yapabilir; faturayı sen ödersin. Anthropic Console → Workspaces → "spend limit" ayarıyla aylık üst sınır koy (örn: $20) — sızdırma durumunda zarar bu sınırla durur.
+
+??? warning "Tipik kurulum hataları — şu mesaj çıkarsa şu çözüm"
+
+    | Hata | Sebep | Çözüm |
+    |---|---|---|
+    | `command not found: python` | Sistem Python yok ya da PATH eksik | `python3` dene; yoksa python.org'dan kur, "Add Python to PATH" işaretle |
+    | `pip install anthropic` → SSL hatası | Eski Python (3.8 veya altı) | Python 3.9+ kur |
+    | Aktivasyon sonrası `(venv)` prompt'u görünmüyor | Yanlış komut / shell uyumsuzluğu | macOS/Linux: `source venv/bin/activate`; Win CMD: `venv\Scripts\activate.bat`; Win PowerShell: `venv\Scripts\Activate.ps1` |
+    | `pip freeze` çıktısı boş | venv yeni, paket henüz yok | Önce `pip install` adımını yap, sonra freeze |
+    | `Permission denied` (Linux/macOS) | venv klasörüne yazma izni yok | `sudo chown -R $USER ~/muhendisal-pratiklerim` |
 
 <div class="ma-anthropic-oz" markdown>
 <div class="ma-anthropic-oz-header">📖 Anthropic bu konuyu nasıl anlatıyor — öz</div>
 
 Anthropic resmi getting started dokümantasyonu **pip + venv** ile başlatıyor — uv'yi henüz default önermiyor.
 
-**1. SDK kurulum tek satır.** `pip install anthropic` — Anthropic Python SDK 0.x serisinde yayınlanıyor (Nisan 2026: 0.97.0), kararlı ve semver'a uygun. Type hints var, async destekli, tüm API endpoint'lerini kapsıyor.
+**1. SDK kurulum tek satır.** `pip install anthropic` — Anthropic Python SDK 0.x serisinde yayınlanıyor (Nisan 2026: 0.97.0), kararlı ve **semver** (sürüm numaralandırma standardı: x.y.z) kurallarına uyumlu. Tip ipuçları (type hints) var, asenkron çağrı destekli, tüm API uçlarını kapsıyor.
 
 **2. API anahtarı `ANTHROPIC_API_KEY` env değişkeniyle.** SDK varsayılan olarak bu değişkeni okur — kodda `Anthropic(api_key=...)` belirtmen gerekmez. Bu disiplin **API anahtarını koddan çıkarır**, güvenliği artırır.
 
-**3. Sürüm uyumluluğu.** Python 3.9+ zorunlu, 3.10+ önerilir (type hints daha iyi). SDK semver kurallarına uyar — `0.x` serisi devam ediyor; major bump yapılana kadar breaking change olmaz.
+**3. Sürüm uyumluluğu.** Python 3.9+ zorunlu (resmi minimum). 3.10+ kullanırsan `match-case` deyimi ve daha iyi tip ipuçları kazanırsın ama 3.9 yeterli. SDK semver kurallarına uyar — `0.x` serisi devam ettiği sürece, ana sürüm sıçraması (major bump) olmadan **bozucu değişiklik** (breaking change — eski kodu çalıştıramaz hâle getiren değişiklik) yapılmaz.
 
 ??? info "Teknik detay — isteyene (parameter adları, mekanikler, edge case'ler)"
 
@@ -227,7 +237,7 @@ Anthropic resmi getting started dokümantasyonu **pip + venv** ile başlatıyor 
     **Anthropic Bedrock + Vertex AI.** AWS Bedrock'tan Claude kullanmak için: `from anthropic import AnthropicBedrock`. Google Vertex için: `AnthropicVertex`. Aynı API, farklı backend.
 
 <div class="ma-anthropic-oz-kaynak" markdown>
-**Kaynak:** [platform.claude.com/docs — Get started with the API](https://platform.claude.com/docs/en/docs/get-started) (EN, ~10 dk). Resmi quickstart + örnek kodlar. SDK GitHub: [github.com/anthropics/anthropic-sdk-python](https://github.com/anthropics/anthropic-sdk-python) — değişiklik loglarını ay başında bir gözle gez.
+**Kaynak:** [platform.claude.com — Get started with the API](https://platform.claude.com/docs/en/get-started) (EN, ~10 dk). Resmi quickstart + örnek kodlar. SDK GitHub: [github.com/anthropics/anthropic-sdk-python](https://github.com/anthropics/anthropic-sdk-python) — değişiklik loglarını ay başında bir gözle gez.
 </div>
 </div>
 
@@ -279,7 +289,7 @@ Repo linkini kaydet: `muhendisal-notlarim/bolum-0/02-python-venv/repo-link.txt`
 <div class="ma-sonraki" markdown>
 <div class="ma-sonraki-header">➡️ Sonraki adım</div>
 
-**[0.3 Ollama ile Yerel LLM →](03-ollama.md)** — Anthropic API token harcamadan deneme yapmak için yerel **Llama 3.2** veya **Qwen 2.5** kur. Geliştirme sırasında ücretsiz, prod'da Claude.
+**[0.3 Ollama ile Yerel LLM →](03-ollama.md)** — Anthropic API token harcamadan deneme yapmak için yerel **Llama 3.2** veya **Qwen 2.5** kur. Geliştirme sırasında ücretsiz, **canlı yayında (production)** Claude.
 
 ← [0.1 VPS ve Linux Komutları](01-vps-linux.md) &nbsp;|&nbsp; [Bölüm 0 girişi](index.md) &nbsp;|&nbsp; [Ana sayfa](../index.md)
 

@@ -13,7 +13,7 @@
 </div>
 
 !!! tip "Yabancı kelime mi gördün?"
-    Bu sayfadaki **italik-altı çizili** ifadelerin (endpoint, route, JSON, ASGI gibi) üstüne mouse'unu getir — kısa tanım çıkar. Mobilde dokun.
+    Bu sayfadaki **kalın** teknik terimler (endpoint, route, JSON, ASGI gibi) ilk geçişte hemen yanında veya altında Türkçe açıklanır.
 
 ## Neden bu sayfa?
 
@@ -21,15 +21,15 @@ Bir AI servisi yazdın diyelim. `python chatbot.py` çalışıyor, soru soruyors
 
 İkincisi: Bölüm 9'da servisi canlıya vereceksin. Canlı servis = **HTTP üstünden konuşulan bir şey.** Docker image'ına koyacaksın, nginx'in arkasına atacaksın, bir domain'e bağlayacaksın — hepsi HTTP varsayar. Bugün öğrendiğin 15 satır, 9. Bölüm'de 3 kıta arasında çalışacak.
 
-Üçüncüsü: FastAPI **Python ekosisteminin altın standardı** oldu (2020'den beri). Type hints ile otomatik validation, Swagger UI otomatik, async default, **hız**: Django + Flask'tan belirgin üstün. Anthropic'in kendi [claude-cookbook](https://github.com/anthropics/claude-cookbooks)'unda "deployment" örneklerinin çoğu FastAPI ile. Bu refleks = iş pazarında da değer.
+Üçüncüsü: FastAPI **Python ekosisteminin altın standardı** oldu (2020'den beri). Tip ipuçlarıyla (type hints) otomatik doğrulama, Swagger UI (API'nın etkileşimli dokümantasyon sayfası) otomatik, asenkron çağrı varsayılan, **hız**: Django + Flask'tan belirgin üstün. Anthropic'in kendi [claude-cookbooks](https://github.com/anthropics/claude-cookbooks) deposundaki "deployment" örneklerinin çoğu FastAPI ile yazılmış. Bu beceri iş ilanlarında da sık aranır.
 
 ## FastAPI kısaca — üç paragraf, matematiksiz
 
-**FastAPI = Python'da HTTP API kurmanın modern yolu.** `@app.get("/")` decorator'ı ile bir fonksiyonu URL'e bağlıyorsun. Fonksiyon ne döndürürse, FastAPI onu **otomatik JSON'a çeviriyor.** Sen `return {"mesaj": "merhaba"}` yazıyorsun, tarayıcı `{"mesaj":"merhaba"}` alıyor.
+**FastAPI = Python'da HTTP API kurmanın modern yolu.** `@app.get("/")` **dekoratörü** (bir fonksiyonun üstüne yerleştirip ona ek özellik veren Python işareti) ile bir fonksiyonu URL'e bağlıyorsun. Fonksiyon ne döndürürse, FastAPI onu **otomatik JSON'a çeviriyor.** Sen `return {"mesaj": "merhaba"}` yazıyorsun, tarayıcı `{"mesaj":"merhaba"}` alıyor.
 
-**`POST` için Pydantic modelleri var.** `class Soru(BaseModel): mesaj: str` yazıyorsun — FastAPI bu şemayı anlıyor, gelen JSON'u doğruluyor (eksik alan = otomatik hata), sonra fonksiyonuna temiz bir `Soru` nesnesi veriyor. 20 satırlık validasyon kodu yazmadın.
+**`POST` için Pydantic modelleri var.** `class Soru(BaseModel): mesaj: str` yazıyorsun — FastAPI bu şemayı anlıyor, gelen JSON'u doğruluyor (eksik alan = otomatik hata), sonra fonksiyonuna temiz bir `Soru` nesnesi veriyor. Sen kendin yazsaydın 20 satır **doğrulama (validasyon)** kodu çıkardı; FastAPI bunu otomatik yapıyor.
 
-**`uvicorn` sunucu, FastAPI ise framework.** `uvicorn main:app --reload` komutu uygulamayı başlatır, `--reload` sen kodu değiştirdikçe otomatik yeniler. Port default `8000`. Tarayıcıdan `http://localhost:8000/docs` → **Swagger UI** otomatik açılır, her endpoint'i tarayıcıdan test edebilirsin. Postman gerekmez.
+**`uvicorn` sunucu, FastAPI ise çerçeve (framework).** `uvicorn main:app --reload` komutu uygulamayı başlatır, `--reload` sen kodu değiştirdikçe otomatik yeniler. Varsayılan port `8000`. Tarayıcıdan `http://localhost:8000/docs` → **Swagger UI** (API'nın etkileşimli dokümantasyon sayfası) otomatik açılır, her uç noktayı (endpoint) tarayıcıdan test edebilirsin. Postman gerekmez.
 
 
 ## Flask / Django / FastAPI — hangisi ne zaman
@@ -42,7 +42,7 @@ Bir AI servisi yazdın diyelim. `python chatbot.py` çalışıyor, soru soruyors
 | **Pydantic validasyon** | Yok | Form-based | Built-in |
 | **AI servisi için** | Basit script | Admin paneli şartsa | **Tercih** |
 
-> **Sonuç:** Bu platformda FastAPI. Anthropic cookbook'larının büyük çoğunluğu FastAPI + uvicorn tabanlı; `async def` + Pydantic = Claude SDK ile doğal uyum.
+> **Sonuç:** Bu platformda FastAPI kullanacağız. Anthropic cookbook örneklerinin büyük çoğunluğu FastAPI + uvicorn üzerinde; `async def` ve Pydantic, Claude SDK ile doğal uyum içinde çalışıyor.
 
 ## Bu sayfanın ekosistemi — kim kime ne veriyor
 
@@ -78,7 +78,7 @@ flowchart LR
 | Düğüm | Nerede | Ne iş yapıyor |
 |---|---|---|
 | 🌐 **Tarayıcı / curl** | Senin makinen | HTTP isteği atar (GET, POST), cevabı alır |
-| ⚡ **uvicorn** | Aynı makine, port 8000 | **ASGI sunucu** — HTTP protokolünü konuşur, FastAPI'ye bağlar |
+| ⚡ **uvicorn** | Aynı makine, port 8000 | **ASGI sunucu** (asenkron Python web sunucusu) — HTTP isteklerini alır, FastAPI'ye bağlar |
 | 🚀 **FastAPI app** | `main.py` dosyası | Route kayıtlarını tutar, gelen isteği doğru fonksiyona yönlendirir |
 | 🛣️ **Route** | `@app.post("/echo")` decorator | URL + HTTP metot eşleşmesi |
 | 📋 **Pydantic Soru** | `class Soru(BaseModel)` | Gelen JSON'u doğrular — eksik alan varsa otomatik 422 hata |
@@ -94,6 +94,7 @@ flowchart LR
 
 ```bash
 # venv aktif olmalı, 0.2'den hatırla
+# Nisan 2026: fastapi 0.136.1 + uvicorn 0.34+
 pip install "fastapi[standard]"
 ```
 
@@ -173,10 +174,18 @@ Beklenen çıktı:
 
 ### Yol B — Hata yönetimi + async + path parameter
 
+İlk olarak `httpx` paketini kur:
+
+```bash
+pip install httpx
+```
+
+Sonra `main.py`:
+
 ```python
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-import httpx  # pip install httpx
+import httpx
 
 app = FastAPI(title="Biraz Daha Pro", version="0.2")
 
@@ -199,7 +208,7 @@ async def echo_dilli(dil: str, soru: Soru):
         )
 
     # Örnek async iş — gerçek projede burada Claude/Ollama çağrısı olur
-    async with httpx.AsyncClient() as client:
+    async with httpx.AsyncClient(timeout=30.0) as client:
         r = await client.get(f"https://httpbin.org/anything?dil={dil}")
         http_durum = r.status_code
 
@@ -246,7 +255,17 @@ Beklenen:
 # Başka makineden erişim (dikkatli!): uvicorn main:app --host 0.0.0.0
 ```
 
-**Önemli:** `--host 0.0.0.0` = "dış dünyadan erişilebilir" demek. Local geliştirmede `127.0.0.1` (default) kal. VPS'te servis açarken nginx reverse proxy kullan (Bölüm 9).
+**Önemli:** `--host 0.0.0.0` = "dış dünyadan erişilebilir" demek. **Yerel** geliştirmede `127.0.0.1` (varsayılan) kal. VPS'te servis açarken nginx ters vekil sunucu (reverse proxy) kullan (Bölüm 9).
+
+??? warning "Tipik FastAPI hataları — şu mesaj çıkarsa şu çözüm"
+
+    | Hata | Sebep | Çözüm |
+    |---|---|---|
+    | `[Errno 48] Address already in use` | 8000 portu meşgul | Farklı port: `uvicorn main:app --port 8001`; ya da `lsof -i:8000` ile süreç bul, `kill <pid>` |
+    | Tarayıcıda `/docs` 404 | Uygulama ayağa kalkmadı veya yanlış URL | Terminal log'una bak: "Application startup complete" görmelisin; URL `localhost:8000/docs` olmalı |
+    | `422 Unprocessable Entity` | Body şeması eksik/yanlış | Pydantic hata mesajındaki `loc` alanına bak — eksik veya yanlış alan adını gösterir |
+    | `--reload` reload etmiyor | Uygulama dışı dosyada değişiklik var | `--reload-dir` ile dizin ekle veya manuel restart |
+    | `ImportError: cannot import name 'FastAPI'` | Paket kurulmamış / yanlış venv | `pip list | grep fastapi` kontrol et; venv aktif değilse aktive et |
 
 <div class="ma-anthropic-oz" markdown>
 <div class="ma-anthropic-oz-header">📖 Anthropic bu konuyu nasıl anlatıyor — öz</div>
@@ -261,20 +280,20 @@ Anthropic FastAPI'yi **resmi olarak önermez** — Python web framework'u seçim
 
 ??? info "Teknik detay — isteyene (parameter adları, mekanikler, edge case'ler)"
 
-    **ASGI vs WSGI.** `uvicorn` ASGI (Async Server Gateway Interface) — FastAPI için. Flask/Django eski WSGI üstünde, bu yüzden async native değiller. Farkı bilmek FastAPI'nin neden hızlı olduğunu anlatır.
+    **ASGI ile WSGI farkı.** `uvicorn` ASGI (Asenkron Sunucu Ağ Geçidi Arayüzü) tabanlı — FastAPI için ideal. Flask/Django eski WSGI üstünde çalışır; bu yüzden asenkron çağrıyı doğal olarak yapamazlar. Farkı bilmek FastAPI'nin neden hızlı olduğunu anlatır.
 
-    **Dependency injection.** FastAPI'nin `Depends()` sistemi — auth, DB bağlantısı, Claude client gibi bağımlılıkları fonksiyon imzasında deklare ediyorsun. Test edilebilirlik çok yüksek. Bölüm 9'da detay.
+    **Bağımlılık enjeksiyonu (dependency injection).** FastAPI'nin `Depends()` sistemi — kimlik doğrulama (auth), veritabanı bağlantısı, Claude istemcisi gibi bağımlılıkları fonksiyon imzasında bildiriyorsun. Test edilebilirlik çok yüksek. Bölüm 9'da detay.
 
-    **Background tasks.** `BackgroundTasks` — HTTP cevabı döndükten sonra arka planda iş yaptırma (log yazma, webhook gönderme). Kullanıcı beklemiyor, iş arka planda.
+    **Arka plan görevleri (background tasks).** `BackgroundTasks` — HTTP cevabı döndükten sonra arka planda iş yaptırma (log yazma, webhook gönderme). Kullanıcı beklemiyor, iş arka planda.
 
-    **Middleware.** CORS (tarayıcı uyumluluğu), auth, rate limit — middleware olarak eklenir. `app.add_middleware(CORSMiddleware, ...)`.
+    **Ara katman (middleware).** Tarayıcı uyumluluğu (CORS), kimlik doğrulama, istek sınırı (rate limit) — bunlar isteğin önüne eklenen filtre katmanlarıdır. `app.add_middleware(CORSMiddleware, ...)`.
 
-    **OpenAPI schema.** FastAPI otomatik OpenAPI 3.0 schema üretir — `http://localhost:8000/openapi.json`. Bu standart sayesinde Claude'a "şu OpenAPI'ye uygun isteği yaz" demek mümkün. Agent'larda güçlü desen.
+    **OpenAPI şeması.** FastAPI otomatik OpenAPI 3.0 şeması üretir — `http://localhost:8000/openapi.json`. Bu standart sayesinde Claude'a "şu OpenAPI'ye uygun isteği yaz" demek mümkün. Ajanlarda güçlü bir desen.
 
-    **Production uvicorn.** Dev'de `--reload`, prod'da `gunicorn -w 4 -k uvicorn.workers.UvicornWorker main:app` (worker sayısı = CPU × 2 + 1 genelde). Tek process yetmez.
+    **Üretim için uvicorn.** Geliştirmede `--reload`, **canlıda** `uvicorn main:app --workers 4` (modern uvicorn 0.30+ doğrudan çoklu süreç destekler — eski `gunicorn -w 4 -k uvicorn.workers.UvicornWorker` deseni artık gereksiz). Worker sayısı genelde CPU çekirdek sayısının 2 katı civarı. Tek süreç yetmez.
 
 <div class="ma-anthropic-oz-kaynak" markdown>
-**Kaynak:** [FastAPI resmi dokümanı](https://fastapi.tiangolo.com/) (EN, Türkçe çevirisi var). Başlangıç için birebir rehber. Pekiştirme: [Anthropic Cookbook — tool_use notebook](https://github.com/anthropics/claude-cookbooks/tree/main/tool_use) — FastAPI ile Claude tool use üretim deseni.
+**Kaynak:** [FastAPI resmi dokümanı](https://fastapi.tiangolo.com/) (EN, Türkçe çevirisi var). Başlangıç için birebir rehber. Pekiştirme: [claude-cookbooks/tool_use/customer_service_agent.ipynb](https://github.com/anthropics/claude-cookbooks/blob/main/tool_use/customer_service_agent.ipynb) — Claude tool use üretim deseni; FastAPI'ye taşımak için doğal örnek.
 </div>
 </div>
 
