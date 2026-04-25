@@ -13,17 +13,17 @@
 </div>
 
 !!! tip "Yabancı kelime mi gördün?"
-    **STT** (Speech-to-Text) = ses → metin; Whisper, Deepgram en yaygın. **TTS** (Text-to-Speech) = metin → ses; ElevenLabs, Fish Audio, OpenAI. **Voice agent** = kullanıcı konuşur → sistem dinler + LLM düşünür + cevap seslendirir. **Streaming** (ses) = ses parça parça akarken işle; toplam kayıt bekleme. **Voice cloning** = bir kişinin sesini 30-60 saniye örnekle kopyalama. **Latency** = kullanıcı konuşmayı bitirdikten sistem cevaba başlayana kadarki süre; voice agent'ta 500ms-2sn kritik.
+    **STT** (Speech-to-Text — sesten metne) = ses → metin; Whisper, Deepgram en yaygın. **TTS** (Text-to-Speech — metinden sese) = metin → ses; ElevenLabs, Fish Audio, OpenAI. **Sesli ajan (voice agent)** = kullanıcı konuşur → sistem dinler + LLM düşünür + cevap seslendirir. **Akış (streaming)** (sesli) = ses parça parça akarken işlemek; tüm kaydı beklemek yerine. **Ses kopyalama (voice cloning)** = bir kişinin sesini 30-60 saniyelik örnekle kopyalama. **Gecikme (latency)** = kullanıcı konuşmayı bitirdikten sistem cevaba başlayana kadarki süre; sesli ajanda 500 ms - 2 sn kritik.
 
 ## Neden bu sayfa?
 
-7.1'de Claude vision ile görsel pipeline'ı kurdun. Bu sayfa **ses tarafı** — Claude **doğrudan ses dinlemiyor** (2026 Nisan itibarıyla), 3. parti STT ile metne çevir, sonra Claude'a ver. Çıktı metni TTS ile tekrar sese çevir — voice agent mimari.
+7.1'de Claude vision ile görsel boru hattını kurdun. Bu sayfa **ses tarafı** — Claude **doğrudan ses dinlemiyor** (2026 Nisan itibarıyla); üçüncü parti STT ile metne çevir, sonra Claude'a ver. Çıktı metnini TTS ile tekrar sese çevir → sesli ajan mimarisi.
 
-**Voice agent 10.4'te Trend 3'tü:** "%80 olur 1 yıl öngörü — voice agent %30+ büyüyecek." 2026 e-ticaret + müşteri destek + telefon görüşme otomasyonu hızla büyüyor. Sen bu pazara teknik zemini bu sayfada kuruyorsun.
+**Sesli ajan 10.4'te Trend 3'tü:** "Sesli ajan pazarı 1 yıl içinde %30+ büyüyecek" tahmininin arka planı. 2026 e-ticaret + müşteri destek + telefon görüşmesi otomasyonu hızla büyüyor. Bu pazara teknik zemini bu sayfada kuruyorsun.
 
-İkincisi: **Türkçe ses pazarı özel** — İngilizce'den sonra en iyi modellerin destek verdiği ikinci-üçüncü dil. ElevenLabs Türkçe TTS doğal; Fish Audio Türkçe özellikle iyi; Whisper large v3 Türkçe STT doğruluğu %90+. Pratik projeler yapılır.
+İkincisi: **Türkçe ses pazarı özel** — İngilizceden sonra büyük modellerin destek verdiği üst dillerden biri. ElevenLabs Türkçe TTS doğal; Fish Audio Türkçe özellikle iyi; Whisper large v3 Türkçe STT doğruluğu temiz kayıtlarda %90'ın üstüne çıkıyor. Pratik projeler yapılabilir.
 
-Üçüncüsü: Bu sayfa **Anthropic-dışı** — Claude ses için kullanmıyor. Tarafsız vendor analizi. Platform'un Anthropic-first disiplininin sınırı: araç seçiminde **doğru aracı seç**, dogmatik kalma.
+Üçüncüsü: Bu sayfa **Anthropic dışı** — Claude ses için kullanmıyor. Tarafsız sağlayıcı analizi. Platformun Anthropic öncelikli disiplininin sınırı: araç seçiminde **doğru aracı seç**, dogmatik kalma.
 
 ## Ses pipeline mimari
 
@@ -101,10 +101,10 @@ print(transcript)
 ```
 
 - **Fiyat:** $0.006/dakika ses
-- **Kalite:** Whisper large v2 sürümü (2026 Nisan)
+- **Kalite:** OpenAI Whisper API (model adı `whisper-1`); arkada Whisper large sürümü kullanılır. Türkçe için tatmin edici.
 - **Limit:** 25 MB dosya (~10-20 dk ses)
 - **Artı:** Kurulum yok, API çağrısı, hepsi bu
-- **Eksi:** 25 MB sınır uzun kayıtlar için yetersiz (parçala gerek)
+- **Eksi:** 25 MB sınırı uzun kayıtlar için yetersiz (parçalamak gerek); seçili dil parametresi (`language="tr"`) belirtilmezse otomatik tespit kullanılır
 
 ### 2. Self-host Whisper (faster-whisper kütüphanesi)
 
@@ -127,11 +127,11 @@ for segment in segments:
     print(f"[{segment.start:.2f}s - {segment.end:.2f}s] {segment.text}")
 ```
 
-- **Fiyat:** GPU (RTX 3060+ ideal) + elektrik = $0-0.001/dakika
-- **Kalite:** faster-whisper large-v3 OpenAI API ile eş, bazen daha iyi (beam_size 5)
-- **Limit:** Yok; 10 saatlik kayıt da yapar
-- **Artı:** Hacimli kullanım için 10-100× ucuz; gizlilik (veri yerel)
-- **Eksi:** Donanım + setup; GPU yoksa CPU yavaş (10 dk ses = 30-60 dk CPU işlem)
+- **Fiyat:** GPU (RTX 3060+ ideal) + elektrik ≈ $0-0.001/dakika
+- **Kalite:** faster-whisper large-v3 OpenAI API ile eş, bazen daha iyi (beam_size 5). Whisper Large v3-turbo (Eylül 2024) varyantı 8 kat hızlı, kalite kaybı minimum — uygunsa onu seç.
+- **Limit:** Yok; 10 saatlik kayıt da işler
+- **Artı:** Hacimli kullanım için 10-100 kat ucuz; gizlilik (veri yerel)
+- **Eksi:** Donanım + kurulum; GPU yoksa CPU yavaş (10 dk ses = 30-60 dk CPU işlem)
 
 ### 3. Deepgram (managed, gerçek zamanlı WebSocket)
 
@@ -155,11 +155,11 @@ response = client.listen.rest.v("1").transcribe_file(audio, options)
 print(response.results.channels[0].alternatives[0].transcript)
 ```
 
-- **Fiyat:** $0.0043/dakika (nova-3); $0.0058 real-time streaming
+- **Fiyat:** $0.0043/dakika (nova-3); $0.0058 gerçek zamanlı akış (2026 Nisan)
 - **Kalite:** Türkçe nova-3 Whisper large-v3'e yakın
-- **Limit:** Büyük hacim native destek
-- **Artı:** Real-time streaming WebSocket ile canlı transkripsiyon; diarization (konuşmacı ayırt etme) native
-- **Eksi:** 4 dil dışı (TR, EN, ES, DE, FR, vb) destek sınırlı; küçük dil varsa Whisper'a düş
+- **Limit:** Büyük hacim yerleşik destek
+- **Artı:** Gerçek zamanlı WebSocket akış ile canlı transkripsiyon; diarization (konuşmacı ayrımı) yerleşik
+- **Eksi:** Bazı az konuşulan dillerde destek sınırlı; bu durumlarda Whisper'a düş
 
 ### Seçim matrisi
 
@@ -228,12 +228,12 @@ with open("cevap.mp3", "wb") as f:
         f.write(chunk)
 ```
 
-- **Fiyat:** $0.18-0.30 / 1000 karakter (~$1 / dk ses)
-- **Kalite:** Endüstri zirvesi — natural, insan kulağı ayırt edemez
-- **Türkçe:** `eleven_multilingual_v2` iyi; bazı voice ID'ler daha doğal
-- **Voice cloning:** 1 dakikalık örnek ile özel ses (premium plan)
-- **Artı:** Natural dinleme kalitesi, streaming destek
-- **Eksi:** Pahalı hacimde, kaynak dışı
+- **Fiyat:** ~$0.15-0.30 / 1000 karakter (yaklaşık $0.50-1.00 / dk ses; 2026 Nisan plan değişimleri için ElevenLabs pricing'i kontrol et)
+- **Kalite:** Endüstri zirvesi — doğal, insan kulağı ayırt etmek zor
+- **Türkçe:** `eleven_multilingual_v2` veya yeni `eleven_v3` modeli (2025) iyi; bazı ses kimlikleri (voice ID) daha doğal
+- **Ses kopyalama:** 1 dakikalık örnek ile özel ses (Creator + planında)
+- **Artı:** Doğal dinleme kalitesi, akış desteği, 30+ dil
+- **Eksi:** Hacimde pahalı; açık kaynak değil
 
 ### 2. Fish Audio (Türkçe specialist)
 
@@ -255,11 +255,11 @@ with open("cevap.mp3", "wb") as f:
     f.write(response.content)
 ```
 
-- **Fiyat:** $0.015 / 1000 karakter (~$0.08 / dk ses) — ElevenLabs'tan 10× ucuz
-- **Kalite:** %90 ElevenLabs (doğal, Türkçe iyi)
-- **Voice cloning:** 30 sn örnek, $15 plan "Plus"
-- **Artı:** Türkçe için en iyi fiyat-kalite; KarincaAI için test edildi
-- **Eksi:** Az bilinen; Anthropic / resmi Anthropic liste yok
+- **Fiyat:** ~$0.015 / 1000 karakter (yaklaşık $0.05-0.10 / dk ses) — ElevenLabs'tan ~10 kat ucuz
+- **Kalite:** ElevenLabs'a yakın (~%90 doğallık), Türkçe iyi
+- **Ses kopyalama:** ~30 sn örnek, "Plus" planı (~$15/ay)
+- **Artı:** Türkçe için en iyi fiyat-kalite oranı; düşük bütçeli sesli ajan için ideal
+- **Eksi:** Görece az bilinen; Anthropic resmi listesinde yok; doküman bazı yerlerde Çince ağırlıklı
 
 ### 3. OpenAI TTS (orta seçim)
 
@@ -276,11 +276,11 @@ response = client.audio.speech.create(
 response.stream_to_file("cevap.mp3")
 ```
 
-- **Fiyat:** $15 / 1M karakter ($0.015 / 1000 char, Fish ile eş)
-- **Kalite:** İyi, doğal; Türkçe OK ama aksanlı (İngilizce ağırlıklı eğitim)
-- **Voice cloning:** Yok
-- **Artı:** OpenAI ekosistem entegrasyon (zaten kullanıyorsan)
-- **Eksi:** Türkçe aksansız değil; cloning destek yok
+- **Fiyat:** $15 / 1M karakter ($0.015 / 1000 char, Fish Audio ile eş seviyede)
+- **Kalite:** İyi, doğal; Türkçe kabul edilebilir ama aksanlı (İngilizce ağırlıklı eğitim)
+- **Ses kopyalama:** Yok
+- **Artı:** OpenAI ekosistemine entegrasyon (zaten OpenAI kullanıyorsan)
+- **Eksi:** Türkçede aksan sezilebilir; ses kopyalama desteği yok
 
 ### Seçim matrisi
 
@@ -420,14 +420,25 @@ ffmpeg -i telefon.mp3 -ar 16000 -ac 1 -af "highpass=f=200,lowpass=f=3000" temiz.
 
 | # | Tuzak | Sonuç | Doğru |
 |---|---|---|---|
-| 1 | language belirtilmemiş Whisper | Türkçe → İngilizce çeviri | `language="tr"` açık |
-| 2 | 25 MB üstü dosya API'ye | Hata | ffmpeg ile parçala |
-| 3 | Voice agent streaming'siz | 5-6 sn latency | Paralel streaming; Pipecat framework |
-| 4 | ElevenLabs voice ID "Adam" Türkçe | Robotik | Multilingual v2 Türkçe voice |
-| 5 | TTS uzun metin (1000+ char) | Cümle ortasında kesme | 200-300 char chunk'lar |
-| 6 | STT sonucu Claude'a ham | Transkript gürültü | Post-process Claude ile düzelt |
-| 7 | Fatura alarm yok | 2 saatlik demo $50 | Hard cap + monitoring |
-| 8 | Gizlilik (KVKK) düşünülmemiş | Kullanıcı ses kayıt onaysız | Açık rıza + ses silme policy |
+| 1 | Whisper'da `language` belirtilmemiş | Türkçe → otomatik tespit ile İngilizceye çeviri olabilir | `language="tr"` açık ver |
+| 2 | 25 MB üstü dosya API'ye gönderme | Hata | ffmpeg ile parçala (örn 10 dk segmentler) |
+| 3 | Sesli ajanda akış (streaming) yok | 5-6 sn gecikme | Paralel akış; Pipecat çerçevesi |
+| 4 | ElevenLabs İngilizce-only ses kimliği seçmek | Türkçede robotik | Multilingual v2 Türkçe ses kimliği |
+| 5 | TTS uzun metin (1000+ karakter) | Cümle ortasında kesme | 200-300 karakter parçalar |
+| 6 | STT sonucunu Claude'a ham vermek | Transkripte gürültü kalır | Post-process Claude ile düzelt |
+| 7 | Fatura alarmı yok | 2 saatlik demo $50 | Üst sınır + izleme |
+| 8 | Gizlilik (KVKK) düşünülmemiş | Kullanıcı ses kaydı onaysız | Açık rıza + ses silme politikası |
+
+??? warning "Tipik ses boru hattı hataları — şu durum şu çözüm"
+
+    | Hata | Sebep | Çözüm |
+    |---|---|---|
+    | Whisper Türkçeyi İngilizceye çeviriyor | `language` belirtilmemiş | `language="tr"` zorunlu |
+    | 25 MB üstü dosya hatası | OpenAI Whisper API limiti | `ffmpeg -t 600 -i in.mp3 part_%03d.mp3` ile parçala |
+    | ElevenLabs ses Türkçe kötü | Voice ID İngilizce-only | `eleven_multilingual_v2` + Türkçe destekli voice ID seç |
+    | Fish Audio sertifika hatası | Eski httpx + güncel SSL | `pip install -U httpx` |
+    | Whisper transkripti çok yavaş (CPU) | GPU kullanılmıyor | faster-whisper + `device="cuda"` veya OpenAI Whisper API |
+    | Voice agent gecikmesi >5 sn | Sıralı boru hattı | Pipecat / LiveKit ile akış paralelleme |
 
 <div class="ma-anthropic-oz" markdown>
 <div class="ma-anthropic-oz-header">📖 Anthropic bu konuyu nasıl anlatıyor — öz</div>

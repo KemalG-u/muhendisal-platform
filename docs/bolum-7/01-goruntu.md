@@ -13,7 +13,7 @@
 </div>
 
 !!! tip "Yabancı kelime mi gördün?"
-    **Vision model** = görsel input kabul eden LLM; Claude Sonnet 4.6, GPT-4o, Gemini 2.5 vision yeteneği. **Modality** = veri türü; text, image, audio, video her biri bir modality. **Base64** = binary dosyayı metin olarak encode etme; görsel API gönderimi için yaygın. **Detail parametre** = görsel çözünürlük kalitesi; `low` hızlı+ucuz, `high` yavaş+pahalı. **OCR** (Optical Character Recognition) = görseldeki metni okuma. **Visual RAG** = görsel + metin hybrid retrieval; ilgili görseli bul + Claude'a ver.
+    **Vision modeli** = görsel girdiyi kabul eden LLM; Claude Sonnet 4.6 / Opus 4.7 / Haiku 4.5, GPT-5.5, Gemini 2.5 vision yeteneği. **Modalite (modality)** = veri türü; metin, görüntü, ses, video her biri bir modalite. **Base64** = ikili (binary) dosyayı metin olarak kodlama; görsel API gönderimi için yaygın. **OCR** (Optical Character Recognition — görsel karakter tanıma) = görseldeki metni okuma. **Visual RAG (görsel destekli RAG)** = görsel + metin hibrit getirme; ilgili görseli bul + Claude'a ver.
 
 ## Neden bu sayfa?
 
@@ -24,11 +24,11 @@ Platform'un önceki 28 sayfası **metin** odaklıydı — prompt, RAG, agent, FT
 - Öğrenci tahta fotoğrafı atıyor → matematik sorusu çöz
 - DevOps ekran görüntüsü paylaşıyor → hatayı yorumla
 
-Bu sayfanın mesajı: **Claude vision %95 "görsel → metin" use case'i kolay çözer.** Kurulum tek bir API parametre değişikliği; zorluk **doğru prompt + maliyet kontrolü**.
+Bu sayfanın mesajı: **Claude vision, "görsel → metin" kullanım senaryolarının büyük çoğunluğunu kolay çözer.** Kurulum tek bir API parametre değişikliği; zorluk **doğru prompt + maliyet kontrolü**.
 
-İkincisi: **Multimodal 2026 trendi** (10.4 Trend 2). AI Engineer CV'sinde "vision integration" satırı **ek değer**. 9.6 Multimodal imza sayfasında (31. tur) canlı bir projeyle göstereceksin.
+İkincisi: **Multimodal 2026 trendi** (10.4 Trend 2). AI Engineer CV'sinde "vision entegrasyonu" satırı **ek değer**. 9.6 Multimodal imza sayfasında canlı bir projeyle göstereceksin.
 
-Üçüncüsü: **Anthropic vision olgun durumda** — Claude Sonnet 4.6 vision quality GPT-4o ile yarışır seviyede. Bu sayfada Anthropic-first yaklaşımımızla tutarlı kalıyoruz.
+Üçüncüsü: **Anthropic vision olgun durumda** — Claude Sonnet 4.6 / Opus 4.7 vision kalitesi GPT-5.5 ile yarışır seviyede. Bu sayfada Anthropic öncelikli yaklaşımımızla tutarlı kalıyoruz.
 
 ## Bu sayfanın ekosistemi
 
@@ -182,22 +182,25 @@ URL Claude sunucularından erişilebilir olmalı (public). Internal URL'ler çal
 ## Kısıtlar — 2026 Claude vision
 
 - **Format:** JPEG, PNG, GIF, WebP
-- **Max boyut:** 5 MB per image
-- **Max çözünürlük:** 8000 × 8000 piksel (daha büyük otomatik downscale)
-- **Per request:** 100 image (Claude Sonnet 4.6); token bütçesi karar verir
-- **Video:** Doğrudan değil — frame'lere ayır, her frame ayrı image (7.3'te detay)
+- **Max boyut:** **5 MB per görsel**
+- **Max çözünürlük:** uzun kenar 8000 piksel; içeride 1568 piksele kadar yeniden boyutlandırılır
+- **Per request:** **20 görsel** (Messages API'de tek istek başına üst sınır)
+- **PDF native:** ayrı `document` bloğu — Messages API'de 32 MB / 100 sayfa, Files API'de 500 MB
+- **Video:** Doğrudan değil — karelere ayır, her kare ayrı görsel (7.3'te detay)
 
-**Token maliyeti tahmin:**
+**Token maliyeti tahmini:**
 
-- Küçük resim (~500×500): ~500 token
-- Orta resim (~1000×1000): ~1500 token
-- Büyük resim (~2000×2000): ~3000 token
+- Küçük görsel (~500 × 500): ~500 token
+- Orta görsel (~1000 × 1000): ~1500 token
+- Büyük görsel (~2000 × 2000): ~3000 token
 
 **Resmi formül:**
 
 ```
-Image tokens ≈ (width × height) / 750
+Görsel token ≈ (genişlik × yükseklik) / 750
 ```
+
+(Anthropic 2026 belgesi; her görsel önce 1568 px uzun kenara yeniden boyutlandırıldığı için 8000 × 8000 girdi pratikte ~1568 × 1568 işlenir, yaklaşık 3300 token.)
 
 Örnek: 1200×800 = 960.000 / 750 = **~1280 token**.
 
@@ -467,14 +470,25 @@ Claude Türkçe içerik için iyi çalışır:
 
 | # | Tuzak | Sonuç | Doğru |
 |---|---|---|---|
-| 1 | Her görsel base64 gönderim | Request boyutu büyük, upload yavaş | Public URL varsa URL |
-| 2 | Prompt caching yok | 10× fazla token maliyet | System prompt cache_control ekle |
-| 3 | 8000×8000'den büyük görsel | API reddeder veya downscale | PIL ile önceden 2048 üst limit |
+| 1 | Her görseli base64 göndermek | İstek boyutu büyük, yükleme yavaş | Halka açık URL varsa URL kullan |
+| 2 | Prompt caching yok | ~10 kat fazla token maliyeti | Sistem promptuna `cache_control` ekle |
+| 3 | 8000×8000'den büyük görsel | API reddeder veya yeniden boyutlandırır | PIL ile önceden 2048 üst sınır |
 | 4 | Çoklu görselde etiket yok | Claude karıştırır | "Görsel 1:", "Görsel 2:" ekle |
-| 5 | Grafik 1 prompt'ta %100 bekleme | %80 doğru gerçekçi | 2 prompt + karşılaştır |
-| 6 | Hard cap yok vision'da | Her görsel $0.01, 10K görsel = $100 | Per-user image limiti |
-| 7 | PII taraması yok | Screenshot'ta TC sızar | Madde 5 pattern |
-| 8 | Tool calling yok JSON için | Parse hataları | `tool_choice` zorla |
+| 5 | 20'den fazla görseli tek istekte göndermek | API hatası | İsteği parçalara böl; max 20/istek |
+| 6 | Vision'da maliyet üst sınırı yok | 10K görsel = ~$100 fatura | Kullanıcı başına görsel limiti |
+| 7 | PII taraması yok | Ekran görüntüsünde TC sızar | Madde 5 deseni (PII maskeleme) |
+| 8 | JSON için araç çağırma yok | Ayrıştırma hataları | `tool_choice={"type":"tool","name":"..."}` zorla |
+
+??? warning "Tipik Claude Vision hataları — şu durum şu çözüm"
+
+    | Hata | Sebep | Çözüm |
+    |---|---|---|
+    | `400 Bad Request: image too large` | 5 MB üzeri | PIL ile JPEG kalite 80'e düşür veya 2048 px sınırla |
+    | `Image type not supported` | TIFF, BMP, RAW formatı | JPEG/PNG/GIF/WebP'ye çevir (PIL `convert("RGB").save("x.jpg")`) |
+    | URL fetch hatası | Yerel/özel ağ URL'si | Halka açık CDN'e yükle; veya base64 kullan |
+    | "Image quality too low" | <100 piksel görsel | En az 256 px tarafı olsun |
+    | OCR Türkçe karakterler bozuk | Yüksek sıkıştırma | Daha az sıkıştırma + min 1024 px uzun kenar |
+    | 20+ görsel hatası | Tek istekte limit aşıldı | İstekleri böl; her birinde max 20 |
 
 ## Anthropic ekosistemi — Claude vision yol haritası
 
@@ -486,10 +500,10 @@ Claude vision evrimini hızlı takip etmek gerek:
 ### 2024-2026 ilerleme
 
 - **Claude 3 (Mart 2024):** İlk vision desteği
-- **Claude 3.5 Sonnet (Haziran 2024):** Vision kalite sıçrama
-- **Claude 3.5 Sonnet New (Ekim 2024):** Computer use duyurusu — ekran görüntüsü → tıklama/yazma
-- **Claude Sonnet 4.6 (2025):** Vision + tool use tam olgunluk
-- **Claude Sonnet 4.6 (2026):** Extended thinking + vision reasoning
+- **Claude 3.5 Sonnet (Haziran 2024):** Vision kalitesinde sıçrama
+- **Claude 3.5 Sonnet New (Ekim 2024):** Computer Use duyurusu — ekran görüntüsü → tıklama/yazma
+- **Claude 4.x serisi (2025):** Sonnet 4.5 / 4.6 + Opus 4.6 / 4.7 + Haiku 4.5 — vision + tool use + uzun bağlam birleşimi tam olgunluğa ulaştı
+- **Claude Opus 4.7 + Sonnet 4.6 (2026):** 1M token bağlam + extended thinking + vision birlikte; PDF native input (32 MB / 100 sayfa Messages, 500 MB Files)
 
 ### Computer use — vision'ın ileri uzantısı
 

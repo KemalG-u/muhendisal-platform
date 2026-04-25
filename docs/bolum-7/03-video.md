@@ -1,4 +1,4 @@
-# 7.3 Video İşleme — Frame Extraction + Claude Vision
+# 7.3 Video İşleme — Kare Çıkarma (Frame Extraction) + Claude Vision
 
 <div class="ma-meta" markdown>
 <div class="ma-meta-row" markdown>
@@ -13,22 +13,22 @@
 </div>
 
 !!! tip "Yabancı kelime mi gördün?"
-    **Frame** = video'nun tek bir kare görüntüsü; 1 saniye video ~30 frame. **Frame rate** (FPS) = saniyede kare sayısı; 24/30/60 yaygın. **Keyframe** = video sıkıştırmasında temel referans kare; önemli görsel değişim noktaları. **Scene detection** = sahne değişikliklerini otomatik bulma. **ffmpeg** = video/ses işleme standart CLI aracı, açık kaynak. **Sampling** = video'dan belli aralıkla frame çıkarma (her saniye, her sahne değişimi).
+    **Kare (frame)** = videonun tek bir görüntüsü; 1 saniye video ~30 kare. **Kare hızı (frame rate / FPS)** = saniyede kare sayısı; 24/30/60 yaygın. **Anahtar kare (keyframe)** = video sıkıştırmasında temel referans kare; önemli görsel değişim noktaları. **Sahne tespiti (scene detection)** = sahne değişimlerini otomatik bulma. **ffmpeg** = video/ses işlemenin standart komut satırı aracı, açık kaynak. **Örnekleme (sampling)** = videodan belli aralıkla kare çıkarma (her saniye, her sahne değişimi).
 
 ## Neden bu sayfa?
 
-Video multimodal'ın 3. boyutu. 7.1 görsel + 7.2 ses + 7.3 video = tam multimodal stack. Somut kullanımlar:
+Video, multimodal'ın 3. boyutu. 7.1 görsel + 7.2 ses + 7.3 video = tam multimodal yığını. Somut kullanımlar:
 
-- Meeting kaydı → katılımcı listesi + konu başlıkları + aksiyon maddeleri
-- Eğitim video → otomatik ders özet + quiz üretimi
+- Toplantı kaydı → katılımcı listesi + konu başlıkları + aksiyon maddeleri
+- Eğitim videosu → otomatik ders özeti + sınav (quiz) üretimi
 - Güvenlik kamera kaydı → olay özetleme, tehdit tespiti
-- YouTube içerik → altyazı + highlight + sosyal post taslakları
+- YouTube içeriği → altyazı + öne çıkan anlar + sosyal medya taslakları
 
-**Anthropic native video API henüz yok** (2026 Nisan). Claude Sonnet **bir kerede çoklu image** alır (100 image per request); video'yu **frame'lere böl**, o frame'leri Claude'a ver, özet al. Bu pattern 2027'ye kadar standart.
+**Anthropic'in yerleşik (native) video API'si henüz yok** (2026 Nisan). Claude Sonnet/Opus **bir istekte 20 görsele kadar** alır; videoyu **karelere böl**, kareleri Claude'a ver, özet al. Bu desen Claude tarafında 2026-2027 standart. Karşılaştırma: **Gemini 2.5 Pro doğal video girdisi** kabul ediyor — saatlerce videoyu tek seferde işleyebilir; bu konuda Claude'a karşı belirgin avantaj.
 
-İkincisi: **Ses kısmı paralel.** Video'da konuşma varsa ffmpeg ile ses ayır → 7.2'deki Whisper pipeline. Görsel + ses transkript birlikte Claude'a → zengin özet.
+İkincisi: **Ses kısmı paralel.** Videoda konuşma varsa ffmpeg ile ses ayır → 7.2'deki Whisper boru hattı. Görsel + ses transkripti birlikte Claude'a → zengin özet.
 
-Üçüncüsü: Bu sayfa **Bölüm 7'nin 3. sayfası**; sonraki 7.4 İMZA (model karşılaştırma). Platform'un video tarafı kompakt — 1 sayfada temel + pratik.
+Üçüncüsü: Bu sayfa **Bölüm 7'nin 3. sayfası**; sonraki 7.4 imza (model karşılaştırma). Platformun video tarafı kompakt — 1 sayfada temel + pratik.
 
 ## Video mimari — 3 paralel yol
 
@@ -470,14 +470,25 @@ for frame, sozlu in aligned:
 
 | # | Tuzak | Sonuç | Doğru |
 |---|---|---|---|
-| 1 | Frame rate çok yüksek | 1 dk video 1000 frame → $$$ | 1/10 sn default; 1/30 uzun için |
-| 2 | Keyframe filter yok | 90% aynı frame | Sahne değişimi filtresi |
-| 3 | 4K frame'leri ham gönder | 15MB per image, API reddeder | scale=1280 downscale |
-| 4 | Audio extract unutma | Eksik transkript | ffmpeg -vn ile ses ayır |
-| 5 | Whisper + Claude hizalama yok | Bağlam kopuk | verbose_json + segments |
-| 6 | Frame 100+ tek request | API hata 100 limit | Batch + meta özet |
-| 7 | Güvenlik kamera KVKK | Hukuki ceza | Kayıt izni + yüz maskeleme |
-| 8 | Prompt caching yok | 10× fatura | System prompt cache_control |
+| 1 | Çok yüksek kare hızı | 1 dk video 1000+ kare → maliyet patlar | Varsayılan 1/10 sn; uzun için 1/30 |
+| 2 | Anahtar kare filtresi yok | %90 aynı kare | Sahne değişimi filtresi |
+| 3 | 4K kareleri ham göndermek | 15 MB / kare, API reddeder | `scale=1280` ile küçült |
+| 4 | Sesi çıkarmayı unutmak | Eksik transkript | `ffmpeg -vn` ile ses ayır |
+| 5 | Whisper + Claude hizalama yok | Bağlam kopuk | `verbose_json` + segmentler |
+| 6 | Tek istekte 20+ kare | API hatası — limit aşımı | Batch (max 20) + ara meta özet |
+| 7 | Güvenlik kamera KVKK | Hukuki yaptırım | Kayıt izni + yüz maskeleme |
+| 8 | Prompt caching yok | 10 kat fatura | Sistem promptuna `cache_control` |
+
+??? warning "Tipik video boru hattı hataları — şu durum şu çözüm"
+
+    | Hata | Sebep | Çözüm |
+    |---|---|---|
+    | "Image limit exceeded" (>20 kare) | Tek istek 20 görsel sınırı | Batch'lere böl; her batch için ayrı çağrı + meta özet |
+    | ffmpeg sahne tespiti çalışmıyor | Eski sürüm / filtergraph hatası | `ffmpeg -version` 6.x+ kontrol et; `select='gt(scene,0.3)'` doğru sözdizimi |
+    | Claude Türkçe altyazıyı atlıyor | Görsel kalite düşük | `scale=1280:-2 -q:v 2` daha yüksek kalite |
+    | Audio dosya çok büyük (>25 MB) | Whisper API sınırı | `ffmpeg -ac 1 -ar 16000 -b:a 64k` ile küçült veya parçala |
+    | Bellek hatası 100+ kare çıkarınca | RAM doluyor | Disk'e yaz (`-y` overwrite); batch işleme |
+    | "I-frame yok" hatası | Bazı dönüştürülmüş videolar I-frame içermez | `select='gt(scene,0.25)'` kullan, `eq(pict_type,I)` çıkar |
 
 <div class="ma-anthropic-oz" markdown>
 <div class="ma-anthropic-oz-header">📖 Anthropic bu konuyu nasıl anlatıyor — öz</div>
@@ -490,7 +501,7 @@ Anthropic Vision dokümantasyonu ve multimodal kullanım kılavuzu video'yu şö
 
 **3. Audio ayrı bir pipeline — Whisper + Claude + resenkron.** Video'nun ses kısmı 7.2'deki pipeline (Whisper transcript). Claude hem frame'leri hem transcript'i aynı mesajda alabilir; Anthropic bu multimodal birleşimi "video understanding" senaryosu olarak cookbook multimodal klasöründe gösteriyor.
 
-**4. Native video desteği yol haritası belirsiz.** Anthropic News'te 2025-2026 boyunca native video endpoint'i için somut açıklama yok. Gemini'nin video kabul etmesi tercih değil — Anthropic reasoning odaklı kalmayı seçti. Bu yüzden frame-based desen **kısa-orta vadede kalıcı**.
+**4. Yerleşik (native) video desteği yol haritası belirsiz.** Anthropic News'te 2025-2026 boyunca yerleşik video uç noktası için somut açıklama yok. **Gemini 2.5 Pro doğal video girdisi kabul ediyor** — saatlerce videoyu tek seferde işleyebilir; bu konuda Claude'a karşı mevcut avantaj. Anthropic akıl yürütme odaklı kalmayı seçti. Bu yüzden Claude tarafında kare bazlı (frame-based) desen **kısa-orta vadede kalıcı**.
 
 <div class="ma-anthropic-oz-kaynak" markdown>
 **Kaynak:** [platform.claude.com — Vision](https://platform.claude.com/docs/en/build-with-claude/vision) (EN, ~12 dk) + [Anthropic Cookbook — multimodal](https://github.com/anthropics/claude-cookbooks/tree/main/multimodal) (Jupyter, EN). Image block yapısı + batch frame deseni örnekleri.
