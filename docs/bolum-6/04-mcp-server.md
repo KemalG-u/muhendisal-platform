@@ -1,4 +1,4 @@
-# 6.4 MCP Server Yazma
+# 6.4 MCP Sunucusu Yazma — Bölüm 6 İmza Sayfası
 
 <div class="ma-meta" markdown>
 <div class="ma-meta-row" markdown>
@@ -8,28 +8,28 @@
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
 <div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~45 dakika</div>
-<div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 6.3 bitmiş — MCP 3 primitive + host/client/server mimarisi + Claude Desktop config ediyorsun; Python 3.10+ ve `uv` ya da `pip` kurulu</div>
-<div class="ma-meta-row"><strong>🎯 Çıktı:</strong> Python `mcp` SDK (`FastMCP`) ile **kendi MCP server'ın** ayakta — **3 gerçek Tool** + **1 Resource** + **1 Prompt** sunuyor; Claude Desktop'a bağladığında 🔨 ikonunda görünüyor; "TCMB kurunu göster" dediğinde senin yazdığın fonksiyon çalışıp cevabı Claude aracılığıyla döndürüyor. Portföye **GitHub repo** + **30 saniyelik demo GIF** çıktı olarak kalıyor.</div>
+<div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 6.3 bitmiş — MCP'nin 3 yapı taşı + ana uygulama (host) / istemci (client) / sunucu (server) mimarisi + Claude Desktop yapılandırması yapıldı; Python 3.10+ ve `uv` ya da `pip` kurulu</div>
+<div class="ma-meta-row"><strong>🎯 Çıktı:</strong> Python `mcp` SDK (`FastMCP`) ile **kendi MCP sunucun** ayakta — **3 gerçek Tool** + **1 Resource** + **1 Prompt** sunuyor; Claude Desktop'a bağladığında 🔨 ikonunda görünüyor; "TCMB kurunu göster" dediğinde senin yazdığın fonksiyon çalışıp cevabı Claude aracılığıyla döndürüyor. Portföye **GitHub repo** + **30 saniyelik demo GIF** çıktı olarak kalıyor.</div>
 </div>
 
 !!! tip "Yabancı kelime mi gördün?"
-    Bu sayfadaki **italik-altı çizili** ifadelerin (decorator, type hint, FastMCP, stdio gibi) üstüne mouse'unu getir — kısa tanım çıkar. Mobilde dokun.
+    Bu sayfadaki **kalın** teknik terimler (decorator / dekoratör, type hint / tip ipucu, FastMCP, stdio gibi) ilk geçişte hemen yanında veya altında Türkçe açıklanır.
 
 ## Neden bu sayfa?
 
-6.3'te **tüketici** oldun — hazır filesystem server'ını Claude Desktop'a bağladın. Bu sayfada **üretici** oluyorsun. Fark şu: MCP ekosistemindeki değerli iş birinci kategoride değil — binlerce kişi hazır server kurup mutlu; **az kişi kendi server'ını yazıyor.** İş ilanlarında, açık kaynak portföyde, teknik görüşmede farkı yaratan bu taraf. AI Engineer rolünde "MCP server yazdım" cümlesi **mesleki geçiş kartı**.
+6.3'te **tüketici** oldun — hazır filesystem sunucusunu Claude Desktop'a bağladın. Bu sayfada **üretici** oluyorsun. Fark şu: MCP ekosistemindeki değerli iş birinci kategoride değil — binlerce kişi hazır sunucu kurup mutlu; **az kişi kendi sunucusunu yazıyor.** İş ilanlarında, açık kaynak portföyde, teknik görüşmede farkı yaratan bu taraf. AI Engineer rolünde "MCP sunucusu yazdım" cümlesi **mesleki geçiş kartı**.
 
-İkincisi: Python `mcp` SDK 2025 boyunca stabil hale geldi, 2026 Nisan itibarıyla v1.27.0. İçindeki **FastMCP** modülü — Flask/FastAPI tarzı **decorator** sözdizimi + Python **type hint**'leri otomatik JSON Schema'ya çeviriyor. Yani 6.2'de elle yazdığın `"input_schema": {"type":"object",...}` blokları artık yok — `def tool(a: int, b: str) -> dict` imzası yeter, şema otomatik üretilir. Bu decorator devrimi, MCP server yazımını 30 satırlık işe indirir.
+İkincisi: Python `mcp` SDK 2025 boyunca olgunlaştı, 2026 Nisan itibarıyla v1.27.x serisinde. İçindeki **FastMCP** modülü — Flask/FastAPI tarzı **dekoratör (decorator)** sözdizimi + Python **tip ipuçlarını (type hints)** otomatik JSON Şemasına çeviriyor. Yani 6.2'de elle yazdığın `"input_schema": {"type":"object",...}` blokları artık yok — `def tool(a: int, b: str) -> dict` imzası yeter, şema otomatik üretilir. Bu dekoratör devrimi, MCP sunucu yazımını ~30 satırlık işe indirir.
 
-Üçüncüsü: Bu sayfanın **canlı referansı benim kendi sunucum** — [mcp.oluk.org](https://mcp.oluk.org). 12 tool sunan production MCP server; Streamable HTTP transport, IP whitelist güvenlik, FastMCP üstüne kurulu. Aşağıda kendi hello-world server'ını yazacaksın; `mcp.oluk.org`'u ise **mimari desen kanıtı** olarak referans vereceğim — "bu kitapta öğrenilenler production'da nasıl görünüyor" sorusunun somut cevabı.
+Üçüncüsü: Bu sayfanın **canlı referansı [mcp.oluk.org](https://mcp.oluk.org)** — 12 araç sunan üretim MCP sunucusu; Streamable HTTP taşıması, IP beyaz listesiyle güvenlik, FastMCP üzerine kurulu. Aşağıda kendi hello-world sunucunu yazacaksın; `mcp.oluk.org`'u ise **mimari desen kanıtı** olarak referans alacağız — "bu kitapta öğrenilenler üretimde nasıl görünüyor" sorusunun somut cevabı.
 
 ## FastMCP kısaca — üç paragraf, matematiksiz
 
-**FastMCP = Python `mcp` SDK'nın decorator katmanı.** Import: `from mcp.server.fastmcp import FastMCP`. `mcp = FastMCP("AdımServer")` ile server nesnesi. `@mcp.tool()`, `@mcp.resource(uri)`, `@mcp.prompt()` decorator'ları ile fonksiyonları 3 primitive'e kaydediyorsun. `mcp.run()` ile ayakta. **30 satırlık kodda** production-ready MCP server çıkıyor — eski SDK'nın 120 satırlık boilerplate'i yok.
+**FastMCP = Python `mcp` SDK'sının dekoratör katmanı.** İçe aktarma: `from mcp.server.fastmcp import FastMCP`. `mcp = FastMCP("AdımSunucu")` ile sunucu nesnesi. `@mcp.tool()`, `@mcp.resource(uri)`, `@mcp.prompt()` dekoratörleriyle fonksiyonları 3 yapı taşına kaydediyorsun. `mcp.run()` ile ayakta. **~30 satırlık kodda** üretime hazır MCP sunucusu çıkıyor — eski SDK'nın 120 satırlık şablon kodu (boilerplate) yok.
 
-**Type hint = otomatik JSON Schema.** `def kdv_hesapla(tutar: float, oran: float = 20) -> dict` yazıyorsun — FastMCP `tutar` ve `oran`'ı JSON Schema'ya çeviriyor, docstring'i `description`'a yazıyor, `-> dict` return type'tan **structured output** çıkarıyor. 6.2'de elle yazdığın `input_schema` bloğu **tamamen otomatik**. Python'ın `typing` modülünden gelen `Literal["USD","EUR"]` → JSON'da `enum`; `Optional[int]` → `nullable`; `list[str]` → `array of string`. Tip sistemi şeman.
+**Tip ipucu = otomatik JSON Şema.** `def kdv_hesapla(tutar: float, oran: float = 20) -> dict` yazıyorsun — FastMCP `tutar` ve `oran`'ı JSON Şemasına çeviriyor, docstring'i `description`'a yazıyor, `-> dict` dönüş tipinden **yapılandırılmış çıktı (structured output)** çıkarıyor. 6.2'de elle yazdığın `input_schema` bloğu **tamamen otomatik**. Python'ın `typing` modülünden gelen `Literal["USD","EUR"]` → JSON'da `enum`; `Optional[int]` → `nullable`; `list[str]` → `array of string`. Tip sistemi senin şeman.
 
-**Transport kararı: stdio (yerel) veya Streamable HTTP (uzak).** `mcp.run()` default stdio çalıştırır — Claude Desktop subprocess olarak başlatır. `mcp.run(transport="streamable-http", port=8000)` derseniz HTTP endpoint sunar — uzaktan (VPS'te) kurulu server'a `mcp-remote` veya doğrudan HTTP client'tan bağlanabilirsiniz. `mcp.oluk.org` ikincisini kullanıyor; Claude Desktop → `mcp-remote` wrapper → HTTP endpoint.
+**Taşıma kararı: stdio (yerel) veya Streamable HTTP (uzak).** `mcp.run()` varsayılan stdio çalıştırır — Claude Desktop alt süreç olarak başlatır. `mcp.run(transport="streamable-http", port=8000)` dersen HTTP uç noktası sunar — uzaktan (VPS'te) kurulu sunucuya `mcp-remote` ile veya doğrudan HTTP istemcisinden bağlanabilirsin. `mcp.oluk.org` ikincisini kullanıyor; Claude Desktop → `mcp-remote` sarıcısı → HTTP uç noktası. (Not: Eski `sse` taşıması Mart 2025 spec'iyle birlikte deprecate edildi; yeni sunucularda Streamable HTTP kullan.)
 
 ## Bu sayfanın ekosistemi — geliştiriciden son kullanıcıya
 
@@ -71,14 +71,14 @@ flowchart TB
 
 | Düğüm | Nerede | Ne iş yapıyor |
 |---|---|---|
-| 👩‍💻 **Geliştirici (sen)** | `server.py` dosyası | Python fonksiyonu yaz, decorator koy |
-| ⚡ **FastMCP decorator'lar** | `@mcp.tool()` vb. | Fonksiyonu primitive'e kaydet + schema otomatik üret |
-| 📦 **mcp SDK (v1.27.0)** | `pip install mcp` | JSON-RPC handler + transport katmanı |
-| ⚙️ **Python subprocess** | `python server.py` veya `uv run` | Server'ın ayakta olduğu süreç |
-| 📡 **Transport** | stdio (lokal) / Streamable HTTP (uzak) | Client↔server pipe |
-| 🔌 **MCP Client** | Claude Desktop içinde | Server'ı keşfet, tool çağır, cevap al |
-| 🤖 **Claude LLM** | Anthropic API | Kullanıcı mesajına göre tool kararı |
-| 👤 **Kullanıcı** | Chat ekranı | Doğal dilde soru/komut |
+| 👩‍💻 **Geliştirici (sen)** | `server.py` dosyası | Python fonksiyonu yaz, dekoratör koy |
+| ⚡ **FastMCP dekoratörleri** | `@mcp.tool()` vb. | Fonksiyonu yapı taşına kaydet + şemayı otomatik üret |
+| 📦 **mcp SDK (v1.27.x, Nisan 2026)** | `pip install mcp` | JSON-RPC işleyici + taşıma katmanı |
+| ⚙️ **Python alt süreci (subprocess)** | `python server.py` veya `uv run` | Sunucunun ayakta olduğu süreç |
+| 📡 **Taşıma (transport)** | stdio (yerel) / Streamable HTTP (uzak) | İstemci ↔ sunucu borusu |
+| 🔌 **MCP İstemcisi** | Claude Desktop içinde | Sunucuyu keşfet, aracı çağır, cevabı al |
+| 🤖 **Claude LLM** | Anthropic API | Kullanıcı mesajına göre araç kararı |
+| 👤 **Kullanıcı** | Sohbet ekranı | Doğal dilde soru/komut |
 
 </table>
 </div>
@@ -400,23 +400,34 @@ flowchart LR
 
 | Tuzak | Sonucu | Çözüm |
 |---|---|---|
-| **Docstring eksik / tek satır** | Claude tool'u çağırmıyor veya yanlış çağırıyor | Docstring'de (1) ne yapıyor (2) ne zaman çağrılır (3) 3+ örnek ifade |
-| **Type hint yok** (`def f(a, b)`) | FastMCP schema üretemez, tool mcp_inspector'da görünmez | **Her argümana tip ver.** `int`, `str`, `float`, `bool`, `Literal[...]`, `Optional[X]` |
-| **`print()` kullanmak (stdio transport)** | stdout protokolü bozar, server çöker | `logging` veya `print(..., file=sys.stderr)` — **stdout sadece JSON-RPC için** |
-| **Göreli yol + Claude Desktop** | Server başlamaz ("command not found") | `command` ve `args` **mutlak yol**; venv'in python binary'si |
-| **`async` + `sync` karışık** | Event loop hatası | Tool fonksiyonları homojen: ya hepsi async ya hepsi sync. HTTP çağrıları varsa async tercih |
-| **Tool çok geniş kapsamlı** (`veritabani_sorgula(sql)` gibi) | Güvenlik riski + Claude karmaşık SQL üretemez | Dar tool'lar: `musteri_getir(id)`, `siparis_listele(tarih)`. Her tool bir iş |
-| **Hata atmak** (`raise ValueError`) | Server çöker veya Claude anlamaz | `{"hata": str(e), "tip": type(e).__name__}` JSON dön + `is_error=True` flag |
-| **Environment variable'lar hardcoded** | Repo'ya secret sızar | `.env` + `python-dotenv`; config dosyasında `"env": {"KEY": "..."}` bloğu |
-| **Test etmeden Claude Desktop'a bağlamak** | Hata ayıklama cehennemi | **Her zaman önce `mcp_inspector`** ile dene; tool'lar orada çalışıyorsa Desktop'ta da çalışır |
-| **Paket dağıtımı ihmali** | Başkası kuramıyor | `pyproject.toml` + `uv` publish veya `.mcpb` paketi (2026 Desktop Extension formatı) |
+| **Docstring eksik / tek satır** | Claude aracı çağırmıyor veya yanlış çağırıyor | Docstring'de (1) ne yapıyor (2) ne zaman çağrılır (3) 3+ örnek ifade |
+| **Tip ipucu yok** (`def f(a, b)`) | FastMCP şema üretemez, araç mcp_inspector'da görünmez | **Her argümana tip ver.** `int`, `str`, `float`, `bool`, `Literal[...]`, `Optional[X]` |
+| **`print()` kullanmak (stdio taşıması)** | `stdout` protokolü bozar, sunucu çöker | `logging` veya `print(..., file=sys.stderr)` — **`stdout` sadece JSON-RPC için** |
+| **Göreli yol + Claude Desktop** | Sunucu başlamaz ("command not found") | `command` ve `args` **mutlak yol**; venv'in python ikilisi (binary) |
+| **`async` + `sync` karışık** | Olay döngüsü (event loop) hatası | Araç fonksiyonları türdeş: ya hepsi async ya hepsi sync. HTTP çağrısı varsa async tercih |
+| **Araç çok geniş kapsamlı** (`veritabani_sorgula(sql)` gibi) | Güvenlik riski + Claude karmaşık SQL üretemez | Dar araçlar: `musteri_getir(id)`, `siparis_listele(tarih)`. Her araç tek iş |
+| **İstisna fırlatmak** (`raise ValueError`) | Sunucu çöker veya Claude anlamaz | `{"hata": str(e), "tip": type(e).__name__}` JSON dön + `is_error=True` bayrağı |
+| **Ortam değişkenleri kodun içinde sabit** | Repoya gizli anahtar sızar | `.env` + `python-dotenv`; yapılandırma dosyasında `"env": {"KEY": "..."}` bloğu |
+| **Test etmeden Claude Desktop'a bağlamak** | Hata ayıklama cehennemi | **Her zaman önce `mcp_inspector`** ile dene; araçlar orada çalışıyorsa Desktop'ta da çalışır |
+| **Paket dağıtımı ihmali** | Başkası kuramıyor | `pyproject.toml` + `uv publish` veya `.mcpb` paketi (2026 Desktop Extension biçimi) |
+
+??? warning "Tipik MCP sunucu çalıştırma hataları — şu durum şu çözüm"
+
+    | Hata | Sebep | Çözüm |
+    |---|---|---|
+    | "Server failed to start" | Mutlak yol değil veya venv yanlış | `which python` ile mutlak yolu al, `command`'e koy |
+    | Hammer ikonunda görünmüyor ama log temiz | İlk çağrı zaman aşımı (>10 sn) | Sunucuda yavaş import (örn. `pandas`) varsa sadeleştir |
+    | "JSON parse error" log'u | `print()` veya `sys.stdout.write` stdout'a yazıyor | Tüm yazımları `logging` veya `stderr`'e çek |
+    | Tool argümanlar None geliyor | Tip ipucu eksik veya `Optional` yanlış | `Optional[int]` yerine `int | None` (Python 3.10+) net |
+    | `httpx.ConnectError` (TCMB API) | Ağ erişimi yok / DNS / IPv6 sorunu | `httpx.AsyncClient(transport=httpx.AsyncHTTPTransport(retries=2))` |
+    | Resource görünmüyor ama tool görünüyor | `+` menüsü yerel sunucularda gizli olabilir | Claude Desktop'ı tam yeniden başlat; spec sürümünü 2025-03 üstüne çek |
 
 <div class="ma-anthropic-oz" markdown>
 <div class="ma-anthropic-oz-header">📖 Anthropic bu konuyu nasıl anlatıyor — öz</div>
 
-Anthropic MCP server yazımını [modelcontextprotocol/python-sdk](https://github.com/modelcontextprotocol/python-sdk) deposunda + Academy [Advanced MCP](https://anthropic.skilljar.com/) kursunda (~60 dk, sertifikalı) anlatıyor. Python SDK son stabil sürüm **v1.27.0** (2 Nisan 2026).
+Anthropic MCP sunucu yazımını [modelcontextprotocol/python-sdk](https://github.com/modelcontextprotocol/python-sdk) deposunda + Academy [Advanced MCP](https://www.anthropic.com/learn) kursunda (ücretsiz, sertifikalı) anlatıyor. Python SDK 2026 Nisan itibarıyla **v1.27.x** serisi.
 
-**1. FastMCP 1.0 SDK'ya merge edildi.** Eskiden ayrı paketti; 2024 sonunda resmi SDK'ya entegre oldu. Bugün `pip install mcp` yeterli. Bağımsız FastMCP paketi (`pip install fastmcp`) daha gelişmiş özellikler (hosting, interactive UI) sunar — tüm MCP server'larının ~%70'i bir FastMCP sürümü üstünde çalışıyor.
+**1. FastMCP 1.0 SDK'ya birleştirildi.** Eskiden ayrı paketti; 2024 sonunda resmi SDK'ya entegre oldu. Bugün `pip install mcp` yeterli. Bağımsız FastMCP paketi (`pip install fastmcp`) daha gelişmiş özellikler (barındırma, etkileşimli UI) sunar — açık kaynaklı MCP sunucularının büyük çoğunluğu bir FastMCP sürümü üzerinde çalışıyor.
 
 **2. Structured output otomatik.** Python return type annotation (`-> dict`, `-> list[X]`, Pydantic modeli) → MCP spec'teki **structured output** bloğuna çevrilir. Claude bu yapılandırılmış veriyi daha doğru parse eder. Geriye dönük uyumluluk için `structured_output=False` ile kapatılabilir.
 
@@ -450,7 +461,7 @@ Anthropic MCP server yazımını [modelcontextprotocol/python-sdk](https://githu
     **Authentication — OAuth 2.1.** 2025 Mart spec'iyle MCP OAuth 2.1 destekliyor. `mcp.run(transport="streamable-http", auth=OAuthProvider(...))` — kimlik doğrulama gereken uzak server için standart.
 
 <div class="ma-anthropic-oz-kaynak" markdown>
-**Kaynak:** [modelcontextprotocol/python-sdk GitHub](https://github.com/modelcontextprotocol/python-sdk) (EN, kod-öncelikli, canonical SDK). `examples/snippets/servers/fastmcp_quickstart.py` dosyası 50 satırlık tam referans. Pekiştirme: [Anthropic Academy — Model Context Protocol: Advanced Topics](https://anthropic.skilljar.com/) (~60 dk, ücretsiz, sertifikalı); production authentication + streaming + resource templates burada. Örnek server'lar: [modelcontextprotocol/servers GitHub](https://github.com/modelcontextprotocol/servers) — Filesystem, Git, Postgres, Slack — Python ve TypeScript reference implementation'lar.
+**Kaynak:** [modelcontextprotocol/python-sdk GitHub](https://github.com/modelcontextprotocol/python-sdk) (EN, kod öncelikli, kanonik SDK). `examples/snippets/servers/fastmcp_quickstart.py` dosyası ~50 satırlık tam referans. Pekiştirme: [Anthropic Academy — Model Context Protocol: Advanced Topics](https://www.anthropic.com/learn) (ücretsiz, sertifikalı); üretim için kimlik doğrulama + akış + kaynak şablonları burada. Örnek sunucular: [modelcontextprotocol/servers GitHub](https://github.com/modelcontextprotocol/servers) — Filesystem, Git, Postgres, Slack — Python ve TypeScript referans uygulamalar.
 </div>
 </div>
 
@@ -510,5 +521,5 @@ Repo linkini kaydet: `muhendisal-notlarim/bolum-6/04-mcp-server/github-repo.txt`
 
 ← [6.3 MCP Protokolü](03-mcp.md) &nbsp;|&nbsp; [Bölüm 6 girişi](index.md) &nbsp;|&nbsp; [Ana sayfa](../index.md)
 
-**Pekiştirme:** Anthropic Academy [Model Context Protocol: Advanced Topics](https://anthropic.skilljar.com/) kursunu aç (~60 dk, ücretsiz, sertifikalı). Authentication + streaming + resource templates — kendi server'ını production'a çekerken ihtiyacın olacak. Paralel okuma: [modelcontextprotocol/servers GitHub](https://github.com/modelcontextprotocol/servers) deposundan **Postgres** ve **Git** server kaynak kodunu oku — resmi örneklerin yazım stili kendi projelerinde refleks olur.
+**Pekiştirme:** Anthropic Academy [Model Context Protocol: Advanced Topics](https://www.anthropic.com/learn) kursunu aç (ücretsiz, sertifikalı). Kimlik doğrulama + akış + kaynak şablonları — kendi sunucunu üretime çekerken bunlara ihtiyacın olacak. Paralel okuma: [modelcontextprotocol/servers GitHub](https://github.com/modelcontextprotocol/servers) deposundan **Postgres** ve **Git** sunucularının kaynak kodunu oku — resmi örneklerin yazım stili kendi projelerinde refleks olur.
 </div>

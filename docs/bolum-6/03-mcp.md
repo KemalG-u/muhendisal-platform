@@ -1,4 +1,4 @@
-# 6.3 MCP Protokolü
+# 6.3 MCP Protokolü — AI için USB-C
 
 <div class="ma-meta" markdown>
 <div class="ma-meta-row" markdown>
@@ -13,23 +13,23 @@
 </div>
 
 !!! tip "Yabancı kelime mi gördün?"
-    Bu sayfadaki **italik-altı çizili** ifadelerin (primitive, transport, stdio, JSON-RPC gibi) üstüne mouse'unu getir — kısa tanım çıkar. Mobilde dokun.
+    Bu sayfadaki **kalın** teknik terimler (yapı taşı / primitive, taşıma katmanı / transport, stdio, JSON-RPC gibi) ilk geçişte hemen yanında veya altında Türkçe açıklanır.
 
 ## Neden bu sayfa?
 
-6.2'de tool calling'i gördün. İstesen bugün Claude'a KDV hesaplatan bir tool yazabilirsin. **Ama bu tool senin Python dosyanda esir.** Başka biri kullanamaz; Claude Desktop tanımaz; Claude Code'a bağlanmaz; bir başka uygulamaya taşımak için baştan yazman gerekir. Tool calling **tool'un özüdür**, ama **taşınabilirlik** için yeterli değildir.
+6.2'de araç çağırmayı (tool calling) gördün. İstesen bugün Claude'a KDV hesaplatan bir araç yazabilirsin. **Ama bu araç senin Python dosyanda esir.** Başka biri kullanamaz; Claude Desktop tanımaz; Claude Code'a bağlanmaz; başka bir uygulamaya taşımak için baştan yazman gerekir. Araç çağırma **bir API özelliği**, ama **taşınabilirlik** için yeterli değil.
 
-İkincisi: 2024 Kasım'da Anthropic **MCP (Model Context Protocol)**'ü duyurdu. Vaad basit — "Claude'a bir tool'u **bir kere** yaz, **her** Anthropic istemcisi (Desktop, Code, API) kullansın". 2025 boyunca OpenAI, Google, Microsoft tarafından desteklenir oldu. 2026 itibarıyla MCP Anthropic'in **OpenAI'da olmayan** en büyük ekosistem farkı — AI Engineer iş ilanlarında "MCP" satırı neredeyse standart haline geldi.
+İkincisi: Kasım 2024'te Anthropic **MCP (Model Context Protocol — Model Bağlam Protokolü)**'ü duyurdu. Vaat basit — "Claude'a bir aracı **bir kere** yaz, **her** istemci (Desktop, Code, API, başka modeller) kullansın". **Mart 2025'te OpenAI**, **Nisan 2025'te Google DeepMind** MCP'yi resmen kabul etti. **Aralık 2025'te Anthropic, MCP'yi Linux Foundation altındaki Agentic AI Foundation'a (AAIF) bağışladı** — bugün ChatGPT, Claude, Cursor, Gemini, Microsoft Copilot, VS Code dahil tüm büyük istemciler MCP konuşuyor. AI Engineer iş ilanlarında "MCP" satırı 2026'da neredeyse standart hâline geldi.
 
-Üçüncüsü: MCP yalnızca "tool taşıyıcı" değil. **Resources** (Claude'a yüklenecek bağlam), **Tools** (Claude'un çağırabileceği işlemler), **Prompts** (hazır şablonlar) — üç ayrı primitive sunuyor. Bu sayfa bu üç primitive'in ne olduğunu + neyin nereye oturduğunu netleştirir; bir sonraki sayfa (6.4) Python'da gerçek bir MCP server yazar.
+Üçüncüsü: MCP yalnızca "araç taşıyıcı" değil. **Resources** (Claude'a yüklenecek bağlam), **Tools** (Claude'un çağırabileceği işlemler), **Prompts** (hazır şablonlar) — üç ayrı yapı taşı sunuyor. Bu sayfa bu üç yapı taşının ne olduğunu + neyin nereye oturduğunu netleştirir; bir sonraki sayfa (6.4) Python'da gerçek bir MCP sunucusu yazar.
 
 ## MCP kısaca — üç paragraf, matematiksiz
 
-**MCP = "AI için USB-C".** Anthropic'in resmi metaforu. USB-C'den önce her cihaz farklı kablo istiyordu (lightning, micro-USB, mini-USB…). USB-C standardı geldi, bir kablo her yere takılıyor. MCP de aynı şey: her LLM ürünü kendi plugin sistemini yazmak yerine, **ortak bir protokole** (JSON-RPC 2.0 üstü açık spec) bağlanıyor. Sen bir MCP server yazıyorsun — Claude Desktop, Claude Code, Cursor, Zed, Windsurf, Continue.dev; hepsi aynı server'ı kullanabiliyor.
+**MCP = "AI için USB-C".** Anthropic'in resmi benzetmesi. USB-C'den önce her cihaz farklı kablo istiyordu (lightning, micro-USB, mini-USB…). USB-C standardı geldi, bir kablo her yere takılıyor. MCP de aynı şey: her LLM ürünü kendi eklenti (plugin) sistemini yazmak yerine, **ortak bir protokole** (JSON-RPC 2.0 üzeri açık spesifikasyon) bağlanıyor. Sen bir MCP sunucusu yazıyorsun — Claude Desktop, Claude Code, Cursor, Zed, Windsurf, Continue.dev, ChatGPT Desktop, Gemini, VS Code; hepsi aynı sunucuyu kullanabiliyor.
 
-**Tool calling (6.2) API feature — MCP protocol standard. Fark bu.** Tool calling senin Python kodundaki Anthropic API entegrasyonu. MCP ise **ayrı bir süreç** (senin server'ın) ile **istemci** (Claude Desktop) arası konuşma kuralı. MCP server'ın içinde **zaten tool calling yapıyor olabilirsin** — ama MCP, tool'u bir **paket** halinde, standart bir arayüzle dış dünyaya sunuyor. Benzetme: tool calling = Python fonksiyonu; MCP = Python paketi + PyPI'a yükleme.
+**Araç çağırma (6.2) bir API özelliği — MCP ise protokol standardı. Fark bu.** Araç çağırma senin Python kodundaki Anthropic API entegrasyonu. MCP ise **ayrı bir süreç** (senin sunucun) ile **istemci** (Claude Desktop) arası konuşma kuralı. MCP sunucunun içinde **zaten araç çağırma yapıyor olabilirsin** — ama MCP, aracı bir **paket** halinde, standart bir arayüzle dış dünyaya sunuyor. Benzetme: araç çağırma = Python fonksiyonu; MCP = Python paketi + PyPI'a yükleme.
 
-**Üç primitive = Claude'a üç farklı şey verme yolu.** (1) **Tools** — Claude'un çağırabileceği fonksiyonlar (POST endpoint benzeri; yan etki yapar): `email_gonder`, `dosya_sil`. (2) **Resources** — Claude'a yüklenebilir bağlam (GET endpoint benzeri; salt-okunur): `musteri_listesi`, `config://app/ayarlar`. (3) **Prompts** — kullanıcının **slash command** olarak çağırabileceği hazır şablonlar: `/kod_review`, `/makale_ozetle`. Üçünün de JSON-RPC üstünde ortak metodları var (`tools/list`, `resources/read`, `prompts/get`), ama Claude'un kullandığı semantik farklı.
+**Üç yapı taşı (primitive) = Claude'a üç farklı şey verme yolu.** (1) **Tools** — Claude'un çağırabileceği fonksiyonlar (POST uç noktası benzeri; yan etki yapar): `email_gonder`, `dosya_sil`. (2) **Resources** — Claude'a yüklenebilir bağlam (GET uç noktası benzeri; salt okunur): `musteri_listesi`, `config://app/ayarlar`. (3) **Prompts** — kullanıcının **slash komutu** olarak çağırabileceği hazır şablonlar: `/kod-review`, `/makale-ozetle`. Üçünün de JSON-RPC üzerinde ortak metotları var (`tools/list`, `resources/read`, `prompts/get`), ama Claude'un kullandığı anlamlar farklı.
 
 ## Bu sayfanın ekosistemi — host, client, server
 
@@ -76,28 +76,28 @@ flowchart LR
 
 | Düğüm | Nerede | Ne iş yapıyor |
 |---|---|---|
-| 👤 **Kullanıcı** | Chat ekranı | Doğal dilde istek — "masaüstümdeki PDF'leri listele" |
-| 🖥️ **MCP Host** | Claude Desktop / Code / Cursor | LLM'i içinde barındıran uygulama; MCP client'ı başlatıyor |
-| 🔌 **MCP Client** | Host içinde kütüphane | Server ile JSON-RPC konuşur; server'ı çağırır, cevabı host'a verir |
-| 📡 **Transport** | stdio veya HTTP | Client↔server arasındaki pipe. Yerel=stdio, uzak=Streamable HTTP |
-| ⚙️ **MCP Server** | Senin yazdığın bağımsız süreç | Tools + Resources + Prompts sunuyor |
-| 💾 **Gerçek kaynak** | DB, dosya sistemi, API | Server'ın arka ucu — gerçek veriyi burası döner |
-| 🛠 **Tools** | Server primitive 1 | `send_email`, `delete_file` — yan etkili fonksiyon |
-| 📄 **Resources** | Server primitive 2 | `file:///path` — salt-okunur bağlam |
-| 💬 **Prompts** | Server primitive 3 | `/review-code` — kullanıcıya slash-command |
+| 👤 **Kullanıcı** | Sohbet ekranı | Doğal dilde istek — "masaüstümdeki PDF'leri listele" |
+| 🖥️ **MCP Host (ana uygulama)** | Claude Desktop / Code / Cursor / ChatGPT Desktop | LLM'i içinde barındıran uygulama; MCP istemcisini başlatıyor |
+| 🔌 **MCP Client (istemci)** | Host içinde kütüphane | Sunucu ile JSON-RPC konuşur; sunucuyu çağırır, cevabı host'a verir |
+| 📡 **Transport (taşıma katmanı)** | stdio veya HTTP | İstemci ↔ sunucu arasındaki boru. Yerel = stdio, uzak = Streamable HTTP |
+| ⚙️ **MCP Server (sunucu)** | Senin yazdığın bağımsız süreç | Tools + Resources + Prompts sunuyor |
+| 💾 **Gerçek kaynak** | DB, dosya sistemi, API | Sunucunun arka ucu — gerçek veri burada |
+| 🛠 **Tools** | Sunucu yapı taşı 1 | `send_email`, `delete_file` — yan etkili fonksiyon |
+| 📄 **Resources** | Sunucu yapı taşı 2 | `file:///path` — salt okunur bağlam |
+| 💬 **Prompts** | Sunucu yapı taşı 3 | `/review-code` — kullanıcıya slash komutu |
 
 </table>
 </div>
 
-**Önemli:** Claude kararıyla tool otomatik çağrılır; resource'u **kullanıcı seçer** (Claude Desktop'ta "+" menüsünden "Attach from MCP" gibi); prompt'u **kullanıcı slash-command ile** çağırır. Üçü de Claude'un elinde ama **tetikleme kaynakları farklı.**
+**Önemli:** Tool, Claude'un kararıyla otomatik çağrılır; resource'u **kullanıcı seçer** (Claude Desktop'ta "+" menüsündeki "Attach from MCP" gibi); prompt'u **kullanıcı slash komutu ile** çağırır. Üçü de Claude'un elinde ama **tetikleme kaynakları farklı.**
 
 ## Uygulama — iki yol
 
-### Yol A — Hazır bir MCP server'ı Claude Desktop'a bağla (15 dk)
+### Yol A — Hazır bir MCP sunucusunu Claude Desktop'a bağla (~15 dk)
 
-Kendin yazmadan önce, **başkasının yazdığını kullanmak** refleksi. Filesystem server resmi [modelcontextprotocol/servers](https://github.com/modelcontextprotocol/servers) deposunda — Claude'a dosya listele/oku/ara yeteneği veriyor.
+Kendin yazmadan önce, **başkasının yazdığını kullanmak** refleksi. Filesystem sunucusu resmi [modelcontextprotocol/servers](https://github.com/modelcontextprotocol/servers) deposunda — Claude'a dosya listele/oku/ara yeteneği veriyor.
 
-**1. Config dosyasını aç.** Claude Desktop → Settings → Developer → **Edit Config**. Dosya konumu:
+**1. Yapılandırma dosyasını aç.** Claude Desktop → Settings → Developer → **Edit Config**. Dosya konumu:
 
 | OS | Yol |
 |---|---|
@@ -123,14 +123,14 @@ Kendin yazmadan önce, **başkasının yazdığını kullanmak** refleksi. Files
 }
 ```
 
-- `command`: Server'ı başlatan komut (`npx`, `uv`, `python`, `docker`…)
-- `args`: Komut argümanları. İlk iki argüman sabit; sonrası server'a **izinli dizinler** (güvenlik: Claude sadece bu yollara erişebilir)
+- `command`: Sunucuyu başlatan komut (`npx`, `uv`, `python`, `docker`…)
+- `args`: Komut argümanları. İlk iki argüman sabit; sonrası sunucuya **izinli dizinler** (güvenlik: Claude sadece bu yollara erişebilir)
 
-**3. Claude Desktop'ı tam kapat ve yeniden aç.** macOS'ta `Cmd+Q` (pencere kapatmak yeterli değil); Windows'ta system tray'den Quit. Server subprocess olarak başlar.
+**3. Claude Desktop'ı tam kapat ve yeniden aç.** macOS'ta `Cmd+Q` (pencere kapatmak yeterli değil); Windows'ta sistem tepsisinden Quit. Sunucu alt süreç (subprocess) olarak başlar.
 
-**4. Doğrulama — "çekiç" (hammer) ikonu.** Yeni chat açtığında mesaj kutusunun altında 🔨 ikonu ve yanında tool sayısı görünür. Tıkla → `read_file`, `write_file`, `list_directory`, `search_files` tool'larını listeler. Eğer ikon **yoksa**: JSON syntax hatası var (virgül/süslü parantez) veya log dosyasına bak → `~/Library/Logs/Claude/mcp-server-filesystem.log`.
+**4. Doğrulama — "çekiç" (hammer) ikonu.** Yeni sohbet açtığında mesaj kutusunun altında 🔨 ikonu ve yanında araç sayısı görünür. Tıkla → `read_file`, `write_file`, `list_directory`, `search_files` araçlarını listeler. Eğer ikon **yoksa**: JSON sözdizimi hatası var (virgül/süslü parantez) veya log dosyasına bak → `~/Library/Logs/Claude/mcp-server-filesystem.log`.
 
-**5. Test.** Chat'e yaz: "Masaüstümdeki PDF dosyalarını listele." Claude `list_directory` tool'unu otomatik çağırır, izin ister (ilk defa), onayladığında dosya listesini döndürür. **Bu Claude'un artık senin dosya sisteminle konuştuğunun ispatı.**
+**5. Test.** Sohbete yaz: "Masaüstümdeki PDF dosyalarını listele." Claude `list_directory` aracını otomatik çağırır, izin ister (ilk defa), onayladığında dosya listesini döndürür. **Bu, Claude'un artık senin dosya sisteminle konuştuğunun ispatı.**
 
 ### Yol B — Uzak MCP server'a `mcp-remote` ile bağlan
 
@@ -168,14 +168,25 @@ Bu desen benim `mcp.oluk.org` sunucumun Claude Desktop'tan nasıl bağlanacağı
 
 | Tuzak | Sonucu | Çözüm |
 |---|---|---|
-| **MCP server'ı tool calling yerine konumlandırmak** ("MCP tool calling'in yerini alır") | Mimari yanlış kavranır | Tool calling API feature, MCP protokol — **ikisi beraber çalışır** (server içinde tool calling yapıyorsun) |
-| **Her şeyi Tool yapmak** | UX bozuk, resource semantiği kaybolur | Kullanıcı seçimli = Resource; Claude kararlı = Tool |
-| **`claude_desktop_config.json` syntax hatası** | **Hiçbir server** yüklenmez (sessiz fail) | JSON'u [jsonlint.com](https://jsonlint.com)'de valide et; virgül + tırnak + parantez |
-| **stdio server stdout'a print atmak** | Protocol bozulur — server çöker | stdio transport'ta `stdout` **sadece JSON-RPC için**; log'lar `stderr`'e (`print(..., file=sys.stderr)` veya `logging`) |
-| **İzinli dizin çok geniş** (`/` veya `$HOME`) | Güvenlik riski — Claude her yere erişir | Sadece proje dizinlerine izin ver; config'de her yolu açıkça yaz |
-| **Server restart'ı Claude Desktop'a yansımadı** | Değişiklik görünmez | Claude Desktop'ı **tam kapat** (Cmd+Q / tray Quit) ve yeniden aç — subprocess bu zaman başlar |
-| **Uzak MCP için OAuth eksik** | Kimse size bağlanamaz | Public değilse IP whitelist + token (`.env`) veya OAuth 2.1 (resmi spec 2025) |
-| **`.mcpb` Desktop Extension ihmali** | Son kullanıcı JSON düzenlemek istemiyor | 2026 başında Anthropic **Desktop Extensions** formatını çıkardı — `manifest.json` + `mcpb pack` ile tek-tık kurulum; teknik olmayan kullanıcıya dağıtımın doğru yolu |
+| **MCP'yi araç çağırmanın yerine koymak** ("MCP araç çağırmayı geride bırakır") | Mimari yanlış kavranır | Araç çağırma API özelliği, MCP protokol — **ikisi beraber çalışır** (sunucu içinde araç çağırma yapıyorsun) |
+| **Her şeyi Tool yapmak** | Kullanıcı deneyimi bozuk, resource anlamı kaybolur | Kullanıcı seçimli = Resource; Claude kararlı = Tool |
+| **`claude_desktop_config.json` sözdizimi hatası** | **Hiçbir sunucu** yüklenmez (sessiz başarısızlık) | JSON'u [jsonlint.com](https://jsonlint.com)'de doğrula; virgül + tırnak + parantez |
+| **stdio sunucusunda `stdout`'a `print` atmak** | Protokol bozulur — sunucu çöker | stdio taşımasında `stdout` **sadece JSON-RPC için**; loglar `stderr`'e (`print(..., file=sys.stderr)` veya `logging`) |
+| **İzinli dizin çok geniş** (`/` veya `$HOME`) | Güvenlik riski — Claude her yere erişir | Sadece proje dizinlerine izin ver; yapılandırmada her yolu açıkça yaz |
+| **Sunucu yeniden başlatması Claude Desktop'a yansımadı** | Değişiklik görünmez | Claude Desktop'ı **tam kapat** (Cmd+Q / tepsi Quit) ve yeniden aç — alt süreç o zaman başlar |
+| **Uzak MCP için OAuth eksik** | Kimse bağlanamaz | Halka açık değilse IP beyaz listesi + token (`.env`) veya OAuth 2.1 (resmi spec 2025) |
+| **`.mcpb` Desktop Extension ihmali** | Son kullanıcı JSON düzenlemek istemiyor | 2026 başında Anthropic **Desktop Extensions** formatını çıkardı — `manifest.json` + `mcpb pack` ile tek tık kurulum; teknik olmayan kullanıcıya dağıtımın doğru yolu |
+
+??? warning "Tipik MCP bağlantı hataları — şu durum şu çözüm"
+
+    | Hata | Sebep | Çözüm |
+    |---|---|---|
+    | Hammer ikonu görünmüyor | JSON sözdizimi hatası veya komut yolu yanlış | jsonlint.com'da doğrula; `which npx` ile `command` yolunu doğrula |
+    | "Server crashed" log'u | stdio'ya stdout print | `print()` yerine `logging.warning(...)` (stderr'e gider) |
+    | Tool çağrısı 30 sn hata | Sunucu cevap vermiyor | `timeout` parametresi sunucu kodunda; Claude Desktop log'una bak |
+    | "Method not found" | Spec sürüm uyuşmazlığı | İstemci ve sunucu MCP `2025-03-26` veya üstü mü kontrol et |
+    | Uzak sunucu OAuth döngüsü | Token süresi dolmuş | `~/.mcp-auth/` dizinini sil, yeniden oturum aç |
+    | `mcp-remote` çalışmıyor | Eski sürüm | `npx mcp-remote@latest <url>` ile en güncel sürümü çek |
 
 <div class="ma-anthropic-oz" markdown>
 <div class="ma-anthropic-oz-header">📖 Anthropic bu konuyu nasıl anlatıyor — öz</div>
@@ -256,5 +267,5 @@ Kaydet: `muhendisal-notlarim/bolum-6/03-mcp/vaka-calismasi-repo.txt`
 
 ← [6.2 Tool Calling](02-tool-calling.md) &nbsp;|&nbsp; [Bölüm 6 girişi](index.md) &nbsp;|&nbsp; [Ana sayfa](../index.md)
 
-**Pekiştirme:** Anthropic Academy [Introduction to Model Context Protocol](https://anthropic.skilljar.com/) kursunu aç (~45 dk, ücretsiz, sertifikalı). Bu sayfadaki 3 primitive + USB-C + tool calling-MCP ayrımı kurstan geri dönüp pekişir.
+**Pekiştirme:** Anthropic Academy [Introduction to Model Context Protocol](https://www.anthropic.com/learn) kursunu aç (ücretsiz, sertifikalı). Bu sayfadaki 3 yapı taşı + USB-C benzetmesi + araç çağırma ↔ MCP ayrımı kurstan geri dönünce pekişir.
 </div>

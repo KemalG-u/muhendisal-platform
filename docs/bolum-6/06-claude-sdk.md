@@ -1,4 +1,4 @@
-# 6.6 Claude Agent SDK
+# 6.6 Claude Agent SDK — Anthropic'in Üst-düzey Ajan Çerçevesi
 
 <div class="ma-meta" markdown>
 <div class="ma-meta-row" markdown>
@@ -8,28 +8,28 @@
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
 <div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~30 dakika</div>
-<div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 6.2 (ham `anthropic` SDK + tool calling) + 6.4 (MCP server) bitmiş; Python 3.10+; `ANTHROPIC_API_KEY` env aktif</div>
-<div class="ma-meta-row"><strong>🎯 Çıktı:</strong> `claude-agent-sdk`'nın **ham `anthropic` SDK'dan nasıl farklı olduğunu** karar matrisi ile ayırıyorsun; `query()` ile tek seferlik agent görevi koşturuyorsun; `ClaudeSDKClient` + `@tool` ile **kendi in-process MCP tool'larını** Claude Code agent'ına eklemiş oluyorsun. Ne zaman bu SDK ne zaman ham SDK — karar pekişiyor.</div>
+<div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 6.2 (ham `anthropic` SDK + araç çağırma) + 6.4 (MCP sunucusu) bitmiş; Python 3.10+; `ANTHROPIC_API_KEY` ortam değişkeni aktif</div>
+<div class="ma-meta-row"><strong>🎯 Çıktı:</strong> `claude-agent-sdk`'nın **ham `anthropic` SDK'dan nasıl farklı olduğunu** karar matrisi ile ayırıyorsun; `query()` ile tek seferlik ajan görevi koşturuyorsun; `ClaudeSDKClient` + `@tool` ile **kendi süreç içi (in-process) MCP araçlarını** Claude Code ajanına eklemiş oluyorsun. Ne zaman bu SDK ne zaman ham SDK — karar pekişiyor.</div>
 </div>
 
 !!! tip "Yabancı kelime mi gördün?"
-    Bu sayfadaki **italik-altı çizili** ifadelerin (agent loop, in-process, permission mode gibi) üstüne mouse'unu getir — kısa tanım çıkar. Mobilde dokun.
+    Bu sayfadaki **kalın** teknik terimler (ajan döngüsü / agent loop, süreç içi / in-process, izin kipi / permission mode gibi) ilk geçişte hemen yanında veya altında Türkçe açıklanır.
 
 ## Neden bu sayfa?
 
-6.2'de ham `anthropic` SDK ile tool calling yazdın — `messages.create()` çağrısı, `tool_use` bloğu parse, `tool_result` geri yolla, `while` döngüsü elle. Güçlü ama **boilerplate** yüksek; dosya sistemi, bash, web gibi "agent'ın dış dünyayla etkileşim" araçlarını **sen kodluyorsun**. `claude-agent-sdk` farklı bir soru cevaplıyor: "Claude Code zaten bir agent — file/bash/web/MCP/subagent hepsi hazır. Bunu benim Python kodumdan **başlatabilir miyim?**" Cevap: evet, bu SDK o başlatıcı.
+6.2'de ham `anthropic` SDK ile araç çağırma yazdın — `messages.create()` çağrısı, `tool_use` bloğunu ayrıştır, `tool_result` geri yolla, `while` döngüsünü elle yaz. Güçlü ama **şablon kodu (boilerplate)** yüksek; dosya sistemi, bash, web gibi "ajanın dış dünyayla etkileşim" araçlarını **sen kodluyorsun**. `claude-agent-sdk` farklı bir soru cevaplıyor: "Claude Code zaten bir ajan — dosya/bash/web/MCP/alt ajan hepsi hazır. Bunu kendi Python kodumdan **başlatabilir miyim?**" Cevap: evet, bu SDK o başlatıcı.
 
-İkincisi: Adı "Claude Agent SDK" yanıltıcı. **Bu yeni bir agent çatısı değil** — Anthropic'in `anthropic` SDK'sının üstüne bir "agent framework" çıkmadı. `claude-agent-sdk` **Claude Code binary'sini gömüyor** (`pip install` sırasında otomatik geliyor), `query()` veya `ClaudeSDKClient` ile Claude Code'u alt süreç olarak başlatıyor, mesajları async iterator olarak döndürüyor. Mental model: "Claude Desktop'ı kod içinden kullanmak" — sadece Claude Code sürümü.
+İkincisi: Adı "Claude Agent SDK" yanıltıcı. **Bu yeni bir ajan çatısı değil** — Anthropic'in `anthropic` SDK'sının üstüne bir "agent framework" çıkmadı. `claude-agent-sdk` **Claude Code ikilisini (binary) gömüyor** (`pip install` sırasında otomatik geliyor), `query()` veya `ClaudeSDKClient` ile Claude Code'u alt süreç olarak başlatıyor, mesajları asenkron iteratör olarak döndürüyor. Zihinsel model: "Claude Desktop'ı kod içinden kullanmak" — Claude Code sürümü.
 
-Üçüncüsü: 2026 itibarıyla AI Engineer iş ilanlarında üç kullanım alanı öne çıkıyor — **(a)** CI/CD pipeline'da otomatik kod düzeltme, **(b)** scheduled data analysis agent (cron), **(c)** IDE eklentisi/backend otomasyon. Üçünün de ortak iskeleti `claude-agent-sdk`. Ham SDK ile kurmak 500+ satır; bu SDK ile 50 satır. **Nerede hangisi** kararının teknik temeli bu sayfada.
+Üçüncüsü: 2026 itibarıyla AI Engineer iş ilanlarında üç kullanım alanı öne çıkıyor — **(a)** CI/CD hattında otomatik kod düzeltme, **(b)** zamanlanmış (cron) veri analizi ajanı, **(c)** IDE eklentisi/arka uç otomasyonu. Üçünün de ortak iskeleti `claude-agent-sdk`. Ham SDK ile kurmak 500+ satır; bu SDK ile 50 satır. **Nerede hangisi** kararının teknik temeli bu sayfada.
 
 ## claude-agent-sdk kısaca — üç paragraf, matematiksiz
 
-**İki ana giriş noktası: `query()` ve `ClaudeSDKClient`.** `query()` **async iterator** döner — tek sorgu, Claude Code alt süreç başlar, mesajlar stream edilir, süreç biter. **Stateless**. `ClaudeSDKClient` ise **kalıcı interactive oturum** — bidirectional; aynı oturumda çoklu tur, kullanıcı araya mesaj atabilir, custom tool'lar + hook'lar tanımlanabilir. Basit görev = `query()`, karmaşık interactive = `ClaudeSDKClient`.
+**İki ana giriş noktası: `query()` ve `ClaudeSDKClient`.** `query()` **asenkron iteratör** döner — tek sorgu, Claude Code alt süreç başlar, mesajlar akış olarak gelir, süreç biter. **Durumsuz (stateless)**. `ClaudeSDKClient` ise **kalıcı etkileşimli oturum** — çift yönlü; aynı oturumda çoklu tur, kullanıcı araya mesaj atabilir, özel araçlar + hook'lar tanımlanabilir. Basit görev = `query()`, karmaşık etkileşim = `ClaudeSDKClient`.
 
-**Built-in tool seti hazır geliyor.** `Read`, `Write`, `Edit`, `Bash`, `Grep`, `Glob`, `WebFetch`, `WebSearch` — Claude Code'un tüm tool'ları default aktif. `allowed_tools` ile allowlist (auto-approve); `disallowed_tools` ile blocklist; `permission_mode` ile onay davranışı: `'default'` (her tool çağrısında sor), `'acceptEdits'` (dosya edit'lerini otomatik onayla), `'bypassPermissions'` (hepsi otomatik — tehlikeli, sandbox'ta kullan). Permission katmanı Anthropic'in "agent güvenlik 3 ilkesi"nin (6.5) programatik karşılığı.
+**Yerleşik (built-in) araç seti hazır geliyor.** `Read`, `Write`, `Edit`, `Bash`, `Grep`, `Glob`, `WebFetch`, `WebSearch` — Claude Code'un tüm araçları varsayılan aktif. `allowed_tools` ile beyaz liste (otomatik onay); `disallowed_tools` ile kara liste; `permission_mode` ile onay davranışı: `'default'` (her araç çağrısında sor), `'acceptEdits'` (dosya değişikliklerini otomatik onayla), `'bypassPermissions'` (hepsi otomatik — tehlikeli, sandbox'ta kullan). İzin katmanı Anthropic'in "ajan güvenlik 3 ilkesi"nin (6.5) programatik karşılığı.
 
-**Custom tool = in-process MCP server.** `@tool` decorator + `create_sdk_mcp_server()` ile **aynı Python süreci içinde** MCP server açarsın — 6.4'teki subprocess MCP server'ın in-process versiyonu. Avantaj: network yok, JSON serialization overhead'i düşük, shared memory (tool fonksiyonları ana kodun state'ine erişir). Dezavantaj: subprocess izolasyonu yok (crash = tüm agent çöker). Özellikle `ClaudeSDKClient` + custom tool ikilisi Python-first agent geliştirme için güçlü.
+**Özel araç = süreç içi MCP sunucusu.** `@tool` dekoratörü + `create_sdk_mcp_server()` ile **aynı Python süreci içinde** MCP sunucusu açarsın — 6.4'teki alt süreç MCP sunucusunun süreç içi sürümü. Avantaj: ağ yok, JSON serileştirme yükü düşük, paylaşılan bellek (araç fonksiyonları ana kodun durumuna erişir). Dezavantaj: alt süreç yalıtımı yok (çöküş = tüm ajan çöker). Özellikle `ClaudeSDKClient` + özel araç ikilisi Python öncelikli ajan geliştirme için güçlü.
 
 ## Bu sayfanın ekosistemi — SDK'dan Claude Code'a
 
@@ -253,34 +253,45 @@ Bu sayfanın özeti: **aynı göreve iki farklı yaklaşım**. Seçim senaryoya 
 
 | Boyut | Ham `anthropic` SDK (6.2) | `claude-agent-sdk` (bu sayfa) |
 |---|---|---|
-| **Ne yapar** | Claude API'ye doğrudan HTTP çağrısı | Claude Code alt süreci başlatıp iterator döner |
-| **Kontrol düzeyi** | Her mesaj + tool call elinde | Claude Code agent loop yönetir |
-| **Built-in tool** | Yok — hepsini sen yazarsın | Read/Write/Edit/Bash/Grep/Glob/WebFetch/WebSearch/Task |
-| **Custom tool** | `tools=[...]` JSON Schema elle | `@tool` decorator + in-process MCP server |
-| **MCP entegrasyonu** | Yok (elle MCP client yazman gerek) | Native — `mcp_servers=` ile doğrudan |
-| **Subagent** | Yok (elle `asyncio.gather` 6.5) | `Task` tool built-in — Claude Code subagent dispatch |
-| **Permission katmanı** | Sen kurarsın | Built-in (`allowed_tools`, `permission_mode`) |
-| **Durable execution** | Yok | Kısmen (alt süreç crash → yeni başlat) |
+| **Ne yapar** | Claude API'ye doğrudan HTTP çağrısı | Claude Code alt süreci başlatıp iteratör döner |
+| **Kontrol düzeyi** | Her mesaj + araç çağrısı senin elinde | Claude Code ajan döngüsünü yönetir |
+| **Yerleşik araç** | Yok — hepsini sen yazarsın | Read/Write/Edit/Bash/Grep/Glob/WebFetch/WebSearch/Task |
+| **Özel araç** | `tools=[...]` JSON Şeması elle | `@tool` dekoratörü + süreç içi MCP sunucusu |
+| **MCP entegrasyonu** | Yok (elle MCP istemcisi yazman gerek) | Yerleşik — `mcp_servers=` ile doğrudan |
+| **Alt ajan** | Yok (elle `asyncio.gather` 6.5) | `Task` aracı yerleşik — Claude Code alt ajan devretme |
+| **İzin katmanı** | Sen kurarsın | Yerleşik (`allowed_tools`, `permission_mode`) |
+| **Dayanıklı yürütme (durable)** | Yok | Kısmen (alt süreç çökünce yeni başlat) |
 | **Maliyet görünürlüğü** | `response.usage` elle topla | `ResultMessage.total_cost_usd` otomatik |
-| **Boilerplate** | Yüksek (~500 satır agent) | Düşük (25–50 satır) |
-| **Çıkış formatı** | Tam metin kontrolü | Claude Code davranış kalıbı |
-| **Ne zaman seç** | Kendi uygulamanda **chat/content** (müşteri destek, içerik üretim, RAG) — her tokende kontrol gerekli | **Otonom iş**: CI/CD, cron agent, IDE eklenti, data analysis — dosya+bash+web zaten gerekli |
+| **Şablon kodu** | Yüksek (~500 satır ajan) | Düşük (25-50 satır) |
+| **Çıkış biçimi** | Tam metin kontrolü | Claude Code davranış kalıbı |
+| **Ne zaman seç** | Kendi uygulamanda **sohbet/içerik** (müşteri destek, içerik üretim, RAG) — her token'da kontrol gerekli | **Otonom iş**: CI/CD, cron ajan, IDE eklenti, veri analizi — dosya + bash + web zaten gerekli |
 
-**Pratik kural (CTO):** Agent dosya sistemi + bash + web **kullanacaksa** → `claude-agent-sdk`. Kullanmayacaksa → ham SDK **ve** maliyet kontrolün %30 daha iyi olacak. HBV chatbot (4.8) → ham SDK; CI'da kod düzelten agent → `claude-agent-sdk`.
+**Pratik kural (CTO):** Ajan dosya sistemi + bash + web **kullanacaksa** → `claude-agent-sdk`. Kullanmayacaksa → ham SDK; ayrıca maliyet kontrolün ~%30 daha iyi olacak. HBV chatbot (4.8) → ham SDK; CI'da kod düzelten ajan → `claude-agent-sdk`.
 
 ## CTO tuzakları
 
 | Tuzak | Sonucu | Çözüm |
 |---|---|---|
-| **`bypassPermissions` prod'da kullanmak** | Agent rm -rf ya da dış servise veri sızdırır | Asla — `default` veya `acceptEdits`; yüksek risk için custom `can_use_tool` callback |
-| **`allowed_tools` atlamak** | Agent beklenmedik tool kullanır (WebFetch, Bash) | Her zaman **allowlist** yaz; sadece ihtiyaç duyulanlar |
+| **`bypassPermissions`'i üretimde kullanmak** | Ajan `rm -rf` yapabilir veya veri sızdırabilir | Asla — `default` veya `acceptEdits`; yüksek risk için özel `can_use_tool` geri çağırma |
+| **`allowed_tools` atlamak** | Ajan beklenmedik araç kullanır (WebFetch, Bash) | Her zaman **beyaz liste** yaz; sadece ihtiyaç duyulanlar |
 | **`max_turns` unutmak** | Sonsuz döngü, token patlar | Her görev için üst sınır belirle (5–20 tipik) |
-| **`cwd` göreli ya da geniş** | Agent repo dışına çıkar, sistem dosyalarına dokunur | Her zaman mutlak yol + proje-sınırlı dizin |
-| **In-process tool'da `raise`** | Agent süreci çöker (subprocess izolasyonu yok) | `try/except` + `{"content": [{"type":"text","text":"hata: ..."}]}` dön |
-| **`total_cost_usd` ignore** | Ay sonu sürprizi | Her `ResultMessage`'da log + budget cap kontrolü |
-| **Adını "Anthropic Agent Framework" sanmak** | Ham SDK yerine buna dayandırmak | Yanlış mental model — bu Claude Code başlatıcı; ham SDK farklı araç |
-| **Built-in tool'a özel mantık eklemek** | Claude Code davranışını override etmeye çalışmak | `PreToolUse` hook ile önle / `disallowed_tools` ile kapat — override yok |
-| **MCP server'ı dış süreç zorla** | Performans düşüyor (JSON serialization, subprocess) | Sadece Python ile konuşan tool'lar için `create_sdk_mcp_server` (in-process); dış servisler için 6.4 |
+| **`cwd` göreli ya da geniş** | Ajan repo dışına çıkar, sistem dosyalarına dokunur | Her zaman mutlak yol + proje sınırlı dizin |
+| **Süreç içi araçta `raise`** | Ajan süreci çöker (alt süreç yalıtımı yok) | `try/except` + `{"content": [{"type":"text","text":"hata: ..."}]}` dön |
+| **`total_cost_usd`'yi yok saymak** | Ay sonu sürprizi | Her `ResultMessage`'da günlüğe yaz + bütçe üst sınırı kontrolü |
+| **Adını "Anthropic Agent Çerçevesi" sanmak** | Ham SDK yerine buna dayandırmak | Yanlış zihinsel model — bu Claude Code başlatıcısı; ham SDK farklı araç |
+| **Yerleşik araca özel mantık eklemek** | Claude Code davranışını ezmeye çalışmak | `PreToolUse` hook ile önle / `disallowed_tools` ile kapat — ezme yok |
+| **MCP sunucusunu dış süreç zorlamak** | Performans düşer (JSON serileştirme, alt süreç) | Sadece Python ile konuşan araçlar için `create_sdk_mcp_server` (süreç içi); dış servisler için 6.4 |
+
+??? warning "Tipik claude-agent-sdk hataları — şu durum şu çözüm"
+
+    | Hata | Sebep | Çözüm |
+    |---|---|---|
+    | `FileNotFoundError: claude` | Bundled CLI kurulmamış / yol yanlış | `pip install -U claude-agent-sdk`; veya `cli_path="/usr/local/bin/claude"` |
+    | "Permission denied: Read" | `allowed_tools` listesinde Read yok | Listeyi güncelle veya `permission_mode="acceptEdits"` |
+    | Custom tool çağrılmıyor | `allowed_tools`'a `mcp__<server>__<tool>` adı eklenmedi | Namespace formatına dikkat: `mcp__kur__tcmb_kuru` |
+    | Sonsuz tur (turn) | `max_turns` set edilmemiş | `ClaudeAgentOptions(max_turns=10)` |
+    | `total_cost_usd` çok yüksek | Sonnet+Opus yerine sadece Opus kullanılıyor | `model="claude-sonnet-4-6"` set et; ya da Haiku 4.5 |
+    | Async iterator boşa dönüyor | `await client.query()`'i çağırdın ama `receive_response()`'i tüketmedin | `async for msg in client.receive_response():` ile döngü kur |
 
 <div class="ma-anthropic-oz" markdown>
 <div class="ma-anthropic-oz-header">📖 Anthropic bu konuyu nasıl anlatıyor — öz</div>
@@ -312,7 +323,7 @@ Anthropic `claude-agent-sdk`'yı [platform.claude.com/docs/agent-sdk/python](htt
     **Deployment.** Typical: Docker image + `uv` + scheduled cron (GitHub Actions, Kubernetes CronJob, Airflow) + Slack/email notification hook'u + budget alert.
 
 <div class="ma-anthropic-oz-kaynak" markdown>
-**Kaynak:** [platform.claude.com/docs/agent-sdk/python](https://platform.claude.com/docs/en/agent-sdk/python) (EN, canonical dokümantasyon — `query()`, `ClaudeSDKClient`, options + examples). Kod: [GitHub — anthropics/claude-agent-sdk-python](https://github.com/anthropics/claude-agent-sdk-python) (`examples/` klasörü — MCP calculator, custom tools, hooks demo). Pekiştirme: [Anthropic Academy — Introduction to Agent Skills](https://anthropic.skilljar.com/) (~45 dk, ücretsiz, sertifikalı) — SDK'nın Skills katmanıyla (`.claude/skills/`) nasıl kesişir. TypeScript eşi: [@anthropic-ai/claude-agent-sdk](https://www.npmjs.com/package/@anthropic-ai/claude-agent-sdk) — Node ekosisteminde aynı API.
+**Kaynak:** [platform.claude.com/docs/agent-sdk/python](https://platform.claude.com/docs/en/agent-sdk/python) (EN, canonical dokümantasyon — `query()`, `ClaudeSDKClient`, options + examples). Kod: [GitHub — anthropics/claude-agent-sdk-python](https://github.com/anthropics/claude-agent-sdk-python) (`examples/` klasörü — MCP calculator, custom tools, hooks demo). Pekiştirme: [Anthropic Academy — Introduction to Agent Skills](https://www.anthropic.com/learn) (~45 dk, ücretsiz, sertifikalı) — SDK'nın Skills katmanıyla (`.claude/skills/`) nasıl kesişir. TypeScript eşi: [@anthropic-ai/claude-agent-sdk](https://www.npmjs.com/package/@anthropic-ai/claude-agent-sdk) — Node ekosisteminde aynı API.
 </div>
 </div>
 
@@ -363,5 +374,5 @@ Repo linkini kaydet: `muhendisal-notlarim/bolum-6/06-claude-sdk/proje-repo.txt`
 
 ← [6.5 Multi-Agent Sistemler](05-multi-agent.md) &nbsp;|&nbsp; [Bölüm 6 girişi](index.md) &nbsp;|&nbsp; [Ana sayfa](../index.md)
 
-**Pekiştirme:** Anthropic Academy [Introduction to Agent Skills](https://anthropic.skilljar.com/) kursunu aç (~45 dk, ücretsiz, sertifikalı). Skills Claude Code'un **görev-özgü bilgi paketi** katmanı (`.claude/skills/`); SDK bu dosyaları otomatik okur. Agent SDK + Skills birlikte okunduğunda "prod otomasyon agent'ı nasıl paketlenir" sorusu netleşir.
+**Pekiştirme:** Anthropic Academy [Introduction to Agent Skills](https://www.anthropic.com/learn) kursunu aç (~45 dk, ücretsiz, sertifikalı). Skills Claude Code'un **görev-özgü bilgi paketi** katmanı (`.claude/skills/`); SDK bu dosyaları otomatik okur. Agent SDK + Skills birlikte okunduğunda "prod otomasyon agent'ı nasıl paketlenir" sorusu netleşir.
 </div>

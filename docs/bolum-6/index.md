@@ -7,39 +7,42 @@
 <span class="ma-persona ma-persona-is">🔵 iş</span>
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
-<div class="ma-meta-row"><strong>📋 Önkoşul:</strong> Bölüm 2 bitmiş (prompt engineering + tool use kavramı), Bölüm 4 bitmiş (RAG — retrieve/generate ayrımı oturmuş); bir MCP sunucusu kurabilecek backend refleksin var (FastAPI + venv)</div>
-<div class="ma-meta-row"><strong>🎯 Çıktı:</strong> Kendi yazdığın **MCP sunucun** ayakta, Claude Desktop'tan "takvimimi göster" dediğinde senin yazdığın tool çalışıyor + Claude'un ReAct döngüsünde çok adımlı görev bitirdiği **canlı demo** + 4 Anthropic Academy kursu (Intro MCP, Advanced MCP, Subagents, Agent Skills) için içerik zemini.</div>
+<div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~5-6 saat (9 sayfa, çoğu pratik)</div>
+<div class="ma-meta-row"><strong>📋 Önkoşul:</strong> Bölüm 2 bitmiş (prompt mühendisliği + tool use kavramı), Bölüm 4 bitmiş (RAG — retrieval ile üretim ayrımı oturmuş); bir MCP sunucusu kurabilecek arka uç refleksin var (FastAPI + venv)</div>
+<div class="ma-meta-row"><strong>🎯 Çıktı:</strong> Kendi yazdığın **MCP sunucun** ayakta, Claude Desktop'tan "takvimimi göster" dediğinde senin yazdığın araç çalışıyor + Claude'un ReAct döngüsünde çok adımlı görev bitirdiği **canlı demo** + 4 Anthropic Academy kursu (Intro MCP, Advanced MCP, Subagents, Agent Skills) için içerik zemini.</div>
 </div>
 
 ## Neden bu bölüm?
 
-2024 sonunda Anthropic **MCP (Model Context Protocol)**'ü duyurdu. 2025'te "AI için USB-C" dediler. 2026 itibarıyla MCP **Anthropic'in en güçlü ürün farkı.** OpenAI yok, Google yok — MCP Anthropic ekosistemine özel açık standart.
+Kasım 2024'te Anthropic **MCP (Model Context Protocol — Model Bağlam Protokolü)** duyurdu. 2025'te "AI için USB-C" benzetmesi yapıldı. **Mart 2025'te OpenAI**, **Nisan 2025'te Google DeepMind** MCP'yi resmen kabul etti. **Aralık 2025'te Anthropic, MCP'yi Linux Foundation altındaki Agentic AI Foundation'a (AAIF) bağışladı** — kurucu olarak Anthropic + Block + OpenAI; destekçi olarak Google, Microsoft, AWS, Cloudflare, Bloomberg. 2026 itibarıyla MCP artık Anthropic'e özel değil, **endüstri standardı**: ChatGPT, Claude, Cursor, Gemini, Microsoft Copilot, VS Code hepsi destekliyor; aylık ~97 milyon SDK indirme, ~10.000 aktif sunucu.
 
-Senin için iki büyük getirisi var: (1) Claude Desktop'a kendi araçlarını bağlayıp "Claude Slack'ime mesaj at" demek; (2) İşyeri projende "Claude kendi database'imle konuşsun, rapor üretsin" sistemini kurmak. İkisi de MCP ile 30 satırlık kod.
+Senin için iki büyük getirisi var: (1) Claude Desktop'a kendi araçlarını bağlayıp "Slack'ime mesaj at" demek; (2) İşyerinde "Claude kendi veritabanımla konuşsun, rapor üretsin" sistemini kurmak. İkisi de MCP ile 30 satırlık kod.
 
-Üçüncü neden: **Agent = LLM + Tool + Loop.** Bu denklem bu bölümde kurulur. ReAct pattern'ını öğrenince "Claude'a özerk görev delege etmek" mimarsı zihinde oturur.
+Üçüncü neden: **Agent = LLM + Araç + Döngü (Tool + Loop).** Bu denklem bu bölümde kurulur. ReAct desenini öğrenince "Claude'a özerk görev devretmek" mimarisi zihinde oturur.
 
 ## Bölüm 6 kısaca
 
-**6.1 — Agent Nedir, ReAct Pattern.** LLM vs agent farkı. "Think → Act → Observe" döngüsü. Hata durumunda agent ne yapar (retry, fallback, hand-off).
+**6.1 — Agent Nedir, ReAct Deseni.** LLM ile agent farkı. "Think → Act → Observe" (Düşün → Yap → Gözle) döngüsü. Hata durumunda ajan ne yapar (yeniden deneme, yedek plan, devir).
 
-**6.2 — Tool Calling.** Claude API'nin `tools` parametresi. JSON schema ile tool tanımlama, Claude'un hangi tool'u çağırdığını anlama, sonucu geri yollama. 3-4 basit tool örnek.
+**6.2 — Tool Calling.** Claude API'sinin `tools` parametresi. JSON şema ile araç tanımlama, Claude'un hangi aracı çağırdığını anlama, sonucu geri yollama. 3-4 basit araç örneği.
 
-**6.3 — MCP Protokolü.** MCP ne, neyi çözüyor, **tool use'dan farkı**. Resources + Tools + Prompts üç primitive. Neden "AI için USB-C".
+**6.3 — MCP Protokolü.** MCP ne, neyi çözüyor, doğrudan `tools` parametresinden farkı ne. Resources + Tools + Prompts üç yapı taşı. "AI için USB-C" benzetmesinin anlamı.
 
-**6.4 — MCP Server Yazma.** Python `mcp` kütüphanesi ile kendi server'ın. 3-4 endpoint: "takvim oku", "email taslak yaz", "dosya listele". Claude Desktop'a entegre etme.
+**6.4 — MCP Sunucusu Yazma.** Python `mcp` kütüphanesi ile kendi sunucun. 3-4 uç: "takvim oku", "e-posta taslak yaz", "dosya listele". Claude Desktop'a entegre etme.
 
-**6.5 — Multi-Agent Sistemler.** Tek agent yetmediğinde — planner + executor + critic rolleri. Multi-agent orkestrasyon teknikleri (Subagents Anthropic yaklaşımı).
+**6.5 — Çok Ajanlı (Multi-Agent) Sistemler.** Tek ajan yetmediğinde — planlayıcı (planner) + uygulayıcı (executor) + eleştirmen (critic) rolleri. Çok ajan orkestrasyonu (Anthropic Subagents yaklaşımı).
 
-**6.6 — Claude Agent SDK.** Anthropic'in yeni SDK'sı (2025). "Kendi agent'ını 50 satırda kur" vaadi. Gerçeklikle karşılaştırma.
+**6.6 — Claude Agent SDK.** Anthropic'in 2025'te çıkardığı SDK. "Kendi ajanını 50 satırda kur" vaadi. Gerçeklikle karşılaştırma.
 
-**6.7 ve 6.8 (nav'da kapalı):** Production agent — timeout, maliyet, gözlemlenebilirlik, insan onayı gerektiren adımlar.
+**6.7 — Çerçeve karşılaştırma:** LangChain, LangGraph, CrewAI, AutoGen, Claude Agent SDK — hangisi ne için.
+
+**6.8 — Üretim ajanı:** Zaman aşımı (timeout), maliyet, gözlemlenebilirlik, insan onayı gerektiren adımlar.
 
 ## Bu bölümün yol haritası
 
 ```mermaid
 flowchart LR
-  S["👤 Sen\n(B5 bitti)"]
+  S["👤 Sen\n(Bölüm 5 bitti)"]
   P61["📄 6.1\nAgent +\nReAct"]
   P62["📄 6.2\nTool\ncalling"]
   P63["📄 6.3\nMCP ne"]
@@ -75,28 +78,29 @@ flowchart LR
 
 | Düğüm | Nerede | Ne iş yapıyor |
 |---|---|---|
-| 👤 **Sen** | Python + Claude Desktop + terminal | Tool use dene, MCP server yaz, Claude Desktop'a entegre et |
+| 👤 **Sen** | Python + Claude Desktop + terminal | Tool use dene, MCP sunucusu yaz, Claude Desktop'a entegre et |
 | 📄 **6.1 Agent + ReAct** | Platform | Kavram + döngü |
-| 📄 **6.2 Tool calling** | Platform + Python | 3-4 basit tool örnek (hesap makinesi, tarih, arama) |
-| 📄 **6.3 MCP ne** | Platform | Protokol + 3 primitive tanım |
-| 🏁 **6.4 MCP server yazma** | Python + MCP kütüphanesi | 30 satır kod, Claude Desktop bağlanıyor |
-| 📄 **6.5 Multi-agent** | Platform + Python | 3 rol örneği |
-| 📄 **6.6 Agent SDK** | Python + Claude SDK | "Anthropic'in yeni SDK" karşılaştırma |
-| 📄 **6.7-6.8 Production** | Python + monitoring | Timeout + maliyet + insan onayı |
-| 🔌 **MCP protokolü** | Standart (JSON-RPC üstü) | Claude ↔ tool arası iletişim kuralları |
-| 📖 **Anthropic Academy (4 kurs)** | skilljar.com | Intro to MCP + Advanced MCP + Intro to Subagents + Agent Skills |
-| ✅ **Çıktı** | Repo `6-mcp-server/` + Claude Desktop config | Canlı demo: "Claude Desktop'tan 'takvimimi göster' dedim, geldi" |
+| 📄 **6.2 Tool calling** | Platform + Python | 3-4 basit araç örneği (hesap makinesi, tarih, arama) |
+| 📄 **6.3 MCP ne** | Platform | Protokol + 3 yapı taşı tanımı |
+| 🏁 **6.4 MCP sunucusu yazma** | Python + MCP kütüphanesi | ~30 satır kod, Claude Desktop bağlanıyor |
+| 📄 **6.5 Çok ajan** | Platform + Python | 3 rol örneği |
+| 📄 **6.6 Agent SDK** | Python + Claude SDK | Anthropic'in 2025 SDK'sı karşılaştırması |
+| 📄 **6.7 Çerçeveler** | Platform | LangChain, LangGraph, CrewAI, AutoGen kıyas |
+| 📄 **6.8 Üretim ajanı** | Python + izleme | Zaman aşımı + maliyet + insan onayı |
+| 🔌 **MCP protokolü** | Standart (JSON-RPC üzeri); 2025 sonu Linux Foundation altında | Claude / GPT / Gemini ↔ araç arası iletişim kuralları |
+| 📖 **Anthropic Academy (4 kurs)** | anthropic.com/learn | Intro to MCP + Advanced MCP + Intro to Subagents + Agent Skills |
+| ✅ **Çıktı** | Repo `6-mcp-server/` + Claude Desktop yapılandırması | Canlı demo: "Claude Desktop'tan 'takvimimi göster' dedim, çalıştı" |
 
 ## Bu bölüm bittiğinde elinde ne olacak
 
-- **Çalışan MCP sunucun:** 3-4 tool'la, Claude Desktop'tan çağrılabiliyor. Bu **Anthropic ekosisteminde saygı gören refleks**
-- **Tool calling refleksi:** Yeni bir proje için "bu LLM + şu external servis" entegrasyonunu 30 dk'da kurabilirsin
-- **Agent mimarisi anlamı:** Multi-step görev geldiğinde "tek agent yeter mi, planner+executor ayrımı lazım mı" sorusunu sorup cevaplayabiliyorsun
-- **ReAct döngüsü deneyimi:** Think-Act-Observe döngüsünü kendi kodunda yazmışsın
-- **Production gerçeği:** "Agent devasa tokenle patlar" tuzağına düşmeden timeout + cost cap + human-in-the-loop kurmayı biliyorsun
+- **Çalışan MCP sunucun:** 3-4 araçla, Claude Desktop'tan çağrılabiliyor. Bu artık **endüstri standardı bir refleks** (sadece Anthropic değil, ChatGPT/Gemini/Cursor da MCP konuşur).
+- **Tool calling refleksi:** Yeni bir proje için "bu LLM + şu dış servis" entegrasyonunu 30 dakikada kurabilirsin
+- **Agent mimarisi anlayışı:** Çok adımlı görev geldiğinde "tek ajan yeter mi, planlayıcı+uygulayıcı ayrımı lazım mı" sorusunu sorup cevaplayabiliyorsun
+- **ReAct döngüsü deneyimi:** Düşün-Yap-Gözle (Think-Act-Observe) döngüsünü kendi kodunda yazdın
+- **Üretim gerçeği:** "Ajan devasa token'le faturayı patlatır" tuzağına düşmeden zaman aşımı + maliyet üst sınırı + insan onayı (human-in-the-loop) kurmayı biliyorsun
 - **4 Anthropic Academy sertifikası eşiği:** Bölümü bitirirken 4 kursun tamamı senin için erişilebilir — içerik hazırlığı tamamsa sertifika almak 1-2 gün iş
 
-Bu çıktı **platformun zirvesi.** Bölüm 7-10 kalan pürüzleri (multimodal, güvenlik, deploy, kariyer) kapatıyor ama teknik olarak bu bölüm sonunda bir agent geliştiricisisin.
+Bu çıktı **platformun zirvesi.** Bölüm 7-10 kalan pürüzleri (multimodal, güvenlik, deploy, kariyer) kapatıyor ama teknik olarak bu bölüm sonunda bir ajan geliştiricisisin.
 
 <div class="ma-anthropic-oz" markdown>
 <div class="ma-anthropic-oz-header">📖 Anthropic bu bölümde ne der — öz</div>
@@ -113,10 +117,10 @@ Bölüm 6 **Anthropic'in en kalın ve en güncel teknik koleksiyonu.** 4 Academy
 
 **5. Docs — MCP Resources + Tools + Prompts.** [platform.claude.com/docs/en/mcp](https://platform.claude.com/docs/en/mcp) Anthropic'in kanonik MCP dokümantasyonu. 3 yapı taşının (resource, tool, prompt) tam spesifikasyonu burada. 6.3-6.4'te referans.
 
-**6. GitHub — anthropics/mcp-server ve ekosistem sunucuları.** Claude'un desteklediği örnek MCP server'lar (Slack, Google Drive, GitHub, Postgres). 6.4'te kendi server'ını yazarken örnek olarak oku.
+**6. GitHub — modelcontextprotocol/servers ve ekosistem sunucuları.** Resmi MCP referans sunucuları reposu ([github.com/modelcontextprotocol/servers](https://github.com/modelcontextprotocol/servers)) — Slack, Google Drive, GitHub, Postgres, Filesystem, Brave Search. 6.4'te kendi sunucunu yazarken örnek olarak oku. Anthropic'in kendi cookbook'ları: [github.com/anthropics/claude-cookbooks](https://github.com/anthropics/claude-cookbooks).
 
 <div class="ma-anthropic-oz-kaynak" markdown>
-**Kaynak:** [Anthropic Academy — Introduction to Model Context Protocol](https://anthropic.skilljar.com/) (İngilizce, ~45 dk, ücretsiz + sertifika). 6.3'ten önce veya sonra aç. MCP'yi Anthropic'in ağzından dinlemek kavramın yerleşmesi için kritik — bu protokol Anthropic'in farkı.
+**Kaynak:** [Anthropic Academy — Introduction to Model Context Protocol](https://www.anthropic.com/learn) (İngilizce, ücretsiz + sertifika). 6.3'ten önce veya sonra aç. MCP, Aralık 2025'te Linux Foundation'a bağışlandı; protokolün resmi sayfası: [modelcontextprotocol.io](https://modelcontextprotocol.io).
 </div>
 </div>
 

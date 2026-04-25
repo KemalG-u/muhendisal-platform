@@ -1,4 +1,4 @@
-# 6.7 LangChain Agents
+# 6.7 LangChain Ajanları (LangChain Agents) — Çerçeve Karşılaştırma
 
 <div class="ma-meta" markdown>
 <div class="ma-meta-row" markdown>
@@ -8,20 +8,20 @@
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
 <div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~30 dakika</div>
-<div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 6.1–6.6 bitmiş — ham `anthropic` SDK ile tool calling, multi-agent patternleri, `claude-agent-sdk` refleksleri oturmuş; Python 3.10+; `ANTHROPIC_API_KEY` aktif</div>
-<div class="ma-meta-row"><strong>🎯 Çıktı:</strong> LangChain 1.x'te `create_agent` ile Anthropic-bağlı agent kurup çalıştırıyorsun; LangGraph `StateGraph` ile custom stateful agent mimarisi yazabiliyorsun; **üç SDK karar matrisini** (ham `anthropic` + `claude-agent-sdk` + LangChain/LangGraph) tek bakışta çözüyorsun — hangi senaryoya hangisini seçeceğin refleks.</div>
+<div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 6.1-6.6 bitmiş — ham `anthropic` SDK ile araç çağırma, çok ajan desenleri, `claude-agent-sdk` refleksleri oturmuş; Python 3.10+; `ANTHROPIC_API_KEY` aktif</div>
+<div class="ma-meta-row"><strong>🎯 Çıktı:</strong> LangChain 1.x'te `create_agent` ile Anthropic'e bağlı ajan kurup çalıştırıyorsun; LangGraph `StateGraph` ile özel durumlu (stateful) ajan mimarisi yazabiliyorsun; **üç SDK karar matrisini** (ham `anthropic` + `claude-agent-sdk` + LangChain/LangGraph) tek bakışta çözüyorsun — hangi senaryoya hangisini seçeceğin refleks haline geliyor.</div>
 </div>
 
 !!! tip "Yabancı kelime mi gördün?"
-    Bu sayfadaki **italik-altı çizili** ifadelerin (durable execution, checkpoint, middleware gibi) üstüne mouse'unu getir — kısa tanım çıkar. Mobilde dokun.
+    Bu sayfadaki **kalın** teknik terimler (dayanıklı yürütme / durable execution, kontrol noktası / checkpoint, ara katman / middleware gibi) ilk geçişte hemen yanında veya altında Türkçe açıklanır.
 
 ## Neden bu sayfa?
 
-2024–25 dönemi LangChain ekosisteminde **kaos** vardı — her ay breaking change, `langchain`/`langchain-core`/`langchain-community` paket bölünmesi, `AgentExecutor` deprecate, LCEL (Expression Language) gel-git'i, LangGraph ayrı paket olarak çıkıp merkeze alınması. Bu dönemde birçok takım "LangChain'den vazgeçin" kararı verdi; doğru karar mıydı? **2026 Nisan itibarıyla cevap değişti** — `langchain 1.2.x` + `langgraph 1.1.x` ailesi stabilize oldu, açık iki kimlik belirdi, ekosistem tekrar tutarlı.
+2024-25 döneminde LangChain ekosisteminde **kaos** vardı — her ay bozucu değişiklik (breaking change), `langchain`/`langchain-core`/`langchain-community` paket bölünmesi, `AgentExecutor`'ın deprecate edilmesi, LCEL (Expression Language) gel-git'i, LangGraph'ın ayrı paket olarak çıkıp sonra merkeze alınması. Bu dönemde birçok takım "LangChain'den vazgeçin" kararı verdi; doğru karar mıydı? **2026 Nisan itibarıyla cevap değişti** — `langchain 1.2.x` + `langgraph 1.1.x` ailesi olgunlaştı, iki net kimlik belirdi, ekosistem tekrar tutarlı.
 
-İkincisi: LangChain 1.x **kimliği netleştirdi** — `langchain` = "en hızlı agent başlangıç", `langgraph` = "low-level orchestration framework for stateful agents". LangChain agent'ları **artık LangGraph üstünde** kurulu (durable execution, streaming, human-in-the-loop, persistence hepsi otomatik); basit kullanım için LangGraph bilmen gerekmiyor. Klarna, Replit, Elastic gibi ölçekli kullanıcılar bu mimarinin üstünde prod. Bu da "framework'e ne zaman evet" kararını güncel tutmayı zorunlu kılıyor.
+İkincisi: LangChain 1.x **kimliği netleştirdi** — `langchain` = "en hızlı ajan başlangıcı", `langgraph` = "düşük seviyeli, durumlu (stateful) ajanlar için orkestrasyon çerçevesi". LangChain ajanları **artık LangGraph üzerinde** kurulu (dayanıklı yürütme — durable execution, akış, insan onayı — human-in-the-loop, kalıcılık hepsi otomatik); basit kullanım için LangGraph bilmen gerekmiyor. Büyük SaaS şirketleri (örnek: Klarna, Replit, Elastic — kaynak: LangChain blog vaka çalışmaları) bu mimari üzerinde üretimde. Bu da "çerçeveye ne zaman evet" kararını güncel tutmayı zorunlu kılıyor.
 
-Üçüncüsü: Bu sayfa **Bölüm 6'nın son sentezi** — ham `anthropic` SDK (6.2) + `claude-agent-sdk` (6.6) + LangChain/LangGraph (bu sayfa) üç seçenek. Her AI Engineer bu üç aracı **birbirinin rakibi değil, farklı iş için alternatif** olarak tanımalı. Sayfa sonundaki **üç SDK karar matrisi** iş ilanlarında en çok sorulan senaryoları kapsayacak.
+Üçüncüsü: Bu sayfa **Bölüm 6'nın son sentezi** — ham `anthropic` SDK (6.2) + `claude-agent-sdk` (6.6) + LangChain/LangGraph (bu sayfa) üç seçenek. Her AI Engineer bu üç aracı **birbirinin rakibi değil, farklı iş için alternatif** olarak tanımalı. Sayfa sonundaki **üç SDK karar matrisi** iş ilanlarında en çok sorulan senaryoları kapsıyor.
 
 ## LangChain 1.x ekosistemi kısaca — üç paragraf, matematiksiz
 
@@ -313,16 +313,27 @@ Aşağıdaki tablo **Bölüm 6'nın final özeti**. Aynı agent görevini üç y
 
 | Tuzak | Sonucu | Çözüm |
 |---|---|---|
-| **Eski `AgentExecutor` referansları** | Deprecated — çalışır ama kırılır | LangChain 1.x = `create_agent` ya da `langgraph.prebuilt.create_react_agent`; tutorial tarihine bak |
-| **`pip install langchain` yeter sanmak** | `ChatAnthropic` yok | Provider paketi ayrı: `pip install "langchain[anthropic]"` veya `langchain-anthropic` |
-| **Sürüm pinleme yok** | Her `pip install` breaking change riski | `requirements.txt`'te **kesin sürüm** (`langchain==1.2.15 langgraph==1.1.9`) |
-| **Framework learning curve'ünü hafife almak** | 2 haftada öğreneceğini sandığın State/edge/checkpoint 4-6 hafta | MVP için **önce ham SDK**; framework'e ihtiyaç doğarsa geç |
-| **`StateGraph` state şeması kaba** | Her node tüm state'i yeniden yazıyor, çakışma | `Annotated[list, add]` gibi reducer'larla **birleştirme semantiği** açıkça tanımla |
-| **Checkpoint prod'da InMemorySaver** | Restart sonrası tüm state kayıp | Postgres (`langgraph-checkpoint-postgres`) veya Redis saver — dev'de `InMemory`, prod'da persist |
-| **LangSmith'i "zorunlu" sanmak** | SaaS fiyat + dış servise trace'ler | Self-host opsiyonu yok resmi; ücretsiz plan var ama limitli. Alternatif: OpenTelemetry + Helicone/LangFuse |
-| **Tool bolluğu (community paketleri)** | 50 tool = Claude'un seçim motoru bozulur | Her görev için dar tool seti; 6.2'deki "çok fazla tool" tuzağı burada da |
-| **Middleware'i overengineer etmek** | Basit agent 200 satır soyutlama içinde kayboluyor | `create_agent` default yeter; middleware sadece tekrarlı pattern için |
-| **LangGraph'ı basit chat'e dayatmak** | Aşırı soyutlama, debug zor | Basit chat + tool = `create_agent`; `StateGraph` sadece state/HITL/durable varsa |
+| **Eski `AgentExecutor` referansları** | Deprecated — çalışır ama kırılabilir | LangChain 1.x = `create_agent` ya da `langgraph.prebuilt.create_react_agent`; eğitim materyalinin tarihine bak |
+| **`pip install langchain` yeter sanmak** | `ChatAnthropic` yok | Sağlayıcı paketi ayrı: `pip install "langchain[anthropic]"` veya `langchain-anthropic` |
+| **Sürüm pinleme yok** | Her `pip install` bozucu değişim riski | `requirements.txt`'te **kesin sürüm** (`langchain==1.2.15 langgraph==1.1.9`) |
+| **Çerçeve öğrenme eğrisini hafife almak** | 2 haftada öğreneceğini sandığın state/edge/checkpoint 4-6 hafta | MVP için **önce ham SDK**; çerçeveye ihtiyaç doğarsa geç |
+| **`StateGraph` durum şeması kaba** | Her düğüm tüm state'i yeniden yazıyor, çakışma | `Annotated[list, add]` gibi azaltıcılarla (reducer) **birleştirme anlamını** açıkça tanımla |
+| **Üretimde `InMemorySaver` checkpoint** | Yeniden başlatma sonrası tüm state kayıp | Postgres (`langgraph-checkpoint-postgres`) veya Redis kaydedici — geliştirmede `InMemory`, üretimde kalıcı |
+| **LangSmith'i "zorunlu" sanmak** | SaaS ücreti + dış servise izleme verileri | Resmi self-host yok; ücretsiz plan var ama sınırlı. Alternatif: OpenTelemetry + Helicone/LangFuse |
+| **Araç bolluğu (topluluk paketleri)** | 50 araç = Claude'un seçim motoru bozulur | Her görev için dar araç seti; 6.2'deki "çok fazla araç" tuzağı burada da |
+| **Ara katmanı aşırı tasarlamak** | Basit ajan 200 satır soyutlama içinde kayboluyor | `create_agent` varsayılanı yeter; ara katman sadece tekrarlı desen için |
+| **LangGraph'ı basit sohbete dayatmak** | Aşırı soyutlama, hata ayıklama zor | Basit sohbet + araç = `create_agent`; `StateGraph` sadece state/HITL/dayanıklı varsa |
+
+??? warning "Tipik LangChain/LangGraph hataları — şu durum şu çözüm"
+
+    | Hata | Sebep | Çözüm |
+    |---|---|---|
+    | `ImportError: cannot import name 'create_agent'` | Eski LangChain (0.x veya 1.0) | `pip install -U "langchain>=1.2"` |
+    | `ChatAnthropic` import hatası | `langchain-anthropic` kurulu değil | `pip install langchain-anthropic` |
+    | "Cannot find checkpoint" | `thread_id` farklı veya yeni saver oluşturulmuş | Aynı `config={"configurable":{"thread_id":"X"}}` kullan |
+    | LangSmith trace görünmüyor | `LANGCHAIN_TRACING_V2` env yok | `LANGCHAIN_TRACING_V2=true LANGCHAIN_API_KEY=...` ortamda set et |
+    | Çoklu provider'da farklı davranış | Provider'a göre tool calling formatları farklı | Her provider için ayrı entegrasyon testi yaz |
+    | StateGraph sonsuz döngü | Conditional edge döngüye giriyor | `recursion_limit=25` parametresi compile sırasında set et |
 
 <div class="ma-anthropic-oz" markdown>
 <div class="ma-anthropic-oz-header">📖 Anthropic bu konuyu nasıl anlatıyor — öz</div>

@@ -1,4 +1,4 @@
-# 6.5 Multi-Agent Sistemler
+# 6.5 Çok Ajanlı (Multi-Agent) Sistemler
 
 <div class="ma-meta" markdown>
 <div class="ma-meta-row" markdown>
@@ -8,20 +8,20 @@
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
 <div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~35 dakika</div>
-<div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 6.1 (Agent + ReAct) + 6.2 (tool calling) + 6.4 (MCP server) bitmiş — tek agent + tool kullanma refleksin var; Python `anthropic` SDK veya Claude Code kurulu</div>
-<div class="ma-meta-row"><strong>🎯 Çıktı:</strong> Bir görevin **tek agent'la** mı **multi-agent'la** mı çözüleceğini 5-sinyal karar matrisiyle tespit ediyorsun; Python'da **orchestrator-workers pattern**'inde 3 paralel subagent çalıştırıp sonucu birleştiriyorsun; Claude Code'da `.claude/agents/` ile kendi özel subagent'ını tanımlayıp tetikliyorsun.</div>
+<div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 6.1 (Ajan + ReAct) + 6.2 (araç çağırma) + 6.4 (MCP sunucusu) bitmiş — tek ajan + araç kullanma refleksin var; Python `anthropic` SDK veya Claude Code kurulu</div>
+<div class="ma-meta-row"><strong>🎯 Çıktı:</strong> Bir görevin **tek ajanla** mı **çok ajanla** mı çözüleceğini 5 sinyalli karar matrisiyle tespit ediyorsun; Python'da **orkestratör-işçi (orchestrator-workers) deseni**nde 3 paralel alt ajan çalıştırıp sonucu birleştiriyorsun; Claude Code'da `.claude/agents/` ile kendi özel alt ajanını tanımlayıp tetikliyorsun.</div>
 </div>
 
 !!! tip "Yabancı kelime mi gördün?"
-    Bu sayfadaki **italik-altı çizili** ifadelerin (orchestrator, subagent, context isolation gibi) üstüne mouse'unu getir — kısa tanım çıkar. Mobilde dokun.
+    Bu sayfadaki **kalın** teknik terimler (orkestratör / orchestrator, alt ajan / subagent, bağlam yalıtımı / context isolation gibi) ilk geçişte hemen yanında veya altında Türkçe açıklanır.
 
 ## Neden bu sayfa?
 
-6.1'de "workflow != agent" dedik — **basit görev için tek agent bile fazla.** Şimdi ters uçtayız: **tek agent'ın da yetmediği** görevler var. Bir araştırma raporu düşün — 10 konuda web araması, her birinin özeti, bir tez kurma, kaynakça kontrolü, üslup birleştirme. Tek agent 100k+ token bağlamda kaybolur; aynı anda "araştır", "özetle", "kritik et" rollerinin arasında kimlik savruluyor; tool seçimi bozuluyor. **Bağlam şişmesi = kalite düşüşü.**
+6.1'de "iş akışı ≠ ajan" dedik — **basit görev için tek ajan bile fazla.** Şimdi ters uçtayız: **tek ajanın da yetmediği** görevler var. Bir araştırma raporu düşün — 10 konuda web araması, her birinin özeti, bir tez kurma, kaynakça kontrolü, üslup birleştirme. Tek ajan 100k+ token bağlamda kaybolur; aynı anda "araştır", "özetle", "eleştir" rollerinin arasında kimlik savruluyor; araç seçimi bozuluyor. **Bağlam şişmesi = kalite düşüşü.**
 
-İkincisi: 2026 Mart itibarıyla Anthropic resmi **5-katman mimari** çizdi — MCP (connectivity) → Skills (görev bilgisi) → Agent (ana işçi) → **Subagents (paralel bağımsız işçi)** → Agent Teams (koordinasyon). Multi-agent artık "deneysel süs" değil; Anthropic'in kendi **Claude Code'u bu katmanların üstünde çalışıyor** ve Anthropic kamuoyu verilerine göre Claude Code kodbase'inin önemli bir kısmı yine Claude Code tarafından üretiliyor. Yani: Anthropic'in **kendi ürününün arkasındaki mimari örüntü** bu sayfada.
+İkincisi: 2026 Mart itibarıyla Anthropic resmi **5 katmanlı mimari** çizdi — MCP (bağlantı) → Skills (görev bilgisi) → Agent (ana işçi) → **Subagents / Alt ajanlar (paralel bağımsız işçi)** → Agent Teams (koordinasyon). Çok ajan artık "deneysel süs" değil; Anthropic'in kendi **Claude Code'u bu katmanların üstünde çalışıyor** ve Anthropic'in kamuya açık verilerine göre Claude Code kod tabanının önemli bir kısmı yine Claude Code tarafından üretiliyor. Yani: Anthropic'in **kendi ürününün arkasındaki mimari örüntü** bu sayfada.
 
-Üçüncüsü: Multi-agent literatürü 2024-25'te gürültülüydü — LangGraph, CrewAI, AutoGen, MetaGPT her biri farklı soyutlama. 2026'da dumanın altında **Anthropic'in kendi yaklaşımı netleşti:** "Single-threaded master loop" + **Task tool** ile dispatch + **context isolation**. Karmaşık framework'ler yerine **sadelik**. Bu sayfa bu sadeleşmiş yaklaşımı alıyor; LangGraph karşılaştırması 6.7'de.
+Üçüncüsü: Çok ajan literatürü 2024-25'te gürültülüydü — LangGraph, CrewAI, AutoGen, MetaGPT her biri farklı soyutlama. 2026'da dumanın altında **Anthropic'in kendi yaklaşımı netleşti:** "tek iş parçacıklı ana döngü (single-threaded master loop)" + **Task aracı** ile devretme + **bağlam yalıtımı (context isolation)**. Karmaşık çerçeveler yerine **sadelik**. Bu sayfa o sadeleşmiş yaklaşımı alıyor; LangGraph karşılaştırması 6.7'de.
 
 ## Multi-agent kısaca — üç paragraf, matematiksiz
 
@@ -80,13 +80,13 @@ flowchart TB
 
 | Düğüm | Rol | Ne iş yapıyor |
 |---|---|---|
-| 👤 **Kullanıcı** | İstek kaynağı | Yüksek seviyeli görev — "X hakkında rapor yaz" |
-| 🧠 **Orchestrator** | Ana agent | Planı kurar, subagent dispatch eder, sonuçları sentezler; **kendisi asli iş yapmaz** |
+| 👤 **Kullanıcı** | İstek kaynağı | Üst düzey görev — "X hakkında rapor yaz" |
+| 🧠 **Orkestratör** | Ana ajan | Plan kurar, alt ajanlara devreder, sonuçları sentezler; **kendisi asli işi yapmaz** |
 | 📋 **Plan** | Soyut aşama | Görevi alt görevlere bölme — 3-7 parça tipik |
-| 🔍 **Researcher subagent** | Arama + bilgi toplama | Taze 200k context ile kaynak tara |
-| 📝 **Writer subagent** | Metin üretimi | Researcher çıktısından taslak yaz |
-| ✅ **Critic subagent** | Değerlendirme | Taslağı kritik et, puanla, düzeltme önerisi ver |
-| 🧩 **Sentez** | Orchestrator'un birleştirmesi | 3 çıktıyı tek tutarlı metne çevir |
+| 🔍 **Araştırmacı alt ajan** | Arama + bilgi toplama | Taze 200K bağlam ile kaynak tarar |
+| 📝 **Yazar alt ajan** | Metin üretimi | Araştırmacının çıktısından taslak yazar |
+| ✅ **Eleştirmen alt ajan** | Değerlendirme | Taslağı eleştirir, puanlar, düzeltme önerir |
+| 🧩 **Sentez** | Orkestratörün birleştirmesi | 3 çıktıyı tek tutarlı metne çevir |
 | 📤 **Final cevap** | Kullanıcıya dönen | Son metin + kaynaklar + kalite notu |
 
 </table>
@@ -254,21 +254,31 @@ flowchart TB
 
 | Tuzak | Sonucu | Çözüm |
 |---|---|---|
-| **Tek agent yeterken multi-agent zorlamak** | 3x maliyet, 3x latency, sıfır kalite farkı | 5-sinyal kontrol listesi — 2+ sinyal yoksa **tek agent** |
-| **Orchestrator'a "plus iş" yaptırmak** | Plan kalitesi düşer, kimlik kayması | Orchestrator **yalnızca koordinatör** — kod yazma/analiz etme subagent işi |
-| **Subagent'lar arası context paylaşımı varsaymak** | Subagent yarı-bilgiyle iş yapar | Her subagent'a **kendine yeten** görev + bağlam yolla; dosya sistemi üstünden dolaylı paylaşım OK |
-| **Recursive subagent spawn beklentisi** | "Subagent kendi alt-subagent'ı açsın" — çalışmaz | Depth limit var. Hiyerarşi en fazla 2: orchestrator → subagent |
-| **Subagent çıktısını doğrulamadan geçmek** | Halüsinasyon birleşik cevaba sızar | Orchestrator kalite kontrol kapısı — evaluator subagent ekle veya regex/şema validasyonu |
-| **Heterojen model karması yanlış** | Haiku subagent'a karmaşık görev = kırılma | Maliyet-görev eşleştirmesi: basit özet Haiku, analiz Sonnet, derin akıl yürütme Opus |
-| **Paralel dispatch'i unutmak** | Sıralı çağrı = 3x gecikme | `asyncio.gather` / `Promise.all` / `Task tool paralel` |
-| **Token maliyeti görünmez** | Ay sonu faturası sürprizi | Her subagent çağrısında `usage.input_tokens` + `output_tokens` logla |
-| **Deterministik workflow yerine agent seçmek** | Debugging cehennemi | HBV chatbot vakası (4.8): state machine 5/5 workflow sinyali — multi-agent **değil** |
-| **Framework tapıncı** (LangGraph/CrewAI) | Soyutlama karmaşası | Anthropic refleksi: **sadelik** — ham SDK + asyncio yeterse onu seç; framework ihtiyaç doğarsa 6.7 |
+| **Tek ajan yeterken çok ajan zorlamak** | 3 kat maliyet, 3 kat gecikme, sıfır kalite farkı | 5 sinyalli kontrol listesi — 2+ sinyal yoksa **tek ajan** |
+| **Orkestratöre "ekstra iş" yaptırmak** | Plan kalitesi düşer, kimlik kayması | Orkestratör **yalnızca koordinatör** — kod yazma/analiz etme alt ajanın işi |
+| **Alt ajanlar arası bağlam paylaşımı varsaymak** | Alt ajan yarı bilgiyle iş yapar | Her alt ajana **kendine yeten** görev + bağlam yolla; dosya sistemi üzerinden dolaylı paylaşım tamam |
+| **Özyinelemeli (recursive) alt ajan üretimi beklentisi** | "Alt ajan kendi alt-alt ajanını açsın" — çalışmaz | Derinlik sınırı var. Hiyerarşi en fazla 2: orkestratör → alt ajan |
+| **Alt ajan çıktısını doğrulamadan geçmek** | Halüsinasyon birleşik cevaba sızar | Orkestratör kalite kontrol kapısı — değerlendirici alt ajan ekle veya regex/şema doğrulaması |
+| **Yanlış heterojen model karması** | Haiku alt ajana karmaşık görev = kırılma | Maliyet-görev eşleştirmesi: basit özet Haiku 4.5, analiz Sonnet 4.6, derin akıl yürütme Opus 4.7 |
+| **Paralel devretmeyi unutmak** | Sıralı çağrı = 3 kat gecikme | `asyncio.gather` / `Promise.all` / Task aracı paralel |
+| **Token maliyeti görünmez** | Ay sonu fatura sürprizi | Her alt ajan çağrısında `usage.input_tokens` + `output_tokens` günlüğe yaz |
+| **Deterministik iş akışı yerine ajan seçmek** | Hata ayıklama cehennemi | HBV chatbot vakası (4.8): durum makinesi 5/5 iş akışı sinyali — çok ajan **değil** |
+| **Çerçeve tapıncı** (LangGraph/CrewAI) | Soyutlama karmaşası | Anthropic refleksi: **sadelik** — ham SDK + asyncio yeterse onu seç; çerçeve ihtiyaç doğarsa 6.7 |
+
+??? warning "Tipik çok ajan hataları — şu durum şu çözüm"
+
+    | Hata | Sebep | Çözüm |
+    |---|---|---|
+    | Sentez tutarsız (subagent'lar çelişiyor) | Orkestratör çakışmayı çözmüyor | Sentez prompt'una "çakışma varsa kullanıcıya iki görüşü de göster" ekle |
+    | Subagent zaman aşımı | Tool çağrısı yavaş veya sonsuz döngü | Her subagent için `timeout=120s` + `max_iterations=10` |
+    | "Rate limit" hatası | 5+ subagent paralel çağrılınca dakikalık limit aşılır | `asyncio.Semaphore(3)` ile eşzamanlılık sınırla |
+    | Maliyet beklenmedik yüksek | Subagent başına 3-4 kat input token (her birine sistem prompt vs.) | Sistem promptlarını kısalt, gereksiz örnekleri çıkar; küçük model dene |
+    | Subagent JSON dönmüyor | `tool_choice` veya structured output yok | Subagent çıktısını `tool_choice={"type":"tool","name":"final_result"}` ile zorla |
 
 <div class="ma-anthropic-oz" markdown>
 <div class="ma-anthropic-oz-header">📖 Anthropic bu konuyu nasıl anlatıyor — öz</div>
 
-Anthropic multi-agent konusunu üç kaynakla canonical hale getirdi: [Building Effective Agents](https://www.anthropic.com/research/building-effective-agents) (Aralık 2024 mühendislik blogu), [Anthropic Academy — Introduction to Subagents](https://anthropic.skilljar.com/) (~30 dk, sertifikalı), [code.claude.com docs — Agent Teams](https://code.claude.com/docs/en/agent-teams).
+Anthropic multi-agent konusunu üç kaynakla canonical hale getirdi: [Building Effective Agents](https://www.anthropic.com/research/building-effective-agents) (Aralık 2024 mühendislik blogu), [Anthropic Academy — Introduction to Subagents](https://www.anthropic.com/learn) (~30 dk, sertifikalı), [code.claude.com docs — Agent Teams](https://code.claude.com/docs/en/agent-teams).
 
 **1. Single-threaded master loop mantığı.** Anthropic Claude Code'un iç mimarisinde **karmaşık multi-agent framework kullanmadığını** açıkça söylüyor. Bir ana döngü (while loop), tool call'ları sırayla işler, gerektiğinde **Task tool** ile subagent dispatch eder. Gerekçe: **debug edilebilirlik + şeffaflık.** Karmaşık actor-based mimariler "ne çalıştığını anlamak" aşamasında dayanılmaz oluyor.
 
@@ -293,7 +303,7 @@ Anthropic multi-agent konusunu üç kaynakla canonical hale getirdi: [Building E
     **Observability — gerekliliği artıyor.** Multi-agent debug için LangFuse / Helicone / Arize tracer'ları yaygınlaştı. Her subagent çağrısı + token + süre ayrı span. Prod multi-agent observability'siz kırılıyor.
 
 <div class="ma-anthropic-oz-kaynak" markdown>
-**Kaynak:** [Anthropic — Building Effective Agents](https://www.anthropic.com/research/building-effective-agents) (EN, ~25 dk, multi-agent pattern taksonomisi — **referans metin**). Pekiştirme: [Anthropic Academy — Introduction to Subagents](https://anthropic.skilljar.com/) (~30 dk, ücretsiz, sertifikalı) ve [code.claude.com/docs — Subagents & Agent Teams](https://code.claude.com/docs/en/agent-teams). Üretim örneği: [Anthropic Webinar — Claude Code Advanced Patterns (Mart 2026)](https://www.anthropic.com/webinars/claude-code-advanced-patterns) — Anthropic mühendisliğinin subagent'ları üretimde nasıl koyduğunu anlatıyor.
+**Kaynak:** [Anthropic — Building Effective Agents](https://www.anthropic.com/research/building-effective-agents) (EN, ~25 dk, multi-agent pattern taksonomisi — **referans metin**). Pekiştirme: [Anthropic Academy — Introduction to Subagents](https://www.anthropic.com/learn) (~30 dk, ücretsiz, sertifikalı) ve [code.claude.com/docs — Subagents & Agent Teams](https://code.claude.com/docs/en/agent-teams). Üretim örneği: [Anthropic Webinar — Claude Code Advanced Patterns (Mart 2026)](https://www.anthropic.com/webinars/claude-code-advanced-patterns) — Anthropic mühendisliğinin subagent'ları üretimde nasıl koyduğunu anlatıyor.
 </div>
 </div>
 
@@ -344,5 +354,5 @@ Repo linkini kaydet: `muhendisal-notlarim/bolum-6/05-multi-agent/proje-repo.txt`
 
 ← [6.4 MCP Server Yazma](04-mcp-server.md) &nbsp;|&nbsp; [Bölüm 6 girişi](index.md) &nbsp;|&nbsp; [Ana sayfa](../index.md)
 
-**Pekiştirme:** [Building Effective Agents](https://www.anthropic.com/research/building-effective-agents) makalesini oku (~25 dk, EN). Bu sayfadaki 5 pattern + orchestrator-workers + 5-sinyal kararı makaleden geri dönüp pekişir — Anthropic'in kendi kaleminden temel referans metin. Ardından [Academy — Introduction to Subagents](https://anthropic.skilljar.com/) (~30 dk, sertifikalı).
+**Pekiştirme:** [Building Effective Agents](https://www.anthropic.com/research/building-effective-agents) makalesini oku (~25 dk, EN). Bu sayfadaki 5 pattern + orchestrator-workers + 5-sinyal kararı makaleden geri dönüp pekişir — Anthropic'in kendi kaleminden temel referans metin. Ardından [Academy — Introduction to Subagents](https://www.anthropic.com/learn) (~30 dk, sertifikalı).
 </div>

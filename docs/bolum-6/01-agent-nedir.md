@@ -1,4 +1,4 @@
-# 6.1 Agent Nedir, ReAct Pattern
+# 6.1 Ajan (Agent) Nedir, ReAct Deseni
 
 <div class="ma-meta" markdown>
 <div class="ma-meta-row" markdown>
@@ -8,28 +8,28 @@
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
 <div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~30 dakika</div>
-<div class="ma-meta-row"><strong>📋 Önkoşul:</strong> Bölüm 2 bitmiş (sistem prompt + few-shot + prompt-caching); Bölüm 4 bitmiş (retrieve + generate ayrımı net)</div>
-<div class="ma-meta-row"><strong>🎯 Çıktı:</strong> **Workflow** ile **Agent**'ın farkını bir paragrafta anlatabilirsin; ReAct döngüsünü (Think → Act → Observe → Loop) kendi kodunla yazarsın; **"bu projede agent gerekli mi?"** sorusuna 5 kriterle cevap verebilirsin — **çoğu durumda "hayır" doğru cevap**tır.</div>
+<div class="ma-meta-row"><strong>📋 Önkoşul:</strong> Bölüm 2 bitmiş (sistem promptu + few-shot + prompt caching); Bölüm 4 bitmiş (retrieve + generate ayrımı net)</div>
+<div class="ma-meta-row"><strong>🎯 Çıktı:</strong> **İş akışı (workflow)** ile **ajan (agent)** farkını bir paragrafta anlatabilirsin; ReAct döngüsünü (Think → Act → Observe → Loop) kendi kodunla yazarsın; **"bu projede ajan gerekli mi?"** sorusuna 5 kriterle cevap verebilirsin — **çoğu durumda "hayır" doğru cevap**.</div>
 </div>
 
 !!! tip "Yabancı kelime mi gördün?"
-    Bu sayfadaki **italik-altı çizili** ifadelerin (workflow, agent, ReAct, autonomy gibi) üstüne mouse'unu getir — kısa tanım çıkar. Mobilde dokun.
+    Bu sayfadaki **kalın** teknik terimler (workflow / iş akışı, agent / ajan, ReAct, autonomy / özerklik gibi) ilk geçişte hemen yanında veya altında Türkçe açıklanır.
 
 ## Neden bu sayfa?
 
-2024-2026 AI dünyasında "agent" kelimesi **her yerde** — LinkedIn'deki her üçüncü gönderi "AI agent built", her startup pitch'inde "multi-agent architecture". Ama sektörün **en büyük sırrı**: çoğu "agent" aslında **agent değil**, sıradan bir workflow'tur. Daha kötüsü: çoğu proje için agent **gereksiz pahalı ve kırılgan** çözüm.
+2024-2026 AI dünyasında "ajan (agent)" kelimesi **her yerde** — LinkedIn'deki her üçüncü gönderi "AI agent built", her girişim sunumunda "multi-agent architecture". Ama sektörün **en büyük sırrı**: bu projelerin çoğu aslında **ajan değil**, sıradan bir iş akışıdır (workflow). Daha kötüsü: çoğu proje için ajan **gereksiz pahalı ve kırılgan** bir çözüm.
 
-İkincisi: Anthropic Aralık 2024'te [Building Effective Agents](https://www.anthropic.com/research/building-effective-agents) makalesini yayınladı. Tek cümlelik mesajı: **"Önce workflow dene, agent son çare."** Bu makaleye kadar sektör dogmatikti: "agent iyidir, daha çok agent daha iyidir." Anthropic denklemi çevirdi. Bu bölüm o yeni denklem üstüne kurulu.
+İkincisi: Anthropic Aralık 2024'te [Building Effective Agents](https://www.anthropic.com/research/building-effective-agents) makalesini yayınladı. Tek cümlelik mesajı: **"Önce iş akışı dene, ajan son çare."** Bu makaleye kadar sektör dogmatikti: "ajan iyidir, daha çok ajan daha iyidir." Anthropic denklemi çevirdi. Bu bölüm o yeni denklem üzerine kurulu.
 
-Üçüncüsü: **Kemal'in HBV chatbot'u agent değildir** — deterministik state machine (4.8'de gördük). 135 bağışçı, canlıda çalışıyor, agent'sız. Buna rağmen "başarılı". Bu sayfa, "agent mı lazım yoksa state machine mi" sorusunun cevabını vermeyi öğretiyor. Yanlış cevap = ya 10 kat pahalı sistem ya da kırılgan servis.
+Üçüncüsü: **HBV bağış chatbot'u ajan değildir** — deterministik bir durum makinesi (state machine — 4.8'de gördük). 135 bağışçı, canlıda çalışıyor, ajansız. Buna rağmen başarılı. Bu sayfa, "ajan mı lazım yoksa durum makinesi mi" sorusunun cevabını vermeyi öğretir. Yanlış cevap = ya 10 kat pahalı sistem ya da kırılgan servis.
 
-## Workflow vs Agent — üç paragraf, matematiksiz
+## İş akışı (Workflow) ile Ajan (Agent) farkı — üç paragraf, matematiksiz
 
-**Workflow = kod tabanlı, deterministik akış.** Sen geliştirici olarak her adımı **önceden** tanımladın: "bu durum oluşursa şu LLM çağrısı, o çıktı gelirse şu tool, aksi halde şu hata." Kod `if/else` ile akar, LLM sadece **nokta atışı** işler yapar (sınıflandırma, özetleme, çeviri). Karar merciisi = **sen**, kodun. **HBV chatbot bu kategoride.**
+**İş akışı = kod tabanlı, deterministik akış.** Sen geliştirici olarak her adımı **önceden** tanımladın: "bu durum oluşursa şu LLM çağrısı, o çıktı gelirse şu araç, aksi halde şu hata." Kod `if/else` ile akar, LLM sadece **nokta atışı** işler yapar (sınıflandırma, özetleme, çeviri). Karar mercii = **sen**, kodun. **HBV chatbot bu kategoride.**
 
-**Agent = LLM'in kendisi karar veriyor.** Görevi veriyorsun ("bu müşterinin siparişini araştır, sorun varsa çöz"), LLM'e bir dizi **tool** (arama, database sorgu, email gönder) ve bir hedef veriyorsun. LLM her adımda "şimdi hangi tool'u çağırayım?" kararını **kendi** veriyor. Adım sayısı önceden bilinmiyor, iş akışı dinamik. Karar merciisi = **LLM**.
+**Ajan = LLM'in kendisi karar veriyor.** Görevi veriyorsun ("bu müşterinin siparişini araştır, sorun varsa çöz"), LLM'e bir dizi **araç (tool)** (arama, veritabanı sorgusu, e-posta gönderme) ve bir hedef veriyorsun. LLM her adımda "şimdi hangi aracı çağırayım?" kararını **kendi** veriyor. Adım sayısı önceden bilinmiyor, iş akışı dinamik. Karar mercii = **LLM**.
 
-**Seçim kuralı: Workflow varsayılan, agent son çare.** 2026 gerçeği şu: ekosistem "agent" kelimesini abartıyor. Gerçek production'da workflow **daha ucuz** (adım sayısı sabit, token patlama yok), **daha öngörülebilir** (test edilebilir, debug kolay), **daha güvenli** (LLM yanlış kararlar almıyor). Agent'a **sadece** dinamik görevlerde geçilir — adım sayısı önceden bilinmiyor, LLM'in gerçek akıl yürütmesi gerekiyor, insan denetimi var.
+**Seçim kuralı: İş akışı varsayılan, ajan son çare.** 2026 gerçeği şu: ekosistem "ajan" kelimesini abartıyor. Gerçek üretimde iş akışı **daha ucuz** (adım sayısı sabit, token patlaması yok), **daha öngörülebilir** (test edilebilir, hata ayıklama kolay), **daha güvenli** (LLM yanlış kararlar almıyor). Ajana **sadece** dinamik görevlerde geçilir — adım sayısı önceden bilinmiyor, LLM'in gerçek akıl yürütmesi gerekiyor, insan denetimi var.
 
 ## Bu sayfanın ekosistemi — kim kime ne veriyor
 
@@ -73,21 +73,21 @@ flowchart TB
 
 | Düğüm | Anthropic terminolojisi | Örnek |
 |---|---|---|
-| ⚙️ **Workflow** | "Prompt chaining" + "Routing" | Müşteri mesajı gelince → sınıflandır → ilgili template ile cevapla |
-| 🔄 **State Machine** | Workflow'un state'li hali | HBV: miktar → niyet → onay → ödeme (4.8) |
-| 🤖 **Agent** | "Autonomous agent" | Claude Desktop'tan "toplantı notlarını özetle email at" → LLM: oku → özetle → email tool → gönder |
-| 🔀 **Hybrid** | "Orchestrator + subagents" | Ana akış workflow, bir adımda LLM birkaç alt-tool karar veriyor |
+| ⚙️ **İş akışı (Workflow)** | "Prompt chaining" + "Routing" | Müşteri mesajı gelince → sınıflandır → ilgili şablonla cevapla |
+| 🔄 **Durum makinesi (State Machine)** | İş akışının durum-tutan hali | HBV: miktar → niyet → onay → ödeme (4.8) |
+| 🤖 **Ajan (Agent)** | "Autonomous agent" | Claude Desktop'tan "toplantı notlarını özetle, e-posta at" → LLM: oku → özetle → e-posta aracı → gönder |
+| 🔀 **Hibrit** | "Orchestrator + subagents" | Ana akış iş akışı; bir adımda LLM birkaç alt-aracı kendi seçiyor |
 
 </table>
 </div>
 
-## ReAct döngüsü — LLM'in "düşünme-eylem-gözlem" ritmi
+## ReAct döngüsü — LLM'in "düşün-yap-gözle" ritmi
 
-ReAct (Yao et al., 2022) = **Reason + Act**. Her adımda LLM üç şeyi yapar:
+ReAct (Yao ve ark., 2022) = **Reason + Act** (Akıl Yürüt + Eyle). Her adımda LLM üç şeyi yapar:
 
 1. **Think (düşün):** "Bu görevi tamamlamak için şimdi ne yapmam gerek?"
-2. **Act (eyle):** Bir tool çağırır (arama, hesap, API call)
-3. **Observe (gözle):** Tool'un sonucunu okur, hedefe ulaşıldı mı kontrol eder
+2. **Act (yap):** Bir araç çağırır (arama, hesaplama, API çağrısı)
+3. **Observe (gözle):** Aracın sonucunu okur, hedefe ulaşıldı mı kontrol eder
 
 Döngü: hedefe ulaşılmadıysa tekrar Think adımına döner, ulaşıldıysa final cevap döner.
 
@@ -106,7 +106,7 @@ Görev: "İstanbul'da yarın yağmur var mı? Varsa bana uygun iç mekan aktivit
 [Final] "İstanbul'da yarın yağmur bekleniyor (12°C). Şu iç mekan aktiviteleri önerebilirim: ..."
 ```
 
-**Burada önemli nokta:** LLM **hangi** tool'u, **hangi** argümanlarla, **kaç** adımda çağıracağına kendisi karar verdi. Sen sadece tool'ları tanıttın + hedef belirledin. Bu "autonomy" (özerlik) = agent'ın tanımı.
+**Burada önemli nokta:** LLM **hangi** aracı, **hangi** argümanlarla, **kaç** adımda çağıracağına kendisi karar verdi. Sen sadece araçları tanıttın + hedef belirledin. Bu özerklik (autonomy) = ajanın tanımı.
 
 ## Uygulama — iki yol
 
@@ -229,30 +229,41 @@ print(cevap)
 
 **Farklar:**
 
-| Kriter | Agent (Yol A) | Workflow (Yol B) |
+| Kriter | Ajan (Yol A) | İş akışı (Yol B) |
 |---|---|---|
 | **Kod satırı** | 40 | 12 |
 | **Maliyet (1 görev)** | ~3 LLM çağrısı (~$0.01) | ~1 LLM çağrısı (~$0.003) |
 | **Hız** | ~6 saniye | ~2 saniye |
-| **Öngörülebilirlik** | Orta (LLM farklı tool sırası deneyebilir) | Yüksek (adım sabit) |
-| **Yeni durum (örn: sis)** | LLM kendisi adapte olur | Kodu güncellemek lazım |
-| **Debug** | Trace gerekli (tool çağrı sırası farklı olabilir) | Print statement yeter |
+| **Öngörülebilirlik** | Orta (LLM farklı araç sırası deneyebilir) | Yüksek (adımlar sabit) |
+| **Yeni durum (örn: sis)** | LLM kendisi uyarlanır | Kodu güncellemek gerek |
+| **Hata ayıklama** | İzleme (trace) gerekir (araç çağrı sırası değişebilir) | `print` ifadesi yeter |
 
-**CTO tavsiyesi:** Bu görev için **workflow daha iyi** — 3 kat ucuz, 3 kat hızlı, deterministik. Agent'a geçmek için iş gerçekten dinamik olmalı (örn: kullanıcı "İstanbul'da hafta sonum için plan yap, hava durumuna göre 5 aktivite öner, otelden uzaklığı da kontrol et" derse — adım sayısı bilinmiyor, LLM karar vermeli).
+**CTO tavsiyesi:** Bu görev için **iş akışı daha iyi** — 3 kat ucuz, 3 kat hızlı, deterministik. Ajana geçmek için iş gerçekten dinamik olmalı (örn: kullanıcı "İstanbul'da hafta sonum için plan yap, hava durumuna göre 5 aktivite öner, otelden uzaklığı da kontrol et" derse — adım sayısı bilinmiyor, LLM karar vermeli).
 
-### "Bu projede agent gerekli mi?" — 5 kriter kontrol listesi
+### "Bu projede ajan gerekli mi?" — 5 kriter kontrol listesi
 
-| # | Soru | Evet = agent lehine | Hayır = workflow yeter |
+| # | Soru | Evet = ajan lehine | Hayır = iş akışı yeter |
 |---|---|---|---|
-| 1 | Adım sayısı önceden bilinmiyor mu? | Agent | Workflow |
-| 2 | LLM'in **kendi** karar vermesi gerekli mi (yoksa kural yeter mi)? | Agent | Workflow |
-| 3 | Kullanıcı "görev tamamlansın" diyor, detayları umurunda değil mi? | Agent | Workflow |
-| 4 | Her adım maliyeti kaldırılabilir mi (agent çok LLM çağrısı demek)? | Agent | Workflow |
-| 5 | Production'da fail etse kabul edilebilir mi (agent kırılgan)? | Agent (mesela iç kullanım) | Workflow (müşteri dokunuşu) |
+| 1 | Adım sayısı önceden bilinmiyor mu? | Ajan | İş akışı |
+| 2 | LLM'in **kendi** karar vermesi gerekli mi (yoksa kural yeter mi)? | Ajan | İş akışı |
+| 3 | Kullanıcı "görev tamamlansın" diyor, detayları umurunda değil mi? | Ajan | İş akışı |
+| 4 | Her adım maliyeti kaldırılabilir mi (ajan çok LLM çağrısı demek)? | Ajan | İş akışı |
+| 5 | Üretimde başarısız olsa kabul edilebilir mi (ajan kırılgan)? | Ajan (örn. iç kullanım) | İş akışı (müşteriye dokunan) |
 
-**3+ "Agent" = agent düşün. 3+ "Workflow" = workflow kal.**
+**3+ "Ajan" = ajan düşün. 3+ "İş akışı" = iş akışı kal.**
 
-HBV için cevap: Workflow (5/5). Claude Desktop'tan "toplantı notlarımı özetle, aksiyonları email at" için: Agent (4/5).
+HBV için cevap: İş akışı (5/5). Claude Desktop'tan "toplantı notlarımı özetle, aksiyonları e-posta at" için: Ajan (4/5).
+
+??? warning "Tipik tool use / ReAct hataları — şu durum şu çözüm"
+
+    | Hata | Sebep | Çözüm |
+    |---|---|---|
+    | Sonsuz döngü (tool1 → tool2 → tool1...) | LLM aynı tool'u tekrar tekrar çağırıyor | `max_iterations=10` üst sınırı + son 3 çağrı aynı tool ise döngüyü kır |
+    | `Token limit reached` | Geçmiş ReAct mesajları context'i şişiriyor | Eski adımları özetle (özetleme adımı), max 10 turla sınırla |
+    | Tool zaman aşımı (timeout) | Yavaş dış API | `try/except httpx.TimeoutException` + LLM'e `is_error=True` ile dön |
+    | LLM yanlış argüman gönderiyor | JSON şema eksik veya ucuz örnek yok | `input_schema`'da `required` alanları net, description'da örnek 2-3 cümle |
+    | Maliyet patlaması (saatte $50+) | Adım sayısı veya tool çağrısı çok | Bütçe üst sınırı (cost cap) + uyarı; `max_iterations` düşür |
+    | "tool_use" stop_reason ama content boş | API geçici hatası veya `disable_parallel_tool_use` çakışması | Bir kez yeniden dene; `messages` listesini doğrula |
 
 <div class="ma-anthropic-oz" markdown>
 <div class="ma-anthropic-oz-header">📖 Anthropic bu konuyu nasıl anlatıyor — öz</div>

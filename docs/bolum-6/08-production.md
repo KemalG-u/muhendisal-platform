@@ -1,4 +1,4 @@
-# 6.8 Üretim Multi-Agent — İçerik Özet Pipeline'ı
+# 6.8 Üretim Çok Ajanı — İçerik Özet Boru Hattı
 
 <div class="ma-meta" markdown>
 <div class="ma-meta-row" markdown>
@@ -8,12 +8,12 @@
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
 <div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~45 dakika</div>
-<div class="ma-meta-row"><strong>📋 Önkoşul:</strong> Bölüm 6'nın 6.1–6.7 hepsi bitmiş — agent/tool/MCP/multi-agent/SDK karar refleksi oturmuş; 4.8 HBV imza sayfası okunmuş (bu sayfa HBV ile **CTO simetrisi** kurar)</div>
-<div class="ma-meta-row"><strong>🎯 Çıktı:</strong> Çalışır durumda bir **multi-agent içerik pipeline**'ının **tam anatomisi** — neden bu pattern, neden bu SDK, neden heterojen model seçimi; klonlayıp kendi varyantını 1–2 saatte deploy ediyorsun. Bölüm 6 boyunca öğrendiğin 7 sayfanın **tek bir gerçek projede** sentezi.</div>
+<div class="ma-meta-row"><strong>📋 Önkoşul:</strong> Bölüm 6'nın 6.1-6.7 hepsi bitmiş — ajan / araç / MCP / çok ajan / SDK karar refleksi oturmuş; 4.8 HBV imza sayfası okunmuş (bu sayfa HBV ile **CTO simetrisi** kurar)</div>
+<div class="ma-meta-row"><strong>🎯 Çıktı:</strong> Çalışır durumda bir **çok ajanlı içerik boru hattının** tam anatomisi — neden bu desen, neden bu SDK, neden heterojen model seçimi; klonlayıp kendi varyantını 1-2 saatte yayına alabiliyorsun. Bölüm 6 boyunca öğrendiğin 7 sayfanın **tek bir gerçek projede** sentezi.</div>
 </div>
 
 !!! tip "Yabancı kelime mi gördün?"
-    Bu sayfadaki **italik-altı çizili** ifadelerin (orchestrator, evaluator-optimizer, semaphore gibi) üstüne mouse'unu getir — kısa tanım çıkar. Mobilde dokun.
+    Bu sayfadaki **kalın** teknik terimler (orkestratör / orchestrator, değerlendirici-iyileştirici / evaluator-optimizer, semafor / semaphore gibi) ilk geçişte hemen yanında veya altında Türkçe açıklanır.
 
 !!! success "Tam çalışır referans kod — hazır"
     Bu sayfada anlatılan **bütün kod** platformun repo'sunda: [`examples/icerik-ozet-agent/`](https://github.com/KemalG-u/muhendisal-platform/tree/main/examples/icerik-ozet-agent). MIT lisans, 9/9 test geçen, ruff temiz, yaklaşık 900 satır. **`git clone` + `.env`'e Anthropic key gir + `uv run python pipeline.py` → ilk raporun hazır.**
@@ -83,13 +83,13 @@ flowchart LR
 
 | Düğüm | Ne yapıyor | Neden burada |
 |---|---|---|
-| 🎯 **pipeline.py** | Orchestrator — 4 agent'ı sıralı + paralel tetikler, DB'ye yazar | 6.5 "orchestrator kendisi iş yapmaz, dispatcher" ilkesi |
-| 🔍 **radar.py** | `feedparser` + `httpx` ile RSS feed'leri tarar, anahtar kelime filtresi | Ücretsiz, deterministic, LLM gereksiz |
-| ✍️ **yazar.py** | Her haber için paralel Claude Sonnet çağrısı, 2–3 cümle özet | Kreatif iş; Haiku yetersiz, Opus aşırı — Sonnet dengeyi tutar |
-| ✅ **evaluator.py** | Her özeti Claude Haiku ile 3 kritere göre puanlar (`tool_choice="tool"`) | Eleştirel iş Haiku'ya sığar; `structured output` ile JSON garanti |
-| 📤 **publisher.py** | Eşik üstü özetleri markdown dosyaya yazar + opsiyonel email | Dosya + SMTP — dış bağımlılık minimum |
-| 💾 **taslaklar.db** | SQLite — her tur tüm taslak + puan + `yayinlandi` flag | Gelecek feedback loop için hazır (şu an boş `geri_bildirim` tablosu) |
-| 📄 **reports/** | `YYYY-MM-DD.md` — günlük markdown rapor, maliyet footer'ı | İnsan için kanıt artifact'ı |
+| 🎯 **pipeline.py** | Orkestratör — 4 ajanı sıralı + paralel tetikler, DB'ye yazar | 6.5 "orkestratör kendisi iş yapmaz, dağıtıcıdır" ilkesi |
+| 🔍 **radar.py** | `feedparser` + `httpx` ile RSS akışlarını tarar, anahtar kelime süzgeci | Ücretsiz, deterministik, LLM gereksiz |
+| ✍️ **yazar.py** | Her haber için paralel Claude Sonnet 4.6 çağrısı, 2-3 cümle özet | Kreatif iş; Haiku yetersiz, Opus aşırı — Sonnet dengeyi tutar |
+| ✅ **evaluator.py** | Her özeti Claude Haiku 4.5 ile 3 kritere göre puanlar (`tool_choice="tool"`) | Eleştirel iş Haiku'ya sığar; yapılandırılmış çıktı ile JSON garantili |
+| 📤 **publisher.py** | Eşik üstü özetleri markdown dosyaya yazar + isteğe bağlı e-posta | Dosya + SMTP — dış bağımlılık az |
+| 💾 **taslaklar.db** | SQLite — her tur tüm taslak + puan + `yayinlandi` bayrağı | Gelecek geri bildirim döngüsü için hazır (şu an boş `geri_bildirim` tablosu) |
+| 📄 **reports/** | `YYYY-MM-DD.md` — günlük markdown rapor, maliyet alt bilgisi | İnsan için kanıt çıktısı |
 
 </table>
 
@@ -163,9 +163,9 @@ resp = await client.messages.create(
 
 Hiçbir regex parse, hiçbir "JSON ayrıştırma başarısız" hatası. `tool_block.input` direkt dict.
 
-### Karar 5: `asyncio.Semaphore` — rate limit koruması
+### Karar 5: `asyncio.Semaphore` — istek sınırı (rate limit) koruması
 
-20 başlık paralel Claude çağrısı = 20 eşzamanlı HTTP bağlantısı. Anthropic Tier 1 rate limit: dakikada 50 request. Patladığında pipeline yarıda kalır.
+20 başlık paralel Claude çağrısı = 20 eşzamanlı HTTP bağlantısı. Anthropic'in dakikalık istek sınırı (RPM) hesabın katmanına göre değişir (Tier 1 yaklaşık 50 RPM; daha yüksek katmanlarda artar — güncel değer için [Anthropic rate limits](https://platform.claude.com/docs/en/api/rate-limits) sayfasına bak). Sınır aşılırsa pipeline yarıda kalır.
 
 Çözüm:
 
@@ -334,16 +334,27 @@ Tipik ilk çıktı:
 
 | Tuzak | Sonuç | Bu projede çözüm |
 |---|---|---|
-| **Orchestrator'a "plus iş" yaptırmak** | Kimlik kayması (6.5) | `pipeline.py` yalnız dispatch + DB; özetleme/puanlama subagent işi |
-| **Radar'a LLM sokmak** | $/gün patlar, saniye gecikme | `radar.py` pure Python; anahtar kelime filtresi yeter |
-| **Paralellik sınırsız** | Rate limit patlar | `asyncio.Semaphore(MAX_CONCURRENCY=5)` default |
-| **JSON parse regex ile** | "Kırılgan, kenar durum hatası" | `tool_choice="tool"` + `tool_block.input` — kesin |
-| **Heterojen model atlamak** | 2× maliyet | Sonnet (kreatif) + Haiku (kalıplı) = %38 tasarruf |
-| **Maliyet görünmez** | Ay sonu sürprizi | Her agent `usage` loglar; publisher rapor footer'ına yapıştırır |
-| **`id()` in set** (test edilemez) | "Bu kayıt yayınlandı mı?" belirsiz | `Puan.yayinlandi: bool` dataclass field — tek doğru kaynak |
-| **Çalışma dizini bağımlı** | Başka yerden çağrılınca patlar | `SCRIPT_DIR = Path(__file__).resolve().parent` |
-| **`print()` prod log** | grep/journalctl zor | `logging` modülü + seviyeler |
-| **Dry-run yok** | Yayına girmeden deneyemezsin | `--dry-run` bayrağı default güvenli iş akışı |
+| **Orkestratöre "ekstra iş" yaptırmak** | Kimlik kayması (6.5) | `pipeline.py` yalnız devretme + DB; özetleme/puanlama alt ajanın işi |
+| **Radar'a LLM sokmak** | Günlük dolar patlar, saniyeler boşa gider | `radar.py` saf Python; anahtar kelime süzgeci yeter |
+| **Sınırsız paralellik** | İstek sınırı patlar | `asyncio.Semaphore(MAX_CONCURRENCY=5)` varsayılan |
+| **JSON ayrıştırma regex ile** | Kırılgan, kenar durum hatası | `tool_choice="tool"` + `tool_block.input` — kesin |
+| **Heterojen modeli atlamak** | 2 katı maliyet | Sonnet (kreatif) + Haiku (kalıplı) = %38 tasarruf |
+| **Maliyet görünmez** | Ay sonu sürprizi | Her ajan `usage` günlüğe yazar; publisher rapor alt bilgisine ekler |
+| **`id()` in set** (test edilemez) | "Bu kayıt yayınlandı mı?" belirsiz | `Puan.yayinlandi: bool` dataclass alanı — tek doğru kaynak |
+| **Çalışma dizinine bağımlı yollar** | Başka yerden çağrılınca patlar | `SCRIPT_DIR = Path(__file__).resolve().parent` |
+| **Üretimde `print()` log** | grep/journalctl zor | `logging` modülü + seviyeler |
+| **Kuru çalışma (dry-run) yok** | Yayına girmeden deneyemezsin | `--dry-run` bayrağı varsayılan güvenli iş akışı |
+
+??? warning "Tipik üretim çok ajan hataları — şu durum şu çözüm"
+
+    | Hata | Sebep | Çözüm |
+    |---|---|---|
+    | "RateLimitError" pipeline ortasında | Eşzamanlılık çok yüksek | `MAX_CONCURRENCY` düşür (3-5); üstel geri çekilme (exponential backoff) ekle |
+    | Tüm özetler aynı kalitede (puan ~7) | Evaluator çok cömert | Puanlama promptuna "10 mükemmel, 7 ortalama, 4 yetersiz" örnek ekle |
+    | Maliyet beklenenin 3 katı | `max_tokens` set edilmemiş, model uzun cevap üretiyor | Yazarda `max_tokens=300`, evaluator'da `max_tokens=200` |
+    | DB locked hatası | SQLite paralel yazma kilidi | `WAL` modu aç: `PRAGMA journal_mode=WAL` |
+    | RSS feed boş geliyor | User-Agent bloke ediliyor | `httpx.AsyncClient(headers={"User-Agent":"icerik-ozet-bot/1.0"})` |
+    | E-posta gönderme başarısız | SMTP TLS / port yanlış | Gmail App Password + port 587 + STARTTLS; `smtplib.SMTP_SSL` port 465 alternatif |
 
 <div class="ma-anthropic-oz" markdown>
 <div class="ma-anthropic-oz-header">📖 Anthropic bu projeyi nasıl değerlendirir — öz</div>
