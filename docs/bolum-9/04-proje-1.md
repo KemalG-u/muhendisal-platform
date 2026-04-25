@@ -30,7 +30,7 @@ Portföyün en etkili parçası **"git, tıkla, kullan" canlı demodur**. GitHub
 |---|---|---|---|
 | **Backend** | FastAPI 0.136 | Flask, Django | FastAPI async-native + OpenAPI otomatik + type hint valid; Claude streaming için ideal |
 | **Vector DB** | Qdrant 1.17.1 (Docker) | Pinecone, Weaviate, Chroma | Qdrant self-host ücretsiz + Rust hızı + filter zengin; Pinecone vendor lock-in; Chroma prod için çok genç |
-| **Embedding** | `voyage-3` (Voyage AI) | OpenAI `text-embedding-3`, Cohere | Voyage AI Anthropic'in resmi tavsiyesi (platform.claude.com/docs'da önerilen); RAG için optimize |
+| **Embedding** | `voyage-4` (Voyage AI by MongoDB) | OpenAI `text-embedding-3`, Cohere | Voyage AI Anthropic'in resmi tavsiyesi (platform.claude.com/docs'ta önerilen); RAG için optimize edilmiş; MongoDB satın aldı (Şub 2025) |
 | **LLM** | Claude Sonnet 4.6 | GPT-4o, Gemini 2.5 | Sonnet 4.6 uzun context (200K) + streaming + tool calling + Türkçe güçlü |
 | **Frontend** | HTMX + Tailwind CDN | React/Next.js, Vue, Streamlit | HTMX build yok, deploy basit; Streamlit **portföy demoya uygun değil** — iş ilanı refleksi değil |
 
@@ -178,7 +178,7 @@ from qdrant_client import QdrantClient
 from qdrant_client.models import Distance, PointStruct, VectorParams
 
 COLLECTION = "documents"
-EMBED_MODEL = "voyage-3"
+EMBED_MODEL = "voyage-4"
 EMBED_DIM = 1024
 CHUNK_TOKENS = 800
 CHUNK_OVERLAP = 100
@@ -254,11 +254,12 @@ def upsert_chunks(client: QdrantClient, vo: voyageai.Client, chunks: list[Chunk]
 def search(client: QdrantClient, vo: voyageai.Client, query: str, top_k: int = 5) -> list[dict]:
     result = vo.embed([query], model=EMBED_MODEL, input_type="query")
     query_vector = result.embeddings[0]
-    hits = client.search(
+    # query_points modern API (Qdrant 1.18'de eski search() kaldırılıyor)
+    hits = client.query_points(
         collection_name=COLLECTION,
-        query_vector=query_vector,
+        query=query_vector,
         limit=top_k,
-    )
+    ).points
     return [
         {
             "text": h.payload["text"],
@@ -525,7 +526,7 @@ rag.alanadin.com {
 | Cloudflare | 0 | 0 | Ücretsiz tier yeterli |
 | Let's Encrypt | 0 | 0 | Caddy otomatik |
 | Anthropic API (kişisel kullanım ~50 soru/gün) | 1–3 $ | 12–36 $ | Sonnet 4.6 input $3/M, output $15/M |
-| Voyage AI embedding (50 PDF + 1500 sorgu) | 0.4 $ | 5 $ | voyage-3 $0.06/1M token |
+| Voyage AI embedding (50 PDF + 1500 sorgu) | 0.4 $ | 5 $ | voyage-4 $0.06/1M token (200M ücretsiz katmanı) |
 | GitHub Actions (public repo) | 0 | 0 | Sınırsız |
 | GHCR storage (image ~180 MB × 10 tag) | 0 | 0 | 500 MB ücretsiz tier |
 | **Toplam (orta kullanım)** | **~$6–8** | **~$80** | Bir Netflix Basic |
@@ -538,10 +539,10 @@ rag.alanadin.com {
 <summary><strong>🤖 Anthropic-öz: bu sayfayı Anthropic resmi kaynaklarına bağla</strong></summary>
 
 - **[Anthropic Cookbook — RAG](https://github.com/anthropics/claude-cookbooks)** — RAG pipeline'ı için referans notebook; bu sayfadaki `_chunk_text` yaklaşımı buradan basitleştirildi.
-- **[Anthropic Docs — Embeddings](https://platform.claude.com/docs/en/docs/build-with-claude/embeddings)** — Voyage AI'ın Anthropic'in resmi embedding tavsiyesi olduğu ve `input_type` ayrımı burada açıklanır.
+- **[Anthropic Docs — Embeddings](https://platform.claude.com/docs/en/build-with-claude/embeddings)** — Voyage AI'ın Anthropic'in resmi embedding tavsiyesi olduğu ve `input_type` ayrımı burada açıklanır.
 - **[Contextual Retrieval](https://www.anthropic.com/news/contextual-retrieval)** — ileri seviye: her chunk'ı belgenin genel bağlamı ile zenginleştirmek %49'a varan retrieval iyileşmesi sağlar. Bu sayfa **uygulamadı** çünkü tek-PDF kişisel kullanımda chunk başına 3 kat maliyet artışı ekler; 4.8 HBV'deki dürüst sapma mantığı — koşula göre karar.
 - **[Streaming messages](https://platform.claude.com/docs/en/api/messages-streaming)** — `async with client.messages.stream()` pattern'inin resmi referansı.
-- **Anthropic Academy → [Prompt Engineering](https://platform.claude.com/docs/en/docs/build-with-claude/prompt-engineering/overview)** kursu — `SYSTEM_PROMPT` tasarımının pedagojik temeli.
+- **Anthropic Academy → [Claude Prompting Best Practices](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices)** — `SYSTEM_PROMPT` tasarımının pedagojik temeli (2026'da prompt-engineering alt sayfaları bu sayfada birleşti).
 
 **Dürüst sapma notu:** Anthropic'in "en iyi chunking" tavsiyesi semantic chunking (tümce/paragraf sınırlarına saygılı); bu sayfadaki basit kelime-tabanlı chunker **pedagojik öncelik** — önce çalışsın, sonra iyileştirilsin. `unstructured` veya `langchain-text-splitters` kütüphanesi ile 10 satırda upgrade edilir; portföy v2'de yap.
 
@@ -585,7 +586,7 @@ PDF yükle → soru sor → Claude Sonnet 4.6 kaynak chunk'ları göstererek cev
 
 - FastAPI 0.136 (async backend)
 - Qdrant 1.17 (vector DB, self-hosted)
-- Voyage AI `voyage-3` (embedding, Anthropic önerisi)
+- Voyage AI `voyage-4` (embedding, Anthropic önerisi)
 - Anthropic Claude Sonnet 4.6 (streaming)
 - HTMX + Tailwind CDN (frontend, build yok)
 - Docker Compose + GitHub Actions (deploy)

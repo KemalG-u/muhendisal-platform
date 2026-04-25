@@ -317,7 +317,7 @@ Claude Code dosya sistemini okur (`pyproject.toml`, `compose.yml`, `Dockerfile`)
 - Workflow içinde `ANTHROPIC_API_KEY`'i sadece integration test step'inde kullan; build step'inde verme → kaza ile cost sıçraması önlenir
 - `pytest -m "not integration"` default, `pytest -m integration` sadece `workflow_dispatch` manuel tetik
 
-**Referans:** Anthropic [Claude Code docs](https://platform.claude.com/docs/en/docs/claude-code/overview) + [API error & rate limit handling](https://platform.claude.com/docs/en/api/errors).
+**Referans:** Anthropic [Claude Code docs](https://platform.claude.com/docs/en/claude-code/overview) + [API error & rate limit handling](https://platform.claude.com/docs/en/api/errors).
 
 </details>
 

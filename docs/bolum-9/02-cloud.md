@@ -304,7 +304,7 @@ Yeni VPS → prod-ready 30 dakika:
 
 Anthropic doğrudan "VPS deploy" dersi yayınlamıyor — bu genel infra konusu. Ama **Anthropic ekosisteminden üç önemli kesişim** var:
 
-**1. API key güvenlik.** [platform.claude.com/docs — API keys](https://platform.claude.com/docs/en/docs/build-with-claude/administration-api) Anthropic'in resmi rehberi: env var'da tut, git'e commit etme, rotate et, kullanım monitörü aç. VPS'te `.env` + `env_file:` disiplini doğrudan bu rehberin uygulanışı.
+**1. API anahtarı güvenliği.** [platform.claude.com — Administration API](https://platform.claude.com/docs/en/build-with-claude/administration-api) Anthropic'in resmi rehberi: env var'da tut, git'e gönderme, döndür (rotate), kullanım izleyicisi aç. VPS'te `.env` + `env_file:` disiplini doğrudan bu rehberin uygulanışı.
 
 **2. Usage limits + alerts.** Anthropic Console → Settings → Usage → **Budget alerts**. Günlük veya aylık harcama eşiği geç → email uyarısı. Prod agent deploy ettiğinde ZORUNLU — bir bug sonsuz loop'ta 1000$'ı 1 saatte harcar. Alert kur, sonra deploy et.
 
@@ -329,7 +329,7 @@ Anthropic doğrudan "VPS deploy" dersi yayınlamıyor — bu genel infra konusu.
     **Graceful shutdown.** Agent servisi kapanırken ortadaki işleri bitirmeli. `docker stop` default 10 sn SIGTERM sonra SIGKILL. Python kod `signal.SIGTERM` handler + `asyncio.gather` cancel yapısı kurmalı — yoksa yarım iş DB'de kalır.
 
 <div class="ma-anthropic-oz-kaynak" markdown>
-**Kaynak:** [platform.claude.com/docs — API administration](https://platform.claude.com/docs/en/docs/build-with-claude/administration-api) (EN, API key yaşam döngüsü + budget alerts). Pekiştirme: [DigitalOcean Community — Initial Server Setup](https://www.digitalocean.com/community/tutorials/initial-server-setup-with-ubuntu-22-04) (EN, Ubuntu 24.04 sertleştirme canonical rehber). Caddy: [caddyserver.com/docs](https://caddyserver.com/docs/) — reverse proxy + HTTPS defaults. Cloudflare: [developers.cloudflare.com](https://developers.cloudflare.com/dns/) — DNS + proxy davranışı.
+**Kaynak:** [platform.claude.com — API administration](https://platform.claude.com/docs/en/build-with-claude/administration-api) (EN, API anahtarı yaşam döngüsü + bütçe uyarıları). Pekiştirme: [DigitalOcean Community — Initial Server Setup](https://www.digitalocean.com/community/tutorials/initial-server-setup-with-ubuntu-22-04) (EN, Ubuntu 24.04 sertleştirme kanonik rehberi). Caddy: [caddyserver.com/docs](https://caddyserver.com/docs/) — reverse proxy + HTTPS varsayılanları. Cloudflare: [developers.cloudflare.com](https://developers.cloudflare.com/dns/) — DNS + proxy davranışı.
 </div>
 </div>
 

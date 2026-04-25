@@ -79,9 +79,9 @@ open http://localhost:8000
 
 ## Stack
 
-- **Claude Sonnet 4.6** — cevap üretimi, 200K bağlam
-- **Qdrant 1.17** — vector DB, self-host Docker
-- **Voyage AI voyage-3** — embedding, Türkçe üstün
+- **Claude Sonnet 4.6** — cevap üretimi, 1M bağlam
+- **Qdrant 1.17** — vektör DB, self-host Docker
+- **Voyage AI voyage-4** — embedding, Türkçe üstün
 - **FastAPI 0.136 + HTMX** — async backend, progressive UI
 - **Tailwind CSS** — UI styling (CDN)
 
@@ -299,7 +299,7 @@ RAG Chatbot — Türkçe PDF Asistanı                   [Canlı] [GitHub]
 ─────────────────────────────────────────────────────────────────────
 Stack: Python · FastAPI · Claude Sonnet 4.6 · Qdrant · Voyage AI · Docker
 • 45+ gün uptime, 18 dosya, pytest 19/19 geçiyor
-• Streaming UX, Türkçe voyage-3 embedding (OpenAI'dan %30 ucuz)
+• Akış UX, Türkçe voyage-4 embedding (OpenAI'dan %30 ucuz)
 • Docker compose deploy, GitHub Actions CI/CD, Caddy HTTPS
 • Aylık maliyet: ~$7 (Claude + Voyage + Hetzner CX22)
 ```
