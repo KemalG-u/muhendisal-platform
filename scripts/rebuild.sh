@@ -32,6 +32,11 @@ for arg in "$@"; do
   esac
 done
 
+echo "→ Sayfa sayisini README'ye yansit"
+SAYFA_SAYISI=$(find docs -name '*.md' -not -path '*/dashboard/*' -not -name 'glossary.md' | wc -l)
+sed -i "s|<!-- SAYFA-SAYISI -->.*<!-- /SAYFA-SAYISI -->|<!-- SAYFA-SAYISI -->${SAYFA_SAYISI}<!-- /SAYFA-SAYISI -->|" README.md 2>/dev/null || true
+echo "   sayfa sayisi: ${SAYFA_SAYISI}"
+
 echo "→ mkdocs build (pre_build hook otomatik gen_dashboard_pages.py cagirir)"
 mkdocs build 2>&1 | sed 's/^/   /'
 

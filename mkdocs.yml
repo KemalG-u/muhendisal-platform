@@ -202,6 +202,7 @@ nav:
       - 10.4 İleri Konular ve Trendler: bolum-10/04-ileri-konular.md
       - 10.5 Topluluk ve Mentorluk: bolum-10/05-topluluk.md
   - Referans (158 Çeviri): https://wiki.oluk.org/muhendisal/
+  - Hakkımda: hakkimda.md
 
 extra_css:
   - assets/custom.css

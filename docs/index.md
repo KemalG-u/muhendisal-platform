@@ -7,20 +7,23 @@ hide:
 # 🛠️ MühendisAl
 
 <div class="ma-meta" markdown>
-**Persona:** Türkçe bilen, Python'a aşina veya almaya hevesli yetişkin. AI'yı merak ediyor ama "nereden başlarım, ne üretirim" sorusunda takılı · **Süre:** 4-6 hafta (akşam ~30 dk/gün) · **Önkoşul:** Bilgisayar + internet + Türkçe okuma · **Çıktı:** Canlı, deploy edilmiş bir Claude-destekli mini-proje (chatbot / iş otomasyonu / metin asistanı) — GitHub repo veya URL
+<div class="ma-meta-row"><span class="ma-icon">👤</span> <strong>Kim için:</strong> Türkçe bilen, Python'a aşina veya almaya hevesli yetişkin. AI'yı merak ediyor ama "nereden başlarım, ne üretirim" sorusunda takılı.</div>
+<div class="ma-meta-row"><span class="ma-icon">⏱️</span> <strong>Süre:</strong> 3-4 ay (akşam ~30 dk/gün) veya yoğun tempoda 6-8 hafta.</div>
+<div class="ma-meta-row"><span class="ma-icon">📋</span> <strong>Önkoşul:</strong> Bilgisayar + internet + Türkçe okuma. Bölüm 0 Python kurulumunu sıfırdan anlatır.</div>
+<div class="ma-meta-row"><span class="ma-icon">🎯</span> <strong>Çıktı:</strong> Canlı, dağıtımı yapılmış bir Claude destekli mini-proje + LinkedIn paylaşımına hazır portföy. Bölüm 10 ayrıca kariyer ipuçları (mülakat, LinkedIn, maaş bantları) içerir.</div>
 </div>
 
 ## Neden bu platform?
 
 AI üzerine Türkçe kaynak az değil ama çoğu iki uçta: ya "AI şudur" soyut anlatımı, ya "30 dakikada yapay zeka uzmanı ol" pazarlama vaadi. Arada boşluk var: **oturup bir şey üreten biri olmak**. MühendisAl bu boşluğu doldurmak için yazıldı.
 
-Platform bir **ders kitabı değil, proje eşlikçisi.** 64 sayfa boyunca tek bir amaç var: platformu bitirdiğinde elinde çalışan, canlıda duran, başkalarının kullanabileceği bir Claude-destekli mini-proje olsun. GitHub linki versen veya URL'i paylaşsan arkadaşın tıklayıp deneyebilsin.
+Platform bir **ders kitabı değil, proje eşlikçisi.** 75+ sayfada AI Engineer'ın günlük işini öğretir; tek bir amaç var: platformu bitirdiğinde elinde çalışan, canlıda duran, başkalarının kullanabileceği bir Claude destekli mini-proje olsun. GitHub linki ya da URL paylaştığında arkadaşın tıklayıp deneyebilsin.
 
-Üçüncü neden: Anthropic'in 18 resmi ücretsiz kursu, docs'u ve GitHub notebook'ları İngilizce. Her sayfada o kaynaklardan birine **Türkçe köprü** kuruyoruz — o kaynağa gitmeden önce konuyu burada anlıyor, sonra ister oraya atlıyorsun ister devam ediyorsun. Yabancılık yok.
+Üçüncü neden: Anthropic'in 18 resmi ücretsiz kursu, docs'u ve GitHub not defterleri İngilizce. Her sayfada o kaynaklardan birine **Türkçe köprü** kuruyoruz — o kaynağa gitmeden önce konuyu burada anlıyor, sonra ister oraya atlıyorsun ister devam ediyorsun. Yabancılık yok.
 
-## Dürüst scope
+## Dürüst kapsam
 
-**Bu platform seni 4-6 haftada şu üçünden birini üretip deploy eden biri yapar:**
+**Bu platform seni 3-4 ay (akşam 30 dk) veya yoğun 6-8 hafta sonunda şu üçünden birini üretip dağıtmayı yapan biri yapar:**
 
 - 🤖 **Chatbot:** Belirli bir konuda sohbet eden, Claude API'ye bağlı, basit kurallı
 - 🔄 **İş otomasyonu:** PDF özetleme, e-posta yanıt taslağı, rapor çıkarma gibi tek-amaç tool
@@ -28,12 +31,12 @@ Platform bir **ders kitabı değil, proje eşlikçisi.** 64 sayfa boyunca tek bi
 
 **Ne yapmaz:**
 
-- Seni 4 haftada "AI Engineer" pozisyonuna hazırlamaz — o ayrı bir yol
-- Transformer'ı sıfırdan yazdırmaz, fine-tune etmez (Bölüm 5'te niye gereksiz olduğunu açıklar)
-- Matematik bölümü yok — ileri kaynaklar bir kutuda referans verilir, platformun akışı matematikten bağımsız akar
-- PhD seviyesi ML teorisi yok — bu platform "yapanlar için", araştıranlar için değil
+- Seni 4 haftada "Senior AI Engineer" pozisyonuna hazırlamaz — o ayrı, çok yıllık bir yol. Bu platform **junior/lateral mover** seviyesi başlangıcı verir.
+- Transformer'ı sıfırdan yazdırmaz. Bölüm 5 ince ayara giriş seviyesinde QLoRA pratiği içerir; üretim seviyesi için Anthropic Academy'ye yönlendirir.
+- Matematik bölümü yok — ileri kaynaklar bir kutuda başvuru olarak verilir, platformun akışı matematikten bağımsız ilerler.
+- PhD seviyesi ML kuramı yok — bu platform "yapanlar için", araştıranlar için değil.
 
-**Başarı kriterin tek şeydir:** 4-6 hafta sonunda GitHub'ında bir repo VEYA tarayıcıda açılan bir URL. O yoksa platform senin için başarısız sayılır — bunu başta yazıyoruz ki beklenti net olsun.
+**Başarı ölçütün tek şeydir:** 3-4 ay sonunda GitHub'ında bir repo VEYA tarayıcıda açılan bir URL. O yoksa platform senin için başarısız sayılır — bunu başta yazıyoruz ki beklenti net olsun.
 
 ## Hangi yoldan başlıyorsun? — Persona seçimi
 
