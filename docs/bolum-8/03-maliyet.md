@@ -1,4 +1,4 @@
-# 8.3 Rate Limit + Maliyet + Secret Management
+# 8.3 İstek Sınırı + Maliyet + Gizli Bilgi (Secret) Yönetimi
 
 <div class="ma-meta" markdown>
 <div class="ma-meta-row" markdown>
@@ -9,11 +9,11 @@
 </div>
 <div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~30 dakika</div>
 <div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 8.1 + 8.2 okundu (teknik + etik güvenlik). 9.4 veya 9.5 canlıda. Anthropic Console erişimi.</div>
-<div class="ma-meta-row"><strong>🎯 Çıktı:</strong> **3 katmanlı maliyet savunma** kuruldu — Anthropic Console hard cap ($100/ay) + client-side rate limit (slowapi) + user başı token cap. **4 katman secret management** uygulandı: `.env` + GitHub Secrets + systemd env + secret manager. git history'den key silme refleksi (BFG) ve detect-secrets pre-commit hook aktif. Canlı projende bir gecede $4000 fatura imkansız.</div>
+<div class="ma-meta-row"><strong>🎯 Çıktı:</strong> **3 katmanlı maliyet savunması** kuruldu — Anthropic Console sert üst sınırı (hard cap, $100/ay) + istemci tarafı istek sınırı (slowapi) + kullanıcı başına token üst sınırı. **4 katmanlı gizli bilgi yönetimi (secret management)** uygulandı: `.env` + GitHub Secrets + systemd ortam değişkeni + secret manager. Git geçmişinden key silme refleksi (BFG) ve `detect-secrets` pre-commit hook'u etkin. Canlıda projende bir gecede $4000 fatura imkânsız.</div>
 </div>
 
 !!! tip "Yabancı kelime mi gördün?"
-    **Rate limit** = zaman başına çağrı sayısı sınırı (ör. dakikada 10 çağrı). **Hard cap** = aşılamaz üst tavan; limiti geçmek fiziksel mümkün değil. **Sliding window** = kayan pencere rate limit algoritması (son 60 sn içinde X istek). **Secret** = hassas bilgi (API key, şifre, token). **Rotation** = secret'i periyodik değiştirme. **Envelope encryption** = secret'in de şifrelenmiş olarak saklanması.
+    **İstek sınırı (rate limit)** = zaman başına çağrı sayısı sınırı (ör. dakikada 10 çağrı). **Sert üst sınır (hard cap)** = aşılamaz tavan; geçmek fiziksel mümkün değil. **Kayan pencere (sliding window)** = istek sınırı algoritması (son 60 sn içinde X istek). **Gizli bilgi (secret)** = hassas bilgi (API anahtarı, şifre, token). **Rotasyon (rotation)** = gizli bilgiyi periyodik olarak değiştirme. **Zarf şifreleme (envelope encryption)** = gizli bilginin de şifrelenmiş olarak saklanması.
 
 ## Neden bu sayfa?
 
@@ -79,22 +79,22 @@ flowchart TB
 
 </div>
 
-## Katman 1 — Anthropic Console hard cap
+## Katman 1 — Anthropic Console sert üst sınırı (hard cap)
 
-**Her canlı proje için ilk iş.** Anthropic Console → Settings → **Limits** sekmesi:
+**Her canlı proje için ilk iş.** Anthropic Console → Settings → **Workspaces / Limits** sekmesi:
 
-1. **Spending limit (monthly):** $100 gibi mantıklı bir rakam.
-2. **Alert thresholds:** $25 (uyarı), $50 (ciddi uyarı), $75 (kritik — API kes).
-3. **Email notification:** senin@mail.com (zorunlu!).
+1. **Aylık harcama sınırı (spend limit):** $100 gibi mantıklı bir rakam.
+2. **Uyarı eşikleri (alert thresholds):** $25 (uyarı), $50 (ciddi uyarı), $75 (kritik — API'yi durdur).
+3. **E-posta bildirim:** sen@example.com (zorunlu!).
 
 **Ne oluyor:**
 
-- Aylık kullanım $25'e ulaştığında → email uyarı.
-- $50'ye ulaştığında → ikinci email + (opsiyonel) SMS.
-- $75'te → Console'da API key'in durumu "paused" olur, sonraki istekler 429 döner.
-- $100'de → **hiçbir API çağrısı geçmez**, aylık reset'e kadar kilitli.
+- Aylık kullanım $25'e ulaştığında → e-posta uyarı.
+- $50'ye ulaştığında → ikinci e-posta + (isteğe bağlı) SMS.
+- $75'te → Console'da API anahtarının durumu "paused" olur, sonraki istekler 429 döner.
+- $100'de → **hiçbir API çağrısı geçmez**, aylık sıfırlamaya kadar kilitli.
 
-**Kritik detay:** Bu limit **hard** ("sessiz"). Kullanıcıya fatura gelmez, **servisin durur**. Bu yüzden threshold'lar önemli — $75'te fark ederek müdahale edersin, $100'e kadar gelmemeye özen gösterirsin.
+**Kritik detay:** Bu sınır **sessiz** çalışır. Kullanıcıya fatura gelmez, **servisin durur**. Bu yüzden eşikler önemli — $75'te fark edip müdahale edersin, $100'e gelmesin diye özen gösterirsin.
 
 ### Ayrı key, ayrı limit
 
@@ -200,11 +200,11 @@ from anthropic import Anthropic
 log = logging.getLogger("budget")
 client = Anthropic()
 
-# Model başı maliyet (2026 yaklaşımları)
+# Model başı maliyet (2026 Nisan yaklaşımları — anthropic.com/pricing ile doğrula)
 FIYAT = {
     "claude-sonnet-4-6": {"in": 3.0, "out": 15.0},  # $/M token
-    "claude-haiku-4-5": {"in": 1.0, "out": 5.0},
-    "claude-opus-4-7": {"in": 15.0, "out": 75.0},
+    "claude-haiku-4-5":  {"in": 1.0, "out": 5.0},
+    "claude-opus-4-7":   {"in": 5.0, "out": 25.0},  # 2026 Nisan güncel: $5/$25
 }
 
 
@@ -440,16 +440,27 @@ Yanlış pozitif için `.secrets.baseline` düzenle.
 
 | # | Tuzak | Sonuç | Doğru |
 |---|---|---|---|
-| 1 | Console hard cap koymama | $4000 gece faturası | İlk gün $100 limit |
-| 2 | Single-process rate limit (memory) | 4-worker uvicorn'da 4× limit | Redis backend |
-| 3 | Rate limit sadece IP | VPN/NAT kullanıcı haksız bloklanır | IP + user ID iki katman |
-| 4 | Token budget yok | 5 istek × 50K token = pahalı | Redis'te günlük token sayacı |
-| 5 | `.env` GitHub'a commit'lendi | Bot 5 dakikada yakalar | `.gitignore` + pre-commit detect-secrets |
-| 6 | VPS `.env` chmod 644 | Diğer kullanıcılar okur | `chmod 600` zorunlu |
-| 7 | API key hiç rotate edilmez | Çalışan ayrılsa bile erişim var | 6 ayda bir rotation rutin |
-| 8 | Sızıntı sonrası git reset yeter | History'de kalır, scan bot yakalar | BFG Repo Cleaner + key revoke |
-| 9 | Tek key, tek limit | 9.5 bug'ı 9.4'ü de öldürür | Ayrı key, ayrı cap (blast radius) |
-| 10 | Budget alert email only | 30-60 dk gecikme | Kendi cron + SMS/Telegram anlık |
+| 1 | Console sert üst sınırı (hard cap) yok | $4000 gece faturası | İlk gün $100 sınır |
+| 2 | Tek süreçli istek sınırı (bellek) | 4 worker'lı uvicorn'da 4 kat sınır | Redis arka uç |
+| 3 | İstek sınırı sadece IP | VPN/NAT kullanıcısı haksız engellenir | IP + user ID iki katman |
+| 4 | Token bütçesi yok | 5 istek × 50K token = pahalı | Redis'te günlük token sayacı |
+| 5 | `.env` GitHub'a gönderildi | Bot 5 dakikada yakalar | `.gitignore` + pre-commit detect-secrets |
+| 6 | VPS `.env` `chmod 644` | Diğer kullanıcılar okur | `chmod 600` zorunlu |
+| 7 | API anahtarı hiç döndürülmez (rotate) | Çalışan ayrılsa bile erişim var | 6 ayda bir rutin rotasyon |
+| 8 | Sızıntı sonrası `git reset` yeter sanmak | Geçmişte kalır, tarama botları yakalar | BFG Repo Cleaner + anahtar iptal |
+| 9 | Tek anahtar, tek sınır | 9.5 hatası 9.4'ü de öldürür | Ayrı anahtar, ayrı sınır (etki yarıçapı) |
+| 10 | Bütçe alarmı sadece e-posta | 30-60 dk gecikme | Kendi cron + SMS/Telegram anında |
+
+??? warning "Tipik istek sınırı / maliyet hataları — şu durum şu çözüm"
+
+    | Hata | Sebep | Çözüm |
+    |---|---|---|
+    | "RateLimitError: 429" prod ortasında | Anthropic dakikalık limit aşıldı | İstemci tarafı `asyncio.Semaphore` + üstel geri çekilme; Tier 2'ye yüksel |
+    | slowapi `rate limit exceeded` ama gerçek değil | Bellek (memory) backend, multi-worker | `storage_uri="redis://..."` zorunlu |
+    | Console hard cap aşıldı, servis durdu | Eşik düşük | Limiti yükselt VEYA cache + heterojen model ile maliyet düşür |
+    | API key sızdı (GitHub) | `.gitignore` eksik | Anthropic Console'da hemen `Revoke`, BFG ile geçmiş temizle, yeni key |
+    | Pre-commit hook devreye girmiyor | Kurulum yapılmadı | `pre-commit install` (her klonlamada) |
+    | Maliyet log'u boş | `client.messages.create` sonucu kaydedilmiyor | Her çağrıdan sonra `usage` JSON formatında loga yaz |
 
 ## Anthropic ekosistemi — Console özellikleri
 
@@ -475,11 +486,11 @@ Yanlış pozitif için `.secrets.baseline` düzenle.
 
 | Model | Input $/M | Output $/M |
 |---|---|---|
-| Claude Opus 4.7 | ~15 | ~75 |
-| Claude Sonnet 4.6 / 4.5 | ~3 | ~15 |
+| Claude Opus 4.7 | ~5 | ~25 |
+| Claude Sonnet 4.6 | ~3 | ~15 |
 | Claude Haiku 4.5 | ~1 | ~5 |
 
-**Prompt caching indirimi** (2024 Kasım): Aynı system prompt'u defalarca kullanırsan input %90 daha ucuz. RAG'de context yeniden kullanımı için kritik — Bölüm 4.7'de detay.
+**Prompt caching indirimi** (2024 Kasım): Aynı system prompt'u defalarca kullanırsan, cache okuma maliyeti yaklaşık base × 0.1 (yani %90 düşüş). 5 dakikalık cache yazımı base × 1.25; 1 saatlik genişletilmiş TTL base × 2. Model-spesifik minimum eşik: Sonnet 4.6 = 2048 token, Opus 4.7 / Haiku 4.5 = 4096 token. RAG'de bağlam yeniden kullanımı için kritik — Bölüm 4.4'te detay.
 
 </details>
 

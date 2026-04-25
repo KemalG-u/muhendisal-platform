@@ -1,4 +1,4 @@
-# 8.4 Loglama ve İzleme — Structured Logs + Metrikler + Grafana
+# 8.4 Loglama ve İzleme — Yapılandırılmış Loglar + Metrikler + Grafana
 
 <div class="ma-meta" markdown>
 <div class="ma-meta-row" markdown>
@@ -9,11 +9,11 @@
 </div>
 <div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~30 dakika</div>
 <div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 8.1 + 8.2 + 8.3 okundu. Canlı projen (9.4 veya 9.5) çalışıyor.</div>
-<div class="ma-meta-row"><strong>🎯 Çıktı:</strong> **JSON structured log** format uyguluyorsun (python-json-logger veya structlog); her istek için trace_id + user_id + token_usage + latency kaydı var; PII log'ta maskelenmiş; **3 kritik metrik** (error rate, p95 latency, token/saat) sürekli görünür. Küçük proje için basit dosya log + `jq`, orta-büyük için Grafana + Loki mimarisi biliyorsun. 24/7 agent (9.5) için journalctl refleksin var.</div>
+<div class="ma-meta-row"><strong>🎯 Çıktı:</strong> **JSON yapılandırılmış log (structured log)** biçimi uyguluyorsun (python-json-logger veya structlog); her istek için trace_id + user_id + token_usage + latency kaydı var; PII loglarda maskelenmiş; **3 kritik metrik** (hata oranı, p95 gecikme, saatlik token) sürekli görünür. Küçük proje için basit dosya logu + `jq`, orta-büyük için Grafana + Loki mimarisi biliyorsun. **AI özelinde**: LangFuse / Helicone / Langsmith (LLM gözlemlenebilirlik) ile token + latency + maliyet panosu kurmayı biliyorsun. 24/7 ajan (9.5) için `journalctl` refleksin var.</div>
 </div>
 
 !!! tip "Yabancı kelime mi gördün?"
-    **Structured log** = satır başına JSON; `grep` yerine `jq` ile filtrelenir. **Trace ID** = bir kullanıcı isteğinin tüm log satırlarını birleştiren benzersiz ID. **Observability** (gözlemlenebilirlik) = sistem iç durumunu dışarıdan görme yeteneği; log + metric + trace üçlüsü. **p95 latency** = isteklerin %95'i bu süreden kısa tamamlanıyor. **Cardinality** = bir metriğin alabileceği benzersiz değer sayısı; yüksek cardinality Prometheus'u patlatır.
+    **Yapılandırılmış log (structured log)** = satır başına JSON; `grep` yerine `jq` ile filtrelenir. **İz kimliği (trace ID)** = bir kullanıcı isteğinin tüm log satırlarını birleştiren benzersiz kimlik. **Gözlemlenebilirlik (observability)** = sistem iç durumunu dışarıdan görme yeteneği; log + metric + trace üçlüsü. **p95 gecikme** = isteklerin %95'i bu süreden kısa tamamlanıyor. **Kardinalite (cardinality)** = bir metriğin alabileceği benzersiz değer sayısı; yüksek kardinalite Prometheus'u patlatır.
 
 ## Neden bu sayfa?
 
@@ -360,10 +360,11 @@ sum by (endpoint) (rate({app="rag-chatbot"} |= "request_done" | json [5m]))
 **Maliyet:**
 
 - **Self-host** (Hetzner CX22 + Loki): ~4 €/ay (aynı VPS'te)
-- **Grafana Cloud free tier**: 50 GB log / 14 gün — solo projeye yeter
-- **Datadog, New Relic**: $15-50/ay, managed, kurulumu 0 dk
+- **Grafana Cloud ücretsiz katman**: 50 GB log / 14 gün — solo projeye yeter
+- **Datadog, New Relic**: $15-50/ay, yönetilen, kurulum süresi yok
+- **LLM özelinde**: Helicone ($0-49/ay), LangFuse (self-host ücretsiz / cloud $29+), LangSmith ($39+/ay) — token + maliyet + prompt versioning panosu hazır gelir
 
-**Eşik:** 2+ servis veya 10+ kişi kullanıcı → Loki/Grafana değerli. Tek kullanıcı solo proje → `jq` yeter.
+**Eşik:** 2+ servis veya 10+ kişi kullanıcı → Loki/Grafana değerli. Tek kullanıcı solo proje → `jq` yeter. AI projesinde her hâlükârda **bir LLM gözlemlenebilirlik aracı** (Helicone proxy en kolay) prod'da çok değerli.
 
 ## 24/7 agent loglaması — 9.5 özel durum
 
@@ -640,7 +641,18 @@ Heartbeat cron 2 saat uyarı kurulu VEYA Uptime Kuma VEYA Sentry DSN aktif. Test
 </ol>
 
 <div class="ma-neden-sonuc-sonuc" markdown>
-**Sonuç:** Canlı proje artık **gözlemlenebilir**. Hata olsa öğrenirsin, trend değişse görürsün, agent sessiz kalsa alarm çalar. Sonraki (8.5): hata yönetimi — log'da görülen hataları nasıl **önlemeye** çevireceğin.
+**Sonuç:** Canlı proje artık **gözlemlenebilir**. Hata olsa öğrenirsin, trend değişse görürsün, ajan sessiz kalsa alarm çalar. Sonraki (8.5): hata yönetimi — log'da görülen hataları nasıl **önlemeye** çevireceğin.
+
+??? warning "Tipik loglama / izleme hataları — şu durum şu çözüm"
+
+    | Durum | Sebep | Çözüm |
+    |---|---|---|
+    | TC numarası loglara düştü | PII maskelemesi yok | Log yazımından önce `presidio` veya regex; tüm log'ları "user_input" alanından geçir |
+    | Disk %95 doldu | Log rotasyonu yok | `logrotate` veya `RotatingFileHandler(maxBytes, backupCount)` |
+    | journalctl logları reboot sonrası gitti | Volatile mod | `/etc/systemd/journald.conf` → `Storage=persistent` |
+    | trace_id boş veya null | Middleware kayıt etmiyor | `contextvars` + `request.state.trace_id` set + log filtresinde oku |
+    | Helicone latency 200 ms ekliyor | Proxy gecikmesi | Async client + sadece üretimde aç; test ortamında kapat |
+    | Sentry "rate limited" hatası | Ücretsiz katman 5K event/ay aşıldı | `sample_rate=0.1` veya ücretli plan |
 </div>
 </div>
 

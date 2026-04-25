@@ -1,4 +1,4 @@
-# 8.5 Hata Yönetimi — Retry, Circuit Breaker, Fallback
+# 8.5 Hata Yönetimi — Yeniden Deneme (Retry), Devre Kesici (Circuit Breaker), Yedek Plan (Fallback)
 
 <div class="ma-meta" markdown>
 <div class="ma-meta-row" markdown>
@@ -9,11 +9,11 @@
 </div>
 <div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~30 dakika</div>
 <div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 8.1-8.4 okundu. Canlı projen (9.4 veya 9.5) log üretiyor, Anthropic Console hard cap açık.</div>
-<div class="ma-meta-row"><strong>🎯 Çıktı:</strong> 3 seviye hata savunma kuruldu — **retry** (geçici hataları otomatik tekrarla), **circuit breaker** (tekrar başarısızlıkta servisi geçici kapat), **fallback** (Sonnet çalışmazsa Haiku'ya düş). Tenacity library refleksi. Timeout disiplin. 9.4 + 9.5 için ayrı hata desenleri. **Sessiz başarısızlık** (9.5 cron) riski sıfırlandı.</div>
+<div class="ma-meta-row"><strong>🎯 Çıktı:</strong> 3 seviye hata savunması kuruldu — **yeniden deneme (retry)** (geçici hataları otomatik tekrarla), **devre kesici (circuit breaker)** (peş peşe başarısızlıkta servisi geçici kapat), **yedek plan (fallback)** (Sonnet 4.6 çalışmazsa Haiku 4.5'e düş). Tenacity kütüphanesi refleksi. Zaman aşımı disiplini. Anthropic SDK gerçek istisna sınıfları (`AuthenticationError`, `BadRequestError`, `RateLimitError`, `APIStatusError`, `OverloadedError`). 9.4 + 9.5 için ayrı hata desenleri. **Sessiz başarısızlık** (9.5 cron) riski sıfırlandı.</div>
 </div>
 
 !!! tip "Yabancı kelime mi gördün?"
-    **Retry** = başarısız çağrıyı tekrar dene. **Exponential backoff** = tekrarlar arası süreyi kat be kat artır (1s, 2s, 4s, 8s). **Jitter** = backoff süresine rastgele katkı; birçok client aynı anda tekrar etmesin diye. **Circuit breaker** = sigorta; peş peşe başarısızlıkta servisi geçici kapat. **Fallback** = ana servis çalışmazsa yedek servise düş. **Dead letter queue** = işlenemeyen mesajların saklandığı yer; sonradan incelenir.
+    **Yeniden deneme (retry)** = başarısız çağrıyı tekrar denemek. **Üstel geri çekilme (exponential backoff)** = denemeler arası süreyi kat kat artırma (1s, 2s, 4s, 8s). **Sapma (jitter)** = geri çekilme süresine rastgele eklenti; birçok istemci aynı anda tekrar denemesin diye. **Devre kesici (circuit breaker)** = sigorta; peş peşe başarısızlıkta servisi geçici kapatma. **Yedek plan (fallback)** = ana servis çalışmazsa yedek servise düşme. **Ölü mektup kuyruğu (dead letter queue)** = işlenemeyen mesajların saklandığı yer; sonradan incelenir.
 
 ## Neden bu sayfa?
 
@@ -99,14 +99,15 @@ client = anthropic.Anthropic()
 
 
 @retry(
-    stop=stop_after_attempt(3),           # Max 3 deneme
-    wait=wait_exponential(multiplier=1, min=1, max=10),  # 1s, 2s, 4s...
+    stop=stop_after_attempt(3),           # En çok 3 deneme
+    wait=wait_exponential(multiplier=1, min=1, max=10),  # 1s, 2s, 4s, ... (üstel geri çekilme)
     retry=retry_if_exception_type((
-        anthropic.RateLimitError,          # 429
-        anthropic.APIConnectionError,       # Network
-        anthropic.APIStatusError,           # 5xx
+        anthropic.RateLimitError,         # 429 — istek sınırı aşıldı
+        anthropic.APIConnectionError,     # ağ kopukluğu
+        anthropic.APIStatusError,         # 5xx (sunucu hatası)
+        anthropic.OverloadedError,        # Anthropic geçici aşırı yüklenme
     )),
-    reraise=True,                          # 3. denemede de başarısız → exception fırlat
+    reraise=True,                          # 3. denemede de başarısız → istisna fırlat
 )
 def claude_cagir(prompt: str) -> str:
     response = client.messages.create(
@@ -455,16 +456,27 @@ def do_work():
 
 | # | Tuzak | Sonuç | Doğru |
 |---|---|---|---|
-| 1 | Sonsuz retry | $1000 fatura + kilitli | `stop_after_attempt(3)` zorunlu |
-| 2 | Jitter yok | Herd effect, servis tekrar düşer | `wait_exponential_jitter` |
-| 3 | Timeout yok | 1 istek 60 sn takılır | `Anthropic(timeout=30)` |
-| 4 | Her exception retry | 400 bad request de retry'lanır | `retry_if_exception_type` spesifik |
-| 5 | Circuit breaker yok | 10 dk outage'da $100 fatura | `pybreaker` 5 fail → 60s açık |
-| 6 | Fallback zinciri yok | Sonnet down → tam kesinti | Haiku fallback |
-| 7 | DLQ yok | Başarısız işler sessiz kayıp | SQLite `dead_letter` tablo |
-| 8 | Graceful shutdown yok | Deploy sırasında request düşer | lifespan + SIGTERM |
-| 9 | Generic `except Exception` | Her hata aynı | Custom hierarchy |
-| 10 | Retry log yok | Neden yavaş bilemezsin | `before_sleep_log` + trace_id |
+| 1 | Sonsuz yeniden deneme | $1000 fatura + kilitlenme | `stop_after_attempt(3)` zorunlu |
+| 2 | Jitter (sapma) yok | Sürü etkisi, servis tekrar düşer | `wait_exponential_jitter` |
+| 3 | Zaman aşımı yok | 1 istek 60 sn takılır | `Anthropic(timeout=30)` |
+| 4 | Her istisnada yeniden dene | 400 bad request de tekrarlanır | `retry_if_exception_type` ile spesifik |
+| 5 | Devre kesici yok | 10 dk kesintide $100 fatura | `pybreaker` 5 hata → 60 sn açık |
+| 6 | Yedek model zinciri yok | Sonnet düşerse tam kesinti | Haiku 4.5 yedek |
+| 7 | Ölü mektup kuyruğu (DLQ) yok | Başarısız işler sessiz kayıp | SQLite `dead_letter` tablosu |
+| 8 | Graceful shutdown yok | Yayına alma sırasında istek düşer | `lifespan` + SIGTERM |
+| 9 | Genel `except Exception` | Her hata aynı | Özel hiyerarşi (RetryableError / PermanentError) |
+| 10 | Yeniden deneme logu yok | Neden yavaş bilemezsin | `before_sleep_log` + trace_id |
+
+??? warning "Tipik hata yönetimi hataları — şu durum şu çözüm"
+
+    | Durum | Sebep | Çözüm |
+    |---|---|---|
+    | "InvalidRequestError" Anthropic SDK'da yok | Eski OpenAI sınıfı sanılıyor | Anthropic'te `BadRequestError` (400) kullan |
+    | Retry sonsuz döngüye girdi | `stop` kuralı eksik | `stop_after_attempt(3)` veya `stop_after_delay(60)` |
+    | 401 hatasında bile retry | Authentication retry edilmemeli | `retry_if_exception_type` listesine `AuthenticationError` ekleme |
+    | Deploy sonrası istekler 502 | Graceful shutdown yok | FastAPI `lifespan` + systemd `KillSignal=SIGTERM` |
+    | Circuit breaker hep açık | reset_timeout çok uzun | `reset_timeout=60` (saniye) makul; 600+ canlıda fazla |
+    | 5xx hatası ama Anthropic SDK retry yapmadı | `max_retries` parametresi 0'a çekilmiş | `Anthropic(max_retries=2)` veya tenacity ile elle |
 
 ## Anthropic SDK hata tipleri
 

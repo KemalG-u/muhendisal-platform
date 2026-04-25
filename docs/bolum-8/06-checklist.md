@@ -1,4 +1,4 @@
-# 8.6 Production Checklist — Bölüm 8 İMZA SAYFASI
+# 8.6 Üretim Kontrol Listesi — Bölüm 8 İmza Sayfası
 
 <div class="ma-meta" markdown>
 <div class="ma-meta-row" markdown>
@@ -8,12 +8,12 @@
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
 <div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~25 dakika</div>
-<div class="ma-meta-row"><strong>📋 Önkoşul:</strong> Bölüm 8'in tamamı (8.1-8.5) okundu. Canlı projen (9.4 veya 9.5) deploy edilmiş veya edilmek üzere.</div>
-<div class="ma-meta-row"><strong>🎯 Çıktı:</strong> **15 maddeli pre-launch checklist** senin projene çalıştırılmış, her maddenin yanında **kanıt** (komut çıktısı, screenshot, commit SHA). Canlıya çıkmaya **objektif olarak** hazır — 15 madde dolu ise "GO", herhangi biri eksik ise "NO-GO". Bu sayfa Bölüm 8'in imza sayfası — 5 kategoride (güvenlik/maliyet/observability/hata/deploy) her biri 3 madde. **Platform'un ikinci imza sayfası** (ilki 9.4 RAG Chatbot portföy).</div>
+<div class="ma-meta-row"><strong>📋 Önkoşul:</strong> Bölüm 8'in tamamı (8.1-8.5) okundu. Canlı projen (9.4 veya 9.5) yayına alınmış ya da alınmak üzere.</div>
+<div class="ma-meta-row"><strong>🎯 Çıktı:</strong> **15 maddeli yayın öncesi kontrol listesi** senin projene çalıştırılmış, her maddenin yanında **kanıt** (komut çıktısı, ekran görüntüsü, commit SHA). Yayına çıkmaya **nesnel olarak** hazır — 15 madde dolu ise "GO", herhangi biri eksik ise "NO-GO". Bu sayfa Bölüm 8'in imza sayfası — 5 kategoride (güvenlik / maliyet / gözlemlenebilirlik / hata / yayına alma) her biri 3 madde. **Platformun ikinci imza sayfası** (birincisi 9.4 RAG Chatbot portföyü).</div>
 </div>
 
 !!! tip "Yabancı kelime mi gördün?"
-    **Pre-launch** = canlıya çıkmadan önce. **Checklist** = kontrol listesi; havacılıktan gelen disiplin, her maddeyi atlatmadan uygulama. **GO/NO-GO** = uçuş öncesi karar; tüm maddeler yeşil ise GO, herhangi biri kırmızı ise NO-GO. **Smoke test** = canlıya çıkınca ilk 5 dakika temel fonksiyon kontrolü. **Rollback** = bozukluğu görüp önceki sürüme geri dönme.
+    **Yayın öncesi (pre-launch)** = canlıya çıkmadan önce. **Kontrol listesi (checklist)** = havacılıktan gelen disiplin, her maddeyi atlamadan uygulama. **GO / NO-GO** = uçuş öncesi karar; tüm maddeler yeşilse GO, herhangi biri kırmızıysa NO-GO. **Smoke test (duman testi)** = canlıya çıkınca ilk 5 dakikalık temel işlev kontrolü. **Rollback (geri alma)** = bozukluğu görüp önceki sürüme dönme.
 
 ## Neden bu sayfa?
 
@@ -316,13 +316,24 @@ flowchart TB
 
 </table>
 
-**MUSTN'T BE incomplete (ASLA eksik kalamaz) 5 madde:**
+**ASLA eksik kalamaz 5 madde (must-not-be-incomplete):**
 
-- G3 (Secret management) — key sızıntısı bir gecede $1000+
-- M1 (Hard cap) — fatura şoku engeli
-- M2 (Rate limit) — saldırı savunması
-- O1 (Log + trace) — hata debug mümkün değilse
-- D3 (Rollback) — bozulduğunda geri dönüş yoksa panik
+- G3 (Gizli bilgi yönetimi) — anahtar sızıntısı bir gecede $1000+
+- M1 (Sert üst sınır) — fatura şoku engeli
+- M2 (İstek sınırı) — saldırı savunması
+- O1 (Yapılandırılmış log + iz kimliği) — hata ayıklama mümkün değilse
+- D3 (Geri alma planı) — bozulduğunda dönüş yoksa panik
+
+??? warning "Tipik yayın öncesi (pre-launch) hataları — şu durum şu çözüm"
+
+    | Durum | Sebep | Çözüm |
+    |---|---|---|
+    | "GO dedim, ilk gece $300 fatura" | M1 sert üst sınır yok | Anthropic Console → Limits anında kur |
+    | İlk saatte 502 fırtınası | Healthcheck eksik | `/health` endpoint + Caddy retry |
+    | Kullanıcı şikayetleri ama log boş | O1 yok | `structlog` veya `python-json-logger` 30 dk içinde kur |
+    | Geri alma 60 dk sürdü | ROLLBACK.md yok | `git tag last-good` + tek satır `docker compose down && git checkout last-good && docker compose up -d` |
+    | İlk gün CI yeşil ama prod bozuk | E2E smoke test yok | İlk 5 isteği canlıda test et |
+    | KVKK denetiminde yakalandı | G2 maskeleme atlandı | presidio + `log_safe()` gerekli |
 
 Bu 5 eksikse **her durumda NO-GO**. Diğer 10 madde bir miktar tolere edilebilir ama önerilmez.
 
