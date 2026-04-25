@@ -395,7 +395,7 @@ Anthropic'in [Building Effective Agents](https://www.anthropic.com/research/buil
     **LangGraph'a geçmek ne zaman değer.** Üç sinyal: (a) uzun süreli kullanıcı oturumu (bu proje yok), (b) multi-provider deneme (bu proje planlamıyor), (c) HITL onay adımı (bu proje publisher eşik ile otomatik). **Yok.** LangGraph eklemek bu projeye 3× soyutlama getirir, 0× değer. 6.7'deki "framework-first yanlış" kuralı.
 
 <div class="ma-anthropic-oz-kaynak" markdown>
-**Kaynak:** [Anthropic — Building Effective Agents](https://www.anthropic.com/research/building-effective-agents) (referans metin, 2024 Aralık). Pekiştirme: [Anthropic Academy — Introduction to Subagents](https://anthropic.skilljar.com/) (~30 dk, sertifikalı). Kod referansı: [anthropics/claude-cookbooks — agents klasörü](https://github.com/anthropics/claude-cookbooks/tree/main/patterns/agents). Fiyat doğrulama: [platform.claude.com/docs/en/docs/about-claude/pricing](https://platform.claude.com/docs/en/docs/about-claude/pricing).
+**Kaynak:** [Anthropic — Building Effective Agents](https://www.anthropic.com/research/building-effective-agents) (referans metin, Aralık 2024). Pekiştirme: [Anthropic Academy — Introduction to Subagents](https://www.anthropic.com/learn) (ücretsiz + sertifikalı). Kod referansı: [anthropics/claude-cookbooks — agents klasörü](https://github.com/anthropics/claude-cookbooks/tree/main/patterns/agents). Fiyat doğrulama: [platform.claude.com — Pricing](https://platform.claude.com/docs/en/about-claude/pricing).
 </div>
 </div>
 

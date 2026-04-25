@@ -180,7 +180,7 @@ Bu desen benim `mcp.oluk.org` sunucumun Claude Desktop'tan nasıl bağlanacağı
 <div class="ma-anthropic-oz" markdown>
 <div class="ma-anthropic-oz-header">📖 Anthropic bu konuyu nasıl anlatıyor — öz</div>
 
-Anthropic MCP'yi [Anthropic Academy — Introduction to Model Context Protocol](https://anthropic.skilljar.com/) kursunda (~45 dk, sertifikalı) anlatıyor. Resmi metin [modelcontextprotocol.io](https://modelcontextprotocol.io) + [platform.claude.com/docs'da MCP bölümü](https://platform.claude.com/docs/en/docs/mcp).
+Anthropic MCP'yi [Anthropic Academy — Introduction to Model Context Protocol](https://www.anthropic.com/learn) kursunda (ücretsiz + sertifikalı) anlatıyor. Resmi metin [modelcontextprotocol.io](https://modelcontextprotocol.io) + [platform.claude.com/docs MCP bölümü](https://platform.claude.com/docs/en/mcp). MCP, Aralık 2025'te Linux Foundation'a bağışlandı; OpenAI ve Google da artık destekliyor.
 
 **1. Üç primitive'in isim seçimi bilinçli.** Anthropic REST API metaforunu kasıtlı kullanıyor: Resource = GET (bağlam yükle), Tool = POST (yan etki). Prompt üçüncü bir konsept — önceden düşünülmüş çağrı şablonu. Bu ayrım geliştirici zihninde "ne zaman ne" refleksi kurar.
 

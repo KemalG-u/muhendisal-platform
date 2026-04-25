@@ -111,7 +111,7 @@ Bölüm 6 **Anthropic'in en kalın ve en güncel teknik koleksiyonu.** 4 Academy
 
 **4. Introduction to Agent Skills (~45 dk, sertifikalı).** "Skills" Anthropic'in yeni kavramı (2025) — MCP tool'larının üstüne "yetenek paketi" katmanı. 6.6 Agent SDK ile birleşik okuma.
 
-**5. Docs — MCP Resources + Tools + Prompts.** [platform.claude.com/docs/en/docs/mcp](https://platform.claude.com/docs/en/docs/mcp) Anthropic'in canonical MCP dokümantasyonu. 3 primitive'in tam spesifikasyonu burada. 6.3-6.4'te referans.
+**5. Docs — MCP Resources + Tools + Prompts.** [platform.claude.com/docs/en/mcp](https://platform.claude.com/docs/en/mcp) Anthropic'in kanonik MCP dokümantasyonu. 3 yapı taşının (resource, tool, prompt) tam spesifikasyonu burada. 6.3-6.4'te referans.
 
 **6. GitHub — anthropics/mcp-server ve ekosistem sunucuları.** Claude'un desteklediği örnek MCP server'lar (Slack, Google Drive, GitHub, Postgres). 6.4'te kendi server'ını yazarken örnek olarak oku.
 

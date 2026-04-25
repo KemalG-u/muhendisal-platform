@@ -287,7 +287,7 @@ resp = client.messages.create(
 <div class="ma-anthropic-oz" markdown>
 <div class="ma-anthropic-oz-header">📖 Anthropic bu konuyu nasıl anlatıyor — öz</div>
 
-Anthropic [Tool Use Overview](https://platform.claude.com/docs/en/docs/build-with-claude/tool-use/overview) dokümanında tool calling'i **Claude 4 serisinin en gelişmiş kapasitelerinden** olarak tanıtıyor.
+Anthropic [Tool Use Overview](https://platform.claude.com/docs/en/build-with-claude/tool-use/overview) dokümanında tool calling'i **Claude 4 serisinin en gelişmiş kapasitelerinden** olarak tanıtıyor.
 
 **1. Parallel tool use default açık.** Claude 3.5'ten itibaren bir adımda birden fazla tool çağırabilir. `disable_parallel_tool_use=True` ile kapatabilirsin (basit ReAct'ta sıralılık istersen).
 
@@ -312,7 +312,7 @@ Anthropic [Tool Use Overview](https://platform.claude.com/docs/en/docs/build-wit
     **Token verimliliği.** Claude 4 serisi tool use'da **token-efficient mode** (`anthropic-beta: token-efficient-tools-2025-02-19`) — %14 token tasarrufu, yüksek hacimli agent'larda fark ediyor.
 
 <div class="ma-anthropic-oz-kaynak" markdown>
-**Kaynak:** [platform.claude.com/docs — Tool Use Overview](https://platform.claude.com/docs/en/docs/build-with-claude/tool-use/overview) (EN, ~30 dk). Tüm parametreler + örnekler + best practices. Pekiştirme: [Anthropic Cookbook — tool_use klasörü](https://github.com/anthropics/claude-cookbooks/tree/main/tool_use) — 8 farklı tool use deseni, parallel calling, JSON mode, customer service agent.
+**Kaynak:** [platform.claude.com — Tool Use Overview](https://platform.claude.com/docs/en/build-with-claude/tool-use/overview) (EN, ~30 dk). Tüm parametreler + örnekler + en iyi uygulamalar. Pekiştirme: [Anthropic Cookbook — tool_use klasörü](https://github.com/anthropics/claude-cookbooks/tree/main/tool_use) — 8 farklı tool use deseni, parallel calling, JSON mode, customer service agent.
 </div>
 </div>
 
