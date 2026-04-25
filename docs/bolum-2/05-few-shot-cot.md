@@ -233,24 +233,30 @@ Token: 105 in / 145 out
 
 ### Extended thinking — Claude 4.x'in kendi CoT'si
 
-Claude Sonnet 4.x ve Opus modellerinde **extended thinking** özelliği var: kullanıcı sormadan model kendi kendine "düşünür" (thinking block üretir, kullanıcıya görünmez), sonra cevabını verir.
+Claude Sonnet 4.6, Haiku 4.5 ve Opus modellerinde **extended thinking** özelliği var: kullanıcı sormadan model kendi kendine "düşünür" (thinking block üretir, kullanıcıya görünmez), sonra cevabını verir.
+
+**2026 Nisan güncel davranış:** Opus 4.7 yalnızca **adaptive thinking** kabul eder (manuel `{"type": "enabled"}` 400 hatası verir); Sonnet 4.6'da manuel kullanım hâlâ çalışır ama Anthropic adaptive'i öneriyor:
 
 ```python
+# Önerilen (2026): adaptive — model kendi karar verir
 cevap = client.messages.create(
     model="claude-sonnet-4-6",
     max_tokens=2000,
-    thinking={"type": "enabled", "budget_tokens": 1500},  # düşünme bütçesi
+    thinking={"type": "adaptive", "effort": "medium"},  # low / medium / high
     messages=[{"role": "user", "content": PROBLEM}],
 )
+
+# Eski (Sonnet 4.5 ve öncesinde): manuel bütçe — Opus 4.7'de çalışmaz
+# thinking={"type": "enabled", "budget_tokens": 1500}
 ```
 
 Pratikte:
 - Sen CoT istemesen bile Claude düşünür → daha doğru cevap
 - Token kullanımı 2-10 kat artar (düşünme tokenları faturaya yazılır)
-- Basit görevde **kapatın** — gereksiz maliyet
-- Karmaşık matematik/kod/strateji görevlerinde **açın** — kalite belirgin artar
+- Basit görevde **kapat** — gereksiz maliyet
+- Karmaşık matematik/kod/strateji görevlerinde **aç** — kalite belirgin artar
 
-**Anthropic önerisi:** Tek seferde matematik/kod/uzun analiz görevi varsa thinking aç; chatbot'ta kapat.
+**Anthropic önerisi:** Tek seferde matematik/kod/uzun analiz görevi varsa thinking aç; chatbot'ta kapat. Yeni kod yazıyorsan `adaptive` ile başla.
 
 <div class="ma-anthropic-oz" markdown>
 <div class="ma-anthropic-oz-header">📖 Anthropic bu konuyu nasıl anlatıyor — öz</div>
@@ -273,7 +279,7 @@ Anthropic dokümantasyonu prompt engineering'in **en zengin alanı** — burası
     - "Before answering, list 3 considerations" (yapılı reasoning)
     - Few-shot CoT — örneklerin de düşünme zinciri içerir
 
-    **Extended thinking parametresi.** `thinking={"type": "enabled", "budget_tokens": N}` — N en az 1024, default 16384, max model'e göre değişir. Düşünme tokenları **input token gibi fiyatlanır** (output'a göre %80 ucuz).
+    **Extended thinking parametresi.** İki form: (a) `thinking={"type": "adaptive", "effort": "low|medium|high"}` — Opus 4.7 dahil tüm 4.x modellerde önerilen modern form; (b) `thinking={"type": "enabled", "budget_tokens": N}` — Sonnet 4.5 ve öncesinde kullanılırdı, Opus 4.7'de **400 hatası** verir. Düşünme tokenları output token gibi fiyatlanır.
 
     **Thinking + tool use.** Tool use ile birlikte extended thinking kullanılabilir — Claude tool çağırmadan önce düşünür. Ajan (agent) sistemleri için güçlü kombinasyon. Bölüm 6'da detay.
 
@@ -282,7 +288,7 @@ Anthropic dokümantasyonu prompt engineering'in **en zengin alanı** — burası
     **CoT döküm tehlikesi.** Bazı durumlarda Claude düşünme zincirinde **yanlış varsayımlara saplanır** ve cevap yanlış çıkar. Self-consistency tekniği: aynı CoT prompt'u 3-5 kez çalıştırıp cevapları çoğunluk oyuyla seçmek — pahalı ama kritik göreve değer.
 
 <div class="ma-anthropic-oz-kaynak" markdown>
-**Kaynak:** [platform.claude.com — Multi-shot prompting](https://platform.claude.com/docs/en/docs/build-with-claude/prompt-engineering/multishot-prompting) (EN, ~10 dk) ve [Chain of Thought](https://platform.claude.com/docs/en/docs/build-with-claude/prompt-engineering/chain-of-thought) (EN, ~10 dk). Pekiştirme: [Extended Thinking](https://platform.claude.com/docs/en/docs/build-with-claude/extended-thinking) — 2025-2026 reasoning models trendinin Anthropic'teki karşılığı.
+**Kaynak:** [platform.claude.com — Claude Prompting Best Practices](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices) (EN, ~15 dk; few-shot, CoT, XML konuları 2026'da bu tek sayfada birleşti). Pekiştirme: [Extended Thinking](https://platform.claude.com/docs/en/build-with-claude/extended-thinking) — 2025-2026 akıl yürüten modeller (reasoning models) trendinin Anthropic'teki karşılığı.
 </div>
 </div>
 

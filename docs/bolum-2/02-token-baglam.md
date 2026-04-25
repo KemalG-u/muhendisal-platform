@@ -25,9 +25,9 @@
 
 ## Token kısaca — üç paragraf, matematiksiz
 
-**Token, dilin "AI'ya yutturulabilen lokması".** Claude bir cümleyi olduğu gibi yutamaz; önce parçalara ayırır. Bu parçalara token denir. Bir token bazen bir kelime ("merhaba"), bazen bir kelimenin parçası ("muhen-disal" → 2 token), bazen tek karakter (noktalama, emoji) olur. **Türkçe'de 1 kelime ortalama 1.5-2 token tutar** (İngilizce'de 0.7-1). Yani aynı içerik Türkçe'de İngilizce'ye göre **~%50 daha pahalıdır.**
+**Token, dilin "AI'ya yutturulabilen lokması".** Claude bir cümleyi olduğu gibi yutamaz; önce parçalara ayırır. Bu parçalara token denir. Bir token bazen bir kelime ("merhaba"), bazen bir kelimenin parçası ("muhen-disal" → 2 token), bazen tek karakter (noktalama, emoji) olur. **İngilizce'de 1 kelime ≈ 1 token, Türkçe'de 1 kelime ≈ 1.5-2 token.** Yani aynı içerik Türkçe'de İngilizce'ye göre **%50-100 arası daha çok token üretir** — fatura da o oranda yüksektir.
 
-**Context window, Claude'un tek seferde "akılda tutabildiği" toplam token sayısı.** Claude Sonnet 4.x için bu pencere 200,000 token (yaklaşık 150,000 Türkçe kelime — orta uzunlukta bir roman). Bu pencere prompt + sistem mesajı + cevap tüm taraflar için ortak — yani 199K token sistem prompt'a verirsen geriye sadece 1K kalır cevap için.
+**Bağlam penceresi (context window), Claude'un tek seferde "akılda tutabildiği" toplam token sayısı.** Nisan 2026 itibarıyla Claude Sonnet 4.6 ve Opus 4.7 için bu pencere **1.000.000 (1M) token** (yaklaşık 500-650 bin Türkçe kelime — birkaç romanlık hacim). Haiku 4.5 ise 200K token. Pencere; prompt + sistem mesajı + cevap için ortaktır — yani 999K token sistem prompt'a verirsen geriye sadece 1K kalır cevap için.
 
 **Fiyatlandırma input ve output ayrı.** Anthropic input token'ı (senin gönderdiğin) **output token'dan ucuz** sayar — çünkü output üretmek (model "düşünmek" anlamında) daha pahalı. Yaklaşık oran 1:5 (output 5 kat). Bu kararı vermek önemli: "uzun cevap üreten" promptlar ile "kısa cevap üreten" promptlar arasında 5x fark var. Bu farkı bilmek = parayı bilmek.
 
@@ -77,11 +77,11 @@ flowchart LR
 
 ## Uygulama — iki yol
 
-### Yol A — Anthropic Tokenizer (kod yok)
+### Yol A — Tokenizer aracılarıyla hızlı tahmin (kod yok)
 
-Tarayıcıda en hızlı yol:
+Tarayıcıda kabaca tahmin için:
 
-1. **[claude.com/tokenizer](https://claude.com/tokenizer)** sayfasını aç (resmi Anthropic aracı)
+1. Üçüncü taraf bir tokenizer sayfası aç ([claude-tokenizer.vercel.app](https://claude-tokenizer.vercel.app/) gibi). **Not:** Anthropic'in resmi tarayıcı tokenizer aracı yoktur; resmi yol Yol B'deki `count_tokens` API'dir. Üçüncü taraf araçlar yaklaşık değer verir.
 2. Kutuya bir Türkçe paragraf yapıştır (örnek altta)
 3. Sağ panelde **token sayısı** anlık çıkar
 4. Aynı paragrafın İngilizce çevirisini yapıştır — farkı gör
@@ -90,7 +90,7 @@ Tarayıcıda en hızlı yol:
 
 > "Merhaba, ben yapay zeka geliştirme öğreniyorum. Bu sayfada token kavramını öğrenip kendi metnimin maliyetini hesaplıyorum. Amacım üç ay sonra çalışan bir sohbet botu yapmak."
 
-Bu metin yaklaşık **52-60 token** tutar. Aynı metnin İngilizcesi (~30 kelime) ~38-44 token. Türkçe'de **~%40 fazlalık** var — Türkçe'nin ekleri ayrı token sayılıyor (`öğreni-yorum` → 2 token).
+Bu metin yaklaşık **55-60 token** tutar. Aynı metnin İngilizcesi (~30 kelime) yaklaşık 38-44 token. Türkçe'de **%50-100 fazlalık** olur — Türkçe'nin ekleri ayrı token sayılıyor (`öğreni-yorum` → 2 token). Bu sayıyı Yol B'de Python ile kesin ölçeceğiz.
 
 **Burada olan nedir (diyagram referansı):** Sen → Metin → Tokenizer → Token sayısı yolu. Fiyat henüz hesaplanmadı; o sıradaki adım.
 
@@ -107,7 +107,7 @@ metin = """Merhaba, ben yapay zeka geliştirme öğreniyorum.
 Bu sayfada token kavramını öğrenip kendi metnimin maliyetini hesaplıyorum.
 Amacım üç ay sonra çalışan bir sohbet botu yapmak."""
 
-# Mesajı count_tokens API'ye gönder (ücretsiz)
+# Mesajı count_tokens API'ye gönder (ücretsiz; resmi yöntem)
 sayim = client.messages.count_tokens(
     model="claude-sonnet-4-6",  # güncel model adını docs'tan kontrol et
     messages=[{"role": "user", "content": metin}],
@@ -133,7 +133,8 @@ toplam = input_maliyet + output_maliyet
 print(f"\n--- 1000 kullanıcı senaryosu ---")
 print(f"Input toplam: {input_toplam:,} token → ${input_maliyet:.4f}")
 print(f"Output toplam: {output_toplam:,} token → ${output_maliyet:.4f}")
-print(f"TOPLAM: ${toplam:.4f} (~{toplam * 38:.2f} TL)")
+USD_TL = 38.0  # 2026 başı yaklaşık kur — kendi kurunu güncelle
+print(f"TOPLAM: ${toplam:.4f} (~{toplam * USD_TL:.2f} TL)")
 ```
 
 **Beklenen çıktı (yaklaşık):**
@@ -159,7 +160,7 @@ TOPLAM: $3.1740 (~120.61 TL)
 | Aynı senaryo + 5K token sistem prompt (cache yok) | 153M in / 6M out | $549 (~20,860 TL/ay) ⚠️ |
 | Aynı + **prompt caching** (Bölüm 8'de) | 18M in / 6M out | $144 (~5,470 TL/ay) ✅ |
 
-**Önemli not:** Sistem prompt'unu **her çağrıda gönderirsen** ve uzunsa (5K+) fatura patlar. Çözüm: `prompt caching` (2.8 + Bölüm 8'de). Şu anki sayfada sadece farkındalık — caching'e Bölüm 4 ve 8'de döneceğiz.
+**Önemli not:** Sistem prompt'unu **her çağrıda gönderirsen** ve uzunsa (5K+) fatura patlar. Çözüm: `prompt caching` (Bölüm 8'de detay). Şu anki sayfada sadece farkındalık — caching'e Bölüm 4 ve 8'de döneceğiz.
 
 <div class="ma-anthropic-oz" markdown>
 <div class="ma-anthropic-oz-header">📖 Anthropic bu konuyu nasıl anlatıyor — öz</div>
@@ -168,24 +169,24 @@ Anthropic token + fiyat konusunu **çok şeffaf** anlatır — fiyat sayfası ve
 
 **1. Token sayma ücretsiz.** Anthropic `count_tokens` API çağrısını faturaya yazmaz. Bu kasıtlı: maliyet tahmini yapmanı kolaylaştırmak için. "Önce tahmin et, sonra çağır" disiplini Anthropic'in önerdiği yaklaşım.
 
-**2. Türkçe ~%40 fazla yer kaplar.** Anthropic'in tokenizer'ı (BPE tabanlı) Latin alfabesine optimize. Türkçe-Arapça-Rusça-Çince diller daha çok token harcar. Bu Anthropic'e özgü değil — OpenAI ve Google'da da benzer.
+**2. Türkçe %50-100 fazla yer kaplar.** Anthropic'in tokenizer'ı (BPE — Byte-Pair Encoding) Latin alfabesine optimize. Türkçe-Arapça-Rusça-Çince diller daha çok token harcar. Bu Anthropic'e özgü değil — OpenAI ve Google'da da benzer.
 
-**3. Prompt caching büyük tasarruf.** 1024+ token'lık sabit içerik (sistem prompt, RAG context) cache edilebilir. Cache'den okuma ~%90 ucuz. Anthropic 2024 sonunda ekledi, 2025-2026'da production'da default kabul ediliyor.
+**3. Prompt caching büyük tasarruf.** Modele göre minimum eşik var: Sonnet 4.6 için **2048 token**, Opus 4.7 ve Haiku 4.5 için **4096 token** (yeni modellerde eşik yükseldi). Eşiği aşan sabit içerik (sistem promptu, RAG bağlamı) önbelleğe alınabilir; cache okuma yaklaşık **base fiyatın %10'u**, cache yazma 5 dakikalık sürede base × 1.25, 1 saatlik sürede base × 2. Anthropic 2024 sonunda ekledi, 2025-2026'da üretimde varsayılan kabul ediliyor.
 
 ??? info "Teknik detay — isteyene (parameter adları, mekanikler, edge case'ler)"
 
     **`count_tokens` endpoint:** `POST /v1/messages/count_tokens` — request body `messages.create` ile aynı (model, messages, system, tools), sadece response `{"input_tokens": N}` döner. Output token tahmini yapmaz; o senin işin.
 
-    **Cache mekaniği:** `cache_control: {"type": "ephemeral"}` mesaj/sistem bloğuna eklenir. Cache TTL 5 dakika (yenilenir). Cache write (~%25 normal fiyat), cache read (~%10 normal fiyat). 1024 token altı cache'lenmez — minimum eşik var.
+    **Cache mekaniği:** `cache_control: {"type": "ephemeral"}` mesaj/sistem bloğuna eklenir. Cache TTL 5 dakika (varsayılan, 1 saat seçeneği var). Cache write 5dk için base × 1.25, 1 saat için base × 2; cache read base × 0.1. Minimum eşik model-spesifiktir: Sonnet 4.6 = 2048 token, Opus 4.7 / Haiku 4.5 = 4096 token. Eşik altı cache'lenmez.
 
     **Vision token maliyeti:** Görsel inputları piksel sayısına göre token'a çevrilir. 1568×1568 piksel = ~1600 token (Sonnet için). Bölüm 7'de detay.
 
     **Tool use token maliyeti:** Tool tanımları (JSON schema) input token'a sayılır. Çok tool tanımlı agent'larda her çağrıda tüm tanımlar gider — caching kritik. Bölüm 6'da detay.
 
-    **Output limit:** `max_tokens` parametresi maksimum çıktıyı sınırlar. 2026 itibariyla Sonnet 4.x üst limit 8192 token (model güncellemesiyle değişebilir). Bu üst limite ulaşılırsa output kesilir; full cevap için `max_tokens` artırılır.
+    **Çıktı limiti:** `max_tokens` parametresi maksimum çıktıyı sınırlar. 2026 Nisan itibarıyla **Sonnet 4.6 max output 64K token, Opus 4.7 ise 128K token** (Haiku 4.5 64K). Bu üst limite ulaşılırsa çıktı kesilir; tam cevap için `max_tokens` artırılır.
 
 <div class="ma-anthropic-oz-kaynak" markdown>
-**Kaynak:** [platform.claude.com — Token Counting](https://platform.claude.com/docs/en/docs/build-with-claude/token-counting) (EN, ~10 dk). count_tokens endpoint resmi spesifikasyonu + örnek kodlar burada. Fiyat için ayrıca [anthropic.com/pricing](https://www.anthropic.com/pricing) — Anthropic fiyatları zaman zaman güncelliyor, ay başında bir kontrol et.
+**Kaynak:** [platform.claude.com — Token Counting](https://platform.claude.com/docs/en/build-with-claude/token-counting) (EN, ~10 dk). count_tokens endpoint resmi spesifikasyonu + örnek kodlar burada. Fiyat için ayrıca [anthropic.com/pricing](https://www.anthropic.com/pricing) — Anthropic fiyatları zaman zaman güncelliyor, ay başında bir kontrol et.
 </div>
 </div>
 
@@ -244,5 +245,5 @@ Gist linkini şu yere kaydet: `muhendisal-notlarim/bolum-2/02-token-baglam/gist-
 
 ← [2.1 LLM Nedir](01-llm-temelleri.md) &nbsp;|&nbsp; [Bölüm 2 girişi](index.md) &nbsp;|&nbsp; [Ana sayfa](../index.md)
 
-**Pekiştirme:** [platform.claude.com — Token Counting](https://platform.claude.com/docs/en/docs/build-with-claude/token-counting) sayfasını aç, kendi metninle kendi count_tokens çağrını yap. Yukarıdaki Python örneğini referans alabilirsin.
+**Pekiştirme:** [platform.claude.com — Token Counting](https://platform.claude.com/docs/en/build-with-claude/token-counting) sayfasını aç, kendi metninle kendi count_tokens çağrını yap. Yukarıdaki Python örneğini referans alabilirsin.
 </div>

@@ -287,10 +287,10 @@ Anthropic prompt injection'a **kurumsal seviyede** yaklaşır — Responsible Sc
 
     **Prompt injection test seti.** [Gandalf.lakera.ai](https://gandalf.lakera.ai) — prompt injection savunmasını öğretmek için oyunlaştırılmış platform. 7 seviyeli, her seviyede farklı savunma var. 2.7'den sonra 1 saat harcanacak en iyi pratik.
 
-    **Anthropic'in red-team örnekleri.** [anthropic.com/research/challenges-in-red-teaming-ai-systems](https://www.anthropic.com/research/challenges-in-red-teaming-ai-systems) — Anthropic kendi modellerini saldırıya uğratıyor, bulguları paylaşıyor. Güncel saldırı kategorilerinin en iyi kaynağı.
+    **Anthropic'in red-team örnekleri.** [Constitutional Classifiers (2025)](https://www.anthropic.com/research/constitutional-classifiers) — Anthropic 10.000 saatten fazla kırmızı takım çalışmasıyla bu savunmayı geliştirdi. Sürekli güncel saldırı kategorilerinin Anthropic perspektifli kaynağı.
 
 <div class="ma-anthropic-oz-kaynak" markdown>
-**Kaynak:** [platform.claude.com — Mitigate jailbreaks and prompt injections](https://platform.claude.com/docs/en/docs/test-and-evaluate/strengthen-guardrails/mitigate-jailbreaks) (EN, ~15 dk). Anthropic'in resmi savunma rehberi: XML izolasyon, harmful string detection, constitutional approach — hepsi örnekli. Pekiştirme için: [Constitutional AI paper](https://www.anthropic.com/research/constitutional-ai-harmlessness-from-ai-feedback) — Claude'un dayanıklılığının felsefi + teknik temeli.
+**Kaynak:** [platform.claude.com — Mitigate jailbreaks and prompt injections](https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/mitigate-jailbreaks) (EN, ~15 dk). Anthropic'in resmi savunma rehberi: XML izolasyon, zararlı dize tespiti, anayasal yaklaşım, Haiku 4.5 ile ön-tarama — hepsi örnekli. Pekiştirme için: [Constitutional Classifiers (2025)](https://www.anthropic.com/research/constitutional-classifiers) — Anthropic'in ek savunma katmanı; resmi raporlarda jailbreak başarı oranını ~%86'dan ~%4'e düşürdüğü gösterildi.
 </div>
 </div>
 

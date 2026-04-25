@@ -175,7 +175,7 @@ Anthropic sampling konusunda **en sade tavsiyeyi** verir: çoğu zaman sadece `t
     **Reasoning models özel durumu.** Anthropic'in "extended thinking" özelliği aktifse temperature etkisi azalır — model uzun düşünme zincirinde zaten kendi kendini düzeltir. 2.5 CoT sayfasında detay.
 
 <div class="ma-anthropic-oz-kaynak" markdown>
-**Kaynak:** [platform.claude.com — Messages API parameters](https://platform.claude.com/docs/en/api/messages) (EN, ~10 dk). `temperature`, `top_p`, `top_k`'nın resmi spesifikasyonu + default değerleri burada. Pekiştirme için: **[Reduce Hallucinations](https://platform.claude.com/docs/en/docs/test-and-evaluate/strengthen-guardrails/reduce-hallucinations)** sayfası — "düşük temperature halüsinasyonu çözmez" tezi orada anlatılır.
+**Kaynak:** [platform.claude.com — Messages API parameters](https://platform.claude.com/docs/en/api/messages) (EN, ~10 dk). `temperature`, `top_p`, `top_k`'nın resmi spesifikasyonu + varsayılan değerleri burada. Pekiştirme için: **[Reduce Hallucinations](https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/reduce-hallucinations)** (Halüsinasyonu Azaltma rehberi, EN) — "düşük temperature halüsinasyonu çözmez" tezi orada anlatılır.
 </div>
 </div>
 

@@ -199,9 +199,9 @@ Anthropic bu konuda **çok güçlü dokümantasyon** üretti — sistem prompt +
 
     **`system` parametresi tipi.** İki seçenek: (a) string — basit kullanım; (b) liste of `{type: "text", text: "...", cache_control: {...}}` — caching kullanmak istediğinde.
 
-    **Sistem prompt yer kuralı.** `system` `messages.create()` çağrısının ayrı parametresidir, `messages` listesinin içine konmaz. Bazı kütüphaneler `messages[0].role = "system"` formatını kullanır (OpenAI tarzı) — Anthropic SDK bunu KABUL ETMEZ, ayrı `system=` ister.
+    **Sistem prompt yer kuralı.** `system` `messages.create()` çağrısının ayrı parametresidir, `messages` listesinin içine konmaz. Bazı kütüphaneler `messages[0].role = "system"` formatını kullanır (OpenAI tarzı) — Anthropic SDK bunu kabul etmez, ayrı `system=` ister.
 
-    **Conversation history limit.** `messages` dizisinin uzunluğu context window ile sınırlı (Sonnet 4.x: 200K token). Çok uzun sohbette eski mesajlar manuel kesilmeli (sliding window) veya özetlenmeli (summarization).
+    **Sohbet geçmişi sınırı.** `messages` dizisinin uzunluğu bağlam penceresiyle sınırlı (Sonnet 4.6 ve Opus 4.7: 1M token; Haiku 4.5: 200K). Çok uzun sohbette eski mesajlar manuel kesilmeli (kayan pencere — sliding window) veya özetlenmeli.
 
     **Assistant prefill tekniği.** Son `messages[]` öğesi `{"role": "assistant", "content": "..."}` ise, Claude bu metni **devam ettirir** (yeni mesaj başlatmaz). `<answer>` ile başlayan prefill koymak Claude'u XML formatına zorlamak için güçlü teknik.
 
@@ -210,7 +210,7 @@ Anthropic bu konuda **çok güçlü dokümantasyon** üretti — sistem prompt +
     **Multi-modal içerikte sistem prompt.** Görsel içeren mesajlarda sistem prompt görsel için ayrı yorumlanır — "bu görsele şu açıdan bak" talimatı sistem promptta etkili. Bölüm 7'de detay.
 
 <div class="ma-anthropic-oz-kaynak" markdown>
-**Kaynak:** [platform.claude.com — Use XML tags to structure your prompts](https://platform.claude.com/docs/en/docs/build-with-claude/prompt-engineering/use-xml-tags) (EN, ~10 dk). XML tasarım kuralları + örnekler. Pekiştirme: [System Prompts](https://platform.claude.com/docs/en/docs/build-with-claude/prompt-engineering/system-prompts) — sistem prompt iyi pratikleri.
+**Kaynak:** [platform.claude.com — Claude Prompting Best Practices](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices) (EN, ~15 dk). 2026'da XML tag kullanımı, sistem promptu, prefill ve örnek tasarımı tek sayfada birleşti. Pratik için: [Anthropic Prompt Engineering Interactive Tutorial](https://github.com/anthropics/prompt-eng-interactive-tutorial) (9 bölüm Jupyter notebook).
 </div>
 </div>
 

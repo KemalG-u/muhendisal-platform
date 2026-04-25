@@ -19,9 +19,9 @@
 
 Senaryo: Prompt'unu geliştirdin, 3 örneğe baktın, "güzel cevap geliyor" dedin, canlıya verdin. Bir hafta sonra kullanıcılar şikayet: "Bot saçma cevap veriyor." Sen? **Emin değilsin.** Çünkü "kaliteyi" ölçmüyordun, **umuyordun**. Bu sayfa umudu sayıya çevirir.
 
-İkincisi: **Prompt değişikliği = deploy.** Sistem promptunu bir kelime değiştirdiğinde aslında production davranışını değiştiriyorsun. Kod'da unit test olmadan deploy yapmak nasıl tehlikeli ise, **prompt'ta eval olmadan değişiklik yapmak aynı tehlike.** Eval = prompt'un "CI/CD test suite'i".
+İkincisi: **Prompt değişikliği = yayına alma.** Sistem promptunu bir kelime değiştirdiğinde aslında üretim (production) davranışını değiştiriyorsun. Kodda birim testi (unit test) olmadan yayına almak ne kadar tehlikeliyse, **promptta eval olmadan değişiklik yapmak da aynı tehlike.** Eval = promptun "kalite kontrol denemesi" (yazılımdaki test seti gibi).
 
-Üçüncüsü: **Anthropic 2024'te bu konuya büyük yatırım yaptı** — Console'da "Evaluate" sekmesi, [anthropic-evals](https://github.com/anthropics/evals) public repo, docs/test-and-evaluate tam bir kategori. Bu "olgun AI development" iş akışının temel ayağı — ve en çok atlanıyor. Sen atlama.
+Üçüncüsü: **Anthropic bu konuya büyük yatırım yaptı** — Console'da "Evaluate" sekmesi, [anthropics/courses → prompt_evaluations](https://github.com/anthropics/courses/tree/master/prompt_evaluations) ücretsiz eğitim notebook'u, ve [docs/test-and-evaluate](https://platform.claude.com/docs/en/test-and-evaluate/define-success) tam bir doküman kategorisi. (Not: `anthropics/evals` GitHub deposu eval *çerçevesi* değil; "Discovering Language Model Behaviors with Model-Written Evaluations" makalesinin veri setlerini barındırır.) Bu olgun AI geliştirme akışının temel ayağı — ve en çok atlanıyor. Sen atlama.
 
 ## Prompt eval kısaca — üç paragraf, matematiksiz
 
@@ -112,7 +112,7 @@ Pratik bir başlangıç — ekip üyesi olmayan biri bile yapabilir:
 3. 20 satır gerçek veri: çeşitli e-posta örnekleri (fatura, kişisel, spam, iş, promosyon her biri 4'er)
 4. `Beklenen Kategori` sütununu **elle doldur** (ground truth)
 5. Anthropic Console'a git, her e-postayı prompt'a ver, cevabı `Gerçek Cevap` sütununa yapıştır
-6. `Doğru mu?` sütunu: `=IF(C2=D2, 1, 0)`
+6. `Doğru mu?` sütunu: `=IF(C2=D2, 1, 0)` (İngilizce Sheets) veya `=EĞER(C2=D2; 1; 0)` (Türkçe Google Sheets — virgül yerine noktalı virgül)
 7. Alt hücrede toplam: `=SUM(E2:E21)/20` → senin **doğruluk skorun**
 
 **Beklenen sonuç:** İlk denemede 14/20 (0.70). Prompt'u revize et, yeni sheet sekmesi aç ("v2"), tekrar çalıştır. 18/20 (0.90). **Şimdi sayıyla** biliyorsun — v2 daha iyi.
@@ -310,7 +310,7 @@ Anthropic 2024'te eval'ı dokümantasyonun **merkez sütunlarından biri** halin
 
 ??? info "Teknik detay — isteyene (parameter adları, mekanikler, edge case'ler)"
 
-    **Anthropic Evals repo.** [github.com/anthropics/evals](https://github.com/anthropics/evals) — Anthropic'in eval framework'ü + hazır eval setleri (coding, math, reasoning). Kendi projende Anthropic'in deseni + hazır setlerden parçaları alabilirsin.
+    **Anthropic eval kaynakları.** Eğitim notebook'u: [anthropics/courses → prompt_evaluations](https://github.com/anthropics/courses/tree/master/prompt_evaluations) — adım adım eval iş akışı. Hazır eval *veri setleri* (akademik araştırma için): [github.com/anthropics/evals](https://github.com/anthropics/evals) (persona, sycophancy, advanced-ai-risk, winogender — bunlar framework değil, çoğunlukla davranış ölçümü için makale eki).
 
     **Holistic eval = meta.** Tek tek örneklere bakmak yerine **dağılıma** bak: hangi kategoride hata çok, hangi uzunluk grubunda hata yoğun. Confusion matrix + bucket analizi. Bu seviye ileri ama production'da zorunlu.
 
@@ -323,7 +323,7 @@ Anthropic 2024'te eval'ı dokümantasyonun **merkez sütunlarından biri** halin
     **A/B test vs eval.** Eval = offline (prod'a çıkmadan). A/B test = online (prod'da iki prompt'u paralel canlıda, kullanıcı davranışını karşılaştır). İkisi farklı — Bölüm 8.3 A/B detay.
 
 <div class="ma-anthropic-oz-kaynak" markdown>
-**Kaynak:** [platform.claude.com — Define success criteria](https://platform.claude.com/docs/en/docs/test-and-evaluate/define-success) ve [Develop test cases](https://platform.claude.com/docs/en/docs/test-and-evaluate/develop-tests) (EN, toplam ~20 dk). Anthropic Console Evaluate: [console.anthropic.com](https://console.anthropic.com) → Evaluate sekmesi. Public repo: [github.com/anthropics/evals](https://github.com/anthropics/evals).
+**Kaynak:** [platform.claude.com — Define success criteria](https://platform.claude.com/docs/en/test-and-evaluate/define-success) ve [Develop test cases](https://platform.claude.com/docs/en/test-and-evaluate/develop-tests) (EN, toplam ~20 dk). Anthropic Console Evaluate: [console.anthropic.com](https://console.anthropic.com) → Evaluate sekmesi. Eğitim notebook'u: [anthropics/courses → prompt_evaluations](https://github.com/anthropics/courses/tree/master/prompt_evaluations).
 </div>
 </div>
 

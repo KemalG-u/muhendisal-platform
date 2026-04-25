@@ -204,10 +204,11 @@ Girdi token: 58
 **Burada olan nedir (diyagram referansı):** `anthropic.Anthropic()` — Python kütüphanesini başlattın. `messages.create(...)` — kütüphane bir HTTPS POST hazırladı, header'a senin API key'ini koydu, gövdesine modeli + mesajını koydu, `api.anthropic.com/v1/messages` adresine gönderdi. API modeli çağırdı, yanıt token token döndü, tamamlandı, geri geldi, Python kütüphanesi JSON'u Python objesine çevirdi, sen `.content[0].text` ile metni, `.usage` ile sayaçları okudun. Diyagramdaki Yol B akışının tamamı bu 10 satır kodda oldu.
 
 ??? tip "Hata aldıysan"
-    - `AuthenticationError`: API key export edilmedi. `echo $ANTHROPIC_API_KEY` (Linux/Mac) veya `$env:ANTHROPIC_API_KEY` (Windows) ile kontrol et; boşsa tekrar set et.
-    - `model_not_found`: model adı değişmiş olabilir. Güncel adlar için aşağıdaki Anthropic özüne bak.
-    - `rate_limit_error`: deneme kredisini bitirdin veya dakikalık limit aşıldı. 1 dakika bekle.
-    - `InvalidRequestError (max_tokens)`: sayıyı düşür, 100'den başla.
+    - `AuthenticationError` (401): API anahtarı dışa aktarılmadı. `echo $ANTHROPIC_API_KEY` (Linux/Mac) veya `$env:ANTHROPIC_API_KEY` (Windows) ile kontrol et; boşsa tekrar set et.
+    - `BadRequestError` (400, "model_not_found"): model adı değişmiş olabilir. Güncel adlar için aşağıdaki Anthropic özüne bak.
+    - `RateLimitError` (429): deneme kredini bitirdin veya dakikalık limit aşıldı. 1 dakika bekle ya da SDK'nin `max_retries` parametresini artır.
+    - `BadRequestError` (max_tokens): `max_tokens` değerini düşür, 100'den başla.
+    - `OverloadedError` / `APIStatusError` (5xx): Anthropic geçici aşırı yüklenmesi; birkaç saniye bekle, üstel geri çekilme (exponential backoff) ile yeniden dene.
 
 <div class="ma-anthropic-oz" markdown>
 <div class="ma-anthropic-oz-header">📖 Anthropic bu konuyu nasıl anlatıyor — öz</div>
@@ -216,7 +217,7 @@ Anthropic'in resmi dokümanı ve **Building with the Claude API** kursu bu sayfa
 
 **1. Her API çağrısında üç zorunlu parça var:** (1) hangi modeli kullanacaksın, (2) ne mesaj yollayacaksın, (3) cevap en fazla kaç token olsun (`max_tokens`). **Son maddeyi unutma** — yoksa Claude 20 sayfa cevap üretip faturayı şişirebilir. Sen bu sayfada üçünü de verdin.
 
-**2. Model adını tarihli yaz.** `claude-sonnet-4-6` (sabit isim) yerine `claude-sonnet-4-6` (tarihli snapshot) kullan — böylece Anthropic modeli yarın güncellese de kodun aynı davranır, kırılmaz.
+**2. Model adını tarihli yaz.** `claude-sonnet-4-6` (takma ad — alias) yerine `claude-sonnet-4-6-YYYYMMDD` formatlı tarihli sürümü (snapshot) kullan — böylece Anthropic modeli yarın güncellese de kodun aynı davranır, kırılmaz. (Örnek: Haiku 4.5'in tarihli sürümü `claude-haiku-4-5-20251001`.)
 
 **3. Kimliğini API key ile ispatla.** Key'i koda yazma, ortam değişkenine koy. SDK zaten header'lara otomatik ekliyor; sen bu işin mekaniğiyle uğraşmıyorsun.
 
@@ -224,12 +225,12 @@ Anthropic'in resmi dokümanı ve **Building with the Claude API** kursu bu sayfa
 
     **Messages API'nin zorunlu alanları: `model` ve `messages`.** Hiçbir çağrı bu ikisi olmadan çalışmaz. Sen bu sayfada `claude-sonnet-4-6` değerini `model`'e, bir `user` mesajını `messages`'a verdin — minimum sözleşme sağlandı. `max_tokens` da zorunlu ve bir güvenlik katmanı: model çıktı token'ı başına ücretlendirilir; `max_tokens=300` Claude'u 300 token'da keser. Geniş işlerde artırırsın (ör. 4000), küçük işlerde düşürürsün (ör. 50). Kesildiğinde `stop_reason: "max_tokens"` döner.
 
-    **Tarihli snapshot neden:** Model sürümleri zamanla güncellenir. `claude-sonnet-4-6` bir takma ad — bugün A sürümüne, yarın B sürümüne işaret edebilir. Tarihli snapshot (`...-20250929`) sabittir. Yeni işlere başladığında [platform.claude.com/docs/models](https://platform.claude.com/docs/en/docs/about-claude/models) adresinden güncel snapshot adını al.
+    **Tarihli snapshot neden:** Model sürümleri zamanla güncellenir. `claude-sonnet-4-6` bir takma ad — bugün A sürümüne, yarın B sürümüne işaret edebilir. Tarihli snapshot (`claude-haiku-4-5-20251001` gibi) sabittir. Yeni işlere başladığında [platform.claude.com/docs/about-claude/models](https://platform.claude.com/docs/en/about-claude/models/overview) adresinden güncel snapshot adını al.
 
     **Header mekaniği:** SDK senin yerine `x-api-key` ve `anthropic-version` header'larını ekliyor. Düz HTTP ile (ör. `curl` ile) denerken bu ikisini manuel eklemen gerekir. SDK'nin ana kazancı bu: kimlik, hata yakalama, yeniden deneme, streaming hazır gelir.
 
 <div class="ma-anthropic-oz-kaynak" markdown>
-**Kaynak:** [platform.claude.com/docs/en/api/messages](https://platform.claude.com/docs/en/api/messages) (resmi API referansı) ve [Building with the Claude API](https://anthropic.skilljar.com/claude-with-the-anthropic-api) — Anthropic Academy (ücretsiz, sertifikalı, EN, ~2 saat). Bu sayfayı bitirdiğinde kursun ilk üç bölümünü zaten deneyimlemiş olacaksın.
+**Kaynak:** [platform.claude.com/docs/en/api/messages](https://platform.claude.com/docs/en/api/messages) (resmi API referansı) ve Anthropic Academy ücretsiz "Claude with the API" kursu — [anthropic.com/learn](https://www.anthropic.com/learn) sayfasından açabilirsin. Bu sayfayı bitirdiğinde kursun ilk derslerini zaten pratikte uygulamış olursun.
 </div>
 </div>
 

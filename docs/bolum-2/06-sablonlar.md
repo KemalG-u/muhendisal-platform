@@ -29,7 +29,7 @@
 
 **Üç Python yöntemi:** (1) f-string — `f"Merhaba {ad}"`, en hızlı, basit; (2) `string.Template` — `Template("Merhaba $ad").substitute(ad="Kemal")`, biraz daha güvenli (yanlış parametre = hata); (3) Jinja2 — `Template("Merhaba {{ ad }}").render(ad="Kemal")`, **en güçlü** (loop, condition, filter destekler). Production projede genellikle **Jinja2.**
 
-**Anthropic'in resmi `prompt_templates` özelliği** API seviyesinde değişken desteği veriyor — `messages.create()` çağrısında `messages` içinde `{{variable}}` yazıp `variables` parametresiyle değer geçiyorsun. Sunucu tarafında doldurulur. **Caching ile uyumlu** olduğu için sistem promptun cache edilirken sadece değişken kısımlar değişir = en ekonomik desen.
+**Anthropic Console'da Prompt Builder** görsel arayüzde `{{variable}}` yer tutucularıyla şablon hazırlamana izin verir. Test sekmesinde değişkenleri doldurup Claude'u denersin. Üretim API çağrısında ise yerleştirmeyi **istemci tarafında** (Jinja2 / f-string) yaparsın; Messages API'sinin doğrudan "variables" parametresi yoktur. Caching ile uyum: sabit talimat + sistem promptu `cache_control` ile işaretlenir, değişken kısım her çağrıda yeniden gönderilir.
 
 ## Bu sayfanın ekosistemi — kim kime ne veriyor
 
@@ -164,42 +164,46 @@ print(f"\n✅ {len(sonuclar)} e-posta sınıflandırıldı, results.json kaydedi
 
 **Burada olan nedir (diyagram referansı):** Diyagramın tüm akışı tek script'te. Şablon dosyası **kod dışında** durur — git'te versiyonlanır, prompt'u değiştirmek için Python kodunu açmana gerek yok.
 
-### Yol B — Anthropic Prompt Templates API (sunucu tarafı)
+### Yol B — Anthropic Console Prompt Builder (görsel araç)
 
-Anthropic 2024 sonunda native değişken desteği ekledi:
+Anthropic Console içinde **Prompt Builder** ekranı var — tarayıcıda görsel olarak `{{degisken}}` placeholder'lı şablon yazıyor, "Generate a Prompt" ile Claude'un kendisi şablonu iyileştiriyor, sonra "Test" sekmesinde değişkenleri doldurup deniyorsun.
+
+```
+console.anthropic.com → Workbench → Prompt Builder
+```
+
+**Önemli not:** Anthropic Messages API'sinin **doğrudan** "variables" parametresi yoktur (Bazı dokümantasyonlarda görülen `extra_body={"metadata": {"variables": ...}}` deseni Messages API tarafından çözümlenmez — değişken yerleştirme **istemci tarafında** yapılır). Yani:
+
+- **Console Workbench'te şablonu hazırlarsın** (hızlı tasarım, görsel test)
+- **Üretim kodunda Jinja2 / f-string** ile değişkenleri yerleştirir, sonuçta tek bir düz metin olarak `messages.create(...)` çağırırsın (Yol A)
 
 ```python
 import anthropic
+from jinja2 import Environment, FileSystemLoader, StrictUndefined
+
+# StrictUndefined: değişken eksikse açık hata atar (sessiz boşluk yerine)
+env = Environment(loader=FileSystemLoader("prompts/"), undefined=StrictUndefined)
+sablon = env.get_template("email_class.j2")
+
+prompt_metni = sablon.render(
+    kategoriler="fatura, kişisel, spam, iş, promosyon",
+    gonderen="fatura@vodafone.com.tr",
+    konu="Fatura Hatırlatma",
+    icerik="Sayın müşterimiz...",
+)
 
 client = anthropic.Anthropic()
-
 cevap = client.messages.create(
     model="claude-sonnet-4-6",
     max_tokens=20,
     temperature=0,
     system="Sen bir e-posta sınıflandırma asistanısın. Sadece kategori adını döndür.",
-    messages=[
-        {"role": "user", "content": """Aşağıdaki e-postayı kategorilere ayır: {{kategoriler}}.
-
-<email>
-Gönderen: {{gonderen}}
-Konu: {{konu}}
-İçerik: {{icerik}}
-</email>"""}
-    ],
-    extra_body={  # Anthropic Console templates ile uyumlu format
-        "metadata": {"variables": {
-            "kategoriler": "fatura, kişisel, spam, iş, promosyon",
-            "gonderen": "fatura@vodafone.com.tr",
-            "konu": "Fatura Hatırlatma",
-            "icerik": "Sayın müşterimiz...",
-        }}
-    },
+    messages=[{"role": "user", "content": prompt_metni}],
 )
 print(cevap.content[0].text)
 ```
 
-**Burada olan nedir (diyagram referansı):** Şablon **Anthropic sunucusunda** doldurulur. Avantaj: caching ile mükemmel uyumlu — şablonun sabit kısmı cache'lenir, sadece değişkenler her çağrıda değişir, %90 maliyet düşer. Dezavantaj: Anthropic Console'da yönetiliyor, lokal değil.
+**Burada olan nedir:** Şablonu **istemci tarafında** Jinja2 ile dolduruyorsun, Claude'a düz metin gidiyor. Caching kullanmak istersen sabit kısmı (system prompt + sabit talimat) `cache_control` ile işaretlersin — şablonun değişen kısmı her çağrıda yeniden gönderilir, sabit kısım cache'lenir.
 
 ### `prompts/` klasör yapısı önerisi
 
@@ -253,7 +257,7 @@ Anthropic 2024'te prompt yönetimine **resmi destek** ekledi:
     **A/B test deseni.** İki versiyon prompt (`email_class_v1.j2`, `email_class_v2.j2`), trafiği %50/%50 böl, kalite/maliyet karşılaştır. Bölüm 8'de production deseni.
 
 <div class="ma-anthropic-oz-kaynak" markdown>
-**Kaynak:** [platform.claude.com — Prompt templates and variables](https://platform.claude.com/docs/en/docs/build-with-claude/prompt-engineering/prompt-templates-and-variables) (EN, ~10 dk). Anthropic Console workbench: [console.anthropic.com](https://console.anthropic.com) → "Prompts" sekmesi. Visual prompt builder + version history burada.
+**Kaynak:** [platform.claude.com — Prompt Engineering Best Practices](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices) (EN, ~15 dk). Anthropic Console workbench: [console.anthropic.com](https://console.anthropic.com) → "Workbench / Prompt Builder". Görsel şablon tasarımı + sürüm geçmişi burada.
 </div>
 </div>
 

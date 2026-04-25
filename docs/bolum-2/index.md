@@ -97,14 +97,14 @@ Bu çıktı 3. bölüme (embeddings + vektör DB) geçmeden önce zorunlu: Embed
 
 Bölüm 2 Anthropic'in **en güçlü olduğu alandır**. Üç kanalda zengin içerik var:
 
-**1. Academy — "Building with the Claude API" (~60 dk, sertifikalı).** Bizim 2.1-2.4'ü kapsayan Anthropic kursu. Biz Türkçe pratikle başlatıyoruz, bu kurs İngilizce geniş perspektif veriyor. 2.4'ten sonra aç — iki tarafın da aynı kavramları farklı örneklerle anlattığını görmek hafızaya oturtur.
+**1. Academy — "Claude with the API" + "Tool Use" + "MCP" kursları.** Anthropic Academy'deki ücretsiz, sertifikalı kurs setinde Bölüm 2'yi kapsayan iki ana kurs ("Claude with the API" + "Prompt Engineering Best Practices") var. Biz Türkçe pratikle başlatıyoruz; bu kurslar İngilizce geniş perspektif veriyor. 2.4'ten sonra aç — biz Türkçe pratiği gösteriyoruz, Anthropic İngilizce farklı örneklerle aynı kavramı anlatıyor — iki kanaldan duymak hafızaya oturtur.
 
-**2. Dokümantasyon — Prompt engineering overview ve Best practices.** [docs.claude.com/en/docs/prompt-engineering](https://platform.claude.com/docs/en/docs/prompt-engineering) Anthropic'in **kanonik** rehberi. Her 2.x sayfasında ilgili docs alt sayfasına köprü kuruyoruz. XML tag'leri (2.4), CoT (2.5), prompt templates (2.6) hepsi docs'un adlandırmasıyla aynı — bu kasıtlı, Anthropic sözlüğüne alıştırıyor.
+**2. Dokümantasyon — Claude prompting best practices.** [Claude Prompting Best Practices](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices) Anthropic'in **kanonik** rehberi (2026'da tüm prompt engineering alt sayfaları — XML tag'leri, CoT, system prompts, prompt templates — bu tek sayfada birleşti). Anthropic sözlüğüne alıştırıyor.
 
-**3. GitHub — `anthropics/courses/prompt_engineering_interactive_tutorial`.** Jupyter notebook, 9 bölüm, her bölümde çalışan kod. 2.5 (few-shot) ve 2.7-2.8 (güvenlik + test) için özellikle zengin. Bu notebook'u Colab'de aç, kendi API anahtarınla çalıştır — 2-3 saat harcadığın en iyi pratik budur. Biz bu notebook'un temel kavramlarını Türkçeleştirip senaryoluyoruz; sen Colab'de pratik etmeye devam ediyorsun.
+**3. GitHub — `anthropics/prompt-eng-interactive-tutorial`.** Jupyter notebook, 9 bölüm, her bölümde çalışan kod. 2.5 (few-shot) ve 2.7-2.8 (güvenlik + test) için özellikle zengin. Notebook'u Colab'de aç, kendi API anahtarınla çalıştır — 2-3 saat harcadığın en iyi pratik budur. Biz bu notebook'un temel kavramlarını Türkçeleştirip senaryoluyoruz; sen Colab'de pratik etmeye devam ediyorsun.
 
 <div class="ma-anthropic-oz-kaynak" markdown>
-**Kaynak:** [Anthropic courses — Prompt Engineering Interactive Tutorial](https://github.com/anthropics/courses/tree/master/prompt_engineering_interactive_tutorial) (İngilizce, Jupyter notebook, ücretsiz, ~3 saat). 2.5 sonrasında aç — Colab'de kendi API anahtarınla çalıştır. Bu notebook bu bölümün "en büyük katkı" eşlikçisidir.
+**Kaynak:** [Anthropic — Prompt Engineering Interactive Tutorial](https://github.com/anthropics/prompt-eng-interactive-tutorial) (İngilizce, Jupyter notebook, ücretsiz, ~3 saat). 2.5 sonrasında aç — Colab'de kendi API anahtarınla çalıştır. Bu notebook bu bölümün en güçlü eşlikçisidir.
 </div>
 </div>
 
