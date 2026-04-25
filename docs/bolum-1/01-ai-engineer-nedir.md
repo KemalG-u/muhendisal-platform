@@ -1,15 +1,12 @@
 # 1.1 AI Engineer Nedir — ve Sen Bu Platform İçin Uygun musun?
 
+> **TL;DR:** "AI Engineer" 2026'da en sık aranan iş ilanı tanımını öğrenirsin · Sayfa sonunda bu yola uygun olup olmadığına net cevap veriyorsun.
+
 <div class="ma-meta" markdown>
-<div class="ma-meta-row" markdown>
-<strong>Kim için:</strong>
-<span class="ma-persona ma-persona-baslangic">🟢 başlangıç</span>
-<span class="ma-persona ma-persona-is">🔵 iş</span>
-<span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
-</div>
-<div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~20 dakika</div>
-<div class="ma-meta-row"><strong>📋 Önkoşul:</strong> Yok. Kod bilmesen de, İngilizcen yetersizse de bu sayfa seninle konuşur. Bir bilgisayar + internet yeter.</div>
-<div class="ma-meta-row"><strong>🎯 Çıktı:</strong> "AI Engineer" teriminin 2026'da ne demek olduğunu kendi cümlelerinle anlatabiliyorsun; sen bu yoldan ilerlemek istiyor musun, buna net cevap verebiliyorsun; kod/İngilizce eksiğinle bu platformu bitirebilir misin sorusuna rakamlı yanıtın var.</div>
+<div class="ma-meta-row"><span class="ma-icon">👤</span> <strong>Kim için:</strong> 🟢 başlangıç · 🔵 iş · 🟣 kişisel — üç persona için ortak giriş.</div>
+<div class="ma-meta-row"><span class="ma-icon">⏱️</span> <strong>Süre:</strong> ~20 dakika</div>
+<div class="ma-meta-row"><span class="ma-icon">📋</span> <strong>Önkoşul:</strong> Yok. Kod bilmesen de, İngilizcen yetersizse de bu sayfa seninle konuşur. Bir bilgisayar + internet yeter.</div>
+<div class="ma-meta-row"><span class="ma-icon">🎯</span> <strong>Çıktı:</strong> "AI Engineer" teriminin 2026'da ne demek olduğunu kendi cümlelerinle anlatabiliyorsun; sen bu yoldan ilerlemek istiyor musun, buna net cevap verebiliyorsun; kod/İngilizce eksiğinle bu platformu bitirebilir misin sorusuna rakamlı yanıtın var.</div>
 </div>
 
 !!! tip "Yabancı kelime mi gördün?"
@@ -17,11 +14,7 @@
 
 ## Neden bu sayfa?
 
-Bu platform "AI Engineer" olma yolculuğu vaat ediyor. Sen okumaya başlamadan önce en dürüst soruyu cevaplayalım: **bu terim tam olarak ne demek, sen bu yola girecek doğru kişi misin, bitirmene ne engeller var?** Üç soru. Hiçbirinin cevabı belirsiz kalmasın.
-
-İkincisi: "AI Engineer" LinkedIn'de, iş ilanlarında, YouTube videolarında birbiriyle çelişen anlamlarda kullanılıyor. Birisi "AI Engineer" derken **PhD'li matematik ağırlıklı araştırmacı** kastediyor; başka biri **prompt yazan web geliştiricisi** kastediyor. İkisi aynı iş değil. Bu sayfada sana **2026'da iş ilanlarında en sık aranan AI Engineer tanımını** veriyoruz, platform bu tanıma göre tasarlandı.
-
-Üçüncüsü: Pedagojik dürüstlük. Bu platformun hedef kitlesi geniş — "komut satırını ilk kez görecek yetişkin"den "backend mühendisi, AI tarafına kaymak istiyor"a kadar. **Sen bu yelpazenin neresindesin?** Sayfa sonunda kendi yerini somut olarak göreceksin, platformu nasıl okuyacağın netleşecek.
+"AI Engineer" 2026'da LinkedIn ilanlarında birbirleriyle çelişen anlamlarda dolaşıyor — biri PhD'li araştırmacı kastediyor, biri prompt yazan web geliştiricisi. Bu sayfa sana iş ilanlarında en sık aranan tanımı verir (platform bu tanıma göre tasarlandı), kendi konumunu (kod/İngilizce eksiğin dahil) "komut satırını ilk kez görecek yetişkin"den "backend'den AI tarafına kayan mühendis"e kadar uzanan yelpazede somut yere oturtur, ve bu yola uygun olup olmadığına net cevap verdirir. Üç soru, hiçbirinin cevabı belirsiz kalmasın.
 
 ## AI Engineer nedir — üç paragraf, 2026 tanımı
 

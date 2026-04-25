@@ -1,5 +1,7 @@
 # Bölüm 0 — Temel Hazırlık
 
+> **TL;DR:** Linux komutları + Python venv + Ollama + FastAPI temellerini atarsın · Bölüm sonunda kendi sunucunda HTTP POST atınca Ollama ile cevap dönen bir FastAPI servisi var.
+
 <div class="ma-meta" markdown>
 <div class="ma-meta-row"><span class="ma-icon">👤</span> <strong>Kim için:</strong> Python ve Linux'u hiç görmemiş, terminale yabancı ama denemeye istekli okuyucu</div>
 <div class="ma-meta-row"><span class="ma-icon">⏱️</span> <strong>Süre:</strong> ~2-2.5 saat (5 sayfa × 25-30 dk + model indirme bekleme süresi)</div>
@@ -9,11 +11,7 @@
 
 ## Neden bu bölüm?
 
-Bir AI platformu kurarken ilk engel **AI değil, altyapıdır.** `pip install anthropic` demeden önce Python'un nereden gelip nereye kurulduğunu, neyin neyin üstünde çalıştığını bilmezsek sonraki 10 bölümdeki pratiklerin hiçbiri yürümez. Bu bölüm bu temeli atar.
-
-İkinci sebep şu: "Anthropic API'si çalışmıyor" diyen kişilerin büyük kısmında sorun aslında API'de değildir — sanal ortam (`venv`, izole Python kutusu) aktif değildir, port (uygulamanın dinlediği kapı numarası) başka bir şeyle çakışmıştır, ya da arka plan servisi (`systemd`) durmuştur. Bu bölüm biter bitmez bu üç konuda "elime bakmadan" çalışabiliyor olacaksın. AI'yi anlamak için **AI'nin üstünde oturduğu zemini** anlamak gerek.
-
-Üçüncü sebep motivasyonel: Bölüm 0 bitince elinde **konuşan bir AI servisi** var. Bedava, kendi makinende, aylık fatura yok. Anthropic API'sine geçmeden önce "AI nedir, nasıl çağrılır" sorusunun cevabını **kendi makinende** yaşamış oluyorsun.
+Bir AI platformu kurarken ilk engel **AI değil, altyapıdır.** `pip install anthropic` demeden önce Python'un nereden gelip nereye kurulduğunu, sanal ortamın (venv) neyi izole ettiğini, FastAPI'nin port'ta nasıl dinlediğini bilmek gerek; "Anthropic API'si çalışmıyor" diyen çoğu kişide sorun API'de değil, venv kapalı veya port çakışmasında. Bu bölüm bu temeli atar — sonunda elinde **konuşan bir yerel AI servisi** var (bedava, internetsiz, faturasız), Anthropic API'sine geçmeden önce "AI nedir, nasıl çağrılır" sorusunu kendi makinende yaşamış oluyorsun.
 
 ## Bölüm 0 kısaca — ne öğreniyorsun
 

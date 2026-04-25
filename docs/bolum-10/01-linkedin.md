@@ -1,15 +1,12 @@
 # 10.1 LinkedIn + İleri Kariyer Stratejisi
 
+> **TL;DR:** LinkedIn 2026 algoritmasına uygun haftalık paylaşım takvimi + 25 ATS anahtar kelime + DM ile iş bulma refleksi kurarsın · Sayfa sonunda kariyer profilin (junior/mid/lateral/freelance) net.
+
 <div class="ma-meta" markdown>
-<div class="ma-meta-row" markdown>
-<strong>Kim için:</strong>
-<span class="ma-persona ma-persona-baslangic">🟢 başlangıç</span>
-<span class="ma-persona ma-persona-is">🔵 iş</span>
-<span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
-</div>
-<div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~30 dakika</div>
-<div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 9.7 Portföy Paketleme okundu (profil foto + headline + About temelleri kuruldu). 9.4 + 9.5 canlıda. GitHub + LinkedIn hesapları mevcut.</div>
-<div class="ma-meta-row"><strong>🎯 Çıktı:</strong> **İçerik stratejin var** — haftalık paylaşım takvimin, 3 ay sonraki hedefin (500-1000 bağlantı, 5-10 yorum/post), DM ile iş bulma refleksin. LinkedIn ATS keyword derinleştirilmiş. Özgün kariyer pozisyonun net: junior / mid / lateral mover / freelance. **Platform kapanış bölümünün açılış sayfası** — 10.5'e kadar her sayfa iş aramana doğrudan destek.</div>
+<div class="ma-meta-row"><span class="ma-icon">👤</span> <strong>Kim için:</strong> 🟢 başlangıç · 🔵 iş · 🟣 kişisel — kariyer açılış sayfası.</div>
+<div class="ma-meta-row"><span class="ma-icon">⏱️</span> <strong>Süre:</strong> ~30 dakika</div>
+<div class="ma-meta-row"><span class="ma-icon">📋</span> <strong>Önkoşul:</strong> 9.7 Portföy Paketleme okundu (profil foto + headline + About temelleri kuruldu). 9.4 + 9.5 canlıda. GitHub + LinkedIn hesapları mevcut.</div>
+<div class="ma-meta-row"><span class="ma-icon">🎯</span> <strong>Çıktı:</strong> **İçerik stratejin var** — haftalık paylaşım takvimin, 3 ay sonraki hedefin (500-1000 bağlantı, 5-10 yorum/paylaşım), DM ile iş bulma refleksin. LinkedIn ATS anahtar kelimeleri derinleştirilmiş. Kariyer konumun net: junior / mid / lateral mover / freelance. **Platform kapanış bölümünün açılış sayfası** — 10.5'e kadar her sayfa iş aramana doğrudan destek.</div>
 </div>
 
 !!! tip "Yabancı kelime mi gördün?"

@@ -1,14 +1,12 @@
 # 9.4 Portföy Projesi 1 — RAG Chatbot
 
+> **TL;DR:** PDF yükleyince Claude'un kaynak göstererek cevap verdiği canlı chatbot kuruyorsun · FastAPI + Qdrant + HTMX, Docker compose, 60 dk, ~$2-5/ay.
+
 <div class="ma-meta" markdown>
-<div class="ma-meta-row" markdown>
-<strong>Kim için:</strong>
-<span class="ma-persona ma-persona-baslangic">🟢 başlangıç</span>
-<span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
-</div>
-<div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~60 dakika</div>
-<div class="ma-meta-row"><strong>📋 Önkoşul:</strong> Bölüm 4 (RAG) tamamlanmış + 9.1 Docker + 9.2 Cloud + 9.3 CI/CD bilgisi; Anthropic API key + bir domain (opsiyonel ama önerilir); yerel makinede Docker Desktop veya engine</div>
-<div class="ma-meta-row"><strong>🎯 Çıktı:</strong> **Canlı RAG Chatbot** — `https://rag.alanadin.com` — kullanıcı PDF yüklüyor, soru soruyor, Claude **kaynak chunk göstererek** cevap veriyor. FastAPI backend + Qdrant vector DB + HTMX frontend (zero JavaScript build). Docker compose tek komutla ayağa kalkıyor, 9.3 pipeline ile otomatik deploy. Portföy README: ekran görüntüsü + demo GIF + maliyet + GitHub link. Aylık maliyet: **~$2–5** (VPS 5 € + Anthropic ~$1–3 orta kullanım).</div>
+<div class="ma-meta-row"><span class="ma-icon">👤</span> <strong>Kim için:</strong> 🟢 başlangıç + 🟣 kişisel — ilk canlı portföy projesi.</div>
+<div class="ma-meta-row"><span class="ma-icon">⏱️</span> <strong>Süre:</strong> ~60 dakika</div>
+<div class="ma-meta-row"><span class="ma-icon">📋</span> <strong>Önkoşul:</strong> Bölüm 4 (RAG) tamamlanmış + 9.1 Docker + 9.2 Cloud + 9.3 CI/CD bilgisi; Anthropic API anahtarı + bir alan adı (isteğe bağlı ama önerilir); yerel makinede Docker Desktop veya engine</div>
+<div class="ma-meta-row"><span class="ma-icon">🎯</span> <strong>Çıktı:</strong> **Canlı RAG Chatbot** — `https://rag.alanadin.com` — kullanıcı PDF yüklüyor, soru soruyor, Claude **kaynak parça (chunk) göstererek** cevap veriyor. FastAPI backend + Qdrant vector DB + HTMX frontend (sıfır JavaScript build). Docker compose tek komutla ayağa kalkar, 9.3 hattı ile otomatik dağıtılır. Portföy README: ekran görüntüsü + demo GIF + maliyet + GitHub bağlantısı. Aylık maliyet: **~$2–5** (VPS 5 € + Anthropic ~$1–3 orta kullanım).</div>
 </div>
 
 !!! tip "Yabancı kelime mi gördün?"
@@ -16,11 +14,7 @@
 
 ## Neden bu sayfa?
 
-Portföyün en etkili parçası **"git, tıkla, kullan" canlı demodur**. GitHub README'sinde sadece kod gören işveren etkilenmez; `https://rag.alanadin.com`'a tıkladığında PDF yükleyip soru sorabildiğinde etkilenir. **İlk portföy projen kullanılabilir olmalı** — akademik makale, şirket dokümanı, veya kişisel notları yükle, Claude alakalı pasajları bulup cevap versin. Bölüm 4'te öğrendiğin RAG desenini artık bir web servisi olarak sunuyorsun.
-
-İkincisi: Bu proje Bölüm 9'un **1+2+3 sayfalarının sentezi**. 9.1'deki Dockerfile, 9.2'deki VPS + HTTPS, 9.3'teki GitHub Actions pipeline — hepsi burada bir araya geliyor. Ayrı ayrı öğrendiğin desenler tek çalışan bir sistemde birleşiyor. **Teori → tek proje → canlı URL** döngüsü tamamlanıyor. 9.5'te ikinci portföy (agent otomasyon) bu iskeleti tekrar kullanacak — bir kere kuruyorsun, kopyalıyorsun.
-
-Üçüncüsü: AI Engineer iş ilanlarında en çok sorulan teknoloji setlerinden biri **"Python backend + vector DB + LLM"** üçlüsü. Bu sayfa sana tam o üçlüyü veriyor: FastAPI (Python backend standardı), Qdrant (Rust-yazılı production vector DB), Anthropic Claude (tool calling + streaming + uzun context). HTMX tercihi **frameworksüz frontend** refleksi — React/Next.js öğrenme yükünü ileriye erteleyip işin backend'ine odaklanmana izin verir. Görüşmede "neden HTMX?" sorusu iyi bir konuşma başlangıcı olur — minimum karmaşıklık, maksimum iş sonucu.
+Portföyün en etkili parçası **"git, tıkla, kullan" canlı demodur**: işveren GitHub'da kod görse etkilenmez, ama `https://rag.alanadin.com`'a tıklayıp PDF yükleyip soru sorabildiğinde etkilenir. Bu proje Bölüm 9'un 1+2+3 sayfalarının sentezi — 9.1 Dockerfile + 9.2 VPS+HTTPS + 9.3 GitHub Actions hattı tek çalışan sistemde birleşir. AI Engineer iş ilanlarında en çok sorulan üçlüyü (FastAPI + Qdrant + Claude) tam olarak öğretir; HTMX tercihi React/Next.js öğrenme yükünü erteler, görüşmede "neden HTMX?" iyi bir konuşma başlangıcıdır — minimum karmaşıklık, maksimum iş sonucu.
 
 ## Stack kararı — neden bu 5 araç
 
