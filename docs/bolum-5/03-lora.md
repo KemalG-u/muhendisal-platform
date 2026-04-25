@@ -13,7 +13,7 @@
 </div>
 
 !!! tip "Yabancı kelime mi gördün?"
-    **Rank (rütbe)** = LoRA adaptör matrisinin "inceliği"; 4/8/16 yaygın. **Hedef katmanlar (target modules)** = modelin hangi katmanları eğitilir (attention Q/K/V/O, MLP). **NF4** = Normal Float 4-bit; QLoRA'nın özel küçültme formatı. **Çift küçültme (double quantization)** = küçültme sabitlerini de küçültmek; ek ~%10 bellek tasarrufu. **Öğrenme oranı (learning rate)** = gradyan güncelleme boyutu; ince ayarda 1e-4 ile 5e-4 arası. **Epoch (devir)** = veri setinin kaç kez taranacağı; ince ayarda 1-3 en uygunu. **Gradyan biriktirme (gradient accumulation)** = küçük batch'leri birleştirip etkin büyük batch elde etme.
+    **Rank (kerte)** = LoRA adaptör matrisinin "inceliği"; 4/8/16 yaygın. **Hedef katmanlar (target modules)** = modelin hangi katmanları eğitilir (attention Q/K/V/O, MLP). **NF4** = Normal Float 4-bit; QLoRA'nın özel niceleme biçimi. **Çift niceleme (double quantization)** = niceleme sabitlerini de nicelemek; ek ~%10 bellek tasarrufu. **Öğrenme oranı (learning rate)** = gradyan güncelleme boyutu; ince ayarda 1e-4 ile 5e-4 arası. **Epoch (devir)** = veri setinin kaç kez taranacağı; ince ayarda 1-3 en uygunu. **Gradyan biriktirme (gradient accumulation)** = küçük yığınları (batch) birleştirip etkin büyük yığın elde etme. **VRAM** (Video RAM — ekran kartı belleği) = GPU'nun kendi RAM'i; CPU RAM'inden ayrı, model + gradyanlar + ara değerler hep burada tutulur. **Gradient checkpointing (gradyan kontrol noktası)** = ileri geçişin ara aktivasyonlarını saklamak yerine yeniden hesaplama; %30-40 VRAM tasarrufu, ~%20 yavaşlama. **bf16 vs fp16** = ikisi de 16-bit, bf16 (Brain Float) Ampere+ GPU'larda eğitim için daha kararlı.
 
 ## Neden bu sayfa?
 
@@ -191,20 +191,21 @@ Tam precision (FP16):  P × 2 bytes
 
 | GPU | VRAM | En büyük QLoRA modeli | Fiyat (2026 Nisan) |
 |---|---|---|---|
-| **Colab T4 (ücretsiz katman)** | 16 GB | 7B (Qwen 3-7B, Llama 3.1 8B) | $0 — günlük kota var, 2024 sonu kısıtlandı |
-| **Colab L4 (ücretsiz katman)** | 22 GB | 8B-13B | $0 — kullanılabilirlik değişken |
-| **Colab Pro A100** | 40 GB | 13B rahat, 32B sınırda | $10/ay + işlem birimi (compute unit) saatlik |
+| **Colab T4 (ücretsiz katman)** | 16 GB | 7B (Qwen3-7B, Llama 3.1 8B) | $0 — günlük yaklaşık 4-6 saat işlem birimi kotası var, 2024 sonu kısıtlandı |
+| **Colab L4 (ücretsiz katman)** | 22.5 GB | 8B-13B | $0 — kullanılabilirlik değişken |
+| **Colab Pro A100 40GB** | 40 GB | 13B rahat, 32B sınırda | $9.99/ay + işlem birimi (compute unit) saatlik |
+| **Colab Pro+ A100 80GB / V5e** | 80 GB | 32B-70B QLoRA | $49.99/ay |
 | **RTX 3060** | 12 GB | 3B-7B | $250-350 (2026 ikinci el) |
 | **RTX 4090** | 24 GB | 13B rahat, 32B sıkışık | $1500-1800 |
-| **RTX 5090** | 32 GB | 32B rahat | $2000-2500 (Ocak 2025'te çıktı) |
-| **A100 40 GB** | 40 GB | 32B rahat, 70B QLoRA sıkışık | $1.20-1.80/saat kiralık |
-| **A100 80 GB** | 80 GB | 70B rahat | $1.50-2.50/saat kiralık |
-| **H100 80 GB** | 80 GB | 70B + eğitim 2-3 kat hızlı | $2-3/saat kiralık (2026'da düştü) |
-| **RunPod / Lambda Labs / Vast.ai** | değişken | kiralama platformları | $0.30-5/saat |
+| **RTX 5090** | 32 GB | 32B rahat | $2000-2500 (Ocak 2025'te çıktı, GDDR7 + 1.8 PFLOPS FP4) |
+| **RunPod / Vast.ai A100 80GB** | 80 GB | 70B QLoRA | $1.10-1.80/saat (saatlik kira; $20-40 ile 13-30 saatlik proje) |
+| **Lambda Labs H100 80GB** | 80 GB | 70B QLoRA + büyük yığın | $2.50-3.50/saat |
+| **AWS p5.48xlarge (8×H100)** | 640 GB | Tam ince ayar 70B+ | $98/saat (Reserved'ta yarı fiyat) |
+| **NVIDIA H200 (Lambda + Hyperstack)** | 141 GB | 70B + eğitim 1.4× hızlı (HBM3e) | $3.00-4.50/saat |
 
 </table>
 
-**5.4 sayfası için:** Colab T4 / L4 (ücretsiz katman) + Qwen 3-1.7B veya Llama 3.2 1B seçimi. İlk ince ayar deneyimi için ideal.
+**5.4 sayfası için:** Colab T4 / L4 (ücretsiz katman) + Qwen3-1.7B veya Llama 3.2 1B Instruct seçimi. İlk ince ayar deneyimi için ideal. Unsloth eklenirse T4'te 7B QLoRA bile çalışır.
 
 ## Hyperparameter önerileri
 
@@ -246,12 +247,15 @@ Efektif 16 batch ile eğitim ama VRAM tek batch × 2 örneği tutar. **16 normal
 
 ```python
 warmup_ratio = 0.03                   # ilk %3 adım ısınma
-lr_scheduler_type = "cosine"          # cosine decay
-weight_decay = 0.01                   # regularization
-max_grad_norm = 1.0                   # gradient clipping
+lr_scheduler_type = "cosine"          # cosine decay (kosinüs azalış)
+weight_decay = 0.01                   # düzenleme (regularization)
+max_grad_norm = 1.0                   # gradyan kırpma (gradient clipping)
+optim = "adamw_8bit"                  # bitsandbytes 8-bit AdamW; ek 2-3 GB VRAM tasarrufu
+bf16 = True                           # Ampere+ GPU'larda fp16'dan kararlı
+gradient_checkpointing = True         # ~%30 VRAM tasarrufu, ~%20 yavaşlama
 ```
 
-Bunlar "konserve" değerler — hyperparameter tuning zamanın yoksa dokunma.
+Bunlar "konserve" değerler — hiperparametre ayarına zamanın yoksa dokunma. Unsloth `use_gradient_checkpointing="unsloth"` özel kipiyle standart checkpointing'den ek %25 daha az VRAM kullanır.
 
 ## Monitoring — eğitim nasıl gidiyor?
 

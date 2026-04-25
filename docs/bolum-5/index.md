@@ -14,13 +14,13 @@ Niye 4 sayfa? Çünkü ince ayar bir kez yanlış yola saparsan $200-500 maliyet
 
 ## Bölüm 5 kısaca
 
-**5.1 — İnce Ayar Nedir.** Tam ince ayar (tüm parametre, pahalı), LoRA (adaptör katman, küçük), QLoRA (4-bit küçültme + LoRA, tüketici GPU'da). İnce ayar ile prompt mühendisliği ve RAG arasındaki rol ayrımı.
+**5.1 — İnce Ayar Nedir.** Tam ince ayar (tüm parametre, pahalı), LoRA (adaptör katman, küçük), QLoRA (4-bit küçültme + LoRA, tüketici GPU'da). DPO (Direct Preference Optimization) ile RLHF arasındaki yeni denge — 2025'te DPO, RLHF'ye kıyasla %70 daha az hesaplama maliyeti gerektiriyor ve eşdeğer hizalama veriyor. İnce ayar ile yönerge mühendisliği ve RAG arasındaki rol ayrımı.
 
-**5.2 — Hangisini Seçmeli.** **Karar ağacı.** "Modelin davranışını mı değiştirmek istiyorsun (ton, stil, format) → ince ayar. Yeni bilgi mi eklemek → RAG. Çok spesifik alan (tıbbi, hukuki) + davranış değiştirme → hibrit." Somut 5 proje senaryosu üzerinde uygulama.
+**5.2 — Hangisini Seçmeli.** **Karar ağacı.** "Modelin davranışını mı değiştirmek istiyorsun (ton, stil, biçim) → ince ayar. Yeni bilgi mi eklemek → RAG. Çok özelleşmiş alan (tıbbi, hukuki) + davranış değiştirme → hibrit." Somut 5 proje senaryosu + 2026 maliyet karşılaştırma tablosu (RAG aylık $5-50 vs LoRA tek seferlik $10-30).
 
-**5.3 — LoRA ve QLoRA.** LoRA matematiği sezgisel (matris ayrıştırma). QLoRA'nın 4-bit küçültme ile 24 GB GPU'da 70B model ince ayar edebildiği iddiası ve sınırları. Pratikte hangi GPU için hangisi (RTX 4090 / 5090 / A100 / H100).
+**5.3 — LoRA ve QLoRA.** LoRA matematiği sezgisel (kerteli matris ayrıştırma — low-rank decomposition). QLoRA'nın 4-bit NF4 niceleme (NormalFloat4 quantization) + LoRA ile 24 GB GPU'da 70B model eğitebilmesi ve sınırları. Pratikte hangi GPU için hangisi (RTX 4090 24 GB / 5090 32 GB / A100 80 GB / H100 80 GB / H200 141 GB). 2025'te eklenen **Unsloth** kütüphanesi LoRA eğitimini 2-5× hızlandırıyor — `unsloth` paketi Colab T4'te bile kullanılabilir.
 
-**5.4 — Hugging Face ile Pratik.** Küçük bir model (Qwen 3-1.7B veya Llama 3.2 1B) üzerinde 50 örnekli LoRA ince ayarı. Colab ücretsiz katmanı (T4 / L4, kullanım kotası var) ya da yerelde 12 GB+ VRAM yeter. Kendi küçük "tonu değişmiş" model üretimi. Deneyim için; üretim için değil.
+**5.4 — Hugging Face ile Pratik.** Küçük bir model (Qwen3-1.7B veya Llama 3.2 1B Instruct) üzerinde 50 örnekli LoRA ince ayarı. Colab ücretsiz katmanı (T4 16 GB veya L4 22.5 GB, günlük yaklaşık 4-6 saat işlem birimi kotası) ya da yerelde 12 GB+ VRAM yeter. Kendi küçük "tonu değişmiş" modelinin üretimi. Deneyim için; üretim için değil.
 
 ## Bu bölümün yol haritası
 
@@ -64,9 +64,9 @@ flowchart LR
 ## Bu bölüm bittiğinde elinde ne olacak
 
 - **Karar ağacı:** RAG mı, ince ayar mı, hibrit mi — 10 saniyede kararı veren eşik
-- **Maliyet farkındalığı:** Tam ince ayar (8B model) $200-500, LoRA $10-30, QLoRA $3-10 — 2026 cloud GPU fiyatlarına göre rakamlı karşılaştırma (5.3'te detay)
-- **1 mini LoRA denemesi:** Qwen 3-1.7B'yi kendi tonunla eğitmiş olmanın deneyimi — "ince ayar efsanevi değilmiş, ama RAG'in yerini de tutmuyor" hissi
-- **Hugging Face + Colab refleksi:** Sonraki ML denemeleri için hazır ortam
+- **Maliyet farkındalığı:** Tam ince ayar (8B model) $200-500, LoRA $10-30, QLoRA $3-10, Unsloth + QLoRA $1-5 — 2026 bulut GPU fiyatlarına (RunPod, Vast.ai, Lambda Labs) göre sayısal karşılaştırma (5.3'te ayrıntı)
+- **1 mini LoRA denemesi:** Qwen3-1.7B'yi kendi tonunla eğitmiş olmanın deneyimi — "ince ayar efsanevi değilmiş, ama RAG'in yerini de tutmuyor" hissi
+- **Hugging Face + Colab refleksi:** Sonraki ML denemeleri için hazır ortam; HF Hub'a model push etme + Hugging Face Spaces'e demo dağıtma alışkanlığı
 
 <div class="ma-anthropic-oz" markdown>
 <div class="ma-anthropic-oz-header">📖 Anthropic bu bölümde ne der — öz</div>

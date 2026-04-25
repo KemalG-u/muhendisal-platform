@@ -13,7 +13,7 @@
 </div>
 
 !!! tip "Yabancı kelime mi gördün?"
-    **Concept drift (kavram kayması)** = verinin zamanla değişmesi; bu ayın müşteri sorusu geçen yılın sorusundan farklı. **Latency budget (gecikme bütçesi)** = uygulamanın cevap süresi bütçesi; chatbot 2-3 sn, batch ajan 30 sn tolere eder. **Cold start (soğuk başlangıç)** = ilk kullanıcı için modelin yüklenme/açılma süresi. **Staleness (bayatlık)** = modelin güncel olmaması; RAG'de parça (chunk) güncel kalır, ince ayar modeli eğitildiği günden sonra "donuk" olur. **Hibrit (hybrid)** = RAG + ince ayar birlikte; genellikle ince ayar ton/stil için, RAG bilgi için.
+    **Concept drift (kavram kayması)** = verinin zamanla değişmesi; bu ayın müşteri sorusu geçen yılın sorusundan farklı. **Latency budget (gecikme bütçesi)** = uygulamanın cevap süresi bütçesi; chatbot 2-3 sn, toplu ajan 30 sn tolere eder. **Cold start (soğuk başlangıç)** = ilk kullanıcı için modelin yüklenme/açılma süresi; barındırılan ince ayarda 30-90 sn olabilir, API çağrısında neredeyse 0. **Staleness (bayatlık)** = modelin güncel olmaması; RAG'de parça (chunk) güncel kalır, ince ayar modeli eğitildiği günden sonra "donuk" olur. **Hibrit (hybrid)** = RAG + ince ayar birlikte; genellikle ince ayar ton/biçem için, RAG bilgi için. **TCO** (Total Cost of Ownership — toplam sahiplik maliyeti) = sadece API/eğitim faturası değil, GPU + bakım + zaman + risk maliyetinin toplamı. **A/B test** = iki sürümü eş zamanlı canlıda denemek; kullanıcının %50'si A, %50'si B alır. **Provisioned throughput** (ayrılmış işleme kapasitesi) = AWS Bedrock + Vertex AI gibi platformlarda barındırılan modele saatlik ödeme; minimum 1 saat ücretlendirme.
 
 ## Neden bu sayfa?
 
@@ -96,12 +96,12 @@ RAG retrieval bir ek adım (embedding hesapla + Qdrant sorgu + bağlam ekle). To
 
 | Aylık bütçe | Tercih |
 |---|---|
-| **<$50** | Prompt + hafif RAG + Haiku 4.5 ($1/$5) |
-| **$50-500** | RAG + Sonnet 4.6 ($3/$15) + prompt caching |
-| **$500-5000** | RAG (Opus 4.7 — $5/$25) veya QLoRA self-host |
-| **$5K+** | İnce ayar + self-host geniş kapsamlı düşün |
+| **<$50** | Yönerge + hafif RAG + Haiku 4.5 ($1/$5) + yönerge önbelleği |
+| **$50-500** | RAG + Sonnet 4.6 ($3/$15) + yönerge önbelleği + heterojen model karması |
+| **$500-5000** | RAG (Opus 4.7 — $5/$25) + Batch API (%50 indirim) veya QLoRA kendi sunucunda |
+| **$5K+** | İnce ayar + kendi sunucunda kapsamlı düşün; Forward Deployed Engineer ile ön çalışma |
 
-**İnce ayarın gizli maliyeti:** GPU çıkarımı (inference). Bulutta A100 80 GB ayda ~$300-500 (saatlik ~$1.5-2 × yarım gün); Anthropic API'siyle aynı yükü ~$100/ay tutar. İnce ayar %80+ kesintisiz kullanılırsa kendini karşılar; yoksa maliyet artar.
+**İnce ayarın gizli maliyeti (TCO — toplam sahiplik):** GPU çıkarımı (inference). Bulutta A100 80 GB ayda ~$300-500 (saatlik ~$1.5-2 × yarım gün), H100 80 GB saatlik ~$2-3 (RunPod, Lambda Labs 2026 fiyatları); Anthropic API'siyle aynı yükü ~$100/ay tutar. İnce ayar %80+ kesintisiz kullanılırsa kendini karşılar; yoksa maliyet artar. AWS Bedrock'ta `provisioned throughput` modu en az 1 ay ayrılmış kapasite ister, ki bu küçük müşteri için cüzdan dostu değil.
 
 ### 7. Domain spesifiklik
 
@@ -229,7 +229,7 @@ flowchart TB
 - Gizlilik: yerinde (on-prem) zorunlu (HIPAA / KVKK özel nitelikli veri)
 - Bütçe: araştırma projesi, uygun
 
-**Karar: Hibrit (RAG + LoRA ince ayar) kendi sunucunda.** Llama 3.1 70B veya Llama 4 Scout kendi sunucunda; radyolog raporu biçimi için LoRA (500 örnek); tıp literatürü Qdrant RAG; yerinde. İnce ayar ton için, RAG bilgi için. **Karmaşık proje; 3-6 aylık iş.**
+**Karar: Hibrit (RAG + LoRA ince ayar) kendi sunucunda.** Llama 4 Scout (17B aktif / 109B toplam, MoE) kendi sunucunda; radyolog raporu biçimi için LoRA (500 örnek, DPO ile tercih ayarı sonrası); tıp literatürü (PubMed + hastane PACS verisi) Qdrant'a; yerinde. İnce ayar ton için, RAG bilgi için. **Karmaşık proje; 3-6 aylık iş.** Tıbbi yazılım için AB MDR (Medical Device Regulation) + AI Act yüksek risk yükümlülükleri 2026 Ağustos'ta yürürlüğe girer — uyum çalışmasını başlangıçtan kapsa.
 
 ### Senaryo 4 — Finansal analiz (kişisel proje)
 
@@ -255,7 +255,7 @@ flowchart TB
 - Gizlilik: eser telifli; edebi taklit (pastiche) için eğitim hukuki gri bölge — ticari için TELİF SAHİBİNDEN İZİN şart
 - Bütçe: hobi → düşük
 
-**Karar: QLoRA + Llama 3.2 1B veya Qwen 3-1.7B (Türkçe iyi) + 200-300 örnek paragraf.** Colab T4/L4 ücretsiz katmanı, 3-4 saat eğitim, $0. **Telif uyarısı (ciddi):** Telifli eserle eğitilmiş model **ticari** kullanılırsa yazarın ya da yayınevinin dava açma hakkı vardır (2024-2025'te ABD'de bu yönde davalar açıldı). Sadece **kişisel deney + paylaşmama** koşuluyla yap.
+**Karar: QLoRA + Llama 3.2 1B Instruct veya Qwen3-1.7B (Türkçe iyi) + 200-300 örnek paragraf.** Colab T4/L4 ücretsiz katmanı + Unsloth ile 1.5-2 saat eğitim, $0. **Telif uyarısı (ciddi):** Telifli eserle eğitilmiş model **ticari** kullanılırsa yazarın veya yayınevinin dava açma hakkı vardır (2024-2025'te ABD'de NYT vs OpenAI, Sarah Silverman vs Meta, Authors Guild vs OpenAI gibi davalar açıldı; 2026'da bazıları sonuçlandı, telif lehine eğilim). AB AI Act 53. madde "Genel Amaçlı AI" eğitim verisinin telif uyumunu zorunlu kılıyor. Sadece **kişisel deney + paylaşmama** koşuluyla yap.
 
 **Alternatif (daha basit):** Claude Sonnet 4.6 + 20 Ahmet Ümit paragrafı few-shot + prompt caching. Kalite yetmezse LoRA.
 
@@ -341,14 +341,15 @@ Proje ince ayar gerektiriyorsa:
 
 | Senaryo | Öneri |
 |---|---|
-| Türkçe yaratıcı | Llama 3.2 1B/3B veya Llama 3.1 8B |
-| Türkçe + kod | Qwen 3-1.7B / Qwen 3.5-7B |
-| Çok dilli | Mistral Nemo 12B veya Mistral 7B |
-| Küçük (mobil) | Gemma 3 2B / 9B / 27B |
-| Akıl yürütme yoğun | DeepSeek V3.2 (671B / 37B aktif MoE) |
-| Açık ağırlıklı yeni nesil | Llama 4 Scout (17B aktif / 109B toplam) |
+| Türkçe yaratıcı (kişisel) | Llama 3.2 1B/3B Instruct veya Llama 3.1 8B Instruct |
+| Türkçe + kod | Qwen3-1.7B / Qwen3.5-7B Instruct |
+| Çok dilli (24+ dil) | Mistral Nemo 12B (Mistral + Nvidia ortak) |
+| Küçük (mobil + edge) | Gemma 3 2B / 9B / 27B veya Phi-4-mini 3.8B |
+| Akıl yürütme yoğun | DeepSeek V3.2 (671B / 37B aktif MoE) veya Qwen3-235B-Reasoner |
+| Açık ağırlıklı yeni nesil | Llama 4 Scout (17B aktif / 109B toplam, MoE) veya Maverick (17B aktif / 400B toplam) |
+| Çoklu kip (görsel + metin) | Qwen3-VL-7B / Llama 3.2 Vision 11B |
 
-Hepsi açık ağırlıklı + HuggingFace'te erişilebilir + LoRA/QLoRA uyumlu.
+Hepsi açık ağırlıklı + Hugging Face'te erişilebilir + LoRA/QLoRA uyumlu. Llama 4 ailesinde MoE (Mixture of Experts — uzman karması) mimarisi var; eğitim için yoğun (dense) modellere göre VRAM ihtiyacı farklılaşır, Unsloth + Llama 4 entegrasyonu 2025 sonunda eklendi.
 
 </details>
 

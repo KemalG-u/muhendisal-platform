@@ -9,11 +9,11 @@
 </div>
 <div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~50 dakika</div>
 <div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 5.1 + 5.2 + 5.3 okundu; hiperparametre mantığı elinde. Google hesabı (Colab için), HuggingFace hesabı (model indirme + adaptör yükleme).</div>
-<div class="ma-meta-row"><strong>🎯 Çıktı:</strong> **İlk LoRA adaptörün Colab T4/L4 üstünde eğitildi** — Qwen 3-1.7B veya Qwen 2.5-1.5B + 50 Türkçe örnek + ~20-30 dakikada tamamlandı. Temel model ile ince ayarlı modeli karşılaştıran testin var. HuggingFace Hub'a yüklendi (herkese açık veya özel). **3. pratik imza** (9.4 RAG + 9.5 Agent + 5.4 ince ayar). Mülakatta "İnce ayar denediniz mi?" sorusuna **evet + somut demo**.</div>
+<div class="ma-meta-row"><strong>🎯 Çıktı:</strong> **İlk LoRA adaptörün Colab T4/L4 üstünde eğitildi** — Qwen3-1.7B veya Llama 3.2 1B Instruct + 50 Türkçe örnek + ~20-30 dakikada tamamlandı (Unsloth ile 10-15 dk). Temel model ile ince ayarlı modeli karşılaştıran testin var. HuggingFace Hub'a yüklendi (herkese açık veya özel). **3. pratik imza** (9.4 RAG + 9.5 Agent + 5.4 ince ayar). Mülakatta "İnce ayar denediniz mi?" sorusuna **evet + somut demo**.</div>
 </div>
 
 !!! tip "Yabancı kelime mi gördün?"
-    **Colab** = Google Colab, ücretsiz bulut GPU notebook'u. **TrainingArguments** = HF Transformers'taki eğitim yapılandırma sınıfı. **Trainer** = eğitim yöneticisi; veri + model + ayarlar verince çalıştırır. **SFTTrainer** = TRL kütüphanesinin instruction tuning'e özel eğiticisi, sohbet şablonunu otomatik halleder. **Gradient checkpointing (gradyan kontrol noktası)** = eğitim belleğini ~%30 düşürür, süre %20 artar. **HuggingFace Hub'a yüklemek (push)** = adaptörü huggingface.co hesabına model sürümü olarak göndermek.
+    **Colab** = Google Colab, ücretsiz bulut GPU not defteri. **TrainingArguments** = HF Transformers'taki eğitim yapılandırma sınıfı. **Trainer** = eğitim yöneticisi; veri + model + ayar verince çalıştırır. **SFTTrainer** = TRL kütüphanesinin instruction tuning'e özel eğiticisi, sohbet şablonunu otomatik halleder. **Gradient checkpointing (gradyan kontrol noktası)** = eğitim belleğini ~%30 düşürür, süre ~%20 artar. **HuggingFace Hub'a yüklemek (push)** = adaptörü huggingface.co hesabına model sürümü olarak göndermek. **JSONL** (JSON Lines — JSON satırları) = her satırı bağımsız JSON olan dosya biçimi; veri seti taşımak için yaygın. **Sentetik veri** = LLM ile üretilmiş eğitim verisi; küçük gerçek veri eksiğini doldurmak için 2025'ten itibaren standart yöntem (Anthropic, Microsoft Phi-4 raporları doğrular). **Token/sn** = eğitim hızı ölçütü; T4'te ~5-10 token/sn, A100'de ~50-100, H100'de ~150-300.
 
 ## Neden bu sayfa?
 
@@ -29,17 +29,17 @@
 
 ## Hedef — ne yapacağız
 
-**50 örnekli Türkçe instruction tuning denemesi:**
+**50 örnekli Türkçe yönerge ayarı (instruction tuning) denemesi:**
 
-- Model: **Qwen 3-1.7B-Instruct** (2026'da güncel; alternatif: Qwen 2.5-1.5B-Instruct ya da Llama 3.2 1B-Instruct — Türkçe iyi, küçük, hızlı)
-- Veri: 50 örnek — "müşteri destek asistanı" biçiminde (sen üreteceksin veya sentetik)
-- Yöntem: **QLoRA** (4-bit küçültme + LoRA adaptör)
-- Hiperparametreler: 5.3'te öğrendiğin tercih (r=8, QKVO, LR 2e-4, 2-3 epoch)
-- GPU: **Colab T4/L4 (ücretsiz katman, kullanım kotası var)**
-- Süre: ~20-30 dakika eğitim + 10 dakika kurulum + 10 dakika test = **40-50 dakika**
-- Çıktı: HuggingFace Hub'da `KULLANICI_ADI/qwen-tr-musteri-destek-v1` adaptörü
+- Model: **Qwen3-1.7B-Instruct** (2026'da güncel; alternatif: Qwen2.5-1.5B-Instruct ya da Llama 3.2 1B-Instruct — Türkçe iyi, küçük, hızlı)
+- Veri: 50 örnek — "müşteri destek asistanı" biçiminde (sen üreteceksin veya Claude ile sentetik üreteceksin)
+- Yöntem: **QLoRA** (4-bit niceleme + LoRA adaptör) + isteğe bağlı **Unsloth** ile 2-5× hızlandırma
+- Hiperparametreler: 5.3'te öğrendiğin tercih (r=8, QKVO, LR 2e-4, 2-3 epoch, `optim="adamw_8bit"`, `bf16=True`)
+- GPU: **Colab T4/L4 (ücretsiz katman, günlük yaklaşık 4-6 saat işlem birimi kotası)**
+- Süre: ~20-30 dakika eğitim (Unsloth ile 10-15 dk) + 10 dakika kurulum + 10 dakika test = **40-50 dakika**
+- Çıktı: HuggingFace Hub'da `KULLANICI_ADI/qwen-tr-musteri-destek-v1` adaptörü + model kartı (model card) Türkçe
 
-**Uyarı:** Bu **üretim modeli değil** — 50 örnek deney seviyesi. Amaç: pratik refleks + ilk ince ayar deneyimi + CV sinyali.
+**Uyarı:** Bu **üretim modeli değil** — 50 örnek deney seviyesi. Amaç: pratik refleks + ilk ince ayar deneyimi + CV sinyali. Üretim için 500-2000 kaliteli örnek + DPO sonrası tercih ayarı + 2 epoch düşük LR + barındırılan inference altyapısı gerekir.
 
 ## Bu sayfanın ekosistemi
 
@@ -212,7 +212,7 @@ print(train_ds[0]["text"])
 from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 import torch
 
-MODEL_NAME = "Qwen/Qwen2.5-1.5B-Instruct"  # alternatif: "Qwen/Qwen3-1.7B-Instruct" veya "meta-llama/Llama-3.2-1B-Instruct"
+MODEL_NAME = "Qwen/Qwen3-1.7B-Instruct"  # 2026 öntanımlı; alternatif: "Qwen/Qwen2.5-1.5B-Instruct" (eski) veya "meta-llama/Llama-3.2-1B-Instruct"
 
 # QLoRA 4-bit NF4 config
 bnb_config = BitsAndBytesConfig(
