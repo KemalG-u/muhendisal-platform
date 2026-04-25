@@ -23,7 +23,7 @@ def get_current_user(
 
 
 @router.post("/auth/init", response_model=schemas.UserOut)
-@limiter.limit("5/minute")
+@limiter.limit("3/hour;10/day")
 def init_user(
     request: Request,
     payload: schemas.UserInit,
@@ -33,7 +33,7 @@ def init_user(
     user = db.query(models.User).filter(models.User.token == payload.token).first()
     if user:
         return user
-    user = models.User(token=payload.token, nick=payload.nick or "Kemal")
+    user = models.User(token=payload.token, nick=payload.nick or "Misafir")
     db.add(user)
     db.flush()
     streak = models.Streak(user_id=user.id)

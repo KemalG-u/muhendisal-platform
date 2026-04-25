@@ -36,21 +36,19 @@ def _strip_dangerous_html(value: str) -> str:
 
 class UserInit(BaseModel):
     """İlk açılışta cihazdan gelen UUID."""
-    token: str = Field(..., min_length=8, max_length=128)
-    nick: Optional[str] = "Kemal"
+    token: str = Field(..., min_length=8, max_length=64, pattern=r"^[a-zA-Z0-9\-_]+$")
+    nick: Optional[str] = Field(None, min_length=1, max_length=30, pattern=r"^[\w\s.\-_]+$")
 
     @field_validator("nick")
     @classmethod
     def _clean_nick(cls, v):
         if v is None:
             return v
-        if len(v) > 64:
-            raise ValueError("nick 64 karakterden uzun olamaz")
         return _strip_dangerous_html(v)
 
 
 class UserUpdate(BaseModel):
-    nick: Optional[str] = Field(None, max_length=64)
+    nick: Optional[str] = Field(None, min_length=1, max_length=30, pattern=r"^[\w\s.\-_]+$")
     target: Optional[Literal["hbv", "kisisel", "is", "hepsi", "baslangic"]] = None
 
     @field_validator("nick")

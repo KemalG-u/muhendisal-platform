@@ -69,3 +69,14 @@ class Feedback(Base):
     created_at = Column(DateTime, server_default=func.now())
 
     user = relationship("User", back_populates="feedback")
+
+
+class ApiLog(Base):
+    """Tüm POST /api/* isteklerinin denetim kaydı."""
+    __tablename__ = "api_log"
+    id = Column(Integer, primary_key=True)
+    timestamp = Column(DateTime, server_default=func.now(), index=True)
+    ip = Column(String, nullable=True, index=True)
+    method = Column(String, nullable=False)
+    endpoint = Column(String, nullable=False, index=True)
+    status = Column(Integer, nullable=False)

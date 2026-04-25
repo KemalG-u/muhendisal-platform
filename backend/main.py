@@ -1,12 +1,13 @@
 """MühendisAl Platform Backend — FastAPI ana giriş."""
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
-from .database import init_db
+from .database import init_db, SessionLocal
 from .rate_limit import limiter
 from .routes import auth, progress, quiz, streak_feedback, xp
+from . import models
 
 
 app = FastAPI(
@@ -39,6 +40,27 @@ app.add_middleware(
 @app.on_event("startup")
 def on_startup():
     init_db()
+
+
+@app.middleware("http")
+async def audit_log_middleware(request: Request, call_next):
+    """POST /api/* isteklerini api_log tablosuna yaz."""
+    response = await call_next(request)
+    if request.method == "POST" and request.url.path.startswith("/api/"):
+        try:
+            db = SessionLocal()
+            ip = request.client.host if request.client else None
+            db.add(models.ApiLog(
+                ip=ip,
+                method=request.method,
+                endpoint=request.url.path,
+                status=response.status_code,
+            ))
+            db.commit()
+            db.close()
+        except Exception:
+            pass  # log kaybı kullanıcı isteğini etkilemesin
+    return response
 
 
 @app.get("/api/health")
