@@ -13,7 +13,7 @@
 </div>
 
 !!! tip "Yabancı kelime mi gördün?"
-    **Trend** = yönelim; 2-3 yılda yaygınlaşacak pattern. **Hype cycle** (Gartner) = yeni teknolojinin balon → hayal kırıklığı → üretkenlik olgunlaşması eğrisi. **Edge inference** = modeli kullanıcı cihazında (mobile, laptop) çalıştırma; cloud'a bağımlı olmama. **A2A protocol** = Agent-to-Agent iletişim protokolü; farklı firma agent'ları konuşabilir. **Alignment** = modelin insan değerlerine uyumlu davranma araştırması. **Evals** = sistematik model değerlendirmeleri; regression test'in LLM versiyonu.
+    **Trend** (eğilim) = 2-3 yılda yaygınlaşacak örüntü. **Hype cycle** (Gartner balonu) = yeni teknolojinin balon → hayal kırıklığı → verimlilik olgunlaşması eğrisi. **Edge inference** (kenar çıkarımı) = modeli kullanıcı cihazında (mobil, dizüstü) çalıştırma; buluta bağımlı olmama. **A2A protocol** (Agent-to-Agent — Ajandan-Ajana) = farklı firma ajanlarının konuşabildiği iletişim protokolü; Google'ın Nisan 2025'te yayımladığı standart. **Alignment** (hizalama) = modelin insan değerlerine uyumlu davranma araştırması. **Evals** (değerlendirmeler) = dizgesel model sınamaları; LLM dünyasındaki gerileme testi karşılığı. **AGI** (Artificial General Intelligence — Yapay Genel Zeka) = insan seviyesi geniş yetkinliğe sahip kuramsal AI sistemi. **Interpretability** (yorumlanabilirlik) = modelin iç hesaplamasını okuma/açıklama araştırması; Anthropic'in mekanistik yorumlanabilirlik ekibi öncü. **RLHF** (Reinforcement Learning from Human Feedback — İnsan Geri Bildirimiyle Pekiştirmeli Öğrenme) = insan tercihleriyle modelin hizalanması.
 
 ## Neden bu sayfa?
 
@@ -101,48 +101,53 @@ Her agent ayrı LLM çağrısı + ayrı sorumluluk + ayrı maliyet optimizasyonu
 
 ### Senin öğrenmen
 
-- 9.5 İçerik Özet Agent **tek başına orchestrator-workers** pattern (Bölüm 6.5).
-- Sonraki adım: aynı pattern'de **ikinci** agent ekle, paralel çalışsınlar (CrewAI, LangGraph, AutoGen framework'leri).
-- **Uyarı:** Multi-agent sistem debug **zor** — 5 agent'ın 25 permutation etkileşim. Başla basit (2 agent), sonra genişle.
+- 9.5 İçerik Özet Ajanı **tek başına orkestratör-işçi** örüntüsü (Bölüm 6.5).
+- Sonraki adım: aynı örüntüde **ikinci** ajan ekle, paralel çalışsınlar (LangGraph 1.x, CrewAI, AutoGen veya Anthropic'in resmi `claude-agent-sdk`'i — `query()` ve `ClaudeSDKClient` ile alt-ajan düzeneği üretim için hazır).
+- **Uyarı:** Çok ajanlı sistem hata ayıklaması **zor** — 5 ajanın etkileşim alanı 25 permütasyon. Sade başla (2 ajan), sonra genişle. Her ajanın trace'i ayrı `trace_id` ile loglanmalı; LangFuse veya Helicone bu izlemeyi kolaylaştırır.
 
 ### Kaynak
 
-- [Anthropic Building Effective Agents (2024-12)](https://www.anthropic.com/research/building-effective-agents) — temel referans
-- [LangGraph](https://langchain-ai.github.io/langgraph/) — multi-agent framework
-- [CrewAI](https://www.crewai.com/) — alternatif framework
-- [Google A2A paper (2025)](https://arxiv.org/abs/2501.14734) — protokol önerisi
+- [Anthropic Building Effective Agents (Aralık 2024, 2025'te güncellendi)](https://www.anthropic.com/research/building-effective-agents) — temel referans
+- [Anthropic claude-agent-sdk](https://github.com/anthropics/claude-agent-sdk-python) — resmi ajan SDK'si (2025'te yayımlandı)
+- [LangGraph 1.x](https://langchain-ai.github.io/langgraph/) — durumlu ajan grafı çatısı
+- [CrewAI](https://www.crewai.com/) — rol tabanlı ajan çatısı
+- [Google A2A protocol (Nisan 2025)](https://google.github.io/A2A/) — açık ajan-arası iletişim standardı; OpenAI ve Microsoft 2025'te benimsediğini duyurdu
+- [Anthropic Multi-Agent Research System (Haziran 2025)](https://www.anthropic.com/news/multi-agent-research-system) — Claude'un kendi araştırma ürününde kullandığı çok-ajan mimarisi
 
-## Trend 2 — Multimodal Foundation Models
+## Trend 2 — Çoklu Kip (Multimodal) Temel Modeller
 
 ### Ne oluyor
 
-Eski LLM sadece metin. Yeni modeller metin + görsel + ses + video **aynı içinde**. Claude Sonnet 4.6 görüntü alır (Bölüm 7 temel). GPT-4o ses + görsel. Gemini 2.5 uzun video analiz.
+Eski LLM yalnızca metin. Yeni modeller metin + görsel + ses + video **aynı içinde**. Claude Sonnet 4.6 + Opus 4.7 görüntü ve PDF doğal alır (Bölüm 7 temel). GPT-5.5 ses + görsel + canlı sesli sohbet. Gemini 2.5 Pro 1M bağlamla uzun video çözümlemesi (2M sürümü 2025'te kapalı betada). 2025'te eklenen **Computer Use** (Claude `computer_20250124+` araç paketi) ile model ekran görüntüsünü alıp fare/klavye eylemleri çıkarabiliyor — masaüstü otomasyonu artık LLM seviyesinde.
 
 ### Somut kullanım
 
-- **PDF OCR + analiz** — scan'lı Türkçe doküman direkt LLM'e, OCR step atlanıyor
-- **Ekran görüntüsü kodlama** — tasarım mockup'tan HTML/CSS üret
-- **Video toplantı özet** — 1 saatlik kayıt → 5 dk executive summary
-- **Ses tabanlı agent** — müşteri hizmetleri voice bot (Vapi + Claude)
+- **PDF doğal girdi** — taranmış Türkçe doküman doğrudan LLM'e (Anthropic Messages API'de PDF native, 32 MB / 100 sayfa; Files API ile 500 MB'a kadar). OCR adımı atlanıyor.
+- **Ekran görüntüsünden kod** — tasarım maketi → HTML/CSS üret (v0.dev, Vercel'in çoklu kip ürünü).
+- **Video toplantı özeti** — 1 saatlik kayıt → 5 dk yönetici özeti (Gemini 2.5 Pro doğal video).
+- **Ses tabanlı ajan** — müşteri hizmetleri sesli botu (Pipecat + LiveKit + Claude veya Vapi).
+- **Computer Use otomasyonu** — Claude tarayıcıdan form doldurma, raporlama (sandbox içinde, üretim için çok dikkatli).
 
 ### Senin öğrenmen
 
-- **Bölüm 7 platform içinde opsiyonel** — 5 sayfa, 1 hafta çalışma
-- Multimodal agent: 9.5 İçerik Özet Agent'a görsel analiz eklemek (haberin görselini al, başlığa uyup uymuyor mu?)
-- **Fiyat uyarısı:** Görsel input metne göre **10× pahalı** (~1500 token/image). Maliyet takibi kritik.
+- **Bölüm 7 platformda isteğe bağlı** — 5 sayfa, 1 hafta çalışma.
+- Çoklu kip ajan: 9.5 İçerik Özet Ajanı'na görsel çözümleme eklemek (haberin görselini al, başlığa uyuyor mu?).
+- **Görsel limit hatırlatması:** Anthropic API tek istekte **20 görsele kadar** kabul eder (önceden 100 sınırı yanlıştı, 2025 belgelerinde 20). Daha fazla için ardışık çağrı.
+- **Fiyat uyarısı:** Görsel girdi metne göre yaklaşık **10× daha pahalı** (~1500 token/görsel). Maliyet izlemi kritik.
 
 ### Kaynak
 
-- [Claude vision docs](https://platform.claude.com/docs/en/build-with-claude/vision)
+- [Claude vision belgesi](https://platform.claude.com/docs/en/build-with-claude/vision)
+- [Claude Computer Use](https://platform.claude.com/docs/en/agents-and-tools/computer-use)
 - [Gemini multimodal](https://ai.google.dev/gemini-api/docs/vision)
-- [OpenAI GPT-4o](https://openai.com/index/hello-gpt-4o/)
-- [LMSYS Multimodal Arena](https://lmarena.ai/) — model karşılaştırma
+- [OpenAI GPT-5 system card](https://openai.com/index/gpt-5-system-card/)
+- [LMArena Multimodal](https://lmarena.ai/) — model karşılaştırma (eski LMSYS)
 
-## Trend 3 — Long Context + Reasoning
+## Trend 3 — Uzun Bağlam + Akıl Yürütme
 
 ### Ne oluyor
 
-2023'te 8K-32K token normaldi. 2024'te Claude + Gemini 200K. 2025-2026'da **1M token** (1000 sayfa!) modeller piyasada. Paralel olarak **reasoning models** — OpenAI o1/o3, Claude "extended thinking" modları. Model adım adım "düşünür", cevabı uzun iç monologla verir.
+2023'te 8K-32K token sıradandı. 2024'te Claude + Gemini 200K. 2025-2026'da **1M token** (yaklaşık 2500 sayfa) modeller yaygınlaştı: Claude Sonnet 4.6 1M (2025'te genel kullanıma açıldı, 200K üstü için Anthropic ek fiyat tarifesi uygular), Gemini 2.5 Pro 1M (2M kapalı beta), GPT-5 400K. Koşut olarak **akıl yürütme modelleri** — OpenAI o3/o4-mini, Claude extended thinking modu (Sonnet 4.6 ve Opus 4.7'de `thinking` parametresiyle). Model adım adım "düşünür", cevabı uzun iç monologla verir. 2026'da Anthropic Opus 4.7 hem klasik hem akıl yürütme kipini tek modelde birleştirdi.
 
 ### Somut kullanım
 
@@ -175,19 +180,19 @@ Eski LLM sadece metin. Yeni modeller metin + görsel + ses + video **aynı için
 - [Gemini 1M context](https://blog.google/technology/ai/google-gemini-next-generation-model-february-2024/)
 - [Anthropic extended thinking](https://platform.claude.com/docs/en/build-with-claude/extended-thinking)
 
-## Trend 4 — AI Tooling Maturity
+## Trend 4 — AI Araç Ekosisteminin Olgunlaşması
 
 ### Ne oluyor
 
-2023 = "chat UI". 2024 = API + SDK olgunlaştı. 2025-2026 = **production tooling** — observability, evaluation, orchestration araçları. AI artık "LLM'e istek at" değil, **yazılım mühendisliği disiplini**.
+2023 = "sohbet arayüzü". 2024 = API + SDK olgunlaştı. 2025-2026 = **üretim araçları** — gözlemlenebilirlik, değerlendirme, orkestrasyon araçları. AI artık "LLM'e istek at" değil, **yazılım mühendisliği disiplini**.
 
 ### Somut örnekler
 
-- **MCP** (Bölüm 6.5) — 2024 Kasım Anthropic açıkladı, 2026'da yaygın standart
-- **Evals framework'leri** — [Inspect AI](https://inspect.ai-safety-institute.org.uk/), [OpenAI Evals](https://github.com/openai/evals), [LangSmith](https://www.langchain.com/langsmith)
-- **Observability** — [Langfuse](https://langfuse.com/), [Helicone](https://www.helicone.ai/), Sentry LLM traces
-- **Orchestration** — LangGraph, CrewAI, [Haystack 2.0](https://haystack.deepset.ai/)
-- **Prompt management** — [PromptLayer](https://promptlayer.com/), [Mirascope](https://mirascope.com/)
+- **MCP** (Bölüm 6.5) — Kasım 2024'te Anthropic açıkladı, **Aralık 2025'te Linux Foundation altındaki AI Alliance Foundation'a (AAIF) bağışlandı**; OpenAI, Google, Microsoft 2025'te resmi olarak benimsedi. 2026'da çapraz ekosistem standardı.
+- **Değerlendirme (evals) çatıları** — [Inspect AI (UK AISI)](https://inspect.ai-safety-institute.org.uk/), [OpenAI Evals](https://github.com/openai/evals), [LangSmith](https://www.langchain.com/langsmith), [Anthropic Evals (2025)](https://platform.claude.com/docs/en/test-and-evaluate/eval-tool) — Console içinde yerleşik değerlendirme.
+- **Gözlemlenebilirlik** — [LangFuse](https://langfuse.com/) (kendi sunucunda), [Helicone](https://www.helicone.ai/) (yönetilen), [LangSmith](https://www.langchain.com/langsmith), [Phoenix (Arize)](https://docs.arize.com/phoenix), Sentry LLM trace; OpenTelemetry GenAI semantic convention 2025 sonu kararlı oldu.
+- **Orkestrasyon** — LangGraph 1.x, CrewAI, [Haystack 2.0](https://haystack.deepset.ai/), [Anthropic claude-agent-sdk](https://github.com/anthropics/claude-agent-sdk-python).
+- **Yönerge yönetimi** — [PromptLayer](https://promptlayer.com/), [Mirascope](https://mirascope.com/), [Promptfoo](https://www.promptfoo.dev/) (açık kaynak, A/B testi).
 
 ### Senin öğrenmen
 
@@ -200,17 +205,18 @@ Eski LLM sadece metin. Yeni modeller metin + görsel + ses + video **aynı için
 - [Latent Space](https://www.latent.space/) — yazılı + podcast
 - [AI Engineer Summit](https://ai.engineer) — yıllık konferans, araç şirketleri
 
-## Trend 5 — AI Safety + Alignment Research
+## Trend 5 — AI Güvenliği + Hizalama Araştırması
 
 ### Ne oluyor
 
-Model yetenekleri hızla artarken **kontrol** zorlaşıyor. Alignment research = modeli insan değerlerine uyumlu davranmaya eğitme. 2026 aktif araştırma alanları:
+Model yetkinlikleri hızla artarken **denetim** zorlaşıyor. Hizalama araştırması = modeli insan değerlerine uyumlu davranmaya eğitme. 2026 aktif araştırma alanları:
 
-- **Interpretability** — model içinde ne oluyor, neden bu cevabı verdi?
-- **Red teaming** — sistematik saldırı; güvenlik açıklarını önceden bul
-- **Constitutional AI** — Anthropic'in yaklaşımı (Bölüm 8.2)
-- **RLHF + reward modeling** — insan geri bildirimi ile hizalama
-- **Sandbagging detection** — model yeteneklerini saklıyor mu?
+- **Yorumlanabilirlik (interpretability)** — model içinde ne oluyor, neden bu cevabı verdi? Anthropic'in 2024 Mayıs "Mapping the Mind of a Large Language Model" çalışması ve 2025'teki devam yayınları öncü.
+- **Kırmızı takım (red teaming)** — dizgesel saldırı; güvenlik açıklarını önceden bul. Anthropic kendi modellerini yayımlamadan önce dış red team şirketleriyle çalışır.
+- **Anayasal Yapay Zeka (Constitutional AI)** — Anthropic'in yaklaşımı (Bölüm 8.2). 2025'te eklenen **Constitutional Classifiers** Claude API üstünde jailbreak savunma katmanı: %95+ saldırı yakalama, %0.4 yanlış pozitif.
+- **İnsan geri bildirimiyle pekiştirmeli öğrenme (RLHF) + ödül modelleme** — insan tercihleriyle hizalama; 2025'te DeepSeek R1 saf RL ile akıl yürütme yeteneği elde ettiğini gösterdi (RLHF olmadan).
+- **Sandbagging tespiti** — model yetkinliklerini saklıyor mu? Kasıtlı düşük performans gösterimi.
+- **Aldatma (deception) tespiti** — model değerlendirme sırasında farklı, üretimde farklı davranıyor mu? Anthropic Aralık 2024 "Alignment faking" makalesi başlangıç noktası.
 
 ### Senin öğrenmen
 
@@ -227,16 +233,17 @@ Model yetenekleri hızla artarken **kontrol** zorlaşıyor. Alignment research =
 - [Redwood Research](https://www.redwoodresearch.org/) — safety lab
 - [AI Safety Institute (UK + US)](https://www.aisi.gov.uk/) — hükümet kuruluşları, public reports
 
-## Trend 6 — On-device / Edge Inference
+## Trend 6 — Cihaz İçi / Kenar Çıkarımı (On-device / Edge Inference)
 
 ### Ne oluyor
 
-Model çağırmak hep cloud → latency + fatura + privacy. **Küçük modeller** kullanıcı cihazında (mobile, laptop) çalışır:
+Model çağırmak hep buluta → gecikme + fatura + gizlilik. **Küçük modeller** kullanıcı cihazında (mobil, dizüstü) çalışır:
 
-- **Apple Intelligence** (iPhone 15 Pro+) — cihaz üstü 3B model
-- **Gemini Nano** — Pixel + Android telefon
-- **Phi-4** (Microsoft), **Llama 3.2 3B** — edge için optimize
-- **ONNX + Core ML + TensorRT** — runtime optimizasyon
+- **Apple Intelligence** (iPhone 15 Pro+, iPhone 16 / 17 tüm aile, M-serisi Mac) — cihaz üstü 3B yoğunlaştırılmış model + Private Cloud Compute (PCC) gerektiğinde.
+- **Gemini Nano** — Pixel 8/9/10 + AICore destekli Android telefon.
+- **Phi-4** (Microsoft, 14B + Phi-4-mini 3.8B), **Llama 4 Scout** (kenar için MoE), **Qwen3-VL-3B**, **Mistral Edge**, **DeepSeek-V3.2-edge** — kenar için eniyilenmiş.
+- **ONNX Runtime + Core ML + TensorRT-LLM + MLX** — çalışma anı eniyilemesi.
+- **WebGPU + transformers.js** — tarayıcıda çıkarım; 2025'te yaygınlaştı.
 
 ### Somut kullanım
 
@@ -259,17 +266,18 @@ Model çağırmak hep cloud → latency + fatura + privacy. **Küçük modeller*
 - [Hugging Face on-device](https://huggingface.co/blog)
 - [MLX (Apple Silicon ML)](https://github.com/ml-explore/mlx)
 
-## Trend 7 — AI Regulation
+## Trend 7 — AI Düzenlemesi
 
 ### Ne oluyor
 
 Hükümetler AI'ya çerçeve getiriyor. 2026 itibarıyla aktif:
 
-- **AB AI Act** (Bölüm 8.2) — Şubat 2025 yasaklar, Ağustos 2026 tam yürürlük
-- **US Executive Order 14110 (2023)** → değişiklikler devam ediyor; 2025 yeni çerçeve
-- **UK AI Safety Bill** — 2025-2026 önerileri
-- **Türkiye AI stratejisi** — KVKK + Anayasa, yeni çerçeve 2027-2028 tahmini
-- **Çin** — kendi model izin sistemi (CAC onayı)
+- **AB AI Act** (Bölüm 8.2) — **2 Şubat 2025**: yasaklı uygulamalar yürürlükte (sosyal puanlama, biyometrik kategorizasyon, vb). **2 Ağustos 2025**: Genel Amaçlı AI (GPAI) modelleri için yükümlülükler. **2 Ağustos 2026**: yüksek riskli AI sistemleri tam yürürlükte. **2027 Ağustos**: yerleşik ürünlerde yüksek risk uyumu.
+- **ABD AI Action Plan (2025)** — Ocak 2025'te Trump yönetimi Biden'ın 14110 sayılı kararnamesini iptal etti; yeni çerçeve "AI Action Plan" Temmuz 2025'te yayımlandı, federal düzenleme yerine eyalet ve sektör düzeyinde yönlendirme.
+- **California SB 1047 / California AI Transparency Act (2024-2025)** — eyalet düzeyinde sınır laboratuvar şeffaflığı.
+- **UK AI Safety Bill** — 2025-2026 öneri aşamasında; UK AISI (AI Safety Institute) öncesinde gönüllü değerlendirme.
+- **Türkiye AI Stratejisi** — KVKK + Anayasa, Cumhurbaşkanlığı Dijital Dönüşüm Ofisi tarafından 2024 sonunda taslak Yapay Zeka Strateji belgesi yayımlandı; bağlayıcı yasa 2027-2028 tahmini.
+- **Çin** — kendi model izin dizgesi (CAC — Cyberspace Administration of China onayı); üretken AI hizmetleri için kayıt zorunluluğu 2023'ten beri.
 
 ### Senin öğrenmen
 
@@ -313,15 +321,15 @@ Kendi bahsini koy. 26 Nisan 2027'de dönüp bakınca doğrulanacak veya çürük
 
 ### 1 yıl — Nisan 2027
 
-**Hipotez 1:** MCP endüstri standart olacak (Anthropic + başka şirket desteği). **Benim bahsim: %70 olur.**
+**Hipotez 1:** MCP, Aralık 2025'te Linux Foundation'a geçtikten sonra **çapraz ekosistem standardı** olarak yerleşecek; OpenAI/Google/Microsoft istemcilerinde ortak sunucu paylaşımı yaygın olacak. **Benim bahsim: %85 olur** (zaten yarısı oldu).
 
-**Hipotez 2:** 1M context yaygınlaşacak, RAG'i küçük projede öldürecek. **Benim bahsim: %30 olur** — RAG hala daha ucuz + deterministik.
+**Hipotez 2:** 1M bağlam yaygınlaşacak, RAG'i küçük projede öldürecek. **Benim bahsim: %30 olur** — RAG hâlâ daha ucuz + belirlenimci + güncel veri tarafında üstün.
 
-**Hipotez 3:** Voice agent (Vapi-like) %30+ büyüyecek. **%80 olur.**
+**Hipotez 3:** Sesli ajan (Pipecat / LiveKit / Vapi tabanlı) çağrı merkezi pazarının %30+ inçinde yer alacak. **%75 olur.**
 
-**Hipotez 4:** AI Act'in ilk ciddi cezaları (1M+ euro) gelecek. **%90 olur.**
+**Hipotez 4:** AB AI Act'in ilk ciddi cezaları (1M+ euro) yüksek riskli AI'da gelecek; Ağustos 2026 yürürlüğüyle takipte. **%85 olur.**
 
-**Hipotez 5:** Çoğu "AI Engineer" rolü "AI + full-stack dev" olarak birleşecek. **%60.**
+**Hipotez 5:** "AI Engineer" rolü mid-senior düzeyinde "AI + full-stack dev" olarak birleşecek; junior düzeyde de "AI bilgisi olan backend" beklenecek. **%70.**
 
 ### 3 yıl — Nisan 2029
 
@@ -341,11 +349,11 @@ Bu hipotezleri **kendi sayfa notlarında** kopyala — 2027'de dönüp bak.
 
 Her şeyi takip etme. **5 kaynak seç**, derinleş:
 
-1. **Anthropic News + Research** — haftalık bakış, 30 dk
-2. **Latent Space podcast** — haftalık, AI Engineer merkezli
-3. **AI Engineer Summit talks** (YouTube) — ayda 1 saat
-4. **Simon Willison blog** — deneyimli pragmatist, weekly summary
-5. **Bir Türkçe kaynak** — @KarincaAI, turkiye.ai, veya kendi blog yazarlığı
+1. **Anthropic News + Research** ([anthropic.com/news](https://www.anthropic.com/news)) — haftalık 30 dk; ayda 5-10 önemli yazı.
+2. **Latent Space** ([latent.space](https://www.latent.space/)) — swyx + Alessio, AI Engineer odaklı haftalık podcast + bülten; AI Engineer Summit'in ana sahibi.
+3. **AI Engineer World's Fair / Summit konuşmaları** ([ai.engineer/talks](https://www.ai.engineer/talks)) — yıllık konferans (Haziran 2025'te 4. yıl), YouTube'da konuşma kayıtları; ayda 1 saat.
+4. **Simon Willison blog** ([simonwillison.net](https://simonwillison.net/)) — Django'nun kurucu eş yazarı, AI mühendisi olarak haftalık günlük yayımlıyor; pragmatik, hızlı tarama için ideal.
+5. **Bir Türkçe kaynak** — Türkiye Açık Kaynak Platformu, Atölye15 yayınları, ya da kendi blog yazarlığın (Substack / GitHub Pages / kendi sitende).
 
 **Haftalık 3 saat, dağılımlı:**
 - Pazartesi 30 dk — Anthropic News
@@ -364,17 +372,17 @@ Anthropic'in [Responsible Scaling Policy (RSP)](https://www.anthropic.com/respon
 
 **ASL-1:** Çok sınırlı model (GPT-2 seviyesi). Güvenlik sorunu yok.
 
-**ASL-2:** Mevcut çoğu model (Claude Sonnet 4.6, GPT-4, Gemini 2). "Meaningful autonomous capabilities" var. Standart güvenlik yeterli.
+**ASL-2:** 2024'te kullanılan çoğu model. "Anlamlı özerk yetkinlikler" var. Standart güvenlik yeterli.
 
-**ASL-3:** Biyolojik/kimyasal saldırıyı yardım edebilecek veya otonom replikasyon yapabilecek. **Ek güvenlik önlemleri zorunlu** — red team test, deployment restriction.
+**ASL-3:** Biyolojik/kimyasal saldırıya yardımcı olabilecek veya özerk çoğaltma yapabilecek model. **Ek güvenlik önlemleri zorunlu** — kırmızı takım sınaması, dağıtım kısıtlaması, ağırlık erişim denetimi. **Anthropic Mart 2025'te Claude Opus 4'ün ASL-3 eşiğinde olduğunu açıkladı**; o tarihten itibaren Opus ailesinde ASL-3 önlemleri uygulanıyor.
 
-**ASL-4+:** "Transformative capabilities" — AGI seviyesi. Henüz yok. Çok sıkı protokol.
+**ASL-4+:** "Dönüştürücü yetkinlikler" — AGI seviyesine yakın. Henüz yok. Çok sıkı kural seti.
 
 ### 2026-2030 olasılıkları
 
-- Anthropic'in Claude 5/6 (2026-2027) olası **ASL-3** — bio/chem kısıtlamaları + enterprise-only deploy
-- ASL-4 2027-2030 arası olabilir, kesin değil
-- Anthropic **yetkinlik + güvenlik** dengesini şeffaf tutacak (kamu RSP updates)
+- Anthropic Opus 4.7 (2026 başı) **ASL-3 önlemleri altında** çalışıyor — bio/kimyasal kısıtlamalar, kurumsal SSO + denetim zorunluluğu.
+- ASL-4 2027-2030 arası olabilir; kesin değil. ASL-4 deklarasyonu ağırlıkların özel bir "shielded" altyapıda saklanmasını da gerektirir.
+- Anthropic **yetkinlik + güvenlik** dengesini şeffaf tutuyor (RSP'nin v2.1 sürümü 2025'te yayımlandı, geniş bir paydaş incelemesinden geçti).
 
 ### AI Engineer için ne demek?
 

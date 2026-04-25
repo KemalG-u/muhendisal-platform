@@ -13,7 +13,7 @@
 </div>
 
 !!! tip "Yabancı kelime mi gördün?"
-    **Cohort** (öğrenci grubu) = aynı dönemde başlayan grup; birlikte öğrenme + dayanışma. **Mentor** = daha tecrübeli kişinin yol göstermesi. **Mentee** = mentor'un eşliği altındaki kişi (sen şu an). **Give first** = topluluk kuralı, önce sen katkı ver, sonra iste. **Onboarding** = ilk gün/ilk ay iş uyum süreci. **Imposter syndrome** = "ben bu işe layık değilim" hissi; AI alanında çok yaygın.
+    **Cohort** (kuşak) = aynı dönemde başlayan öğrenci grubu; birlikte öğrenme + dayanışma. **Mentor** (rehber) = daha deneyimli kişinin yol göstermesi. **Mentee** (rehberlik alan) = mentorun eşlik ettiği kişi (sen şu an). **Give first** (önce sen ver) = topluluk kuralı; önce sen katkı ver, sonra iste. **Onboarding** (uyumlanma) = işe ilk gün/ilk ay uyum süreci. **Imposter syndrome** (sahteci sendromu) = "ben bu işe layık değilim" hissi; AI alanında çok yaygın. **DM** (Direct Message — doğrudan mesaj) = profil dışı özel iletişim. **AMA** (Ask Me Anything — bana her şeyi sor) = topluluk üyelerinin bir uzmana açık soru-cevap oturumu. **Office hours** (görüş saatleri) = bir mentorun haftalık ayırdığı, isteyenin katılabileceği açık görüşme dilimi. **Cold outreach** (soğuk temas) = tanımadığın bir kişiye iş/danışma için ilk mesaj.
 
 ## Neden bu sayfa?
 
@@ -31,53 +31,69 @@
 
 <table class="ma-aktorler" markdown>
 
-| Platform | Nerede | Ne işe yarar | Aktivite |
+| Platform | Nerede | Ne işe yarar | Etkinlik |
 |---|---|---|---|
-| **turkiye.ai** | [turkiye.ai](https://turkiye.ai) | Türkiye AI haber + etkinlik | Orta-yüksek |
-| **AI Türkiye Discord** | Discord (link turkiye.ai'dan) | Günlük teknik sohbet | Yüksek |
-| **KodlaRise** | [kodlarise.com](https://kodlarise.com) | Hybrid, topluluk + eğitim | Orta |
-| **Turkcell Geleceği Yazanlar** | Bootcamp + Discord | Junior ağırlıklı | Yüksek (bootcamp zamanı) |
+| **Türkiye AI Discord** | Discord (turkiye.ai veya yt.com/turkiyeai bağlantısı) | Günlük teknik sohbet, iş ilanı kanalı | Yüksek |
+| **YZTürkiye** | [yzturkiye.org](https://yzturkiye.org) ve LinkedIn grubu | Yapay Zeka Türkiye topluluğu, etkinlikler | Orta-yüksek |
+| **Türkiye Açık Kaynak Platformu** | [acikkaynak.gov.tr](https://acikkaynak.gov.tr) + GitHub topluluğu | Yerel açık kaynak projeler, devlet + STK | Orta |
+| **KodlaRise** | [kodlarise.com](https://kodlarise.com) | Karma, topluluk + eğitim | Orta |
+| **Turkcell Geleceği Yazanlar** | Eğitim kampı (bootcamp) + Discord | Junior ağırlıklı | Yüksek (kamp dönemlerinde) |
+| **GDG (Google Developer Group) Türkiye şehir kolları** | Meetup + Discord | Cloud + AI kesişim, çevrimdışı buluşmalar | Orta |
 | **AWS Community Türkiye** | LinkedIn + etkinlik | Cloud + AI kesişim | Orta |
-| **Anthropic TR gayriresmi** | Twitter X hashtagler #ClaudeTR | Claude kullanıcıları | Düşük-orta (büyüyor) |
+| **Anthropic TR gayri resmi** | X / Twitter etiketi `#ClaudeTR` | Claude kullanıcıları | Düşük-orta (büyüyor) |
 
 </table>
 
 **Pratik yaklaşım:**
 
-1. **Discord → turkiye.ai** — gündelik teknik soruların cevabı.
-2. **LinkedIn → KodlaRise + Geleceği Yazanlar** takip — kariyer fırsatı haber akışı.
-3. **Twitter/X → #AIEngineering #ClaudeTR #LLM** — canlı teknik tartışma.
+1. **Discord → Türkiye AI** — gündelik teknik soruların cevap kanalı.
+2. **LinkedIn → KodlaRise + Geleceği Yazanlar + GDG İstanbul/Ankara** takip — kariyer fırsatı haber akışı.
+3. **X (Twitter) → `#AIEngineering` `#ClaudeTR` `#LLM` `#YapayZeka`** — canlı teknik tartışma.
+4. **Meetup.com → "AI" + "Yapay Zeka" şehrin** — çevrimdışı buluşma; ayda 1 etkinliğe git.
 
-**Pasif tüketim değil, aktif katılım:** Ayda en az **3 soru sor + 3 soruya cevap ver**. Soran kişi → sen 2 ay sonra mentor pozisyonundasın.
+**Pasif tüketim değil, etkin katılım:** Ayda en az **3 soru sor + 3 soruya cevap ver**. Soran kişi → sen 2 ay sonra rehberlik konumundasın.
 
-### Global topluluklar (İngilizce)
+### Küresel topluluklar (İngilizce)
 
-- **[AI Engineer Summit](https://ai.engineer)** — yıllık konferans, online kayıtlar ücretsiz.
-- **[LangChain Discord](https://discord.gg/langchain)** — RAG + agent topluluğu.
-- **[Anthropic Discord](https://www.anthropic.com/discord)** — Claude kullanıcıları, Anthropic staff aktif.
-- **[Hacker News](https://news.ycombinator.com/)** — tech haber; AI bölümü aktif (ama troll de çok, filtreli oku).
+- **[AI Engineer World's Fair / Summit](https://www.ai.engineer/)** — swyx + Alessio Fanelli'nin yıllık konferansı (Haziran 2025'te 4. yıl, San Francisco). Konuşmaların kaydı YouTube'da ücretsiz.
+- **[Latent Space Discord](https://www.latent.space/)** — AI Engineer odaklı haftalık bülten + podcast topluluğu.
+- **[LangChain Discord](https://discord.gg/langchain)** — RAG + ajan topluluğu; LangGraph konuları yoğun.
+- **[Anthropic Community Discord](https://www.anthropic.com/discord)** — Claude kullanıcıları, Anthropic çalışanları etkin; düzenli AMA + canlı kod oturumları.
+- **[MCP Discord](https://discord.gg/modelcontextprotocol)** — Model Context Protocol topluluğu; sunucu/istemci geliştiricileri (Aralık 2025'ten itibaren Linux Foundation altında).
+- **[Build Club](https://www.buildclub.ai/)** — Avustralya merkezli ama uzaktan, AI projeleri kuran haftalık demo gece dahil.
+- **[r/LocalLLaMA](https://www.reddit.com/r/LocalLLaMA/)** ve **[r/MachineLearning](https://www.reddit.com/r/MachineLearning/)** — Reddit; açık kaynak modeller ve araştırma haberleri.
+- **[Hacker News](https://news.ycombinator.com/)** — teknoloji haberi; AI bölümü etkin (troll yoğun, süzerek oku).
+- **[AI Engineer Foundation Slack](https://aiefoundation.org/)** — açık kaynak ajan standartları çevresinde mühendis topluluğu.
 
-**Yaklaşım:** Bir İngilizce + bir Türkçe topluluk seç. Haftada 1-2 saat orada ol. İlk 3 ay **sadece dinle + sor**; sonra cevap verme kasını geliştir.
+**Yaklaşım:** Bir İngilizce + bir Türkçe topluluk seç. Haftada 1-2 saat orada ol. İlk 3 ay **yalnızca dinle + sor**; sonra cevap verme kasını geliştir.
 
 ## Mentor arama — 3 kanal, 3 yaklaşım
 
-### Kanal 1 — MentorCruise ($30-100/ay)
+### Kanal 1 — MentorCruise ($30-150/ay)
 
-[MentorCruise](https://mentorcruise.com) — ücretli aylık abonelik, 1-on-1 mentor. AI/ML kategori zengin.
+[MentorCruise](https://mentorcruise.com) — ücretli aylık abonelik, birebir rehberlik. AI/ML kategorisi zengin (2026 başında 500+ AI mentörü). Aylık ücret $30-150 arasında değişir, mentörün senörlüğüne bağlı.
 
-**Avantaj:** Randevu garantisi, yapılandırılmış (haftalık 30-60 dk görüşme).
-**Dezavantaj:** Ücretli — junior için $50-100/ay ciddi yatırım.
-**Karar:** Finansal imkânın varsa 3-6 ay için **değerli**. Daha sonra bırakırsın.
+**Avantaj:** Randevu güvencesi, yapılandırılmış (haftalık 30-60 dk görüşme), ödev takibi.
+**Dezavantaj:** Ücretli — junior için $50-150/ay (TL karşılığı 2026 başında 2.000-6.000 TL) ciddi yatırım.
+**Karar:** Bütçen varsa 3-6 ay için **değerli**. Sonrasında bırakırsın; biriktirdiğin ödevler kalır.
 
 ### Kanal 2 — ADPList (ücretsiz)
 
-[ADPList](https://adplist.org) — gönüllü mentor platform, ücretsiz randevu.
+[ADPList](https://adplist.org) — gönüllü rehber platformu, ücretsiz randevu. 2026 başında 30K+ rehber, çoğunluğu tasarım + ürün ama AI mühendisliği bölümü genişliyor.
 
-**Avantaj:** Ücretsiz. Teknoloji şirketlerinde çalışanlar mentor.
-**Dezavantaj:** Randevu bulmak zor (popüler mentor'lar dolu). Ayda 1 görüşme tipik.
-**Karar:** İlk adımı atmak için **ideal**. 3 ay boyunca farklı mentor'larla 3 görüşme → kimin stili sana uyuyor bul.
+**Avantaj:** Ücretsiz. Tanınmış teknoloji şirketlerinde çalışanlar rehber.
+**Dezavantaj:** Randevu bulmak zor olabilir (popüler rehberler dolu). Ayda 1 görüşme tipik.
+**Karar:** İlk adımı atmak için **ideal**. 3 ay boyunca farklı rehberlerle 3 görüşme → kimin tarzı sana uyuyor bul.
 
-### Kanal 3 — LinkedIn organic (cold outreach)
+### Kanal 3 — Maven (kuşak tabanlı kurslar)
+
+[Maven](https://maven.com) — 4-8 haftalık canlı kuşak (cohort) kursları. AI alanında 2025-2026'da yaygın: "AI Engineering with Hamel Husain & Dan Becker", "Building LLM Apps for Production", "AI Evals" vb. Ücret $500-2000.
+
+**Avantaj:** Yapılandırılmış müfredat + akran ağı + eğitmenle haftalık görüş saatleri.
+**Dezavantaj:** Pahalı; sınırlı süre.
+**Karar:** Bir konuda hızlı derinleşmek istiyorsan değerli; tek seferlik yatırım.
+
+### Kanal 4 — LinkedIn doğal (soğuk temas — cold outreach)
 
 LinkedIn'de AI alanında senior bir kişiye DM at:
 
@@ -174,11 +190,11 @@ AI alanı hızlı değişiyor. Öğrenme **iş değil alışkanlık**. Haftalık
 
 **Önemli kaynaklar (2026):**
 
-- **Haber:** [Anthropic News](https://www.anthropic.com/news), [OpenAI Blog](https://openai.com/blog), [Hugging Face Blog](https://huggingface.co/blog)
-- **Paper:** [Papers with Code](https://paperswithcode.com/) + [arXiv AI](https://arxiv.org/list/cs.AI/recent) (günlük son)
-- **Podcast:** Latent Space (AI engineers), TWiML, The Pragmatic Engineer (AI Engineering episodes)
-- **Newsletter:** Ben's Bites, The Rundown AI, AI Breakfast
-- **YouTube:** Andrej Karpathy (Neural Networks: Zero to Hero), Yannic Kilcher (paper açıklamaları)
+- **Haber:** [Anthropic News](https://www.anthropic.com/news), [OpenAI Blog](https://openai.com/blog), [Hugging Face Blog](https://huggingface.co/blog), [Google DeepMind Blog](https://deepmind.google/discover/blog/), [Mistral News](https://mistral.ai/news/).
+- **Akademik makale:** [Papers with Code](https://paperswithcode.com/) + [arXiv cs.CL](https://arxiv.org/list/cs.CL/recent) (Hesaplamalı Dilbilim, LLM yayınları için cs.AI'dan daha odaklı) + [Alphaxiv](https://alphaxiv.org/) (arXiv tartışma katmanı).
+- **Podcast:** Latent Space (haftalık, AI Engineer), Practical AI, The Cognitive Revolution, The Pragmatic Engineer (AI Engineering bölümleri), Lex Fridman (uzun röportajlar).
+- **Bülten:** [Simon Willison's Weblog](https://simonwillison.net/), Ben's Bites, The Rundown AI, [Import AI (Jack Clark)](https://importai.substack.com/), [Latent Space](https://www.latent.space/).
+- **YouTube:** Andrej Karpathy (Neural Networks: Zero to Hero, "How I use LLMs" 2024 konuşması), Yannic Kilcher (makale açıklamaları), [3Blue1Brown — neural network mini dizisi](https://www.youtube.com/c/3blue1brown), [AI Engineer YouTube](https://www.youtube.com/@aiDotEngineer) (konuşma kayıtları).
 
 **Kural:** **Quality over quantity.** Bir kaynağa haftada 2 kez bak + derinleş. 20 kaynağa 5 dk bakma.
 
@@ -267,23 +283,24 @@ Give first. Başlat, yazmaya başla. Seni bekliyoruz.
 
 ### Saat 1 — Topluluk
 
-1. turkiye.ai Discord'a katıl. **Kendini tanıt** — 3 cümle: ne yapıyorsun, ne inşa ettin, ne istiyorsun.
-2. Anthropic Discord'a katıl (TR kanal varsa orada ol).
-3. X hashtag #ClaudeTR takip + ilk yorumunu at.
-4. ADPList hesabı aç, 3 AI Engineer mentor profili kaydet.
-5. İlk soruunu Discord'a sor — "Junior AI Engineer pozisyonu için [şu] doğru mu?"
+1. Türkiye AI Discord'a katıl. **Kendini tanıt** — 3 cümle: ne yapıyorsun, ne kurdun, ne istiyorsun.
+2. Anthropic Community Discord'a katıl (TR kanal varsa orada ol, yoksa #general'da Türkçe selamla).
+3. MCP Discord'a katıl ve `modelcontextprotocol/servers` reposunu yıldızla.
+4. X (Twitter) etiketi `#ClaudeTR` ve `#YapayZeka` takip + ilk yorumunu at.
+5. ADPList hesabı aç, 3 AI Engineer rehberi profili kaydet, birine açık-uçlu randevu iste.
+6. İlk sorunu Discord'a sor — "Junior AI Engineer pozisyonu için [şu] doğru mu?"
 
 ### Saat 2 — Plan
 
 1. 6 aylık yol haritasını `muhendisal-notlarim/` altına yaz.
-2. Haftalık öğrenme ritmini takvimine ekle (Google Calendar, Notion).
-3. MentorCruise / ADPList / LinkedIn DM — 3 mentor adayı yazılı.
-4. İlk 3 ay iş sonrası planı (hangi tip iş arıyorsun, maaş beklentisi, kabul kriterleri) not.
-5. Bu sayfayı bookmarle — 6 ay sonra dön.
+2. Haftalık öğrenme ritmini takvimine ekle (Google Calendar veya Notion).
+3. MentorCruise / ADPList / Maven / LinkedIn DM — 3 rehber adayı yazılı.
+4. İlk 3 ay iş sonrası planı (hangi tür iş arıyorsun, maaş beklentisi, kabul ölçütleri) not.
+5. Bu sayfayı yer imine al — 6 ay sonra dön.
 
-**Başarı kriteri:** 2 saat sonunda 2 topluluk üyesisin, yol haritan yazılı, ilk soru soruldu.
+**Başarı ölçütü:** 2 saat sonunda 2 topluluğun üyesisin, yol haritan yazılı, ilk soru soruldu.
 
-Kanıt: Discord ekran görüntüsü + yol haritası dosyası + kendi tanıtım mesajı ekran görüntüsü.
+Kanıt: Discord ekran görüntüsü + yol haritası dosyası + kendini tanıtım mesajının ekran görüntüsü.
 
 </div>
 
@@ -306,14 +323,19 @@ Bu platformu Claude ile yazdım. Sen **öğrencisi** olarak geldin, şimdi **kul
 
 5. **[Model Spec](https://platform.claude.com/docs/en/about-claude/model-spec)** — Claude davranış tanımı. Müşteri sorusu için canlı referans.
 
-### Anthropic ambassador / community programı
+### Anthropic Builder Program ve topluluk fırsatları
 
-Anthropic zaman zaman topluluk programları açıyor (early access, beta test, etkinlik sunumu). Takip:
-- LinkedIn'de Anthropic + çalışanları follow
-- Twitter/X'te #Anthropic #Claude hashtagler
-- Academy'yi bitirip sertifika alırsan "alumni" ekoşisteminde görünürlük
+Anthropic 2025'in son çeyreğinde **Anthropic Builder Program**'ı duyurdu — etkin geliştiricilere artırılmış API kredisi + erken özellik erişimi + Anthropic mühendisleriyle bağlantı. Başvuru formu Anthropic ana sayfasından erişilir; resmi URL 2026 boyunca güncellenebilir, ana sayfada "builders" araması yap.
 
-Açılımı belirli değil (2026'da topluluk programı henüz yapılandırılıyor), ama **şu an kalite katkı ver** → program açıldığında seçkin hale gelmiş olursun.
+Diğer fırsatlar:
+
+- **LinkedIn'de Anthropic + çalışanları takip et** ([Anthropic LinkedIn](https://www.linkedin.com/company/anthropicresearch/)).
+- **X / Twitter'da `#Anthropic` `#Claude` `#MCP` etiketleri** ile günlük etkileşim.
+- **Anthropic Academy sertifikalarını bitir** — LinkedIn "Licenses & Certifications" alanına ekle.
+- **MCP açık kaynak katkısı** ([modelcontextprotocol/servers](https://github.com/modelcontextprotocol/servers)) — MCP topluluğunda görünürlük; Linux Foundation altında olduğu için yönetişim açık.
+- **Anthropic blogunda ürün hikâyesi** — Anthropic, Claude'la ürün kuran ekiplerin hikâyelerini bloga alıyor (Notion, Cursor, Replit gibi); kendi ürünün öne çıkarsa başvurabilirsin.
+
+Resmi başvuru süreçleri 2026 boyunca olgunlaşıyor, ama **şu an kaliteli katkı ver** → program açıldığında seçkin hâle gelmiş olursun.
 
 ### Son söz
 

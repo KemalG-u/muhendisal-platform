@@ -13,7 +13,7 @@
 </div>
 
 !!! tip "Yabancı kelime mi gördün?"
-    **STAR** = Situation (durum), Task (görev), Action (aksiyon), Result (sonuç). Davranışsal soru cevap formatı. **Tech screen** = ön teknik görüşme, 30-60 dk. **Take-home** = ev ödevi, 4-8 saat kod yazarsın + sunarsın. **Behavioral round** = davranışsal görüşme, liderlikle. **Cultural fit** = şirket kültürüne uygunluk değerlendirmesi. **Leveling** = junior/mid/senior seviye kararı.
+    **STAR** = Situation (durum), Task (görev), Action (eylem), Result (sonuç). Davranışsal soru cevap biçimi. **Tech screen** (teknik ön elemenin) = 30-60 dk teknik görüşme. **Take-home** (ev ödevi) = 4-8 saat kod yazıp sunduğun ödev. **Behavioral round** (davranışsal tur) = liderlikle yapılan davranışsal görüşme. **Cultural fit** (kültür uyumu) = şirket kültürüne uygunluk değerlendirmesi. **Leveling** (seviyelendirme) = junior/mid/senior seviye kararı. **System design round** (sistem tasarımı turu) = beyaz tahtada büyük ölçek bir sistemi tasarladığın 60 dk'lık tur. **Pair programming** (eşli programlama) = mülakatçıyla canlı kod yazma; düşünce sürecini sesli yapmanı isterler. **HR screen** = işe alımcı tarafından yapılan ilk eleme; teknik değil, motivasyon + maaş + temel uygunluk.
 
 ## Mülakat süreç tipik
 
@@ -33,15 +33,15 @@ Bu sayfadaki 30 soru **her aşamada** çıkabilir. Hepsini önce oku, sonra **ke
 
 ## Teknik sorular — 18 soru
 
-### 1. Prompt, token, context window nedir?
+### 1. Prompt, token, context window (bağlam penceresi) nedir?
 
-**Model cevap:** Prompt = LLM'e gönderdiğin metin; sistem mesajı (rol) + kullanıcı mesajı (soru) + asistan mesajları (varsa geçmiş). Token = modelin işlediği atom birim; Türkçe'de 1 kelime ~2-3 token, İngilizce'de 1 kelime ~1.3 token. Context window = modelin tek çağrıda işleyebileceği max token; Claude Sonnet 4.6 için 200K (input + output toplam). 200K token ~150K kelime veya ~500 sayfa metin — tam bir roman okur.
+**Model cevap:** Prompt (yönerge) = LLM'e gönderdiğin metin; sistem mesajı (rol) + kullanıcı mesajı (soru) + asistan mesajları (varsa geçmiş). Token = modelin işlediği atom birim; Türkçe'de 1 kelime ~2-3 token, İngilizce'de 1 kelime ~1.3 token. Context window (bağlam penceresi) = modelin tek çağrıda işleyebileceği üst sınır; **Claude Sonnet 4.6 için 1M token** (Anthropic Console + API üzerinde 1M context erişimi 2025'te genel kullanıma açıldı), Haiku 4.5 için 200K, Opus 4.7 için 200K. 200K token ~150K kelime veya ~500 sayfa metin; 1M token ise ~2500 sayfa veya orta boy bir kod tabanı. Input + output toplamı bu sınır içinde olmalı.
 
-**Senin örneğin:** "9.4 RAG Chatbot'umda 50 sayfalık PDF ~25K token; Claude'un 200K context'inde rahatça sığıyor."
+**Senin örneğin:** "9.4 RAG Chatbot'umda 50 sayfalık PDF ~25K token; Sonnet 4.6'nın 1M bağlamında rahatça sığıyor — hatta tüm dokümanı tek seferde gönderip RAG'siz başlangıç bile yapabilirdim."
 
-### 2. Temperature ne işe yarar?
+### 2. Temperature (sıcaklık) ne işe yarar?
 
-**Model cevap:** Temperature modelin cevap çeşitliliğini kontrol eder. 0 = deterministik (aynı soru aynı cevap); 1 = yaratıcı (çeşitli cevaplar). RAG'de **0 veya 0.1** — sadık retrieval cevabı istiyorsun. Yaratıcı yazma (blog, şiir) **0.7-1**. Code generation **0-0.3**. Değer aralığı modele göre farklı (Claude 0-1, OpenAI 0-2). Default genelde 1 — üretim için düşür.
+**Model cevap:** Temperature (sıcaklık) parametresi modelin cevap çeşitliliğini denetler. 0 = belirlenimci (aynı soru aynı cevap); 1 = yaratıcı (çeşitli cevaplar). RAG'de **0 veya 0.1** — kaynağa sadık geri-getirme cevabı istiyorsun. Yaratıcı yazma (blog, şiir) **0.7-1**. Kod üretimi **0-0.3**. Değer aralığı modele göre farklılaşır (Anthropic Claude 0-1, OpenAI 0-2). Varsayılan değer Claude'da 1 — üretim için düşürmek standart. **2026 not:** Anthropic API'de `temperature` ile birlikte `top_p` ya da `top_k` sample parametrelerinden sadece birini kullanmak önerilir; ikisini birden ayarlamak istenmeyen davranışlara yol açabilir.
 
 ### 3. RAG nedir, fine-tuning'den ne zaman tercih edilir?
 
@@ -49,29 +49,29 @@ Bu sayfadaki 30 soru **her aşamada** çıkabilir. Hepsini önce oku, sonra **ke
 
 **Senin örneğin:** "9.4'te RAG seçtim çünkü PDF içeriği kullanıcı yüklüyor, hafta hafta değişiyor. Fine-tuning anlamsızdı."
 
-### 4. Embedding nedir, cosine similarity neden?
+### 4. Embedding (gömme) nedir, cosine similarity neden?
 
-**Model cevap:** Embedding = metni N-boyutlu vektöre dönüştürme; anlamsal olarak yakın metinler vektör uzayında yakın. Voyage-3 1024 boyut üretir. Cosine similarity iki vektör arasındaki açının kosinüsü — **büyüklüğü ihmal eder**, yönü kıyaslar. Metin embedding'lerde büyüklük (magnitude) metin uzunluğuyla korelasyon; anlamsal benzerlik **yönde**. Euclidean distance büyüklüğü karıştırır, anlamsal benzerlikte yanıltıcı. Cosine → [-1, 1]; 1 = aynı yön, 0 = dik, -1 = zıt.
+**Model cevap:** Embedding (gömme vektörü) = metni N-boyutlu vektöre dönüştürme; anlamsal olarak yakın metinler vektör uzayında yakındır. **Voyage 4** ailesi 2026 öntanımlı: `voyage-4` (1024 boyut), `voyage-4-large` (1536 boyut, üst düzey kalite), `voyage-4-lite` ve `voyage-4-nano` (kenar / cep cihazı). Cosine similarity (kosinüs benzerliği) iki vektör arasındaki açının kosinüsüdür — **büyüklüğü yok sayar**, yönü karşılaştırır. Metin embedding'lerinde büyüklük (magnitude) metin uzunluğuyla bağıntılıdır; anlamsal benzerlik ise **yöndedir**. Euclidean distance (Öklid mesafesi) büyüklüğü işin içine kattığı için anlamsal benzerlikte yanıltıcıdır. Cosine değeri [-1, 1] aralığındadır; 1 = aynı yön, 0 = dik, -1 = zıt.
 
 ### 5. Vector DB: Qdrant vs Pinecone ne zaman?
 
-**Model cevap:** Qdrant = açık kaynak, self-host + managed (Qdrant Cloud). Pinecone = managed SaaS only, proprietary. Qdrant tercih: (1) maliyet kritik (1M vektör $4-5/ay VPS vs Pinecone $70+); (2) on-prem veri zorunluluğu; (3) filter + hybrid search zengin. Pinecone tercih: (1) zero-ops (AWS'siz ekip); (2) auto-scale gerek; (3) enterprise SLA. Ara yol: Qdrant Cloud ($25-100/ay). Chroma küçük prototip için; Weaviate GraphQL seven için; pgvector PostgreSQL zaten varsa.
+**Model cevap:** Qdrant = açık kaynak, kendi sunucunda barındırma (self-host) + yönetilen (Qdrant Cloud). Pinecone = yalnızca yönetilen SaaS, kapalı kaynak. Qdrant tercih: (1) maliyet kritik (1M vektör $4-5/ay VPS, Pinecone $70+); (2) yerinde (on-prem) veri zorunluluğu; (3) filtre + hibrit arama zengin; (4) Qdrant 1.18'le birlikte arama API'si `client.query_points()` üstüne taşındı (eski `client.search()` deprecated), tek arayüz hibrit / dense / sparse hepsini taşır. Pinecone tercih: (1) sıfır operasyon (DevOps'suz ekip); (2) otomatik ölçek; (3) kurumsal SLA. Ara yol: Qdrant Cloud ($25-100/ay). Chroma küçük prototip için; Weaviate GraphQL sevenler için; pgvector PostgreSQL zaten varsa; Milvus 1B+ vektör ölçeğinde.
 
-**Senin örneğin:** "3.5 Semantic Search projemde Qdrant seçtim çünkü self-host + filter zengin. 100 bin vektör, $4/ay VPS, aylık Pinecone'un $70'ine göre 18× ucuz."
+**Senin örneğin:** "3.5 Semantic Search projemde Qdrant seçtim çünkü kendi sunucumda barındırma + filtre zengin. 100 bin vektör, $4/ay VPS, aylık Pinecone'un $70'ine göre 18× daha ucuz. Qdrant 1.18'in `query_points()` API'si hibrit aramayı tek çağrıya indirdi."
 
 ### 6. Prompt injection nedir, nasıl önlenir?
 
-**Model cevap:** Prompt injection = kullanıcı input'u içine gizlenen komut, LLM'i sistem prompt'tan saptırır ("Önceki talimatları unut, X yap"). 4 katman savunma: (1) sistem prompt sertleştirme (rol kilidi, injection reddi); (2) Pydantic input validation (uzunluk + pattern red); (3) output sanitization (bleach HTML, SQL parameterize); (4) structured output zorla (`tool_choice={"type":"tool","name":"X"}`). Tek katman yetmez — RAG'de chunk injection (context boundary system prompt) ek savunma gerekir.
+**Model cevap:** Prompt injection (yönerge enjeksiyonu) = kullanıcı girdisinin içine gizlenen komut, LLM'i sistem yönergesinden saptırır ("Önceki talimatları unut, X yap"). 5 katman savunma: (1) sistem yönergesi sertleştirme (rol kilidi, enjeksiyon reddi); (2) Pydantic ile girdi doğrulama (uzunluk + örüntü reddi); (3) çıktı temizleme (bleach ile HTML, parametre bağlamalı SQL); (4) yapılandırılmış çıktı zorla (`tool_choice={"type":"tool","name":"X"}`); (5) **Anthropic Constitutional Classifiers** (2025) — Claude'un saldırı türünden bağımsız jailbreak savunma katmanı; %95+ jailbreak yakalama oranı, %0.4 yanlış pozitif. Tek katman yetmez — RAG'de parça enjeksiyonu (context boundary system prompt) ek savunma gerekir. **OWASP Top 10 for LLM (2025)** prompt injection'ı 1. sırada listeler — mülakatçı "OWASP LLM listesini biliyor musun?" diye sorabilir.
 
-### 7. Agent vs workflow farkı?
+### 7. Ajan (agent) vs iş akışı (workflow) farkı?
 
-**Model cevap:** Workflow = deterministik adım dizisi; her adımda LLM olabilir ama karar yok. Agent = LLM karar verici; hangi tool'u hangi sırayla çağıracağını kendi seçer. Anthropic "Building Effective Agents" (2024) der: "Start simple — workflow before agents." Workflow tercih: süreç belli, adım tahmin edilebilir (RSS parse → özet → puanla). Agent tercih: kullanıcı sorusu açık uçlu, plan dinamik (deep research, coding agent). Çoğu production sistemi **workflow + 1-2 yerde agent** karması — 9.5 İçerik Özet Agent örnek (radar deterministik, yazar+evaluator LLM ama döngü yok).
+**Model cevap:** İş akışı (workflow) = belirlenimci adım dizisi; her adımda LLM olabilir ama LLM döngü kararı vermez. Ajan (agent) = LLM karar verici; hangi aracı (tool) hangi sırayla çağıracağını kendi seçer; bitirme kriteri de LLM'in kendisindedir. Anthropic'in "Building Effective Agents" yazısı (Aralık 2024, 2025'te güncellendi) der: "Önce iş akışı, gerekmedikçe ajan değil." İş akışı tercih: süreç belli, adım öngörülebilir (RSS ayrıştırma → özet → puanla). Ajan tercih: kullanıcı sorusu açık uçlu, plan dinamik (derin araştırma, kod yazan ajan). Çoğu üretim sistemi **iş akışı + 1-2 yerde ajan** karması — 9.5 İçerik Özet Ajan örnek (radar belirlenimci, yazar + değerlendirici (evaluator) LLM ama özyineleme yok). Anthropic 2025'te `claude-agent-sdk` paketini yayımladı — `query()` ve `ClaudeSDKClient` ile alt-ajan (sub-agent) düzeneği üretim için hazır.
 
-### 8. MCP nedir?
+### 8. MCP (Model Context Protocol) nedir?
 
-**Model cevap:** MCP (Model Context Protocol) = Anthropic'in açık standartı, Claude'u dış servislere bağlamak için. 2024 Kasım yayınlandı. Öncesinde her entegrasyon özel kod; MCP ile standart protokol — bir MCP server yaz, Claude Desktop/Claude Code/API hepsi kullanır. JSON-RPC üstü, stdio veya SSE transport. Tools + resources + prompts üç primitive. Gmail, Slack, GitHub için hazır server'lar var; kendi veri kaynağın için custom yazabilirsin.
+**Model cevap:** MCP (Model Context Protocol — Model Bağlam Protokolü) = Anthropic'in açık standardı, LLM'leri dış servislere bağlamak için. **Kasım 2024'te yayımlandı, Aralık 2025'te Linux Foundation altında AAIF (AI Alliance Foundation) bünyesine bağışlandı** — yönetişim artık satıcıdan bağımsız. OpenAI, Google ve Microsoft 2025'te MCP'yi resmi olarak benimsediğini duyurdu — yani çapraz ekosistem standardı. Öncesinde her entegrasyon özel koddu; MCP ile standart protokol — bir MCP sunucusu yaz, Claude Desktop / Claude Code / API / ChatGPT Desktop / Gemini hepsi kullanır. JSON-RPC üstü, stdio veya HTTP/SSE iletim katmanı. Üç temel ilkel: tools (araçlar) + resources (kaynaklar) + prompts (yönergeler). Gmail, Slack, GitHub için hazır sunucular `modelcontextprotocol/servers` reposundadır; kendi veri kaynağın için özel sunucu yazabilirsin (FastMCP kütüphanesi Python tarafında en hızlı yoldur).
 
-**Senin örneğin:** "ClawdBot'ta MCP server yazdım — Claude bot'u Telegram üstünden projelerime bağlıyor; saatler yerine dakikalar."
+**Senin örneğin:** "ClawdBot'ta MCP sunucusu yazdım — Claude botunu Telegram üzerinden projelerime bağlıyor; saatler yerine dakikalar. Aynı sunucu Aralık 2025'ten beri Linux Foundation standardı altında, ileride Gemini istemcimle de aynı sunucuyu paylaşabilirim."
 
 ### 9. Tool calling nasıl çalışır?
 
@@ -95,21 +95,21 @@ Bu sayfadaki 30 soru **her aşamada** çıkabilir. Hepsini önce oku, sonra **ke
 
 **Senin örneğin:** "9.5 agent'ımda Semaphore 3 Sonnet + 5 Haiku ile rate'i istemci tarafında kontrol ediyorum, paralel çağrılar Anthropic'i zorlamıyor."
 
-### 14. Maliyet optimizasyonu?
+### 14. Maliyet eniyilemesi (cost optimization)?
 
-**Model cevap:** 5 teknik: (1) **Heterojen model** — basit görev Haiku, karmaşık Sonnet (9.5'te %38 tasarruf); (2) **Prompt caching** — aynı system prompt %90 indirimli (Anthropic 2024 Kasım); (3) **Batch API** — %50 indirim, 24 saat bekler (offline işler); (4) **Chunk optimizasyonu** — daha az context → daha az input token; (5) **Model downgrade** — Opus yerine Sonnet, Sonnet yerine Haiku deneyi. Her request için `usage.input_tokens` + `output_tokens` logla; 1 ay sonra "hangi endpoint en pahalı?" net.
+**Model cevap:** 6 teknik: (1) **Heterojen model** — basit görev Haiku 4.5 ($1/M giriş, $5/M çıkış), karmaşık görev Sonnet 4.6 ($3/$15), kritik akıl yürütme Opus 4.7 ($5/$25); 9.5'te %38 tasarruf; (2) **Prompt caching (yönerge önbellekleme)** — aynı sistem yönergesinde %90 indirim (Anthropic Kasım 2024), 5 dakika varsayılan, 1 saat genişletilmiş cache 2025'te eklendi; (3) **Batch API (toplu API)** — %50 indirim, 24 saat içinde döner (çevrimdışı işler için); (4) **Parça eniyilemesi** — daha az bağlam → daha az girdi tokeni; (5) **Model düşürme** — Opus yerine Sonnet, Sonnet yerine Haiku denemesi; (6) **Extended thinking (uzun düşünme) kontrolü** — `thinking` parametresi açıksa düşünce zinciri token tüketir; basit görevde kapalı tut. Her istek için `usage.input_tokens` + `output_tokens` + `cache_read_input_tokens` + `cache_creation_input_tokens` logla; 1 ay sonra "hangi uç en pahalı?" net görünür.
 
-### 15. Hallucination nasıl azaltılır?
+### 15. Halüsinasyon (hallucination) nasıl azaltılır?
 
-**Model cevap:** Halüsinasyon = model kaynakta olmayan şeyi uydurur. Azaltma: (1) RAG + kaynak alıntı zorunluluğu; (2) sistem prompt katı ("sadece kaynakta olan bilgi, bilmiyorsan 'bilmiyorum' de"); (3) low temperature (0-0.1); (4) Claude'un dürüstlük refleksi (Anthropic Constitutional AI avantajı — emin değilse söyler); (5) evaluator pattern (ikinci LLM cevabı kaynağa göre denetler, 9.5 agent örneği). Tam sıfırlamaz ama %80+ azaltır.
+**Model cevap:** Halüsinasyon = model kaynakta olmayan şeyi uydurur. Azaltma: (1) RAG + kaynak alıntı zorunluluğu; (2) sistem yönergesi katı ("yalnızca kaynaktaki bilgi, bilmiyorsan 'bilmiyorum' de"); (3) düşük sıcaklık (0-0.1); (4) Claude'un dürüstlük refleksi (Anthropic Constitutional AI avantajı — emin değilse söyler); (5) **değerlendirici örüntüsü (evaluator pattern)** — ikinci LLM cevabı kaynağa göre denetler, 9.5 agent örneği; (6) **extended thinking** (uzun düşünme) açık + "kanıtla" yönergesi — Claude düşünce zincirinde kaynak alıntısını gerçekten kontrol eder; (7) **JSON Schema kısıtlamalı çıktı** — yalnızca öntanımlı alanlara cevap; uydurma alanı yok. Tam sıfırlamaz ama %85+ azaltır. Anthropic'in 2025 değerlendirmelerinde Sonnet 4.6 + RAG + evaluator karması TruthfulQA'da %92 doğruluk verdi.
 
 ### 16. Structured output garanti?
 
 **Model cevap:** 3 yol: (1) **Tool calling + `tool_choice`** — Claude mutlaka tool'u çağırır, input schema'ya uyar. En güçlü yöntem. (2) **JSON mode** (bazı modellerde) — response JSON olarak gelir ama şema zorlanmaz, Pydantic validation gerek. (3) **Prompt tuning + regex parse** — "JSON olarak döndür" + regex ile yakalama; zayıf, hata riskli. Production'da tool calling standart. Anthropic 2024-12 "Building Effective Agents" evaluator-optimizer pattern'inde tool calling kullanır.
 
-### 17. Observability?
+### 17. Gözlemlenebilirlik (observability)?
 
-**Model cevap:** 3 boyut: log (ne oldu, discrete events), metric (ne kadar oldu, time series), trace (nasıl oldu, request path). Structured JSON log + trace_id middleware (FastAPI contextvars). Kritik metrikler: error rate, p95 latency, token/saat, maliyet/saat. Küçük proje `jq` + cron email; orta-büyük Grafana + Loki. PII maskeleme zorunlu (presidio). 24/7 agent için heartbeat + Uptime Kuma + Sentry — sessiz başarısızlık engeli.
+**Model cevap:** 3 boyut: log (ne oldu — kesikli olaylar), metric (ne kadar oldu — zaman serisi), trace (nasıl oldu — istek yolu). Yapılandırılmış JSON log + `trace_id` ara katmanı (FastAPI `contextvars`). Kritik ölçümler: hata oranı, p95 gecikme, saatlik token, saatlik maliyet, cache hit oranı. Küçük proje `jq` + cron e-posta; orta-büyük **LangFuse** (açık kaynak, kendi sunucunda) ya da **Helicone** (yönetilen) — ikisi de LLM çağrıları için özel; klasik Grafana + Loki üstüne ek katman. **LangSmith** LangChain projeleri için yerleşik. PII maskeleme zorunlu (Microsoft Presidio). 7/24 ajan için heartbeat + Uptime Kuma + Sentry — sessiz arıza önlemi. **2026 not:** OpenTelemetry GenAI semantic convention 2025 sonu stable oldu — `gen_ai.system`, `gen_ai.request.model`, `gen_ai.usage.input_tokens` standart alanlar; gözlemlenebilirlik takımları bunu bekleyebilir.
 
 ### 18. Production deploy?
 
@@ -187,15 +187,17 @@ Bu sayfadaki 30 soru **her aşamada** çıkabilir. Hepsini önce oku, sonra **ke
 
 ## Maaş müzakeresi — 3 refleks
 
-### 1. Beklenti sayı ver
+### 1. Beklentini sayı ile ver
 
-Recruiter "beklenti nedir?" dediğinde "görüşürüz" **yanlış** — seni düşük banttadan alır. **Sayı ver** ama aralıkla:
+İşe alımcı "beklenti nedir?" dediğinde "görüşürüz" **yanlış** — seni düşük bandın altından alır. **Sayı ver** ama aralıkla:
 
-- **Junior AI Engineer:** 60K-100K TL/ay brüt (Türkiye 2026)
-- **Mid AI Engineer:** 100K-180K TL/ay brüt
-- **Remote global (USD):** Junior $50K-80K/yıl, Mid $80K-140K/yıl
+- **Junior AI Engineer (Türkiye 2026 başı):** 70K-120K TL/ay brüt (TL 2024-2025'te %50+ enflasyon yaşadı, eski rakamlar geçersiz)
+- **Mid AI Engineer:** 120K-220K TL/ay brüt
+- **Senior AI Engineer:** 220K-400K TL/ay brüt
+- **Uzaktan global (USD):** Junior $50K-90K/yıl, Mid $90K-160K/yıl, Senior $160K-250K/yıl
+- **Anthropic / OpenAI gibi sınır laboratuvarlar:** Mid $200K-350K, Senior $350K-600K (base + equity dahil)
 
-1.2 Bölümündeki bant hatırla. Şehir + remote vs ofis + şirket büyüklüğü farkı büyük.
+1.2 Bölümündeki bant hatırla. Şehir + uzaktan vs ofis + şirket büyüklüğü farkı büyük. Türkiye'de TL maaş enflasyon nedeniyle 6 aylık zam pazarlığını mülakatta açmak makul; sözleşmeye yıllık ÜFE bağlı zam koşulunu eklet.
 
 ### 2. Total compensation
 
@@ -248,9 +250,9 @@ Claude kullanan şirketlerde (Anthropic customers) mülakatta büyük olasılık
 
 ### Anthropic'in kendi mülakatı
 
-Anthropic'e doğrudan başvurursan (Applied AI Engineer rol) 5 aşama: recruiter → tech screen → take-home (AI sistem tasarımı) → onsite 4 round → offer. Take-home zor — 4-8 saat, production-level kod. Deep tech aşamada **derin sistem tasarımı** — "Claude-based RAG chatbot tasarla, 10M kullanıcı, aşağıdaki constraint'lerle...". Güncel referans: Anthropic Careers blog post'ları + ex-Anthropic mühendislerin blog'ları (Simon Willison, Andrej Karpathy).
+Anthropic'e doğrudan başvurursan (Applied AI Engineer / Forward Deployed Engineer rolü) 5-7 aşama: işe alımcı eleme → teknik ön görüşme (1 saat canlı kod) → ev ödevi (AI sistem tasarımı) → 4 turlu yüz yüze veya video gün (ekiple) → değer uyumu (values match) turu → teklif. Ev ödevi zor — 4-8 saat, üretim seviyesinde kod. Derin teknik aşamada **derin sistem tasarımı** — "Claude tabanlı RAG sohbet botu tasarla, 10M kullanıcı, şu kısıtlarla...". Anthropic'in Acceptable Use Policy + Responsible Scaling Policy mülakat sırasında "şirket nasıl düşünür" sorgusu için iyi referans. Güncel kaynaklar: Anthropic Careers blog yazıları + Simon Willison'ın haftalık AI günlüğü ([simonwillison.net](https://simonwillison.net)).
 
-**Gerçekçi değerlendirme:** Anthropic direkt 2026 itibarıyla **senior+** bias — junior pozisyon az. 2-3 yıl production AI engineering sonra güçlü. Öncesi: Claude kullanan customer şirket (Notion, Zapier, Replit vb) → 2 yıl → Anthropic geçişi.
+**Gerçekçi değerlendirme:** Anthropic doğrudan 2026 başı itibarıyla **mid-senior eğilimli** — junior pozisyon az. 2-3 yıl üretim AI mühendisliği sonra güçlü. Öncesi: Claude kullanan müşteri şirket (Notion, Zapier, Replit, Cursor, Hebbia, Casetext vb) → 2 yıl → Anthropic geçişi. 2025'te eklenen **Forward Deployed Engineer (FDE)** rolü saha-yoğun (müşteride 2-4 hafta yerinde çalışma); seyahat sevenler için iyi.
 
 </details>
 
@@ -312,5 +314,5 @@ Toplam süre: ~2 saat. Bitiminde `mulakat-hazirlik/` klasörü GitHub'a push + L
 
 ← [10.1 LinkedIn Strateji](01-linkedin.md) &nbsp;|&nbsp; [Bölüm 10 girişi](index.md) &nbsp;|&nbsp; [Ana sayfa](../index.md)
 
-**Pekiştirme:** [Interviewing.io AI/ML mock interviews](https://interviewing.io/) + [Educative System Design for ML](https://www.educative.io/) + [Pramp ücretsiz peer mock](https://www.pramp.com/). Bir arkadaşla haftada 1 mock görüşme — gerçeğe en iyi hazırlık.
+**Pekiştirme:** [Interviewing.io AI/ML deneme görüşmeleri](https://interviewing.io/) (anonim mühendislerle ücretsiz deneme + işveren bulursan ücretli) + [Hello Interview ML System Design](https://www.hellointerview.com/learn/ml-system-design) (2025'te kurulan, ML/LLM sistem tasarımına özel) + [Pramp ücretsiz akran deneme görüşmesi](https://www.pramp.com/). Bir arkadaşla haftada 1 deneme görüşmesi — gerçek görüşmeye en iyi hazırlık. Anthropic + OpenAI mülakatına özel kaynak: Aishwarya Naresh Reganti'nin AI Engineer mülakat hazırlığı LinkedIn dizisi (haftalık güncellenir).
 </div>

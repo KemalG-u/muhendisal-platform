@@ -1,7 +1,7 @@
 # Bölüm 10 — İleri Seviye ve Kariyer
 
 <div class="ma-meta" markdown>
-**Persona:** Bölüm 9'u bitirdi. Canlı projesi var, GitHub'da repo var, README hazır. "Bunu kariyere/işe nasıl çeviririm" sorusu var · **Süre:** ~3 saat (5 sayfa, çoğu eylem planı) · **Önkoşul:** Bölüm 9 çıktısı (canlı URL + repo) elinde · **Çıktı:** LinkedIn profili AI Engineer ekseninde optimize, mülakat soruları için hazırlık notları, sonraki 6 aylık öğrenme yol haritası yazılı
+**Persona:** Bölüm 9'u bitirdin. Canlı projen var, GitHub'da repon var, README hazır. "Bunu kariyere/işe nasıl çeviririm?" sorusu var · **Süre:** ~3 saat (5 sayfa, çoğu eylem planı) · **Önkoşul:** Bölüm 9 çıktısı (canlı URL + repo) elinde · **Çıktı:** LinkedIn profili AI Engineer ekseninde optimize, mülakat soruları için hazırlık notları, sonraki 6 aylık öğrenme yol haritası yazılı
 </div>
 
 ## Neden bu bölüm?
@@ -14,15 +14,15 @@ Niye 5 sayfa, az? Çünkü teknik kısım bitti. Burası **eylem planı + toplul
 
 ## Bölüm 10 kısaca
 
-**10.1 — LinkedIn Profil Optimizasyonu.** Headline + About bölümü + projenin "Featured" alanına nasıl koyulur. AI Engineer kelimelerinin ATS taraması için hangi yere yerleştirileceği. 3 örnek profil (önce/sonra).
+**10.1 — LinkedIn Profil Optimizasyonu.** Başlık + Hakkımda bölümü + projenin "Featured" (öne çıkan) alanına nasıl koyulacağı. 2026 LinkedIn algoritma gerçeği: video > resim > metin, dwell time (sayfada geçirilen süre) ana sıralama sinyali. AI Engineer anahtar kelimelerinin ATS taraması için hangi yere yerleştirileceği. 3 örnek profil (önce/sonra).
 
-**10.2 — Mülakat Soruları.** En sık 30 soru: "RAG'i fine-tune'dan ne zaman tercih edersin?", "Token nedir?", "Prompt injection nasıl önlenir?", "MCP nedir?". Her birine 1-2 paragraflık model cevap (kalıp değil, refleks için).
+**10.2 — Mülakat Soruları.** En sık 30 soru: "RAG'i ince ayardan ne zaman tercih edersin?", "Token nedir?", "Prompt injection nasıl önlenir?", "MCP nedir?", "Constitutional AI ne işe yarar?". Her birine 1-2 paragraflık model cevap (kalıp değil, refleks için).
 
-**10.3 — Açık Kaynak Katkı.** Anthropic Cookbook'a (claude-cookbooks), LangChain, Qdrant gibi projelere ilk PR nasıl atılır. "Beginner-friendly issue" etiketleriyle başlama. İlk küçük katkıdan referans inşası.
+**10.3 — Açık Kaynak Katkı.** Anthropic Cookbook'a (`anthropics/claude-cookbooks`), MCP referans sunucularına (`modelcontextprotocol/servers`), LangChain, Qdrant gibi projelere ilk PR nasıl atılır. "Good first issue" etiketleriyle başlama. İlk küçük katkıdan referans inşası.
 
-**10.4 — İleri Konular ve Trendler.** 2026 itibarıyla yükselen konular: AI agents at scale, multimodal foundation models, on-device inference (mobile), AI safety + alignment araştırma. Hangi paper, hangi blog, hangi podcast.
+**10.4 — İleri Konular ve Trendler.** 2026 itibarıyla yükselen konular: ölçekte AI ajanları (agents at scale), multimodal temel modeller, cihaz içi (on-device) çıkarım (mobil), AI safety + hizalama araştırması, MCP ekosistem genişlemesi (Linux Foundation altında). Hangi makale, hangi blog, hangi podcast.
 
-**10.5 — Topluluk ve Mentorluk.** Türkiye AI toplulukları, Discord/Slack grupları, mentorluk arama (ADP Listesi, MentorCruise, Anthropic ambassador programları). Mentor olma tarafı (sen kuyrukta arkadakine yardım ediyorsun).
+**10.5 — Topluluk ve Mentorluk.** Türkiye AI toplulukları, Discord / Slack grupları, mentorluk arama (ADPList, MentorCruise, Anthropic ekosistem). Mentor olma tarafı (sen sıradaki kişiye yardım ediyorsun).
 
 ## Bu bölümün yol haritası
 
