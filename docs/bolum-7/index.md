@@ -14,13 +14,13 @@ Niye 4 sayfa, daha az? Çünkü multimodal **API seviyesinde kolaydır** — `im
 
 ## Bölüm 7 kısaca
 
-**7.1 — Görüntü Modelleri.** Claude Sonnet 4.6 / Opus 4.7 / Haiku 4.5 vision. JPG/PNG/GIF/WEBP desteği, **5 MB / görsel + max 20 görsel / istek**, 8000 piksel uzun kenar üst sınır (içeride 1568 piksele yeniden boyutlanır). Base64 ile URL referansı. PDF native input (32 MB / 100 sayfa).
+**7.1 — Görüntü Modelleri.** Claude Sonnet 4.6 / Opus 4.7 / Haiku 4.5 görüntü desteği. JPG/PNG/GIF/WEBP biçimleri, **5 MB / görsel + en çok 20 görsel / istek**, 8000 piksel uzun kenar üst sınır (içeride 1568 piksele yeniden boyutlanır; bu yeniden boyutlama 1.15 token / piksel maliyetini etkiler). Base64 veya URL referansı. PDF doğal girdi (32 MB / 100 sayfa Messages API; 500 MB / 1000 sayfa Files API). 2025'te eklenen **Citations API** — Claude görsel veya PDF içinden okuduğu kaynağı sayfa numarasıyla geri verebilir.
 
-**7.2 — Ses ve TTS/STT.** Whisper (açık kaynak, kendi sunucunda veya OpenAI API), Deepgram (yönetilen), ElevenLabs (TTS kalite zirvesi), Fish Audio veya Replicate XTTS-v2 (Türkçe TTS). Seçim matrisi.
+**7.2 — Ses ve TTS/STT.** Whisper Large v3 (açık kaynak, kendi sunucunda veya OpenAI API üzerinden — `whisper-1` artık ucuzlatılmış nesil), Deepgram Nova-3 (yönetilen, Türkçe destekli, ~$0.0043/dakika), ElevenLabs Turbo v3 (TTS kalite zirvesi), Replicate XTTS-v2 veya Cartesia Sonic (düşük gecikmeli TTS, Türkçe), GPT-5.5 Realtime API (canlı sesli sohbet). Seçim matrisi.
 
-**7.3 — Video İşleme.** "Video → kare (frame) serisi → Claude analizi" deseni. Ücretsiz kare çıkarma (ffmpeg). Videonun 5-10 anahtar karesi üstünde çalışmak. Alternatif: **Gemini 2.5 Pro doğal video girdisi** kabul ediyor — Claude için ise frame-based desen kalıcı.
+**7.3 — Video İşleme.** "Video → kare (frame) dizisi → Claude çözümlemesi" örüntüsü. Ücretsiz kare çıkarma (ffmpeg). Videonun 5-10 anahtar karesi üstünde çalışmak. Alternatif: **Gemini 2.5 Pro doğal video girdisi** (1M bağlamla 60 dakikaya kadar video) kabul ediyor — Claude için ise kare tabanlı (frame-based) örüntü kalıcı. 2025'te eklenen **Twelve Labs** — video için özel temel model (anlamsal arama + sahne sınıflandırma).
 
-**7.4 — Vision-Language Modeller.** Claude vs GPT-5.5 (vision) vs Gemini 2.5 Pro karşılaştırma. OCR, diyagram okuma, sahne anlama kıyaslamaları (güncel veriler).
+**7.4 — Görsel-Dil Modelleri (Vision-Language Models).** Claude (Opus 4.7 + Sonnet 4.6) vs GPT-5.5 vision vs Gemini 2.5 Pro vs Qwen3-VL-235B vs Llama 4 Maverick (vision) karşılaştırma. OCR, diyagram okuma, sahne anlama kıyaslamaları (güncel kıyaslamalar: MMMU, ChartQA, DocVQA).
 
 ## Bu bölümün yol haritası
 
@@ -63,11 +63,12 @@ flowchart LR
 
 ## Bu bölüm bittiğinde elinde ne olacak
 
-- **Claude vision refleksi:** Bir görsel veya PDF geldiğinde Claude'a verip analiz ettirme, sınırlarını bilme
-- **STT + Claude boru hattı:** Ses dosyası → Whisper → metin → Claude cevabı. Sesli asistan iskeleti elinde
-- **Video analiz deseni:** Kare çıkarma + Claude tek adımlı analiz mantığı — yeterince "video anlayan" sistem için
-- **Model karşılaştırma:** Proje vision gerektirdiğinde Claude vs Gemini 2.5 vs GPT-5.5 seçimi gerekçeli yapılıyor
-- **3. parti ses ekosistemi:** Whisper / Deepgram / ElevenLabs seçim ölçütü (maliyet + Türkçe kalitesi + gecikme)
+- **Claude görüntü refleksi:** Bir görsel veya PDF geldiğinde Claude'a verip çözümletme, sınırlarını bilme; Citations API ile sayfa numarası alıntısı
+- **STT + Claude boru hattı:** Ses dosyası → Whisper Large v3 → metin → Claude cevabı. Sesli asistan iskeleti elinde
+- **Video çözümleme örüntüsü:** Kare çıkarma + Claude tek adımlı çözümleme; alternatif olarak Twelve Labs anlamsal arama
+- **Model karşılaştırması:** Proje görüntü gerektirdiğinde Claude vs Gemini 2.5 vs GPT-5.5 vs Qwen3-VL seçimi gerekçeli yapılıyor
+- **Üçüncü taraf ses ekosistemi:** Whisper Large v3 / Deepgram Nova-3 / ElevenLabs Turbo v3 / Cartesia Sonic seçim ölçütü (maliyet + Türkçe kalitesi + ilk-token gecikmesi)
+- **Düşük gecikmeli sesli ajan örüntüsü:** Pipecat + LiveKit + Deepgram + Claude + ElevenLabs zinciri — son kullanıcıda 1-1.5 sn ilk yanıt
 
 <div class="ma-anthropic-oz" markdown>
 <div class="ma-anthropic-oz-header">📖 Anthropic bu bölümde ne der — öz</div>

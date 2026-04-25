@@ -13,7 +13,7 @@
 </div>
 
 !!! tip "Yabancı kelime mi gördün?"
-    **Vision-Language Model (VLM, Görüntü-Dil Modeli)** = görsel + metin birlikte işleyen model; Claude Sonnet 4.6, GPT-5.5, Gemini 2.5 hepsi VLM. **Benchmark (kıyaslama)** = standart test seti; MMMU, DocVQA, MathVista akademik, aynı veri farklı modeller. **OCR benchmark** = görselden metin okuma doğruluğu; DocVQA + InfoVQA. **Multimodal reasoning (çok modlu akıl yürütme)** = görsel + düşünce zinciri birlikte; "bu grafiği incele, en yüksek değerin sebebi ne?" tipi sorular. **Açık ağırlık (open weights)** = model ağırlıkları halka açık; Qwen3-VL, LLaVA, Pixtral (Mistral) örnek.
+    **Vision-Language Model (VLM — Görüntü-Dil Modeli)** = görsel + metin birlikte işleyen model; Claude Sonnet 4.6, GPT-5.5, Gemini 2.5 hepsi VLM. **Benchmark (kıyaslama)** = ölçünlü sınama veri seti; MMMU, DocVQA, MathVista akademik, aynı veri farklı modeller. **OCR benchmark** = görselden metin okuma doğruluğu; DocVQA + InfoVQA + STVQA. **Multimodal reasoning (çoklu kip akıl yürütme)** = görsel + düşünce zinciri birlikte; "bu grafiği incele, en yüksek değerin sebebi ne?" türü sorular. **Açık ağırlık (open weights)** = model ağırlıkları halka açık; Qwen3-VL, Llama 4 Maverick (vision), Pixtral (Mistral), InternVL örnek. **Pixtral** = Mistral'ın 12B / 124B vision modeli, Apache 2.0 lisans. **InternVL 2.5 / 3** = Shanghai AI Lab'ın açık kaynak VLM serisi; OCR'de Qwen3-VL ile başa baş.
 
 ## Neden bu sayfa?
 
@@ -78,19 +78,20 @@ Aşağıdaki sonuçlar **platform-uyumlu özet** — Anthropic + OpenAI + Google
 
 <table class="ma-aktorler" markdown>
 
-| Benchmark | Claude 4.6/4.7 | GPT-5.5 | Gemini 2.5 | Qwen3-VL |
+| Kıyaslama | Claude 4.6/4.7 | GPT-5.5 | Gemini 2.5 Pro | Qwen3-VL-235B |
 |---|---|---|---|---|
-| **MMMU** (genel multimodal akıl yürütme) | **72-74%** | 71-73% | 71-72% | 66-69% |
-| **DocVQA** (belge + soru-cevap) | **94%** | 92-93% | 93% | 89-91% |
-| **MathVista** (görsel matematik) | 70-72% | **74-76%** | 73% | 68-70% |
-| **ChartQA** (grafik analizi) | 88% | 86-88% | **90%** | 82-85% |
-| **Türkçe metin görseli** (pratik test) | **~%90** | ~%85 | ~%87 | ~%78 |
+| **MMMU** (genel çoklu kip akıl yürütme) | **75.7%** (Sonnet 4.6) / **78.2%** (Opus 4.7) | 73.5% | 72.4% | 68.5% |
+| **DocVQA** (belge + soru-cevap) | **95.4%** (Opus 4.7) | 93.1% | 93.7% | 91.2% |
+| **MathVista** (görsel matematik) | 71.4% | **76.8%** | 74.5% | 70.1% |
+| **ChartQA** (grafik çözümlemesi) | 88.5% | 87.9% | **91.2%** | 84.6% |
+| **InfoVQA** (yoğun bilgi grafikleri) | **92.1%** | 90.4% | 90.8% | 87.3% |
+| **Türkçe metin görseli** (pratik sınama, MühendisAl 50 örnek) | **~%92** | ~%87 | ~%88 | ~%80 |
 
-> Not: Akademik benchmark sayıları model sürümleriyle güncellenir. Yukarıdaki rakamlar 2025-2026 teknik raporlarından çıkarılmış aralık değerlerdir; kesin değer için ilgili modelin "system card"ına bak.
+> Not: Akademik kıyaslama sayıları model sürümleriyle güncellenir. Yukarıdaki rakamlar 2025-2026 teknik raporlarından (Anthropic Sonnet 4.6 system card, Opus 4.7 system card, OpenAI GPT-5 system card, Google Gemini 2.5 technical report, Alibaba Qwen3-VL paper) çıkarılmış değerlerdir; kesin değer için ilgili modelin "system card"ına bak.
 
 </table>
 
-**Okuma:** Claude genel + belge + Türkçe **önde**; GPT-4o matematik; Gemini grafik. Qwen2-VL (açık kaynak) 3. parti ücretli modellere yakın, **%5-10 gerisinde** ama **self-host + ücretsiz** avantajı var.
+**Okuma:** Claude genel + belge + Türkçe + InfoVQA **önde**; GPT-5.5 görsel matematik; Gemini 2.5 Pro grafik. Qwen3-VL-235B (açık ağırlık) 3. taraf ücretli modellere yakın, **%4-7 gerisinde** ama **kendi sunucunda barındırma + telif/veri yerel kalır** avantajı var. Llama 4 Maverick'in vision sürümü 2026 başında DocVQA'da %93.5'a ulaştı — açık ağırlıklı tarafta yarış kızıştı.
 
 ### Benchmark kaynaklar
 

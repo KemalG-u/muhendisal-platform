@@ -13,7 +13,7 @@
 </div>
 
 !!! tip "Yabancı kelime mi gördün?"
-    **Kare (frame)** = videonun tek bir görüntüsü; 1 saniye video ~30 kare. **Kare hızı (frame rate / FPS)** = saniyede kare sayısı; 24/30/60 yaygın. **Anahtar kare (keyframe)** = video sıkıştırmasında temel referans kare; önemli görsel değişim noktaları. **Sahne tespiti (scene detection)** = sahne değişimlerini otomatik bulma. **ffmpeg** = video/ses işlemenin standart komut satırı aracı, açık kaynak. **Örnekleme (sampling)** = videodan belli aralıkla kare çıkarma (her saniye, her sahne değişimi).
+    **Kare (frame)** = videonun tek bir görüntüsü; 1 saniye video ~30 kare. **Kare hızı (frame rate / FPS)** = saniyede kare sayısı; 24/30/60 yaygın. **Anahtar kare (keyframe / I-frame)** = video sıkıştırmasında temel referans kare; önemli görsel değişim noktaları. **Sahne tespiti (scene detection)** = sahne değişimlerini otomatik bulma. **ffmpeg** = video/ses işlemenin ölçünlü komut satırı aracı, açık kaynak; 2025'te v7.1 yayımlandı. **Örnekleme (sampling)** = videodan belli aralıkla kare çıkarma (her saniye, her sahne değişimi). **PySceneDetect** = sahne sınırlarını otomatik bulan Python paketi; histogram veya içerik tabanlı. **Twelve Labs** = video için özel temel model; anlamsal arama (semantic search) + sahne sınıflandırma; Marengo + Pegasus modelleri. **Video token'ı** = Gemini 2.5 Pro saniye başına ~258 token sayar; 1 saatlik video ~930K token, 1M bağlamına sığar.
 
 ## Neden bu sayfa?
 
@@ -24,7 +24,7 @@ Video, multimodal'ın 3. boyutu. 7.1 görsel + 7.2 ses + 7.3 video = tam multimo
 - Güvenlik kamera kaydı → olay özetleme, tehdit tespiti
 - YouTube içeriği → altyazı + öne çıkan anlar + sosyal medya taslakları
 
-**Anthropic'in yerleşik (native) video API'si henüz yok** (2026 Nisan). Claude Sonnet/Opus **bir istekte 20 görsele kadar** alır; videoyu **karelere böl**, kareleri Claude'a ver, özet al. Bu desen Claude tarafında 2026-2027 standart. Karşılaştırma: **Gemini 2.5 Pro doğal video girdisi** kabul ediyor — saatlerce videoyu tek seferde işleyebilir; bu konuda Claude'a karşı belirgin avantaj.
+**Anthropic'in yerleşik (native) video API'si henüz yok** (2026 Nisan). Claude Sonnet 4.6 / Opus 4.7 **bir istekte 20 görsele kadar** alır; videoyu **karelere böl**, kareleri Claude'a ver, özet al. Bu örüntü Claude tarafında 2026-2027 standart. Karşılaştırma: **Gemini 2.5 Pro doğal video girdisi** kabul ediyor — 1M bağlamla 1 saatlik videoyu tek seferde işleyebilir (saniye başına ~258 token; 1 saat ≈ 930K token). Twelve Labs ise video için özel temel model sunuyor — Marengo (anlamsal arama) + Pegasus (sahne çözümleme); **Claude ile karşılaştırılabilir doğruluk**, ancak yığın işleme tarafında daha eniyilenmiş.
 
 İkincisi: **Ses kısmı paralel.** Videoda konuşma varsa ffmpeg ile ses ayır → 7.2'deki Whisper boru hattı. Görsel + ses transkripti birlikte Claude'a → zengin özet.
 

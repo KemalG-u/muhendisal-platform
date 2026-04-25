@@ -13,7 +13,7 @@
 </div>
 
 !!! tip "Yabancı kelime mi gördün?"
-    **Vision modeli** = görsel girdiyi kabul eden LLM; Claude Sonnet 4.6 / Opus 4.7 / Haiku 4.5, GPT-5.5, Gemini 2.5 vision yeteneği. **Modalite (modality)** = veri türü; metin, görüntü, ses, video her biri bir modalite. **Base64** = ikili (binary) dosyayı metin olarak kodlama; görsel API gönderimi için yaygın. **OCR** (Optical Character Recognition — görsel karakter tanıma) = görseldeki metni okuma. **Visual RAG (görsel destekli RAG)** = görsel + metin hibrit getirme; ilgili görseli bul + Claude'a ver.
+    **Vision (görüntü) modeli** = görsel girdiyi kabul eden LLM; Claude Sonnet 4.6 / Opus 4.7 / Haiku 4.5, GPT-5.5, Gemini 2.5 görüntü yeteneği. **Modalite (modality)** = veri türü; metin, görüntü, ses, video her biri bir kip. **Base64** = ikili (binary) dosyayı metin olarak kodlama; görsel API gönderimi için yaygın; %33 boyut artışına yol açar. **OCR** (Optical Character Recognition — görsel karakter tanıma) = görseldeki metni okuma. **Visual RAG (görsel destekli RAG)** = görsel + metin hibrit getirme; ilgili görseli bul + Claude'a ver. **Citations API** (Alıntı API'si) = Claude'un kullandığı kaynak parçacığı (görsel ya da PDF sayfası) ile birlikte cevap üretmesi; halüsinasyonu azaltır. **MMMU** (Massive Multi-discipline Multimodal Understanding) = 11.5K çoklu kip soru, üniversite seviyesi; Sonnet 4.6 Mart 2025 puanı %75.7. **DocVQA** = belge sorgulama kıyaslaması; Claude Opus 4.7 %95.4 puanla 2026 başında lider.
 
 ## Neden bu sayfa?
 
@@ -179,14 +179,16 @@ URL Claude sunucularından erişilebilir olmalı (public). Internal URL'ler çal
 
 **Pratik kural:** Kullanıcı yüklüyorsa base64; zaten public'se URL.
 
-## Kısıtlar — 2026 Claude vision
+## Kısıtlar — 2026 Claude görüntü
 
-- **Format:** JPEG, PNG, GIF, WebP
-- **Max boyut:** **5 MB per görsel**
-- **Max çözünürlük:** uzun kenar 8000 piksel; içeride 1568 piksele kadar yeniden boyutlandırılır
-- **Per request:** **20 görsel** (Messages API'de tek istek başına üst sınır)
-- **PDF native:** ayrı `document` bloğu — Messages API'de 32 MB / 100 sayfa, Files API'de 500 MB
-- **Video:** Doğrudan değil — karelere ayır, her kare ayrı görsel (7.3'te detay)
+- **Biçim:** JPEG, PNG, GIF, WebP (animated GIF için sadece ilk kare okunur)
+- **Üst boyut:** **5 MB / görsel** (base64 ya da URL)
+- **Üst çözünürlük:** uzun kenar 8000 piksel; içeride 1568 piksele kadar yeniden boyutlandırılır
+- **İstek başına:** **20 görsel** (Messages API'de tek istek üst sınırı; daha fazla için ardışık çağrı)
+- **PDF doğal girdi:** ayrı `document` bloğu — Messages API'de 32 MB / 100 sayfa, Files API'de 500 MB / yaklaşık 1000 sayfa
+- **Video:** Doğrudan değil — karelere ayır, her kare ayrı görsel (7.3'te ayrıntı). Gemini 2.5 Pro doğal video alıyor.
+- **Citations API:** Görsel veya PDF'lerde alıntı dönüşü için `citations: {"enabled": true}` parametresi 2025'te eklendi.
+- **Bölgesel kısıt:** 2026 başında AB AI Act yüksek riskli sistemlerde (sağlık, biyometrik) görüntü çıkarımı için ek belge zorunluluğu.
 
 **Token maliyeti tahmini:**
 
@@ -204,7 +206,7 @@ Görsel token ≈ (genişlik × yükseklik) / 750
 
 Örnek: 1200×800 = 960.000 / 750 = **~1280 token**.
 
-**Karşılaştırma:** Metin olarak 1280 token ~960 Türkçe kelime; bir sayfa metinle aynı maliyet. **Görsel pahalı değil** ama **çok görsel** toplam 50K+ token kolay geçer — maliyet 8.3 hard cap kritik.
+**Karşılaştırma:** Metin olarak 1280 token ~960 Türkçe kelime; bir sayfa metinle aynı maliyet. **Görsel pahalı değil** ama **çok görsel** toplam 50K+ token kolay geçer — 8.3'teki üst sınır (hard cap) kritik. **Yönerge önbelleği (prompt caching)** görsellerde de çalışır: aynı görsel art arda çağrılarda %90 indirimli okunur.
 
 ## 5 pratik kullanım
 
@@ -268,9 +270,9 @@ response = client.messages.create(
 print(response.content[0].text)
 ```
 
-**Anthropic'in kendi kullanımı:** Claude in Chrome ve Claude Code ürünlerinde bu pattern yerleşik. Tasarım → kod dönüşüm **2024-2026 AI Engineer iş ilanlarında sık** istenen yetkinlik.
+**Anthropic'in kendi kullanımı:** Claude in Chrome ve Claude Code ürünlerinde bu örüntü yerleşik. Tasarım → kod dönüşümü **2024-2026 AI Engineer iş ilanlarında sıkça** istenen yetkinlik. Vercel'in `v0.dev` ürünü tam olarak bu örüntü üzerine kurulu, milyon dolarlık ARR'a 2025'te ulaştı.
 
-**Gerçekçi kalite:** Basit form + liste UI %90 doğru. Karmaşık animasyon + özel bileşen %60-80. İlk taslak olarak çok güçlü, elle rötuş gerekir.
+**Gerçekçi kalite:** Basit form + liste UI %90 doğru. Karmaşık animasyon + özel bileşen %60-80. İlk taslak olarak çok güçlü, elle rötuş gerekir. **2025 ipucu:** Çok adımlı UI'da Claude `extended thinking` (uzun düşünme) modunu açarsan tasarım analizi belirgin gelişiyor — `thinking: {"type": "enabled", "budget_tokens": 5000}` parametresiyle.
 
 ### 3. Ürün fotoğrafı → otomatik açıklama
 

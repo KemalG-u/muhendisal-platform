@@ -13,7 +13,7 @@
 </div>
 
 !!! tip "Yabancı kelime mi gördün?"
-    **STT** (Speech-to-Text — sesten metne) = ses → metin; Whisper, Deepgram en yaygın. **TTS** (Text-to-Speech — metinden sese) = metin → ses; ElevenLabs, Fish Audio, OpenAI. **Sesli ajan (voice agent)** = kullanıcı konuşur → sistem dinler + LLM düşünür + cevap seslendirir. **Akış (streaming)** (sesli) = ses parça parça akarken işlemek; tüm kaydı beklemek yerine. **Ses kopyalama (voice cloning)** = bir kişinin sesini 30-60 saniyelik örnekle kopyalama. **Gecikme (latency)** = kullanıcı konuşmayı bitirdikten sistem cevaba başlayana kadarki süre; sesli ajanda 500 ms - 2 sn kritik.
+    **STT** (Speech-to-Text — sesten metne) = ses → metin; Whisper, Deepgram en yaygın. **TTS** (Text-to-Speech — metinden sese) = metin → ses; ElevenLabs, Cartesia Sonic, OpenAI. **Sesli ajan (voice agent)** = kullanıcı konuşur → sistem dinler + LLM düşünür + cevap seslendirir. **Akış (streaming) (sesli)** = ses parça parça akarken işlemek; tüm kaydı beklemek yerine. **Ses kopyalama (voice cloning)** = bir kişinin sesini 30-60 saniyelik örnekle kopyalama. **Gecikme (latency)** = kullanıcı konuşmayı bitirdikten sistem cevaba başlayana kadarki süre; sesli ajanda 500 ms - 2 sn kritik. **WER** (Word Error Rate — kelime hata oranı) = STT modelinin doğruluğunu ölçer; Whisper Large v3 Türkçe için temiz kayıtta %5-8. **VAD** (Voice Activity Detection — ses etkinliği algılama) = konuşmanın başladığını/bittiğini saptar; sesli ajanın "kullanıcı sustu mu?" karar verme katmanı. **Pipecat** = Daily.co'nun açık kaynak Python sesli ajan çatısı; STT → LLM → TTS akışını yönetir.
 
 ## Neden bu sayfa?
 
@@ -69,14 +69,14 @@ flowchart LR
     class TTS,AUDIO_OUT tts
 ```
 
-**3 kritik metrik:**
+**3 kritik ölçüm:**
 
-- **STT latency:** Whisper API ~500ms-2sn
-- **LLM latency:** Claude ~1-3sn (streaming ilk token 500ms)
-- **TTS latency:** ElevenLabs ~500ms-1sn (streaming)
-- **Toplam:** 2-6 saniye (voice agent için sınırda, 500ms-2sn ideal)
+- **STT gecikmesi:** Whisper API ~500ms-2sn; Deepgram Nova-3 streaming ~200-400ms
+- **LLM gecikmesi:** Claude Haiku 4.5 streaming ilk token ~250-400ms; Sonnet 4.6 ~500-1000ms; Opus 4.7 ~800-1500ms
+- **TTS gecikmesi:** ElevenLabs Turbo v3 streaming ~150-300ms; Cartesia Sonic ~75-150ms (en hızlısı, 2025'te öne çıktı)
+- **Toplam:** 2026 hedef: kullanıcı bitirdikten sonra **800ms-1.5sn ilk yanıt** (Pipecat + LiveKit + Deepgram + Haiku 4.5 + Cartesia karması)
 
-Optimize etmek için **streaming + parallelism** gerek: Claude cevap verirken TTS paralel başla.
+Eniyilemek için **akış (streaming) + paralelleştirme** gerek: Claude cevap verirken TTS koşut başlar; cümle tamamlandıkça parça parça seslendirilir. **Pipecat** çatısı bu akışı kutudan çıkar — kendi başına yazmak 2-3 hafta iş, Pipecat'le 1-2 gün.
 
 </div>
 
@@ -175,13 +175,14 @@ print(response.results.channels[0].alternatives[0].transcript)
 
 </table>
 
-### Türkçe STT kalite gerçeği
+### Türkçe STT kalite gerçeği (WER — kelime hata oranı)
 
-- **Temiz Türkçe kayıt** (stüdyo, net konuşma): %95-98 doğruluk
-- **Telefon kaydı** (8kHz ses kalitesi): %85-92 doğruluk
-- **Gürültülü ortam** (café, araba): %75-85 doğruluk
-- **Aksan/dialekt** (Karadeniz, Doğu Anadolu): %70-80 doğruluk
-- **Teknik jargon** (tıbbi, hukuki): %80-90 — post-processing (LLM düzeltmesi) gerekli
+- **Temiz Türkçe kayıt** (stüdyo, net konuşma): %95-98 doğruluk (WER %2-5)
+- **Telefon kaydı** (8 kHz ses kalitesi): %85-92 doğruluk (WER %8-15)
+- **Gürültülü ortam** (kafe, araç içi): %75-85 doğruluk (WER %15-25)
+- **Aksan/lehçe** (Karadeniz, Doğu Anadolu): %70-80 doğruluk
+- **Teknik jargon** (tıbbi, hukuki): %80-90 — son işleme (LLM düzeltmesi) gerekli
+- **Çoklu konuşmacı (multi-speaker)** — diarization (konuşmacı ayrımı) ile %85+ doğruluk; Deepgram Nova-3 ve Whisper Large v3 + pyannote.audio karması iyi sonuç verir
 
 **Post-processing pattern:**
 
