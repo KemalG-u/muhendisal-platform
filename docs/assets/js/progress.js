@@ -86,6 +86,17 @@
   }
 
   // --- XP + Streak pill badge ---
+  // Aşama 3.1 + 7.1: badge sadece /dashboard/ veya kullanıcı localStorage'da
+  // ma_show_badge='1' olarak işaretlemişse gösterilir.
+
+  function shouldShowBadge() {
+    if (location.pathname.indexOf('/dashboard/') !== -1) return true;
+    try {
+      return localStorage.getItem('ma_show_badge') === '1';
+    } catch (e) {
+      return false;
+    }
+  }
 
   function renderBadge() {
     var badge = document.getElementById("ma-badge");
@@ -98,6 +109,7 @@
   }
 
   function refreshBadge() {
+    if (!shouldShowBadge()) return;
     var badge = renderBadge();
     api.getStreak().then(function (s) {
       var xp = (s && s.total_xp) || 0;

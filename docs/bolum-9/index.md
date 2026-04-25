@@ -1,7 +1,10 @@
 # Bölüm 9 — Deployment ve Portföy
 
 <div class="ma-meta" markdown>
-**Persona:** Bölüm 8'i bitirmiş, güvenlik checklist işaretli. "Artık canlıya çıkarmanın zamanı" diyor. Portföye ne koyacağına karar vermesi gerek · **Süre:** ~6 saat (7 sayfa, 3'ü somut portföy projesi) · **Önkoşul:** Bölüm 4 veya 6'dan hazır servis, GitHub hesabı, 1 domain veya subdomain · **Çıktı:** **Canlı, deploy edilmiş 1 portföy projesi** — URL paylaşılabilir, GitHub repo public + README'li
+<div class="ma-meta-row"><span class="ma-icon">👤</span> <strong>Kim için:</strong> Bölüm 8'i bitirmiş, güvenlik checklist işaretli. "Artık canlıya çıkarmanın zamanı" diyor. Portföye ne koyacağına karar vermesi gerek</div>
+<div class="ma-meta-row"><span class="ma-icon">⏱️</span> <strong>Süre:</strong> ~6 saat (7 sayfa, 3'ü somut portföy projesi)</div>
+<div class="ma-meta-row"><span class="ma-icon">📋</span> <strong>Önkoşul:</strong> Bölüm 4 veya 6'dan hazır servis, GitHub hesabı, 1 domain veya subdomain</div>
+<div class="ma-meta-row"><span class="ma-icon">🎯</span> <strong>Çıktı:</strong> **Canlı, deploy edilmiş 1 portföy projesi** — URL paylaşılabilir, GitHub repo public + README'li</div>
 </div>
 
 ## Neden bu bölüm?

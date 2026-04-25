@@ -1,7 +1,10 @@
 # Bölüm 5 — RAG vs Fine-tuning
 
 <div class="ma-meta" markdown>
-**Persona:** Bölüm 4'te RAG çalıştırdın. "Bu yetmez, modeli kendime göre eğitsem mi?" diye sorduğun nokta. Ya da tam tersi: "RAG çok iş, ince ayar (fine-tuning) daha temiz olmaz mı?" · **Süre:** ~2.5-3 saat (4 sayfa; 5.4'te Colab eğitimi ek 30 dk) · **Önkoşul:** Bölüm 4 bitti, çalışan bir RAG sistemin var · **Çıktı:** Bir proje geldiğinde RAG / ince ayar / hibrit arasında **gerekçeli karar** verebilecek eşik, ve Hugging Face üzerinde mini LoRA denemesi
+<div class="ma-meta-row"><span class="ma-icon">👤</span> <strong>Kim için:</strong> Bölüm 4'te RAG çalıştırdın. "Bu yetmez, modeli kendime göre eğitsem mi?" diye sorduğun nokta. Ya da tam tersi: "RAG çok iş, ince ayar (fine-tuning) daha temiz olmaz mı?"</div>
+<div class="ma-meta-row"><span class="ma-icon">⏱️</span> <strong>Süre:</strong> ~2.5-3 saat (4 sayfa; 5.4'te Colab eğitimi ek 30 dk)</div>
+<div class="ma-meta-row"><span class="ma-icon">📋</span> <strong>Önkoşul:</strong> Bölüm 4 bitti, çalışan bir RAG sistemin var</div>
+<div class="ma-meta-row"><span class="ma-icon">🎯</span> <strong>Çıktı:</strong> Bir proje geldiğinde RAG / ince ayar / hibrit arasında **gerekçeli karar** verebilecek eşik, ve Hugging Face üzerinde mini LoRA denemesi</div>
 </div>
 
 ## Neden bu bölüm?

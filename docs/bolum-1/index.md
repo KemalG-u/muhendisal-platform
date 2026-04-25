@@ -1,7 +1,10 @@
 # Bölüm 1 — Giriş ve Temeller
 
 <div class="ma-meta" markdown>
-**Persona:** Bölüm 0'ı bitirdin (Python + yerel LLM ayakta). AI dünyasına girmek istiyorsun ama "AI Engineer", "ML Engineer", "GPT-5 ile Claude ile Gemini" gibi terimler kafanda dağınık · **Süre:** ~2 saat (4 sayfa × 30 dk) · **Önkoşul:** Bölüm 0 tamamlanmış · **Çıktı:** AI ekosisteminin 2026 haritasını zihinde oturtmuş, AI Engineer ile ML Engineer ayrımını yapabiliyor, persona yolunu kesin seçmiş olursun
+<div class="ma-meta-row"><span class="ma-icon">👤</span> <strong>Kim için:</strong> Bölüm 0'ı bitirdin (Python + yerel LLM ayakta). AI dünyasına girmek istiyorsun ama "AI Engineer", "ML Engineer", "GPT-5 ile Claude ile Gemini" gibi terimler kafanda dağınık</div>
+<div class="ma-meta-row"><span class="ma-icon">⏱️</span> <strong>Süre:</strong> ~2 saat (4 sayfa × 30 dk)</div>
+<div class="ma-meta-row"><span class="ma-icon">📋</span> <strong>Önkoşul:</strong> Bölüm 0 tamamlanmış</div>
+<div class="ma-meta-row"><span class="ma-icon">🎯</span> <strong>Çıktı:</strong> AI ekosisteminin 2026 haritasını zihinde oturtmuş, AI Engineer ile ML Engineer ayrımını yapabiliyor, persona yolunu kesin seçmiş olursun</div>
 </div>
 
 ## Neden bu bölüm?

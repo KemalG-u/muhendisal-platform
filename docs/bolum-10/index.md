@@ -1,7 +1,10 @@
 # Bölüm 10 — İleri Seviye ve Kariyer
 
 <div class="ma-meta" markdown>
-**Persona:** Bölüm 9'u bitirdin. Canlı projen var, GitHub'da repon var, README hazır. "Bunu kariyere/işe nasıl çeviririm?" sorusu var · **Süre:** ~3 saat (5 sayfa, çoğu eylem planı) · **Önkoşul:** Bölüm 9 çıktısı (canlı URL + repo) elinde · **Çıktı:** LinkedIn profili AI Engineer ekseninde optimize, mülakat soruları için hazırlık notları, sonraki 6 aylık öğrenme yol haritası yazılı
+<div class="ma-meta-row"><span class="ma-icon">👤</span> <strong>Kim için:</strong> Bölüm 9'u bitirdin. Canlı projen var, GitHub'da repon var, README hazır. "Bunu kariyere/işe nasıl çeviririm?" sorusu var</div>
+<div class="ma-meta-row"><span class="ma-icon">⏱️</span> <strong>Süre:</strong> ~3 saat (5 sayfa, çoğu eylem planı)</div>
+<div class="ma-meta-row"><span class="ma-icon">📋</span> <strong>Önkoşul:</strong> Bölüm 9 çıktısı (canlı URL + repo) elinde</div>
+<div class="ma-meta-row"><span class="ma-icon">🎯</span> <strong>Çıktı:</strong> LinkedIn profili AI Engineer ekseninde optimize, mülakat soruları için hazırlık notları, sonraki 6 aylık öğrenme yol haritası yazılı</div>
 </div>
 
 ## Neden bu bölüm?

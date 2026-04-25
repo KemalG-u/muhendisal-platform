@@ -1,7 +1,10 @@
 # Bölüm 7 — Multimodal
 
 <div class="ma-meta" markdown>
-**Persona:** Bölüm 6'da ajan ve MCP'yi oturttun; metin dünyasından çıkıp görüntü/ses dünyasına bakmak istiyorsun · **Süre:** ~3 saat (4 sayfa) · **Önkoşul:** Bölüm 2 (Claude API), bir örnek görsel ve bir ses dosyası · **Çıktı:** Claude vision ile görsel analiz yapan örnek + sesli transkripsiyon iskeleti
+<div class="ma-meta-row"><span class="ma-icon">👤</span> <strong>Kim için:</strong> Bölüm 6'da ajan ve MCP'yi oturttun; metin dünyasından çıkıp görüntü/ses dünyasına bakmak istiyorsun</div>
+<div class="ma-meta-row"><span class="ma-icon">⏱️</span> <strong>Süre:</strong> ~3 saat (4 sayfa)</div>
+<div class="ma-meta-row"><span class="ma-icon">📋</span> <strong>Önkoşul:</strong> Bölüm 2 (Claude API), bir örnek görsel ve bir ses dosyası</div>
+<div class="ma-meta-row"><span class="ma-icon">🎯</span> <strong>Çıktı:</strong> Claude vision ile görsel analiz yapan örnek + sesli transkripsiyon iskeleti</div>
 </div>
 
 ## Neden bu bölüm?

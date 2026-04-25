@@ -1,7 +1,41 @@
-/* MühendisAl özel stil */
+/* MühendisAl özel stil — Aşama 3.4: Anthropic koyu turuncu yumuşak (#D97757) */
 :root {
-  --md-primary-fg-color: #ff6b35;
-  --md-accent-fg-color: #cc5520;
+  --md-primary-fg-color: #D97757;
+  --md-primary-fg-color--light: #E89272;
+  --md-primary-fg-color--dark: #B85B3F;
+  --md-accent-fg-color: #D97757;
+  --md-accent-fg-color--transparent: rgba(217, 119, 87, 0.1);
+}
+[data-md-color-scheme="slate"] {
+  --md-primary-fg-color: #E89272;
+  --md-accent-fg-color: #E89272;
+}
+
+/* Aşama 3.5: Persona kutusu 4 satır flex layout */
+.ma-meta {
+  background: var(--md-accent-fg-color--transparent);
+  border-left: 4px solid var(--md-primary-fg-color);
+  border-radius: 4px;
+  padding: 1rem 1.25rem;
+  margin: 1.5rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.ma-meta-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  line-height: 1.5;
+}
+.ma-meta-row .ma-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+  width: 24px;
+  text-align: center;
+}
+.ma-meta-row strong {
+  margin-right: 4px;
 }
 .md-typeset h1 { font-weight: 700; letter-spacing: -0.02em; }
 .md-typeset h2 { border-bottom: 1px solid var(--md-default-fg-color--lightest); padding-bottom: 0.3rem; }

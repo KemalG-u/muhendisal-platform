@@ -9,20 +9,20 @@ use_directory_urls: true
 theme:
   name: material
   language: tr
+  custom_dir: overrides
   palette:
-    # Light mode
+    # Aşama 3.4: Anthropic koyu turuncu yumuşak palette (#D97757)
     - media: "(prefers-color-scheme: light)"
       scheme: default
-      primary: deep orange
-      accent: orange
+      primary: custom
+      accent: custom
       toggle:
         icon: material/brightness-7
         name: Karanlık moda geç
-    # Dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
-      primary: deep orange
-      accent: orange
+      primary: custom
+      accent: custom
       toggle:
         icon: material/brightness-4
         name: Aydınlık moda geç
@@ -112,7 +112,6 @@ hooks:
   - hooks/pre_build.py
 
 nav:
-  - "Yazım Kuralları (CTO)": yazim-kurallari.md
   - Ana Sayfa: index.md
   - 📊 Dashboard: dashboard.md
   - Bölüm 0 — Temel Hazırlık:

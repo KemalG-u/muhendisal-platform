@@ -1,7 +1,10 @@
 # Bölüm 4 — RAG (Retrieval Augmented Generation)
 
 <div class="ma-meta" markdown>
-**Persona:** Bölüm 3 bitmiş, Qdrant ayakta, semantic search çalışıyor. Şimdi "PDF'ten soru cevaplayan asistan" kurmak istiyor · **Süre:** ~6 saat (7 sayfa, hepsinde kod) · **Önkoşul:** Bölüm 2 + 3, Qdrant kurulu, Claude API anahtarı aktif · **Çıktı:** Kendi dokümanlarından soru cevaplayan çalışan bir RAG servisi — web arayüzüyle veya API endpoint'iyle
+<div class="ma-meta-row"><span class="ma-icon">👤</span> <strong>Kim için:</strong> Bölüm 3 bitmiş, Qdrant ayakta, semantic search çalışıyor. Şimdi "PDF'ten soru cevaplayan asistan" kurmak istiyor</div>
+<div class="ma-meta-row"><span class="ma-icon">⏱️</span> <strong>Süre:</strong> ~6 saat (7 sayfa, hepsinde kod)</div>
+<div class="ma-meta-row"><span class="ma-icon">📋</span> <strong>Önkoşul:</strong> Bölüm 2 + 3, Qdrant kurulu, Claude API anahtarı aktif</div>
+<div class="ma-meta-row"><span class="ma-icon">🎯</span> <strong>Çıktı:</strong> Kendi dokümanlarından soru cevaplayan çalışan bir RAG servisi — web arayüzüyle veya API endpoint'iyle</div>
 </div>
 
 ## Neden bu bölüm?

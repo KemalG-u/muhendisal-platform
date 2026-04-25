@@ -1,7 +1,10 @@
 # Bölüm 2 — LLM ve Prompt Engineering
 
 <div class="ma-meta" markdown>
-**Persona:** Bölüm 1'den gelmiş, persona netleşmiş, "Claude nedir, nasıl konuşulur"u merak ediyor. Python ve venv biliyor, ama API çağrısı atmamış · **Süre:** ~5 saat (8 sayfa, hepsinde pratik kod) · **Önkoşul:** Bölüm 0 + 1, Python venv aktif, Anthropic hesabı ve API anahtarı (2.1'de nasıl alınacağı anlatılıyor) · **Çıktı:** İlk Claude çağrın çalışıyor, token ekonomisini anlıyorsun, sıcaklık/sistem prompt/few-shot'u pratikte deneyimlemişsin
+<div class="ma-meta-row"><span class="ma-icon">👤</span> <strong>Kim için:</strong> Bölüm 1'den gelmiş, persona netleşmiş, "Claude nedir, nasıl konuşulur"u merak ediyor. Python ve venv biliyor, ama API çağrısı atmamış</div>
+<div class="ma-meta-row"><span class="ma-icon">⏱️</span> <strong>Süre:</strong> ~5 saat (8 sayfa, hepsinde pratik kod)</div>
+<div class="ma-meta-row"><span class="ma-icon">📋</span> <strong>Önkoşul:</strong> Bölüm 0 + 1, Python venv aktif, Anthropic hesabı ve API anahtarı (2.1'de nasıl alınacağı anlatılıyor)</div>
+<div class="ma-meta-row"><span class="ma-icon">🎯</span> <strong>Çıktı:</strong> İlk Claude çağrın çalışıyor, token ekonomisini anlıyorsun, sıcaklık/sistem prompt/few-shot'u pratikte deneyimlemişsin</div>
 </div>
 
 ## Neden bu bölüm?

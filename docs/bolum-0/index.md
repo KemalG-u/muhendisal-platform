@@ -1,7 +1,10 @@
 # Bölüm 0 — Temel Hazırlık
 
 <div class="ma-meta" markdown>
-**Persona:** Python ve Linux'u hiç görmemiş, terminale yabancı ama denemeye istekli okuyucu · **Süre:** ~2-2.5 saat (5 sayfa × 25-30 dk + model indirme bekleme süresi) · **Önkoşul:** Bir bilgisayar + temel internet · bir VPS (Hetzner/DigitalOcean/AWS) veya yerel Linux/WSL (Windows içinde Linux terminali) kabul · **Çıktı:** Kendi sunucunda çalışan **yerel AI servisi** — HTTP POST atınca Ollama ile cevap dönen FastAPI uygulaması
+<div class="ma-meta-row"><span class="ma-icon">👤</span> <strong>Kim için:</strong> Python ve Linux'u hiç görmemiş, terminale yabancı ama denemeye istekli okuyucu</div>
+<div class="ma-meta-row"><span class="ma-icon">⏱️</span> <strong>Süre:</strong> ~2-2.5 saat (5 sayfa × 25-30 dk + model indirme bekleme süresi)</div>
+<div class="ma-meta-row"><span class="ma-icon">📋</span> <strong>Önkoşul:</strong> Bir bilgisayar + temel internet · bir VPS (Hetzner/DigitalOcean/AWS) veya yerel Linux/WSL (Windows içinde Linux terminali) kabul</div>
+<div class="ma-meta-row"><span class="ma-icon">🎯</span> <strong>Çıktı:</strong> Kendi sunucunda çalışan **yerel AI servisi** — HTTP POST atınca Ollama ile cevap dönen FastAPI uygulaması</div>
 </div>
 
 ## Neden bu bölüm?

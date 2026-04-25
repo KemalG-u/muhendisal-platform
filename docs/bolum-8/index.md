@@ -1,7 +1,10 @@
 # Bölüm 8 — Güvenlik ve Production
 
 <div class="ma-meta" markdown>
-**Persona:** Bölüm 7'ye kadar geldin, teknik olarak bir AI uygulaması inşa edebiliyorsun. Şimdi **"canlıya çıkmadan önce ne eksik"** sorusu. Güvenlik, maliyet, loglama, hata yönetimi · **Süre:** ~4 saat (6 sayfa, kontrol listesi ağırlıklı) · **Önkoşul:** Bölüm 4 veya 6'dan elinde çalışan bir AI servisi var · **Çıktı:** Üretime açık bir servis + 15 maddelik güvenlik kontrol listesi işaretli + maliyet alarmları kurulu
+<div class="ma-meta-row"><span class="ma-icon">👤</span> <strong>Kim için:</strong> Bölüm 7'ye kadar geldin, teknik olarak bir AI uygulaması inşa edebiliyorsun. Şimdi **"canlıya çıkmadan önce ne eksik"** sorusu. Güvenlik, maliyet, loglama, hata yönetimi</div>
+<div class="ma-meta-row"><span class="ma-icon">⏱️</span> <strong>Süre:</strong> ~4 saat (6 sayfa, kontrol listesi ağırlıklı)</div>
+<div class="ma-meta-row"><span class="ma-icon">📋</span> <strong>Önkoşul:</strong> Bölüm 4 veya 6'dan elinde çalışan bir AI servisi var</div>
+<div class="ma-meta-row"><span class="ma-icon">🎯</span> <strong>Çıktı:</strong> Üretime açık bir servis + 15 maddelik güvenlik kontrol listesi işaretli + maliyet alarmları kurulu</div>
 </div>
 
 ## Neden bu bölüm?

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block extrahead %}
+  {{ super() }}
+  {# Aşama 6: og:meta + twitter card + JSON-LD #}
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="{{ page.title }} — MühendisAl">
+  <meta property="og:description" content="{{ page.meta.description if page.meta and page.meta.description else config.site_description }}">
+  <meta property="og:url" content="{{ page.canonical_url }}">
+  <meta property="og:site_name" content="MühendisAl">
+  <meta property="og:locale" content="tr_TR">
+  {% if page.meta and page.meta.image %}
+  <meta property="og:image" content="{{ page.meta.image }}">
+  {% else %}
+  <meta property="og:image" content="{{ config.site_url }}assets/og-default.png">
+  {% endif %}
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@KarincaAI">
+  <meta name="twitter:title" content="{{ page.title }} — MühendisAl">
+  <meta name="twitter:description" content="{{ page.meta.description if page.meta and page.meta.description else config.site_description }}">
+
+  {% if page.meta and page.meta.type == 'article' %}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "{{ page.title }}",
+    "author": {"@type": "Person", "name": "Kemal", "url": "{{ config.site_url }}hakkimda/"},
+    "publisher": {"@type": "Organization", "name": "MühendisAl", "url": "{{ config.site_url }}"},
+    "url": "{{ page.canonical_url }}"
+  }
+  </script>
+  {% endif %}
+{% endblock %}

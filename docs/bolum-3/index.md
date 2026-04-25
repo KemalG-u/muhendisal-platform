@@ -1,7 +1,10 @@
 # Bölüm 3 — Embeddings ve Vector DB
 
 <div class="ma-meta" markdown>
-**Persona:** Bölüm 2 bitmiş, Claude API çağırabiliyor, prompt yazabiliyor. Şimdi "kendi dokümanlarımı AI'ya sordurmak" istiyor — ama "nasıl?" kısmı muğlak · **Süre:** ~4 saat (5 sayfa, yoğun pratik) · **Önkoşul:** Bölüm 2 tamam, Python + Docker temel bilgisi · **Çıktı:** Kendi metinlerinden "benzer olanı bul" yapan çalışan bir semantic search servisi
+<div class="ma-meta-row"><span class="ma-icon">👤</span> <strong>Kim için:</strong> Bölüm 2 bitmiş, Claude API çağırabiliyor, prompt yazabiliyor. Şimdi "kendi dokümanlarımı AI'ya sordurmak" istiyor — ama "nasıl?" kısmı muğlak</div>
+<div class="ma-meta-row"><span class="ma-icon">⏱️</span> <strong>Süre:</strong> ~4 saat (5 sayfa, yoğun pratik)</div>
+<div class="ma-meta-row"><span class="ma-icon">📋</span> <strong>Önkoşul:</strong> Bölüm 2 tamam, Python + Docker temel bilgisi</div>
+<div class="ma-meta-row"><span class="ma-icon">🎯</span> <strong>Çıktı:</strong> Kendi metinlerinden "benzer olanı bul" yapan çalışan bir semantic search servisi</div>
 </div>
 
 ## Neden bu bölüm?
