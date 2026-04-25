@@ -107,6 +107,20 @@ plugins:
   - search:
       lang: tr
   - glightbox
+  # Aşama 6.1 — Material social plugin: otomatik og:image üretici
+  - social:
+      cards: true
+      cards_layout_options:
+        background_color: "#D97757"
+        color: "#FFFFFF"
+        font_family: Inter
+  # Aşama 9.3 — RSS feed (bolum-* sayfaları için)
+  - rss:
+      match_path: "bolum-.+"
+      date_from_meta:
+        as_creation: date
+      categories:
+        - tags
 
 hooks:
   - hooks/pre_build.py
