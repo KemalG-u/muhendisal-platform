@@ -75,7 +75,7 @@ flowchart LR
 <div class="ma-anthropic-oz" markdown>
 <div class="ma-anthropic-oz-header">📖 Anthropic bu bölümde ne der — öz</div>
 
-**Dürüst not:** Anthropic'in kendi embedding modeli **yok.** Anthropic docs embedding için [Voyage AI](https://www.voyageai.com/) tavsiye eder — bu Anthropic'in önerdiği üçüncü parti. Biz bu bölümde Voyage AI'yı kısa değiniyoruz (3.2'de) ama ana odak daha yaygın seçenekler (OpenAI + açık kaynak Qdrant).
+**Dürüst not:** Anthropic'in kendi embedding modeli **yok.** Anthropic docs embedding için [Voyage AI by MongoDB](https://www.voyageai.com/) tavsiye eder — Voyage bağımsız bir girişimdi; **MongoDB Şubat 2025'te satın aldı**, tam adı artık "Voyage AI by MongoDB". Bu bölümde Voyage'ı kısa tanıtıyoruz (3.2'de) — `voyage-4` ailesi varsayılan tavsiye. Yan yana OpenAI ve açık kaynak BGE-M3 / Qdrant kombinasyonu da gösteriliyor.
 
 **1. Anthropic'in embedding politikası.** Anthropic "biz LLM + tool use'a odaklanıyoruz, embedding ekosistemde yeterince güçlü, yeni bir oyuncu eklemiyoruz" duruşu aldı. Bu karar bizim için iyi — tek sağlayıcıya bağımlı kalmıyorsun. Embedding'i istediğin yerden al, Claude'u LLM olarak kullan.
 

@@ -156,7 +156,7 @@ from qdrant_client.models import Distance, VectorParams
 
 client = QdrantClient(url="http://localhost:6333")
 
-# İlk koleksiyon — 1024 boyut (voyage-3 ile uyumlu), cosine distance
+# İlk koleksiyon — 1024 boyut (voyage-4 ile uyumlu), cosine distance
 client.create_collection(
     collection_name="haberler",
     vectors_config=VectorParams(size=1024, distance=Distance.COSINE),
@@ -169,7 +169,7 @@ print(client.get_collections())
 **3 parametre kritik:**
 
 1. `collection_name` — benzersiz; var olanla çakışırsa hata (aşağıda `get_or_create` deseni).
-2. `size` — vektör boyutu. Embedding modelin ne veriyorsa o (voyage-3 → 1024, OpenAI small → 1536).
+2. `size` — vektör boyutu. Embedding modelin ne veriyorsa o (voyage-4 → 1024, OpenAI small → 1536).
 3. `distance` — `COSINE` (en yaygın), `DOT`, `EUCLID`, `MANHATTAN`. Embedding modelin için hangisi önerildiyse onu seç (Voyage → Cosine).
 
 **Tekrar çalıştırırsan** aynı koleksiyon adıyla `create_collection` hata verir. Güvenli desen:
@@ -241,7 +241,7 @@ if "haberler" not in existing:
 
 # Embed et (document modu)
 metinler = [h[1] for h in haberler]
-result = vo.embed(metinler, model="voyage-3", input_type="document")
+result = vo.embed(metinler, model="voyage-4", input_type="document")
 vektorler = result.embeddings
 
 # Qdrant'a yaz
@@ -275,16 +275,16 @@ print(f"Toplam nokta: {info.points_count}")
 # Sorgu: "AI modelleri son gelişmeler"
 sorgu = "AI modelleri son gelişmeler"
 
-# Query modunda embed et!
-q_result = vo.embed([sorgu], model="voyage-3", input_type="query")
+# Sorgu modunda embed et!
+q_result = vo.embed([sorgu], model="voyage-4", input_type="query")
 q_vector = q_result.embeddings[0]
 
-# Qdrant'ta ara
-hits = client.search(
+# Qdrant'ta ara — query_points modern API (v1.18'de search() kaldırılıyor)
+hits = client.query_points(
     collection_name="haberler",
-    query_vector=q_vector,
+    query=q_vector,
     limit=5,
-)
+).points
 
 for h in hits:
     print(f"{h.score:.3f}  [{h.payload['kategori']}]  {h.payload['baslik']}")
@@ -309,16 +309,16 @@ for h in hits:
 ```python
 from qdrant_client.models import FieldCondition, Filter, MatchValue
 
-hits = client.search(
+hits = client.query_points(
     collection_name="haberler",
-    query_vector=q_vector,
+    query=q_vector,
     limit=3,
     query_filter=Filter(
         must=[
             FieldCondition(key="kategori", match=MatchValue(value="ekon"))
         ]
     ),
-)
+).points
 
 for h in hits:
     print(f"{h.score:.3f}  [{h.payload['kategori']}]  {h.payload['baslik']}")
@@ -451,7 +451,7 @@ API key yanlışsa tüm çağrılar 401 döner.
 | 2 | Port 6333'ü `0.0.0.0` bindlemek | İnternetten herkes eriir | `127.0.0.1:6333:6333` (9.2 kuralı) |
 | 3 | `id` string olarak geçmek (`"abc"`) | Qdrant hata verir | Integer veya UUID string |
 | 4 | `create_collection` `get_or_create` olmadan | 2. run'da "already exists" hata | Ensure pattern (3.1'de gösterdim) |
-| 5 | Embedding model boyutu ile collection size uyuşmaz | `ValueError: vector size mismatch` | voyage-3 → 1024, OpenAI small → 1536 |
+| 5 | Embedding model boyutu ile collection size uyuşmaz | `ValueError: vector size mismatch` | voyage-4 → 1024, OpenAI small → 1536 |
 | 6 | `document` ve `query` asimetrisini unutmak | Retrieval kalitesi %20-30 düşer | 3.1 kuralı: yazarken document, sorarken query |
 | 7 | `wait=False` upsert + hemen arama | Eski durumu görür, kaybolmuş cevap | İlk yüklemede `wait=True`; yüksek hacim canlıda `False` |
 | 8 | 10M+ vektörde HNSW index kurulumunu beklemeden upload | Dakikalarca yavaş arama | İlk upload önce, sonra index build |
@@ -525,7 +525,7 @@ Kategori filter ile ekonomi-özel arama yapmışsın; 3 ekonomi haberi dönmüş
 1. Qdrant Docker compose ile ayakta (volume mount + localhost bind).
 2. `qdrant-client==1.17.1` + `voyageai` kurulu, venv aktif.
 3. Kendi verinden 20 satır hazırla — 3-4 kategori (ör. kendi hobby alanların, yemek tarifleri, film önerileri).
-4. Her satırı embed et (voyage-3, `document` modu), Qdrant'a yaz.
+4. Her satırı embed et (voyage-4, `document` modu), Qdrant'a yaz.
 5. Kendi yazdığın 3 farklı sorgu ile ara; sonuçların anlamlı olup olmadığını gözle.
 6. 1 sorguyu kategori filter ile tekrarla.
 7. Dashboard'u aç, koleksiyonunu orada gör.
@@ -542,7 +542,7 @@ Kanıt: 3 soru + sonuç çıktıları + dashboard ekran görüntüsü.
 <ol class="ma-neden-sonuc-zincir" markdown>
 <li>**A → B:** Docker ile Qdrant tek komutta ayağa kalkar; production için compose + volume + localhost bind. Bu yüzden **önce çalıştır, sonra sağlamlaştır.**</li>
 <li>**B → C:** Python SDK `qdrant-client==1.17.1` — sürüm pin mandatory. Bu yüzden **pin'siz kurulum ileriki kırılmaları davet eder.**</li>
-<li>**C → D:** Koleksiyon boyutu embedding modeliyle uyumlu olmalı (voyage-3 → 1024); `ensure_collection` idempotent deseni. Bu yüzden **boyut uyumsuzluğu sessiz yanlışlık üretir.**</li>
+<li>**C → D:** Koleksiyon boyutu embedding modeliyle uyumlu olmalı (voyage-4 → 1024); `ensure_collection` idempotent deseni. Bu yüzden **boyut uyumsuzluğu sessiz yanlışlık üretir.**</li>
 <li>**D → E:** Upsert `document` modunda embed edilmiş vektör + payload (metin + kategori) birlikte. Bu yüzden **payload olmadan arama anlamsız kalır.**</li>
 <li>**E → F:** Arama `query` modunda embed edilmiş vektör; top_k sonuç + skor + payload döner. Bu yüzden **skor eşiği kalitenin kilidi.**</li>
 <li>**F → G:** Filter + vektör arama = yapısal ve semantik birleşimi (Qdrant'ın gücü). Bu yüzden **salt vektör aramadan üstündür.**</li>

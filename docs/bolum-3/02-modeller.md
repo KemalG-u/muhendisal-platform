@@ -31,7 +31,7 @@
 ```mermaid
 flowchart TB
     subgraph API["🌐 API (cloud, ücretli)"]
-        V["🟠 Voyage AI\nvoyage-3\nvoyage-3-large\nvoyage-3-lite"]
+        V["🟠 Voyage AI\nvoyage-4\nvoyage-4-large\nvoyage-4-lite"]
         O["🟢 OpenAI\ntext-embedding-3-small\ntext-embedding-3-large"]
         C["🔵 Cohere\nembed-v4\n(alternatif)"]
     end
@@ -73,33 +73,39 @@ flowchart TB
 
 ## 🟠 Voyage AI — platformun varsayılan tercihi
 
-**Şirket:** Stanford AI çıkışlı startup, 2023 kuruldu. Anthropic'in resmi embedding tavsiyesi.
+**Şirket:** Stanford AI çıkışlı girişim, 2023'te kuruldu. **Şubat 2025'te MongoDB satın aldı**; ürünün tam adı artık "Voyage AI by MongoDB". Anthropic'in resmi embedding tavsiyesi.
 
-### Modeller
+### Modeller (Voyage 4 ailesi — Ocak 2026'dan beri default)
 
-| Model | Boyut | Bağlam | Fiyat ($/M token, 2026 Nisan) | Kullanım |
+| Model | Boyut (esnek) | Bağlam | Fiyat ($/M token, 2026 Nisan) | Kullanım |
 |---|---|---|---|---|
-| **voyage-3-large** | 1024 | 32K | ~$0.18 | En üst kalite (kritik retrieval) |
-| **voyage-3** | 1024 | 32K | ~$0.06 | Dengeli (platform default) |
-| **voyage-3-lite** | 512 | 32K | ~$0.02 | Yüksek hacim, düşük bütçe |
-| **voyage-3-context** | 1024 | 32K | ~$0.06 | Uzun kontekst işlemede optimize |
+| **voyage-4-large** | 1024 (256/512/2048 opt) | 32K | ~$0.12 | En üst kalite (kritik retrieval) |
+| **voyage-4** | 1024 (256/512/2048 opt) | 32K | ~$0.06 | Dengeli (platform varsayılanı) |
+| **voyage-4-lite** | 512 | 32K | ~$0.02 | Yüksek hacim, düşük bütçe |
+| **voyage-4-nano** | 512 | 32K | $0 (açık ağırlık, Apache 2.0 — HuggingFace) | Yerel + ücretsiz |
+| **voyage-multimodal-3.5** | 1024 | 32K | ~$0.12 | Metin + görsel + video (ilk video embedding modeli) |
+| **voyage-3-large** (eski nesil) | 1024 | 32K | ~$0.18 | Geriye uyum için |
 
 !!! tip "Güncel fiyatlar ve 6-ay revizyonu"
-    Rakamlar **2026 Nisan** yaklaşımları; [voyageai.com/pricing](https://docs.voyageai.com/docs/pricing) sayfasından doğrula. 6 ayda bir revize: Ekim 2026 sonrası sayfa güncellenene dek bu tablonun güvenilirliği düşer.
+    Rakamlar **2026 Nisan** yaklaşımları; [docs.voyageai.com/docs/pricing](https://docs.voyageai.com/docs/pricing) sayfasından doğrula. 6 ayda bir revize: Ekim 2026 sonrası sayfa güncellenene dek tablonun güvenilirliği düşer.
 
 ### Güçlü yönler
 
 - **MTEB retrieval üst sırada** (2026 itibarıyla retrieval görevlerinde ilk 3'te)
-- **Ücretsiz tier cömert** — ayda **50M token** ücretsiz (öğrenme + MVP için fazlasıyla yeter)
-- **`input_type` asimetrisi native** — `document` / `query` / `classification` modları
+- **Ücretsiz tier cömert** — ayda **200M token** ücretsiz (öğrenme + MVP için fazlasıyla yeter, voyage-4-lite/voyage-4 için)
+- **Batch API'de %33 indirim** (asenkron iş yüklerinde)
+- **Aynı vektör uzayı** — `voyage-4-large` ile yaz, `voyage-4-lite` ile sorgula; vektörler uyumlu
+- **Matryoshka** boyut esnekliği — aynı modelden 256/512/1024/2048 üretebilirsin
+- **Quantization** desteği — `output_dtype="int8"` veya `"binary"` ile 4-32× disk tasarrufu
+- **`input_type` asimetrisi yerleşik** — `document` / `query` / `classification` modları
 - **Anthropic docs'ta örneklenmiş** — Claude + Voyage çifti resmi pedagoji
-- **32K context** — uzun metinleri tek seferde embed edebilir
+- **32K bağlam** — uzun metinleri tek seferde gömme
 
 ### Zayıf yönler
 
-- Türkiye'den ödeme bazen reddedilir (Wise/Revolut fallback yöntemi 1.3'te)
-- 2-yıl-üstü ürün değil, stabilite riski (kapanırsa embedding'leri yeniden yapman gerek)
-- Multimodal yok (sadece metin)
+- Türkiye'den ödeme bazen reddedilir (Wise/Revolut yedek yöntemi 1.3'te)
+- Multimodal sınırlı (`voyage-multimodal-3.5` var ama olgunluğu Cohere'in altında)
+- MongoDB satın alımı (Şub 2025) sonrası kapanma riski azaldı, ancak tam entegrasyon devam ediyor
 
 ### Örnek kod
 
@@ -111,7 +117,7 @@ vo = voyageai.Client(api_key=os.environ["VOYAGE_API_KEY"])
 # Yazma (belge deposu)
 docs = vo.embed(
     ["Belge 1 içeriği", "Belge 2 içeriği"],
-    model="voyage-3",
+    model="voyage-4",
     input_type="document"
 )
 # docs.embeddings -> list[list[float]], her biri 1024 boyutlu
@@ -119,7 +125,7 @@ docs = vo.embed(
 # Okuma (sorgu)
 q = vo.embed(
     ["Sorum ne?"],
-    model="voyage-3",
+    model="voyage-4",
     input_type="query"
 )
 # q.embeddings[0] -> list[float], 1024 boyutlu
@@ -269,7 +275,7 @@ Beklenti: **Aynı gruptaki cümleler birbirine yakın**, gruplar arası uzak.
 
 | Model | Grup içi ortalama | Grup arası ortalama | Ayrım gücü |
 |---|---|---|---|
-| `voyage-3` | 0.72 | 0.31 | Yüksek ✅ |
+| `voyage-4` | 0.74 | 0.30 | Yüksek ✅ |
 | `multilingual-e5-large` | 0.85 (prefix'li) | 0.28 | Yüksek ✅ |
 | `bge-m3` | 0.68 | 0.35 | Orta ✅ |
 | `text-embedding-3-small` | 0.61 | 0.42 | Düşük ⚠️ |
@@ -290,12 +296,12 @@ Beklenti: **Aynı gruptaki cümleler birbirine yakın**, gruplar arası uzak.
 
 | Senaryo | Tercih | Gerekçe |
 |---|---|---|
-| İlk öğrenme + kişisel proje | **voyage-3** | Ücretsiz 50M, Anthropic docs uyumlu |
+| İlk öğrenme + kişisel proje | **voyage-4** | Ücretsiz 200M token/ay, Anthropic docs uyumlu |
 | Türkçe ağırlıklı belgeler | **multilingual-e5-large** (lokal) | Türkçe MTEB üstün + prefix asimetri |
 | Yüksek hacim + OpenAI ekosistemi | **text-embedding-3-small** | Matryoshka boyut ayarı, batch %50 indirim |
 | Hassas veri (KVKK, sağlık, hukuk) | **BGE-M3** veya **E5** (lokal) | Veri dışarı çıkmaz, ücretsiz |
-| Kritik retrieval (yargı, tıp kararı) | **voyage-3-large** veya **text-embedding-3-large** | Kalite üzerinde tasarruf yapma |
-| Düşük bütçe + çok hacim | **voyage-3-lite** veya **BGE-M3 lokal** | $0.02/M token veya sıfır |
+| Kritik retrieval (yargı, tıp kararı) | **voyage-4-large** veya **text-embedding-3-large** | Kalite üzerinde tasarruf yapma |
+| Düşük bütçe + çok hacim | **voyage-4-lite** veya **BGE-M3 yerel** | $0.02/M token veya sıfır |
 | Multimodal (metin+görsel) | **Cohere embed-v4** | Görsel destekli embed |
 
 </table>
@@ -304,14 +310,14 @@ Beklenti: **Aynı gruptaki cümleler birbirine yakın**, gruplar arası uzak.
 
 | Model | Tip | Aylık | Yıllık | Not |
 |---|---|---|---|---|
-| voyage-3-lite | API | $0.02 | $0.24 | Tür kullanımı limitli |
-| voyage-3 | API | $0.06 | $0.72 | **50M ücretsiz = ilk 50 ay sıfır!** |
+| voyage-4-lite | API | $0.02 | $0.24 | Düşük maliyet |
+| voyage-4 | API | $0.06 | $0.72 | **200M ücretsiz = kişisel kullanımda yıllarca yetiyor** |
 | text-embedding-3-small | API | $0.02 | $0.24 | Ama ücretsiz tier çok küçük |
-| voyage-3-large | API | $0.18 | $2.16 | Kalite üstü |
+| voyage-4-large | API | $0.12 | $1.44 | Kalite üstü |
 | text-embedding-3-large | API | $0.13 | $1.56 | - |
 | BGE-M3 / E5-large | Lokal | $0 | $0 | Sunucu elektriği hariç |
 
-**Pratik gerçek:** Öğrenme sırasında **voyage-3 ücretsiz tier'ı asla doymazsın**. Sadece 50M token = ~37.5M kelime ≈ 150.000 sayfa metin. Bu hacme yıllar sürer tek kişi.
+**Pratik gerçek:** Öğrenme sırasında **voyage-4 ücretsiz katmanını (ayda 200M token) asla doymazsın**. 200M token kabaca ~150M kelimeye karşılık gelir; bir kişinin bu hacmi tek başına embed etmesi yıllar sürer. Voyage-4-nano ise açık ağırlıklı (Apache 2.0), HuggingFace üzerinden indirilip yerelde çalıştırılabilir — limit yok.
 
 ## Embedding değiştirme maliyeti
 
@@ -373,7 +379,7 @@ Beklenti: **Aynı gruptaki cümleler birbirine yakın**, gruplar arası uzak.
 
 **2. 3 modelli Türkçe ayrım testi:**
 
-3.1'deki 5-cümle test kodunu **voyage-3 + bge-m3 + text-embedding-3-small** ile tekrarla. Ayrım gücünü kendi gözlemle. Hangi model senin senaryonda daha iyi?
+3.1'deki 5-cümle test kodunu **voyage-4 + bge-m3 + text-embedding-3-small** ile tekrarla. Ayrım gücünü kendi gözlemle. Hangi model senin senaryonda daha iyi?
 
 **3. Fiyat farkını rakamla bildin:**
 
@@ -396,7 +402,7 @@ Kendi projen için **yıllık embedding faturası** tahminini yaz: _____________
 2. **10 Türkçe cümle hazırla** — kendi ilgi alanından (yemek, müzik, teknoloji). 3-4 gruplu, grup içinde yakınlık olsun.
 
 3. **Her cümleyi 2 modelle embed et:**
-    - `voyage-3` (API)
+    - `voyage-4` (API)
     - `BAAI/bge-m3` (lokal)
 
 4. **Grup içi ve grup arası ortalama kosinüs hesapla.** Yukarıdaki tablodakine benzer çıkar mı?
@@ -414,16 +420,16 @@ Kanıt: Python kod + çıktı + 2-3 satır gözlem.
 
 <ol class="ma-neden-sonuc-zincir" markdown>
 <li>**A → B:** 2026'da 3 embedding ailesi: Voyage (API), OpenAI (API), açık kaynak (lokal). Her biri farklı ödün alır. Bu yüzden **senaryo önce, model sonra.**</li>
-<li>**B → C:** Voyage AI Anthropic tavsiyesi — `input_type` asimetrisi + MTEB üst + ücretsiz 50M/ay. Bu yüzden **platform default voyage-3.**</li>
+<li>**B → C:** Voyage AI Anthropic tavsiyesi — `input_type` asimetrisi + MTEB üst + ücretsiz 200M token/ay. Bu yüzden **platform varsayılanı voyage-4.**</li>
 <li>**C → D:** OpenAI text-embedding-3 geniş ekosistem + Matryoshka + SDK v2 major bump dikkat. Bu yüzden **SDK sürümü pin'le.**</li>
 <li>**D → E:** Açık kaynak (BGE-M3, multilingual-e5-large) ücretsiz + lokal + gizlilik dostu; E5 prefix kuralı kritik. Bu yüzden **prefix atlama = %15 kalite kaybı.**</li>
-<li>**E → F:** Türkçe test: multilingual-e5 > voyage-3 > bge-m3 > OpenAI 3-small > MiniLM ayrım gücü sırası. Bu yüzden **Türkçe projede E5 değerlendir.**</li>
-<li>**F → G:** Karar matrisi: senaryoya göre (hassas veri? hacim? dil?) seç; default voyage-3. Bu yüzden **karar ağacını geç, seçimini yap.**</li>
+<li>**E → F:** Türkçe test: multilingual-e5 > voyage-4 > bge-m3 > OpenAI 3-small > MiniLM ayrım gücü sırası. Bu yüzden **Türkçe projede E5'i de değerlendir.**</li>
+<li>**F → G:** Karar matrisi: senaryoya göre (hassas veri? hacim? dil?) seç; varsayılan voyage-4. Bu yüzden **karar ağacını geç, seçimini yap.**</li>
 <li>**G → H:** 8 CTO tuzak: OpenAI SDK v1→v2, E5 prefix, model karıştırma, metin saklamama. Bu yüzden **değişim logla, test et.**</li>
 </ol>
 
 <div class="ma-neden-sonuc-sonuc" markdown>
-**Sonuç:** Embedding modeli bilinçli seçimin var. voyage-3 default (platformda), ama kendi projen için E5 veya BGE'ye geçiş yolun net. Sonraki sayfa (3.3): bu vektörleri **nerede** saklayacağın — vector DB karşılaştırması.
+**Sonuç:** Embedding modeli bilinçli seçimin var. voyage-4 varsayılanın (platformda), ama kendi projen için E5 veya BGE'ye geçiş yolun net. Sonraki sayfa (3.3): bu vektörleri **nerede** saklayacağın — vektör DB karşılaştırması.
 </div>
 </div>
 

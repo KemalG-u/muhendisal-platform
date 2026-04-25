@@ -118,7 +118,7 @@ from qdrant_client.models import (
 )
 
 COLLECTION = "haberler"
-EMBED_MODEL = "voyage-3"
+EMBED_MODEL = "voyage-4"
 EMBED_DIM = 1024
 
 
@@ -175,12 +175,13 @@ def search(client, vo, sorgu: str, top_k: int = 5, kategoriler: list[str] | None
             ]
         )
 
-    hits = client.search(
+    # query_points modern API (Qdrant 1.10+ önerilir; v1.18'de eski search() kaldırılıyor)
+    hits = client.query_points(
         collection_name=COLLECTION,
-        query_vector=q_vector,
+        query=q_vector,
         limit=top_k,
         query_filter=query_filter,
-    )
+    ).points
     return [
         {"baslik": h.payload["baslik"], "kategori": h.payload["kategori"],
          "kaynak": h.payload.get("kaynak"), "skor": round(h.score, 4)}
@@ -292,7 +293,7 @@ Sadece ekonomi kategorisinde skorlu 3 sonuç döner — kategori filter + semant
 | **Amaç** | Retrieval (sadece skorlu liste) | Full RAG (retrieval + LLM cevap) |
 | **LLM** | YOK | Claude Sonnet 4.6 |
 | **Vector DB** | Qdrant | Qdrant |
-| **Embedding** | Voyage voyage-3 | Voyage voyage-3 |
+| **Embedding** | Voyage voyage-4 | Voyage voyage-4 |
 | **Frontend** | Yok (JSON API) | HTMX + Tailwind |
 | **Input** | Metin (başlık, paragraf) | PDF yükleme |
 | **Chunking** | Yok (kısa metinler) | var (500-1000 token) |

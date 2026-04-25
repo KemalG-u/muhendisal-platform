@@ -13,7 +13,7 @@
 </div>
 
 !!! tip "Yabancı kelime mi gördün?"
-    **Embedding** (gömme) = bir metnin sayı dizisine (vektör) dönüşmüş hali. **Vektör** = sabit boyutlu sayı dizisi, örnek: `[0.23, -0.11, 0.08, ...]` 1024 elemanlı. **Dimension** (boyut) = vektörün kaç sayıdan oluştuğu; voyage-3 için 1024, OpenAI için 1536 veya 3072. **Cosine similarity** (kosinüs benzerliği) = iki vektörün açı yakınlığını ölçen 0-1 arası sayı; 1'e yakınsa anlamca yakın. **Semantic** (anlamsal) = kelime eşleşmesine değil, kavramsal yakınlığa dayalı.
+    **Embedding** (gömme) = bir metnin sayı dizisine (vektör) dönüşmüş hali. **Vektör** = sabit boyutlu sayı dizisi, örnek: `[0.23, -0.11, 0.08, ...]` 1024 elemanlı. **Dimension** (boyut) = vektörün kaç sayıdan oluştuğu; voyage-4 için 1024, OpenAI için 1536 veya 3072. **Cosine similarity** (kosinüs benzerliği) = iki vektörün açı yakınlığını ölçen 0-1 arası sayı; 1'e yakınsa anlamca yakın. **Semantic** (anlamsal) = kelime eşleşmesine değil, kavramsal yakınlığa dayalı.
 
 ## Neden bu sayfa?
 
@@ -27,7 +27,7 @@ Bölüm 2'de Claude'a yazı yazdın, cevap aldın. Ama Claude **her çağrıda s
 
 Bir metni embedding'e çevirmek demek onu **çok boyutlu uzayda bir noktaya** yerleştirmek demek. "İstanbul" bir nokta, "Ankara" başka bir nokta, "makarna" üçüncü nokta. İstanbul ve Ankara **yakın**, ikisi de şehir; makarna **uzak**, yemek. Bilgisayar bu "yakın/uzak"ı **sayısal mesafe** ile ölçer. Sen soru yazdığında ("Türkiye'nin başkenti neresi?"), sistem sorunun noktasını hesaplar, önceden yerleştirdiğin belge parçaları arasında **en yakın 5 noktayı** getirir. Bu kadar.
 
-**Matematik yok** — noktaları hesaplayan embedding modeli (voyage-3, OpenAI, BGE) karmaşık sinir ağı; ama sen onu **kutu** olarak kullanıyorsun: kutuya metin sokuyorsun, kutudan vektör çıkıyor.
+**Matematik yok** — noktaları hesaplayan embedding modeli (voyage-4, OpenAI, BGE) karmaşık sinir ağı; ama sen onu **kutu** olarak kullanıyorsun: kutuya metin sokuyorsun, kutudan vektör çıkıyor.
 
 ## Bu sayfanın ekosistemi — metin in, sayı out
 
@@ -40,7 +40,7 @@ flowchart LR
     T2["📝 Metin B\n'Çocuk parkta oynadı'"]
     T3["📝 Metin C\n'Python programlama dili'"]
 
-    EM["🧠 Embedding Modeli\nvoyage-3 / OpenAI / BGE"]
+    EM["🧠 Embedding Modeli\nvoyage-4 / OpenAI / BGE-M3"]
 
     V1["🔢 Vektör A\n[0.12, -0.34, ...]\n1024 sayı"]
     V2["🔢 Vektör B\n[0.15, -0.29, ...]\n1024 sayı"]
@@ -136,7 +136,7 @@ cumleler = [
 ]
 
 # Embed et — 'document' modu: vektör deposuna yazacağımız metinler için
-result = vo.embed(cumleler, model="voyage-3", input_type="document")
+result = vo.embed(cumleler, model="voyage-4", input_type="document")
 vektorler = result.embeddings
 
 print(f"Her vektör boyutu: {len(vektorler[0])}")  # 1024
@@ -175,12 +175,12 @@ Voyage AI (ve çoğu modern embed modeli) **iki farklı mod**da çalışır:
 
 ```python
 # DOĞRU kullanım
-docs = vo.embed(["Belge 1", "Belge 2"], model="voyage-3", input_type="document")
-q = vo.embed(["Sorum ne?"], model="voyage-3", input_type="query")
+docs = vo.embed(["Belge 1", "Belge 2"], model="voyage-4", input_type="document")
+q = vo.embed(["Sorum ne?"], model="voyage-4", input_type="query")
 
 # YANLIŞ — asimetriyi boz
-docs = vo.embed(["Belge 1", "Belge 2"], model="voyage-3", input_type="query")
-q = vo.embed(["Sorum ne?"], model="voyage-3", input_type="query")
+docs = vo.embed(["Belge 1", "Belge 2"], model="voyage-4", input_type="query")
+q = vo.embed(["Sorum ne?"], model="voyage-4", input_type="query")
 # retrieval kalitesi %20-30 düşer
 ```
 
@@ -192,7 +192,7 @@ Embedding modellerinin çıktı **boyutları** farklıdır:
 
 | Model | Boyut |
 |---|---|
-| voyage-3 | 1024 |
+| voyage-4 | 1024 |
 | OpenAI text-embedding-3-small | 1536 |
 | OpenAI text-embedding-3-large | 3072 |
 | BGE-large-v2 | 1024 |
@@ -204,7 +204,7 @@ Embedding modellerinin çıktı **boyutları** farklıdır:
 - **Daha büyük → daha yavaş arama.** Vector DB retrieval hızı boyutla lineer bağlı.
 - **Ama kalite farkı nadiren büyük.** Günlük kullanımda 1024 vs 3072 arasındaki fark %2-5 civarında; dev hacimde **1024 yeter**.
 
-**Pratik kural:** Yüksek trafik / dar bütçe → 1024 (voyage-3 veya BGE). Düşük hacim / en iyi kalite → 3072 (OpenAI large). Orta yol: 1536 (OpenAI small).
+**Pratik kural:** Yüksek trafik / dar bütçe → 1024 (voyage-4 veya BGE). Düşük hacim / en iyi kalite → 3072 (OpenAI large). Orta yol: 1536 (OpenAI small).
 
 ## Çalıştır ve gör — mini lab
 
@@ -239,7 +239,7 @@ cumleler = [
     "Havada damlalar belirdi.",                 # E (C'ye yakın)
 ]
 
-result = vo.embed(cumleler, model="voyage-3", input_type="document")
+result = vo.embed(cumleler, model="voyage-4", input_type="document")
 vs = result.embeddings
 
 def cos(a, b):
@@ -285,7 +285,7 @@ for i in range(5):
 
 Anthropic kendi embedding modeli sunmaz. Bunun yerine **Voyage AI**'ı resmi tavsiye olarak gösterir (platform.claude.com/docs/en/docs/build-with-claude/embeddings). Gerekçe:
 
-1. **Voyage AI Anthropic dostu pedagoji izler** — `input_type` asimetrisi, 200K bağlam-uyumlu context modeli (voyage-3-context), retrieval performansı MTEB benchmark'ta sürekli ilk 3'te.
+1. **Voyage AI Anthropic dostu pedagoji izler** — `input_type` asimetrisi, 200K bağlam-uyumlu context modeli (voyage-4-context), retrieval performansı MTEB benchmark'ta sürekli ilk 3'te.
 2. **Ücretsiz tier cömert** — ayda 50M token ücretsiz (2026 itibarıyla); öğrenme + MVP için fazlasıyla yeter.
 3. **Fiyat/performans** — OpenAI text-embedding-3-small ile neredeyse eşit kalite, ~%30 daha ucuz.
 4. **Claude ile entegre dokümantasyon** — RAG örneklerinde Claude + Voyage çifti standart.
@@ -296,7 +296,7 @@ Alternatif yollar (platform dogmatik değil, 1.3 deseni):
 - **BGE-large-v2 (sentence-transformers)** — ücretsiz + lokal + GDPR uyumu
 - **Multilingual-E5** — Türkçe + İngilizce birlikte
 
-Bu platform **voyage-3** default seçim olarak kullanır; 3.2'de tüm alternatifler detayla açılır.
+Bu platform **voyage-4** default seçim olarak kullanır; 3.2'de tüm alternatifler detayla açılır.
 
 </details>
 
@@ -330,7 +330,7 @@ Yukarıdaki 5 cümlelik benzerlik testi çalışıyor, çıktıda A↔B ve C↔E
 <li>**A → B:** Claude'un hafızası yok → kendi dokümanları okutmak için metin-sayı dönüşümü (embedding) gerek. Bu yüzden **embedding ilk adım.**</li>
 <li>**B → C:** Embedding = metin → sabit boyutlu vektör; anlamca yakın metinler yakın vektörler verir. Bu yüzden **vektör mesafesi anlam ölçer.**</li>
 <li>**C → D:** Kosinüs benzerliği = iki vektörün açı yakınlığı (0-1); 1'e yakın = anlamca yakın. Bu yüzden **tek formül yeter.**</li>
-<li>**D → E:** voyage-3 örneği 3 cümlede 0.72 / 0.38 / 0.41 — model anlamsal yakınlığı yakaladı. Bu yüzden **API çağrısı gerçek sonuç verir.**</li>
+<li>**D → E:** voyage-4 örneği 3 cümlede 0.72 / 0.38 / 0.41 — model anlamsal yakınlığı yakaladı. Bu yüzden **API çağrısı gerçek sonuç verir.**</li>
 <li>**E → F:** `document` (yazma) vs `query` (sorgulama) asimetrisi — karıştırma %20-30 kalite kaybı. Bu yüzden **input_type seçimi kritik.**</li>
 <li>**F → G:** Boyut seçimi (384 / 1024 / 1536 / 3072) maliyet-kalite dengesi; 1024 default. Bu yüzden **varsayılan genelde yeterli.**</li>
 <li>**G → H:** 8 CTO tuzak: asimetri ihlali, model karıştırma, hardcode key, büyüklük abartısı. Bu yüzden **baştan doğru yapı kur.**</li>

@@ -17,7 +17,7 @@
 
 ## Neden bu sayfa?
 
-3.2'de embedding modelini seçtin — voyage-3, OpenAI, BGE vb. Artık elinde **sayı dizileri (vektörler)** var. Bu vektörleri **nereye yazacaksın?** Listeye koyup RAM'de tutmak küçük deneme için olur (100 vektör), ama 100.000 vektörde 5 GB RAM yer — üretimde sürdürülemez. Vector DB tam burada devreye girer: vektörleri diske yazar, hızlı arama için indeksler, payload + filter ile zenginleştirir.
+3.2'de embedding modelini seçtin — voyage-4, OpenAI text-embedding-3, BGE-M3 vb. Artık elinde **sayı dizileri (vektörler)** var. Bu vektörleri **nereye yazacaksın?** Listeye koyup RAM'de tutmak küçük deneme için olur (100 vektör), ama 100.000 vektörde 5 GB RAM yer — üretimde sürdürülemez. Vector DB tam burada devreye girer: vektörleri diske yazar, hızlı arama için indeksler, payload + filter ile zenginleştirir.
 
 İkincisi: 5 ciddi seçenek var, birbirinden ciddi farklar. **Qdrant** Rust-yazılı, hızlı, self-host dostu. **Pinecone** managed SaaS, enterprise. **Chroma** Python-first, lokal prototip için ideal. **pgvector** PostgreSQL eklentisi, "DB iki yerde olmasın" diyenler için. **Weaviate** GraphQL + modüler, zengin entegrasyon. Bu sayfa 5'ini yan yana gösterir, projen için **doğru olanı** seçmene yardım eder.
 
