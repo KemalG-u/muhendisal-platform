@@ -1,4 +1,4 @@
-# 5.2 Karar Ağacı — Hangisini Seçmeli
+# 5.2 Karar Ağacı — RAG mı, İnce Ayar mı?
 
 <div class="ma-meta" markdown>
 <div class="ma-meta-row" markdown>
@@ -8,22 +8,22 @@
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
 <div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~30 dakika</div>
-<div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 5.1 okundu (prompt ↔ RAG ↔ FT üçgeni + 3 FT biçimi + maliyetler).</div>
-<div class="ma-meta-row"><strong>🎯 Çıktı:</strong> **10 kriterli karar ağacı** elinde; yeni proje geldiğinde 5 dakikada "prompt / RAG / FT / hybrid" kararını **gerekçeli** verebiliyorsun. 5 somut senaryo (müşteri destek, hukuki doküman, tıbbi tanı, finansal analiz, yaratıcı yazım) üzerinde pratik uyguladın. Mülakattaki "FT mi RAG mi?" sorusuna (10.2) derinleşmiş cevap. **Bölüm 5'in karar-odaklı sayfası.**</div>
+<div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 5.1 okundu (prompt ↔ RAG ↔ ince ayar üçgeni + 3 ince ayar biçimi + maliyetler).</div>
+<div class="ma-meta-row"><strong>🎯 Çıktı:</strong> **10 kriterli karar ağacı** elinde; yeni proje geldiğinde 5 dakikada "prompt / RAG / ince ayar / hibrit" kararını **gerekçeli** verebiliyorsun. 5 somut senaryo (müşteri destek, hukuki doküman, tıbbi tanı, finansal analiz, yaratıcı yazım) üzerinde pratik uyguladın. Mülakattaki "İnce ayar mı, RAG mi?" sorusuna (10.2) derinleşmiş cevap. **Bölüm 5'in karar-odaklı sayfası.**</div>
 </div>
 
 !!! tip "Yabancı kelime mi gördün?"
-    **Concept drift** = verinin zamanla değişmesi; bu ayın müşteri sorusu geçen yılın sorusundan farklı. **Latency budget** = uygulamanın cevap süresi bütçesi; chatbot 2-3 sn, batch agent 30 sn tolere eder. **Cold start** = ilk kullanıcı için modelin kurulum süresi. **Staleness** = modelin güncel olmaması; RAG'de chunk güncel, FT modeli eğitilme gününden sonra "donuk". **Hybrid** = RAG + FT birlikte; genellikle FT ton/stil, RAG bilgi.
+    **Concept drift (kavram kayması)** = verinin zamanla değişmesi; bu ayın müşteri sorusu geçen yılın sorusundan farklı. **Latency budget (gecikme bütçesi)** = uygulamanın cevap süresi bütçesi; chatbot 2-3 sn, batch ajan 30 sn tolere eder. **Cold start (soğuk başlangıç)** = ilk kullanıcı için modelin yüklenme/açılma süresi. **Staleness (bayatlık)** = modelin güncel olmaması; RAG'de parça (chunk) güncel kalır, ince ayar modeli eğitildiği günden sonra "donuk" olur. **Hibrit (hybrid)** = RAG + ince ayar birlikte; genellikle ince ayar ton/stil için, RAG bilgi için.
 
 ## Neden bu sayfa?
 
 5.1'de kavramları gördün. Bu sayfa o kavramları **karara** dönüştürür. Müşterin geldi: *"Bana hukuki doküman analizi sistemi kur."* Nereden başlarsın?
 
-AI Engineer'ı juniordan ayıran nokta: **doğru soru sorma refleksi.** Bu sayfa 10 kriterli soru listesi verir — her biri kararı daraltır. 10 dakika sonra müşterine: *"Sizinki için RAG + prompt engineering yeter; FT'ye **şu noktada** ihtiyaç olursa geri dönelim"* diyebiliyorsun.
+AI Engineer'ı yeni başlayandan ayıran nokta: **doğru soru sorma refleksi.** Bu sayfa 10 kriterli soru listesi verir — her biri kararı daraltır. 10 dakika sonra müşterine: *"Sizinki için RAG + prompt mühendisliği yeter; ince ayara **şu noktada** ihtiyaç olursa geri dönelim"* diyebiliyorsun.
 
-İkincisi: Mülakat sorusu olarak direk çıkar. 10.2 sayfasında "FT mi RAG mi?" sorusu vardı; bu sayfa o cevabı derinleştirir. Senaryo soruları için (10.2'deki senaryo 29) somut cevap şablonu.
+İkincisi: Mülakat sorusu olarak doğrudan çıkar. 10.2 sayfasında "İnce ayar mı, RAG mi?" sorusu vardı; bu sayfa o cevabı derinleştirir. Senaryo soruları için (10.2'deki senaryo 29) somut cevap şablonu.
 
-Üçüncüsü: Bu sayfa **imza niteliğinde** — Bölüm 5'in karar-odaklı sayfası. Index'te 🏁 işaretli. 5.4 pratik imza (Colab'de LoRA), 5.2 kavramsal imza (karar refleksi).
+Üçüncüsü: Bu sayfa **imza niteliğinde** — Bölüm 5'in karar-odaklı sayfası. Index'te 🏁 işaretli. 5.4 pratik imzası (Colab'de LoRA), 5.2 kavramsal imzası (karar refleksi).
 
 ## 10 kriterli karar soruları
 
@@ -35,22 +35,22 @@ Yeni proje için sırayla sor:
 
 | Sıklık | Kategori | Tercih |
 |---|---|---|
-| Saat / gün | Fiyat, stok, haber | **RAG** (FT anında güncellenemez) |
-| Hafta | Müşteri katalog, doküman | **RAG** |
-| Ay | Ürün kılavuzu | RAG veya hybrid |
-| Yıl | Şirket stili, tıp kurallarının temeli | FT düşünülebilir |
-| Hiç | Matematik sabitleri | Model zaten biliyor, hiçbiri |
+| Saat / gün | Fiyat, stok, haber | **RAG** (ince ayar anlık güncellenemez) |
+| Hafta | Müşteri kataloğu, doküman | **RAG** |
+| Ay | Ürün kılavuzu | RAG veya hibrit |
+| Yıl | Şirket stili, tıp kurallarının temeli | İnce ayar düşünülebilir |
+| Hiç | Matematik sabitleri | Model zaten biliyor, hiçbiri gereksiz |
 
-**Altın kural:** Veri ayda 1'den sık değişiyorsa **RAG**. FT her güncellemede yeniden eğitim = sürdürülemez.
+**Altın kural:** Veri ayda 1'den sık değişiyorsa **RAG**. İnce ayarda her güncellemede yeniden eğitim = sürdürülemez.
 
 ### 2. Kaynak alıntı gereksinimi
 
 **Soru:** Kullanıcı cevabın **hangi belgeye** dayandığını görmeli mi?
 
-- **Evet:** Hukuk, tıp, finans, akademi → **RAG** zorunlu. FT modeli "şu sayfadan" bilgi veremez.
-- **Hayır:** Günlük chatbot, stil değiştirme → FT veya prompt.
+- **Evet:** Hukuk, tıp, finans, akademi → **RAG** zorunlu. İnce ayarlı model "şu sayfadan" bilgi veremez (kaynak ile bilgi içselleştirilmiştir).
+- **Hayır:** Günlük chatbot, stil değiştirme → ince ayar veya prompt.
 
-Kaynak alıntı = RAG'in **yapısal avantajı**. Hiçbir FT bu açığı kapatmaz.
+Kaynak alıntı = RAG'in **yapısal avantajı**. Hiçbir ince ayar bu açığı kapatmaz.
 
 ### 3. Veri miktarı
 
@@ -58,11 +58,11 @@ Kaynak alıntı = RAG'in **yapısal avantajı**. Hiçbir FT bu açığı kapatma
 
 | Örnek sayısı | Tercih |
 |---|---|
-| **0-50** | Prompt engineering + few-shot (FT yetersiz, overfitting) |
+| **0-50** | Prompt mühendisliği + few-shot (ince ayar yetersiz, ezberler) |
 | **50-500** | Prompt + RAG |
-| **500-2000** | RAG veya small LoRA |
-| **2000-10K** | LoRA/QLoRA anlamlı |
-| **10K+** | FT ciddi düşün; continued pre-training olasılığı |
+| **500-2000** | RAG veya küçük LoRA |
+| **2000-10.000** | LoRA/QLoRA anlamlı |
+| **10.000+** | İnce ayarı ciddi düşün; sürekli ön-eğitim (continued pre-training) ihtimali |
 
 ### 4. Davranış mı bilgi mi?
 
@@ -71,12 +71,12 @@ Kaynak alıntı = RAG'in **yapısal avantajı**. Hiçbir FT bu açığı kapatma
 | Sorun | Tercih |
 |---|---|
 | "Model **bilmiyor**" (yeni ürün, içine eklenmemiş bilgi) | **RAG** |
-| "Model **yanlış söylüyor**" (stil, ton, format) | **FT** |
-| "Model **yapmıyor**" (tool çağırmıyor, format dışı) | Prompt engineering + tool calling |
+| "Model **yanlış söylüyor**" (stil, ton, format) | **İnce ayar** |
+| "Model **yapmıyor**" (tool çağırmıyor, format dışında cevap veriyor) | Prompt mühendisliği + tool calling |
 
 **Örnek ayrımı:**
 
-- "Model 'müşteri' diyor, biz 'ürün sahibi' diyoruz" → **FT** (ton)
+- "Model 'müşteri' diyor, biz 'ürün sahibi' diyoruz" → **İnce ayar** (ton)
 - "Model şirketin iade politikasını bilmiyor" → **RAG** (bilgi)
 - "Model JSON dönüş formatına uymuyor" → **tool_choice** (prompt)
 
@@ -84,11 +84,11 @@ Kaynak alıntı = RAG'in **yapısal avantajı**. Hiçbir FT bu açığı kapatma
 
 **Soru:** Uygulaman ne kadar hızlı cevap vermeli?
 
-- **<500ms** (sesli agent, gerçek zamanlı): **FT** (retrieval overhead yok) veya küçük model
-- **500ms-3sn** (chatbot, streaming): **RAG** uygun (retrieval 100-300ms)
-- **>3sn** (batch, agent): Her ikisi de olur
+- **<500 ms** (sesli ajan, gerçek zamanlı): **İnce ayar** (retrieval ek yükü yok) veya küçük model
+- **500 ms - 3 sn** (chatbot, akış): **RAG** uygun (retrieval 100-300 ms)
+- **>3 sn** (toplu iş, ajan): Her ikisi de olur
 
-RAG retrieval bir ek adım (embedding hesapla + Qdrant sorgu + context ekle). Toplam latency 300-500ms artar. Kritik durumda FT veya cache.
+RAG retrieval bir ek adım (embedding hesapla + Qdrant sorgu + bağlam ekle). Toplam gecikme 300-500 ms artar. Kritik durumda ince ayar veya cache.
 
 ### 6. Maliyet bütçesi
 
@@ -96,12 +96,12 @@ RAG retrieval bir ek adım (embedding hesapla + Qdrant sorgu + context ekle). To
 
 | Aylık bütçe | Tercih |
 |---|---|
-| **<$50** | Prompt + hafif RAG + Haiku |
-| **$50-500** | RAG + Sonnet + prompt caching |
-| **$500-5000** | RAG (Opus) veya QLoRA self-host |
-| **$5K+** | FT + self-host geniş kapsamlı düşün |
+| **<$50** | Prompt + hafif RAG + Haiku 4.5 ($1/$5) |
+| **$50-500** | RAG + Sonnet 4.6 ($3/$15) + prompt caching |
+| **$500-5000** | RAG (Opus 4.7 — $5/$25) veya QLoRA self-host |
+| **$5K+** | İnce ayar + self-host geniş kapsamlı düşün |
 
-**FT'nin gizli maliyeti:** GPU inference. $300/ay A100 self-host + elektrik; Anthropic API ~$100/ay eşdeğer yük. FT %80+ kesintisiz kullanılırsa karşılar; yoksa maliyet artar.
+**İnce ayarın gizli maliyeti:** GPU çıkarımı (inference). Bulutta A100 80 GB ayda ~$300-500 (saatlik ~$1.5-2 × yarım gün); Anthropic API'siyle aynı yükü ~$100/ay tutar. İnce ayar %80+ kesintisiz kullanılırsa kendini karşılar; yoksa maliyet artar.
 
 ### 7. Domain spesifiklik
 
@@ -127,21 +127,21 @@ Claude + Voyage **çoğu niş**'te İngilizce ve Türkçe'de iyi. FT'ye atlamada
 
 **Soru:** Veri nerede kalmalı?
 
-- **Bulut OK** (KVKK uyum varsa): Claude + Qdrant Cloud → kolay.
-- **On-prem zorunlu** (sağlık, savunma): Self-host Qdrant + self-host model (Llama). FT muhtemelen gerekli — API kullanamazsın.
-- **Hibrit:** Hassas veri on-prem (embedding on-prem), LLM cloud (anonim prompt).
+- **Bulut tamam** (KVKK uyumu varsa): Claude + Qdrant Cloud → kolay.
+- **Yerinde (on-prem) zorunlu** (sağlık, savunma): Kendi sunucunda Qdrant + kendi sunucunda model (Llama / Qwen / DeepSeek). İnce ayar muhtemelen gerekli — API kullanamazsın.
+- **Hibrit:** Hassas veri yerinde (embedding yerinde), LLM bulutta (anonimleştirilmiş prompt).
 
-On-prem + API kullanmaya direnç yüksekse FT + self-host Llama/Qwen tek seçenek.
+Yerinde + API kullanmaya direnç yüksekse ince ayar + kendi sunucunda Llama/Qwen tek seçenek.
 
 ### 10. Geri alınabilirlik
 
 **Soru:** Yanlış giderse ne kadar hızlı düzeltebilirsin?
 
 - **Prompt** — 1 dakikada `git commit` ile geri al.
-- **RAG** — chunks yeniden index'le, 1 saatte geri al.
-- **FT** — eski adapter'ı yükle + yeni eğitim başlat; gün veya hafta.
+- **RAG** — parçaları (chunks) yeniden indeksle, 1 saatte geri al.
+- **İnce ayar** — eski adaptörü yükle + yeni eğitim başlat; gün veya hafta sürer.
 
-**Kritik:** FT "iade edilemez" değil ama "yavaş iade." Production bug'ı 3 gün kalıcı olursa müşteri kaybedebilirsin.
+**Kritik:** İnce ayar "iade edilemez" değil ama "yavaş iade." Üretimdeki bir hata 3 gün kalıcı olursa müşteri kaybedebilirsin.
 
 ## Karar ağacı — görsel
 
@@ -223,13 +223,13 @@ flowchart TB
 **Durum:** Radyoloji bölümü, X-ray + röntgen raporu yazım asistanı. Sadece **araştırma ortamı**, son karar radyolog.
 
 **Kriter uygulama:**
-- Veri: tıbbi literatür (yıllık güncellemeler) + hastane protokol
-- Kaynak alıntı: zorunlu — tıp etik
-- Davranış: radyolog tonu + format
-- Gizlilik: on-prem zorunlu (HIPAA / KVKK özel nitelikli veri)
+- Veri: tıbbi literatür (yıllık güncellemeler) + hastane protokolleri
+- Kaynak alıntı: zorunlu — tıp etiği
+- Davranış: radyolog tonu + rapor biçimi
+- Gizlilik: yerinde (on-prem) zorunlu (HIPAA / KVKK özel nitelikli veri)
 - Bütçe: araştırma projesi, uygun
 
-**Karar: Hybrid (RAG + FT LoRA) self-host.** Llama 3.1 veya benzeri self-host; radyolog raporu format'ı için LoRA (500 örnek); tıp literatürü Qdrant RAG; on-prem. FT ton için, RAG bilgi için. **Karmaşık proje; 3-6 aylık iş.**
+**Karar: Hibrit (RAG + LoRA ince ayar) kendi sunucunda.** Llama 3.1 70B veya Llama 4 Scout kendi sunucunda; radyolog raporu biçimi için LoRA (500 örnek); tıp literatürü Qdrant RAG; yerinde. İnce ayar ton için, RAG bilgi için. **Karmaşık proje; 3-6 aylık iş.**
 
 ### Senaryo 4 — Finansal analiz (kişisel proje)
 
@@ -249,15 +249,15 @@ flowchart TB
 **Durum:** Roman yazarı, Ahmet Ümit'in 10 romanını verdi, benzer ton istiyor.
 
 **Kriter uygulama:**
-- Veri: sabit (10 roman, değişmez) → FT uygun
+- Veri: sabit (10 roman, değişmez) → ince ayar uygun
 - Kaynak alıntı: **yok** (yaratıcı eser)
-- Davranış: **ton + stil değişimi** → **FT'nin kullanım alanı**
-- Gizlilik: eser telif ama edebi pastiche için eğitim gri bölge
+- Davranış: **ton + stil değişimi** → **ince ayarın kullanım alanı**
+- Gizlilik: eser telifli; edebi taklit (pastiche) için eğitim hukuki gri bölge — ticari için TELİF SAHİBİNDEN İZİN şart
 - Bütçe: hobi → düşük
 
-**Karar: QLoRA + Llama 3.2 (Türkçe iyi) + 200-300 örnek paragraf.** Colab T4 ücretsiz, 4 saat eğitim, $0. Ama **telif not:** Ticari kullanım yasal riski; sadece kişisel deney için.
+**Karar: QLoRA + Llama 3.2 1B veya Qwen 3-1.7B (Türkçe iyi) + 200-300 örnek paragraf.** Colab T4/L4 ücretsiz katmanı, 3-4 saat eğitim, $0. **Telif uyarısı (ciddi):** Telifli eserle eğitilmiş model **ticari** kullanılırsa yazarın ya da yayınevinin dava açma hakkı vardır (2024-2025'te ABD'de bu yönde davalar açıldı). Sadece **kişisel deney + paylaşmama** koşuluyla yap.
 
-**Alternatif (daha basit):** Claude Sonnet + 20 Ahmet Ümit paragraf few-shot + prompt caching. Kalite yetmezse LoRA.
+**Alternatif (daha basit):** Claude Sonnet 4.6 + 20 Ahmet Ümit paragrafı few-shot + prompt caching. Kalite yetmezse LoRA.
 
 ## Hybrid yaklaşım — ileri kullanım
 
@@ -293,14 +293,14 @@ RAG + FT birlikte. Amaç: FT ton/stil/format, RAG bilgi.
 
 | # | Tuzak | Sonuç | Doğru |
 |---|---|---|---|
-| 1 | Sadece trend'e göre karar | FT popüler diye FT → $$$$ | 10 kriteri sırayla uygula |
-| 2 | İlk denemede hybrid | 2 sistem bakım + karmaşık | Önce tekil, yetmezse hybrid |
-| 3 | Prompt denemeden RAG'e geç | Gereksiz Qdrant kurulum | Prompt + few-shot önce |
-| 4 | RAG denemeden FT'ye geç | $500-$5K gereksiz | RAG 1 haftada sonuç verir; FT 4 haftada |
-| 5 | "Müşteri FT istedi" = FT | Müşteri teknik bilgisi eksik | Gereksinim analizi + sen karar |
-| 6 | Tek senaryoya uzun karar | 3 saat boşa | 10 kriter + 5 dakika yeter |
-| 7 | Karar sonrası sorgulama yok | 3 ay sonra yanlış anlaşılır | 1 aylık checkpoint |
-| 8 | "Hybrid en iyisi" refleksi | Gereksiz karmaşıklık | Tekil yetiyorsa tekil |
+| 1 | Sadece trende göre karar | "İnce ayar popüler" diye seçmek → maliyet patlar | 10 kriteri sırayla uygula |
+| 2 | İlk denemede hibrit | 2 sistem bakımı + karmaşık | Önce tekil, yetmezse hibrit |
+| 3 | Prompt denemeden RAG'e geç | Gereksiz Qdrant kurulumu | Prompt + few-shot önce |
+| 4 | RAG denemeden ince ayara geç | $500-$5K gereksiz | RAG 1 haftada sonuç verir; ince ayar 4 haftada |
+| 5 | "Müşteri ince ayar istedi" = ince ayar | Müşterinin teknik bilgisi eksik | Gereksinim analizi yap + sen karar ver |
+| 6 | Tek senaryo için 3 saatlik karar tartışması | Boşa zaman | 10 kriter + 5 dakika yeter |
+| 7 | Karar sonrası sorgulama yok | 3 ay sonra yanlış anlaşılır | 1 aylık kontrol noktası koy |
+| 8 | "Hibrit en iyisi" refleksi | Gereksiz karmaşıklık | Tekil yetiyorsa tekil |
 
 ## Anthropic ekosistemi — karar öncesi sorgular
 
@@ -309,9 +309,9 @@ RAG + FT birlikte. Amaç: FT ton/stil/format, RAG bilgi.
 
 Claude kullanıyorsan karar ağacının **RAG** yolu %80+ olasılıkla sonuç. Sebepleri:
 
-### 1. 200K context + prompt caching
+### 1. 1M bağlam + prompt caching
 
-Claude Sonnet 4.6 + prompt caching (2024-11) ile sistem prompt %90 indirimli. **Büyük few-shot örnek seti** (50-100 örnek, 10K+ token) system prompt'a sığar + her istekte $0.003/1K token (cache'den). Bu **"mini FT"** gibi çalışır.
+Claude Sonnet 4.6 ve Opus 4.7 = 1M token bağlam (Haiku 4.5 = 200K). Prompt caching (Kasım 2024'ten beri) ile sistem promptunun cache okuma maliyeti yaklaşık base × 0.1 (%90 düşüş). **Büyük few-shot örnek seti** (50-100 örnek, 10K+ token) sistem promptuna rahat sığar; her istekte cache'den okunur. Bu **"mini ince ayar"** gibi çalışır — model parametreleri değişmez ama bağlamda tutarlı örnekler kalır.
 
 ### 2. Tool calling — davranış kilidi
 
@@ -335,19 +335,20 @@ Claude "kötü karar" vermeme refleksine sahip. FT bu refleksi bozabilir. Claude
 
 **Claude projen için karar ağacı eğik RAG tarafına.** 5.1'de Anthropic public FT yok dedim; bu eksik değil, sistem tasarımı teşvik.
 
-### Model seçim içinde karar
+### Model seçimi içinde karar
 
-Proje FT gerektiriyorsa:
+Proje ince ayar gerektiriyorsa:
 
 | Senaryo | Öneri |
 |---|---|
-| Türkçe yaratıcı | Llama 3.2 (8B) |
-| Türkçe + kod | Qwen 2.5 (7B) |
-| Çok-dilli | Mistral Nemo 12B |
-| Küçük (mobile) | Gemma 3 (2B-9B) |
-| Reasoning yoğun | DeepSeek V3.5 |
+| Türkçe yaratıcı | Llama 3.2 1B/3B veya Llama 3.1 8B |
+| Türkçe + kod | Qwen 3-1.7B / Qwen 3.5-7B |
+| Çok dilli | Mistral Nemo 12B veya Mistral 7B |
+| Küçük (mobil) | Gemma 3 2B / 9B / 27B |
+| Akıl yürütme yoğun | DeepSeek V3.2 (671B / 37B aktif MoE) |
+| Açık ağırlıklı yeni nesil | Llama 4 Scout (17B aktif / 109B toplam) |
 
-Hepsi açık ağırlık + Hugging Face'de erişilebilir + LoRA/QLoRA uyumlu.
+Hepsi açık ağırlıklı + HuggingFace'te erişilebilir + LoRA/QLoRA uyumlu.
 
 </details>
 

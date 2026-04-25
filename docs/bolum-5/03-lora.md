@@ -1,4 +1,4 @@
-# 5.3 LoRA ve QLoRA — Matematik Sezgisi + GPU Seçimi
+# 5.3 LoRA ve QLoRA — Sezgi, Hiperparametre, GPU Seçimi
 
 <div class="ma-meta" markdown>
 <div class="ma-meta-row" markdown>
@@ -8,30 +8,30 @@
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
 <div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~35 dakika</div>
-<div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 5.1 + 5.2 okundu. FT gereksinimi karar ağacında çıktı — şimdi **nasıl** yapıldığını öğreneceksin.</div>
-<div class="ma-meta-row"><strong>🎯 Çıktı:</strong> LoRA matrisi ayrıştırma sezgisini biliyorsun (formül ezberlemeden); **rank** + **target modules** + **learning rate** hyperparameter'larını kalibre edebiliyorsun; QLoRA'nın 4-bit NF4 quantization mantığını anladın; **hangi GPU için hangi boyut** modeli eğitebileceğinin memory math tablosu hazır. 5.4'te Colab'de eğitim yaparken parametre seçimlerini gerekçeli yapıyorsun.</div>
+<div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 5.1 + 5.2 okundu. İnce ayar gereksinimi karar ağacında çıktı — şimdi **nasıl** yapıldığını öğreneceksin.</div>
+<div class="ma-meta-row"><strong>🎯 Çıktı:</strong> LoRA matris ayrıştırma sezgisini biliyorsun (formül ezberlemeden); **rank** + **hedef katmanlar (target modules)** + **öğrenme oranı (learning rate)** hiperparametrelerini kalibre edebiliyorsun; QLoRA'nın 4-bit NF4 küçültme (quantization) mantığını anladın; **hangi GPU için hangi boyut** modeli eğitebileceğinin bellek hesabı tablosu hazır. 5.4'te Colab'de eğitim yaparken parametre seçimlerini gerekçeli yapıyorsun.</div>
 </div>
 
 !!! tip "Yabancı kelime mi gördün?"
-    **Rank** = LoRA adapter matrisinin "inceliği"; 4/8/16 yaygın. **Target modules** = modelin hangi layer'ları eğitilir (attention Q/K/V/O, MLP). **NF4** = Normal Float 4-bit; QLoRA'nın özel quantization format'ı. **Double quantization** = quantization constant'larını da quantize etme, ek %10 memory. **Learning rate** = gradient update boyutu; FT'de 1e-4 ila 5e-4 aralığı. **Epoch** = veri seti kaç kez görülür; FT'de 1-3 optimum. **Gradient accumulation** = küçük batch'leri birleştir, efektif büyük batch.</p>
+    **Rank (rütbe)** = LoRA adaptör matrisinin "inceliği"; 4/8/16 yaygın. **Hedef katmanlar (target modules)** = modelin hangi katmanları eğitilir (attention Q/K/V/O, MLP). **NF4** = Normal Float 4-bit; QLoRA'nın özel küçültme formatı. **Çift küçültme (double quantization)** = küçültme sabitlerini de küçültmek; ek ~%10 bellek tasarrufu. **Öğrenme oranı (learning rate)** = gradyan güncelleme boyutu; ince ayarda 1e-4 ile 5e-4 arası. **Epoch (devir)** = veri setinin kaç kez taranacağı; ince ayarda 1-3 en uygunu. **Gradyan biriktirme (gradient accumulation)** = küçük batch'leri birleştirip etkin büyük batch elde etme.
 
 ## Neden bu sayfa?
 
-5.1'de *"LoRA matris ayrıştırma, QLoRA 4-bit quantization"* dedim — kavram seviyesi. 5.2 karar ağacında FT'ye yönlendi. Bu sayfa **eğitim sırasında karşılaşacağın seçimleri** açıklar:
+5.1'de *"LoRA matris ayrıştırma, QLoRA 4-bit küçültme"* dedim — kavram seviyesi. 5.2 karar ağacında ince ayara yönlendi. Bu sayfa **eğitim sırasında karşılaşacağın seçimleri** açıklar:
 
-- **Rank = 8 mi 16 mı?** — adapter büyüklüğü
-- **Target modules: q_proj + v_proj mi yoksa hepsi mi?** — hangi katmanları eğit
-- **Learning rate 1e-4 mü 2e-4 mü?** — optimize konfigürasyonu
-- **4-bit mi 8-bit mi?** — quantization tercihi
-- **Hangi GPU'da hangi model?** — donanım kısıt
+- **Rank = 8 mi 16 mı?** — adaptör büyüklüğü
+- **Hedef katmanlar: `q_proj + v_proj` mi yoksa hepsi mi?** — hangi katmanları eğit
+- **Öğrenme oranı 1e-4 mü 2e-4 mü?** — eniyileyici (optimizer) ayarı
+- **4-bit mi 8-bit mi?** — küçültme tercihi
+- **Hangi GPU'da hangi model?** — donanım kısıtı
 
-Bu seçimler notebook'un üst 10 satırıdır. Default'a mahkum kalmayıp **gerekçeli karar** vermek senin işin.
+Bu seçimler notebook'un üst 10 satırıdır. Varsayılana mahkûm kalmayıp **gerekçeli karar** vermek senin işin.
 
-İkincisi: Sayfa **matematik formülü içermez.** Sezgi → diagram → karar mantığı. Bölüm 3.1 embedding matematiksizlik kuralının devamı.
+İkincisi: Sayfa **matematik formülü içermez.** Sezgi → diyagram → karar mantığı. Bölüm 3.1 embedding matematiksizlik kuralının devamı.
 
 ## LoRA sezgisi — iki küçük matris
 
-Bir büyük modelin bir ağırlık matrisi (örnek: attention'da `W_q` sorgu projeksiyonu) 4096×4096 = **16.7 milyon parametre**. Tam FT'de bu 16.7M hepsi güncellenir.
+Bir büyük modelin bir ağırlık matrisi (örnek: attention'da `W_q` sorgu projeksiyonu) 4096×4096 = **16.7 milyon parametre**. Tam ince ayarda bu 16.7M'in hepsi güncellenir.
 
 **LoRA fikri:** Bu büyük matrisin **değişimi** (ΔW) **düşük rank**'li olabilir. Yani:
 
@@ -73,7 +73,7 @@ flowchart LR
 
 </div>
 
-**Sonuç:** Model'in ana bilgisi korunur (W donuk), LoRA adapter'ı "ek davranış" yaratır. Adapter dosyası ~10-50 MB; orijinal model ~30-70 GB. **1000× daha küçük** dosya ile model davranışını değiştirebildin.
+**Sonuç:** Modelin ana bilgisi korunur (W donuk), LoRA adaptörü "ek davranış" yaratır. Adaptör dosyası ~10-50 MB; orijinal model 16-140 GB (Llama 3.1 8B FP16 = 16 GB; 70B FP16 = 140 GB). **1000 kattan fazla küçük** dosya ile model davranışını değiştirebildin.
 
 ## Rank seçimi — adapter kalınlığı
 
@@ -91,13 +91,13 @@ flowchart LR
 
 </table>
 
-**Rule of thumb:** Küçük veri seti (500-1000 örnek) → r=8. Büyük veri (5000+) → r=16. Veri 200 altı → r=4, overfit engelle.
+**Pratik kural:** Küçük veri seti (500-1000 örnek) → r=8. Büyük veri (5000+) → r=16. Veri 200'ün altında → r=4, ezberlemeyi engelle.
 
-**Alpha parametresi (scaling):** Genelde `alpha = 2 × r`. Yani r=8 için alpha=16. Gradient büyüklüğü kontrolü.
+**Alpha parametresi (ölçekleme):** Genelde `alpha = 2 × r`. Yani r=8 için alpha=16. Gradyan büyüklüğü kontrolü.
 
-## Target modules — hangi katmanlar
+## Hedef katmanlar (target modules) — hangi katmanlar
 
-Transformer model içinde **eğitilecek layer'lar** seçilmeli. Hugging Face PEFT config'i:
+Transformer model içinde **eğitilecek katmanlar** seçilmeli. Hugging Face PEFT yapılandırması:
 
 ```python
 from peft import LoraConfig
@@ -116,17 +116,17 @@ config = LoraConfig(
 
 **1. Minimal — `[q_proj, v_proj]`**
 
-Sadece attention Q ve V. En küçük adapter, en hızlı. Basit tarz değişimi.
+Sadece dikkat (attention) Q ve V projeksiyonları. En küçük adaptör, en hızlı. Basit stil değişimi.
 
 **2. Standart — `[q_proj, k_proj, v_proj, o_proj]`**
 
-Tüm attention projeksiyonları. 2× daha büyük adapter, daha iyi kalite.
+Tüm dikkat projeksiyonları. 2 kat büyük adaptör, daha iyi kalite.
 
-**3. Full — `[q_proj, k_proj, v_proj, o_proj, gate_proj, up_proj, down_proj]`**
+**3. Tam — `[q_proj, k_proj, v_proj, o_proj, gate_proj, up_proj, down_proj]`**
 
-Attention + MLP. En büyük adapter; tam FT'ye yaklaşan kalite, ama memory + süre artar.
+Dikkat + MLP. En büyük adaptör; tam ince ayara yaklaşan kalite, ama bellek + süre artar.
 
-**Tavsiye:** Standart preset (QKVO) çoğu kullanım için en iyi denge. Minimal deneyde, Full büyük bütçede.
+**Tavsiye:** Standart hazır ayar (QKVO) çoğu kullanım için en iyi denge. Minimal deney için, Tam büyük bütçe için.
 
 ### Unsloth kısayolu
 
@@ -147,19 +147,19 @@ model = FastLanguageModel.get_peft_model(
 
 Unsloth "standart" + MLP'yi otomatik önerir.
 
-## QLoRA — quantization sihri
+## QLoRA — küçültme sihri
 
-LoRA adapter küçük ama **orijinal model hâlâ 14-70 GB**. Colab T4'ün 16 GB VRAM'i 7B modeli bile zor kaldırır. QLoRA çözüm:
+LoRA adaptörü küçük ama **orijinal model hâlâ 14-140 GB**. Colab T4'ün 16 GB VRAM'i 7B modeli bile zor kaldırır. QLoRA çözüm:
 
-1. **Orijinal model 4-bit NF4 format'ına quantize** — memory 4× düşer (14 GB → 3.5 GB)
-2. **LoRA adapter 16-bit kalır** — eğitim kalitesi korunur
-3. **Double quantization** — quantization constant'larını da quantize et, ek %10 memory
+1. **Orijinal model 4-bit NF4 formatına küçültülür** — bellek 4 kat düşer (14 GB → 3.5 GB)
+2. **LoRA adaptörü 16-bit (BF16) kalır** — eğitim kalitesi korunur
+3. **Çift küçültme (double quantization)** — küçültme sabitlerini de küçültür, ek ~%10 bellek tasarrufu
 
 ### NF4 nedir
 
-**Normal Float 4-bit** — 4 bit (16 olası değer) ile neural network ağırlıklarının normal dağılımına optimize edilmiş format. FP4 (standart float 4-bit)'dan **kalite olarak daha iyi**; QLoRA paper'ı 2023 (Dettmers et al.).
+**Normal Float 4-bit** — 4 bitlik (16 olası değer) bir format; sinir ağı ağırlıklarının normal (Gauss) dağılımına optimize edilmiş. FP4'ten (standart 4-bit float) **istatistiksel olarak daha iyi temsil verir**; bu nedenle QLoRA makalesi (Dettmers ve ark., 2023) NF4'ü tercih ediyor.
 
-**Quantization kalitesi** — tam precision'a göre kayıp %1-3. Benchmark kalitesi **neredeyse özdeş** (MMLU, HellaSwag).
+**Küçültme kalitesi** — tam hassasiyete göre kayıp %1-3. Benchmark kalitesi neredeyse özdeş (MMLU, HellaSwag).
 
 ### Memory math — kendi hesap
 
@@ -179,7 +179,7 @@ Tam precision (FP16):  P × 2 bytes
 | 8-bit | 7 GB |
 | 4-bit NF4 | 3.5 GB + 0.35 GB overhead ≈ 4 GB |
 
-**Eğitim için ek:** gradients + optimizer states. AdamW optimizer 8-bit kullanırsa (bitsandbytes `AdamW8bit`) ek 2-3 GB. Toplam eğitim hafızası:
+**Eğitim için ek:** gradyanlar + eniyileyici (optimizer) durumları. AdamW eniyileyicisi 8-bit kullanırsa (bitsandbytes `AdamW8bit`) ek 2-3 GB. Toplam eğitim belleği:
 
 - 7B QLoRA eğitim: **~6-8 GB VRAM** (T4 16 GB rahat)
 - 13B QLoRA eğitim: **~12 GB VRAM** (T4 sınırda, A100 rahat)
@@ -189,20 +189,22 @@ Tam precision (FP16):  P × 2 bytes
 
 <table class="ma-aktorler" markdown>
 
-| GPU | VRAM | Max QLoRA model | Fiyat |
+| GPU | VRAM | En büyük QLoRA modeli | Fiyat (2026 Nisan) |
 |---|---|---|---|
-| **Colab T4 (ücretsiz)** | 16 GB | 7B (Qwen 7B, Llama 8B) | $0 |
-| **Colab Pro A100** | 40 GB | 13B rahat, 34B sınırda | $10/ay + saatlik |
-| **RTX 3060** | 12 GB | 3B-7B | $300-400 |
-| **RTX 4090** | 24 GB | 13B rahat, 34B sıkış | $1800 |
-| **A100 40 GB** | 40 GB | 34B rahat, 70B QLoRA | $1.5-2/saat kiralık |
-| **A100 80 GB** | 80 GB | 70B rahat | $2-3/saat kiralık |
-| **H100 80 GB** | 80 GB | 70B + eğitim hızlı | $4-5/saat kiralık |
-| **RunPod / Lambda Labs** | değişken | kiralama platformları | $0.3-5/saat |
+| **Colab T4 (ücretsiz katman)** | 16 GB | 7B (Qwen 3-7B, Llama 3.1 8B) | $0 — günlük kota var, 2024 sonu kısıtlandı |
+| **Colab L4 (ücretsiz katman)** | 22 GB | 8B-13B | $0 — kullanılabilirlik değişken |
+| **Colab Pro A100** | 40 GB | 13B rahat, 32B sınırda | $10/ay + işlem birimi (compute unit) saatlik |
+| **RTX 3060** | 12 GB | 3B-7B | $250-350 (2026 ikinci el) |
+| **RTX 4090** | 24 GB | 13B rahat, 32B sıkışık | $1500-1800 |
+| **RTX 5090** | 32 GB | 32B rahat | $2000-2500 (Ocak 2025'te çıktı) |
+| **A100 40 GB** | 40 GB | 32B rahat, 70B QLoRA sıkışık | $1.20-1.80/saat kiralık |
+| **A100 80 GB** | 80 GB | 70B rahat | $1.50-2.50/saat kiralık |
+| **H100 80 GB** | 80 GB | 70B + eğitim 2-3 kat hızlı | $2-3/saat kiralık (2026'da düştü) |
+| **RunPod / Lambda Labs / Vast.ai** | değişken | kiralama platformları | $0.30-5/saat |
 
 </table>
 
-**5.4 sayfası için:** Colab T4 (ücretsiz) + Qwen 2.5-1.5B veya TinyLlama 1.1B seçim. İlk FT deneyimi için ideal.
+**5.4 sayfası için:** Colab T4 / L4 (ücretsiz katman) + Qwen 3-1.7B veya Llama 3.2 1B seçimi. İlk ince ayar deneyimi için ideal.
 
 ## Hyperparameter önerileri
 
@@ -309,20 +311,31 @@ MMLU (multi-task), HellaSwag (commonsense), HumanEval (kod) gibi standart benchm
 
 **lm-evaluation-harness** kütüphanesi standart benchmark'ları tek komutla çalıştırır.
 
-## CTO tuzakları — 10 FT eğitim hatası
+## CTO tuzakları — 10 ince ayar eğitim hatası
 
 | # | Tuzak | Sonuç | Doğru |
 |---|---|---|---|
 | 1 | LR 1e-3 (çok büyük) | Kayıp zıplar, model bozuk | 1e-4 ile 3e-4 arası |
-| 2 | 10 epoch | Overfitting, test kötü | 2-3 epoch |
-| 3 | Rank=64 küçük veride | Overfit + gereksiz büyük adapter | r=8 veri 500-5000 için |
-| 4 | Target modules sadece q_proj | Kalite sınırlı | QKVO preset |
-| 5 | Evaluation hiç | "İyi mi bilmem" | Hold-out set + kalite karşılaştırma |
-| 6 | Train/test aynı | Leakage, yanlış ölçüm | %10-20 hold-out |
-| 7 | Monitoring olmaksızın | Eğitim ortasında durdurmazsın | wandb veya logging_steps |
-| 8 | 4-bit quantization + küçük rank | Bazen dipte kalite kaybı | Kalite kritikse r=16 dene |
-| 9 | Tek deney sonrası "tamam" | Hyperparameter tuning yok | 2-3 farklı LR/epoch dene |
-| 10 | Model Hub'a push etmeden sakla | Yerelde unut, kaybol | HF Hub'a push + versioning |
+| 2 | 10 epoch | Modelin ezberlemesi, test kötü | 2-3 epoch |
+| 3 | r=64 küçük veride | Ezberleme + gereksiz büyük adaptör | r=8, veri 500-5000 için |
+| 4 | Hedef katman olarak yalnızca `q_proj` | Kalite sınırlı | QKVO hazır ayarı |
+| 5 | Değerlendirme yok | "İyi mi bilmem" | Ayrı test seti + kalite karşılaştırma |
+| 6 | Eğitim/test aynı veri | Sızıntı (leakage), yanlış ölçüm | %10-20 ayrı tut |
+| 7 | İzleme olmadan eğitim | Ortada durdurma sezgisi yok | wandb veya `logging_steps` ekle |
+| 8 | 4-bit küçültme + küçük rank | Kalite dipte kalabilir | Kalite kritikse r=16 dene |
+| 9 | Tek deney sonrası "tamam" | Hiperparametre ayarı yok | 2-3 farklı LR/epoch dene |
+| 10 | Model Hub'a yüklemeden saklama | Yerelde unutulur, kaybolur | HuggingFace Hub'a yükle + sürümle |
+
+??? warning "Tipik LoRA/QLoRA hataları — şu durum şu çözüm"
+
+    | Hata | Sebep | Çözüm |
+    |---|---|---|
+    | `CUDA out of memory` (eğitim sırasında) | Batch + model büyük | `per_device_train_batch_size=1`, `gradient_accumulation_steps=16`; gradient checkpointing aç |
+    | `bitsandbytes` import hatası | CUDA / sürücü uyumsuz | `pip install -U bitsandbytes`; CUDA 12.x sürücü kontrol et |
+    | Eğitim kayıp düşmüyor (sabit) | LR çok düşük veya veri çok az | LR'yi 5e-5 → 2e-4'e çek; 200+ örnekli veriyle dene |
+    | İnce ayar sonrası model "saçmalıyor" | Yıkıcı unutma (catastrophic forgetting) — LR çok yüksek veya çok epoch | LR'yi düşür (5e-5'e); epoch 1'e indir; rank'i azalt |
+    | Adaptör yüklenmiyor | Versiyon uyumsuzluğu (peft sürümü) | `peft` ve `transformers` aynı uyumlu sürümlere yükselt |
+    | Çıktı tam saçma değil ama kötü | r veya hedef katmanlar yetersiz | Hedef katmanları QKVO'ya çıkar; rank 8 → 16 |
 
 ## Anthropic ekosistemi — Claude ile kıyas
 

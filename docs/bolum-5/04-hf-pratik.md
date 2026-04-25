@@ -1,4 +1,4 @@
-# 5.4 Hugging Face Pratik — Bölüm 5 İMZA SAYFASI
+# 5.4 Hugging Face Pratik — Bölüm 5 İmza Sayfası (Mini LoRA Eğitimi)
 
 <div class="ma-meta" markdown>
 <div class="ma-meta-row" markdown>
@@ -8,38 +8,38 @@
 <span class="ma-persona ma-persona-kisisel">🟣 kişisel</span>
 </div>
 <div class="ma-meta-row"><strong>⏱️ Süre:</strong> ~50 dakika</div>
-<div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 5.1 + 5.2 + 5.3 okundu; hyperparameter mantığı elinde. Google hesabı (Colab için), HF hesabı (model indirme + adapter push).</div>
-<div class="ma-meta-row"><strong>🎯 Çıktı:</strong> **İlk LoRA adapter'ın Colab T4 üstünde eğitildi** — Qwen2.5-1.5B + 50 Türkçe örnek + 20 dakikada tamamlandı. Base model vs fine-tuned model karşılaştırma testin var. HF Hub'a push edildi (public veya private). **3. pratik imza** (9.4 RAG + 9.5 Agent + 5.4 FT). Mülakatta "FT denediniz mi?" sorusuna EVET + somut demo.</div>
+<div class="ma-meta-row"><strong>📋 Önkoşul:</strong> 5.1 + 5.2 + 5.3 okundu; hiperparametre mantığı elinde. Google hesabı (Colab için), HuggingFace hesabı (model indirme + adaptör yükleme).</div>
+<div class="ma-meta-row"><strong>🎯 Çıktı:</strong> **İlk LoRA adaptörün Colab T4/L4 üstünde eğitildi** — Qwen 3-1.7B veya Qwen 2.5-1.5B + 50 Türkçe örnek + ~20-30 dakikada tamamlandı. Temel model ile ince ayarlı modeli karşılaştıran testin var. HuggingFace Hub'a yüklendi (herkese açık veya özel). **3. pratik imza** (9.4 RAG + 9.5 Agent + 5.4 ince ayar). Mülakatta "İnce ayar denediniz mi?" sorusuna **evet + somut demo**.</div>
 </div>
 
 !!! tip "Yabancı kelime mi gördün?"
-    **Colab** = Google Colab, ücretsiz bulut GPU notebook. **TrainingArguments** = HF Transformers'da eğitim config class'ı. **Trainer** = eğitim orchestrator; veri + model + args + çalıştır. **SFTTrainer** = TRL library'sinin instruction tuning'e özel trainer'ı, template auto-handle. **Gradient checkpointing** = eğitim memory'sini ~%30 düşürür, süre %20 artar. **HF Hub push** = adapter'ı huggingface.co hesabına yükleme, model version olarak.
+    **Colab** = Google Colab, ücretsiz bulut GPU notebook'u. **TrainingArguments** = HF Transformers'taki eğitim yapılandırma sınıfı. **Trainer** = eğitim yöneticisi; veri + model + ayarlar verince çalıştırır. **SFTTrainer** = TRL kütüphanesinin instruction tuning'e özel eğiticisi, sohbet şablonunu otomatik halleder. **Gradient checkpointing (gradyan kontrol noktası)** = eğitim belleğini ~%30 düşürür, süre %20 artar. **HuggingFace Hub'a yüklemek (push)** = adaptörü huggingface.co hesabına model sürümü olarak göndermek.
 
 ## Neden bu sayfa?
 
-5.1-5.3 teorikti. Bu sayfa **gerçek eğitim** — Colab'i aç, 30-60 dakika ayır, kendi fine-tuned adapter'ın elinde. Bitişte:
+5.1-5.3 teorikti. Bu sayfa **gerçek eğitim** — Colab'i aç, 30-60 dakika ayır, kendi ince ayarlı adaptörün elinde. Bitişte:
 
-- GitHub profilinde "first LoRA adapter" commit
-- HuggingFace Hub'da kendi model sayfan (public) — CV'de link
-- Mülakatta "FT pratiği var mı?" sorusu → "evet, Qwen2.5-1.5B üstünde 50 örnek LoRA, repo şu" cevabı
+- GitHub profilinde "first LoRA adapter" commit'i
+- HuggingFace Hub'da kendi model sayfan (herkese açık) — CV'de link
+- Mülakatta "İnce ayar pratiği var mı?" sorusu → "Evet, Qwen 3-1.7B üstünde 50 örnek LoRA, repo şu" cevabı
 
-İkincisi: Bu sayfa **platform'un 3. pratik imza sayfası**. 9.4 rag-chatbot (14. tur) + 9.5 icerik-ozet-agent (13. tur) + 5.4 mini-FT (bu tur). Her üçü pytest kanıtlı, çalışır kod. Öğrenci **3 kanıtlanabilir proje** ile iş başvurusu yapar.
+İkincisi: Bu sayfa **platformun 3. pratik imza sayfası**. 9.4 rag-chatbot + 9.5 icerik-ozet-agent + 5.4 mini ince ayar (bu tur). Her üçü pytest kanıtlı, çalışır kod. Öğrenci **3 kanıtlanabilir proje** ile iş başvurusu yapar.
 
-Üçüncüsü: FT **hiç yapmama yerine küçük bir deney** mindset'i verir. Mülakat değerlendirmesi: "gerekmeyeceğini bilen ama pratik göstermek için küçük deney yapmış" aday > "hiç denemedim" aday.
+Üçüncüsü: İnce ayar **hiç yapmama yerine küçük bir deney** zihniyeti verir. Mülakatçı için: "gerekmeyeceğini bilen ama pratik göstermek için küçük deney yapmış" aday > "hiç denemedim" diyen aday.
 
 ## Hedef — ne yapacağız
 
-**50 örnekli Türkçe instruction FT:**
+**50 örnekli Türkçe instruction tuning denemesi:**
 
-- Model: **Qwen2.5-1.5B-Instruct** (Türkçe iyi, küçük, hızlı)
-- Veri: 50 örnek — "müşteri destek asistanı" formatı (sen üreteceksin veya sentetik)
-- Yöntem: **QLoRA** (4-bit quantization + LoRA adapter)
-- Hyperparameters: 5.3'te öğrendiğin tercih (r=8, QKVO, LR 2e-4, 2 epoch)
-- GPU: **Colab T4 (ücretsiz)**
-- Süre: ~20 dakika eğitim + 10 dakika kurulum + 10 dakika test = **40-45 dakika**
-- Çıktı: HF Hub'da `USERNAME/qwen-tr-musteri-destek-v1` adapter
+- Model: **Qwen 3-1.7B-Instruct** (2026'da güncel; alternatif: Qwen 2.5-1.5B-Instruct ya da Llama 3.2 1B-Instruct — Türkçe iyi, küçük, hızlı)
+- Veri: 50 örnek — "müşteri destek asistanı" biçiminde (sen üreteceksin veya sentetik)
+- Yöntem: **QLoRA** (4-bit küçültme + LoRA adaptör)
+- Hiperparametreler: 5.3'te öğrendiğin tercih (r=8, QKVO, LR 2e-4, 2-3 epoch)
+- GPU: **Colab T4/L4 (ücretsiz katman, kullanım kotası var)**
+- Süre: ~20-30 dakika eğitim + 10 dakika kurulum + 10 dakika test = **40-50 dakika**
+- Çıktı: HuggingFace Hub'da `KULLANICI_ADI/qwen-tr-musteri-destek-v1` adaptörü
 
-**Uyarı:** Bu **üretim modeli değil** — 50 örnek deney seviyesi. Amaç: pratik refleks + ilk FT deneyimi + CV sinyali.
+**Uyarı:** Bu **üretim modeli değil** — 50 örnek deney seviyesi. Amaç: pratik refleks + ilk ince ayar deneyimi + CV sinyali.
 
 ## Bu sayfanın ekosistemi
 
@@ -98,11 +98,11 @@ flowchart LR
 
 ### Google Colab hesabı
 
-[colab.research.google.com](https://colab.research.google.com) — Google hesabıyla giriş. Ücretsiz T4 GPU.
+[colab.research.google.com](https://colab.research.google.com) — Google hesabıyla giriş. Ücretsiz katmanda T4 veya L4 GPU çıkar (kullanılabilirlik değişken; 2024 sonu Google ücretsiz katmanı kısıtladı, günlük kota var).
 
 **Runtime seçimi:**
 1. Üst menü → Runtime → Change runtime type
-2. Hardware accelerator: **T4 GPU**
+2. Hardware accelerator: **T4 GPU** (ya da uygunsa **L4 GPU**)
 3. Save
 
 ### Hugging Face hesabı
@@ -137,12 +137,13 @@ Yeni Colab notebook aç, aşağıdaki hücreleri sırayla çalıştır.
 ### Hücre 1: Kütüphane kurulum
 
 ```python
-!pip install -q -U transformers==5.6.1 peft==0.19.1 trl==1.2.0 \
+!pip install -q -U \
+    transformers==5.6.2 peft==0.19.1 trl==1.2.0 \
     datasets==4.8.4 accelerate==1.13.0 bitsandbytes==0.49.2 \
     huggingface_hub
 ```
 
-~2 dakika sürer.
+~2 dakika sürer. (Sürümler 2026 Nisan'da en günceller; sonraki seansta `pip install -U paket_adi` ile yenisini çekersin. Ana sürümler değişirse — örn. transformers 6.x — kod kırılmalarına dikkat.)
 
 ### Hücre 2: HF login
 
@@ -160,7 +161,7 @@ print(f"GPU: {torch.cuda.get_device_name(0)}")
 print(f"VRAM: {torch.cuda.get_device_properties(0).total_memory / 1e9:.1f} GB")
 ```
 
-Çıktı: `CUDA: True`, `GPU: Tesla T4`, `VRAM: 15.8 GB` — T4 ücretsiz tier.
+Çıktı (örnek): `CUDA: True`, `GPU: Tesla T4`, `VRAM: 15.8 GB` — T4 ücretsiz katmanı. L4 düşerse: `GPU: NVIDIA L4`, `VRAM: 22.1 GB`. P100 / V100 nadir; çıkmaz.
 
 ## Adım 2 — Veri yükle (2 dk)
 
@@ -211,7 +212,7 @@ print(train_ds[0]["text"])
 from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 import torch
 
-MODEL_NAME = "Qwen/Qwen2.5-1.5B-Instruct"
+MODEL_NAME = "Qwen/Qwen2.5-1.5B-Instruct"  # alternatif: "Qwen/Qwen3-1.7B-Instruct" veya "meta-llama/Llama-3.2-1B-Instruct"
 
 # QLoRA 4-bit NF4 config
 bnb_config = BitsAndBytesConfig(
@@ -500,18 +501,29 @@ Platform'un diğer imza sayfalarında (9.4, 9.5, 3.5) 4 CTO kanıtı vardı: AST
 
 Model card (HF Hub README) **şeffaf** — deney seviyesi belirtildi, üretim iddia edilmedi. Telif uyum (Apache 2.0 base model).
 
-## CTO tuzakları — 8 yaygın FT hatası (pratik)
+## CTO tuzakları — 8 yaygın ince ayar hatası (pratik)
 
 | # | Tuzak | Sonuç | Doğru |
 |---|---|---|---|
-| 1 | 50 örnek "çalıştı" = production | Deney ≠ üretim | README açıkça "deney seviyesi" |
-| 2 | Evaluation atlama | "İyi mi" bilinmez | Base vs FT karşılaştırma zorunlu |
-| 3 | HF push olmadan laptop'ta sakla | Kaybolur | Git veya HF versioning |
-| 4 | Model card yok | Kimse anlamaz | README şeffaf + base_model + license |
-| 5 | Telif ihlali veri | Yasal risk | Sentetik veya lisanslı veri |
-| 6 | Base model lisans uyumsuz | Apache 2.0 OK, kapalı OK değil | lisans kontrol zorunlu |
-| 7 | Colab kapattığında model kayıp | Runtime disconnect → disk temiz | HF Hub push sonrası güvende |
-| 8 | Sonraki iterasyon yok | Tek deney → unut | v1 sonrası v2 dene, öğrenim birikir |
+| 1 | 50 örnek "çalıştı" = üretim | Deney ≠ üretim | README'de açıkça "deney seviyesi" yaz |
+| 2 | Değerlendirme atlama | "İyi mi" bilinmez | Temel ile ince ayar karşılaştırması zorunlu |
+| 3 | HF Hub'a yüklemeden dizüstüne kaydetme | Kaybolur | Git veya HF Hub sürümleme |
+| 4 | Model kartı yok | Kimse anlamaz | README şeffaf + temel model + lisans |
+| 5 | Telifli veri kullanımı | Yasal risk | Sentetik veya lisanslı veri |
+| 6 | Temel model lisansı uyumsuz | Apache 2.0 tamam, kapalı yasak | Lisans kontrolü zorunlu |
+| 7 | Colab kapattığında model kayıp | Runtime kopunca disk temizlenir | HF Hub'a yükledikten sonra güvende |
+| 8 | Sonraki iterasyon yok | Tek deney → unut | v1 sonrası v2 dene, birikim sağla |
+
+??? warning "Tipik Colab + LoRA hataları — şu durum şu çözüm"
+
+    | Hata | Sebep | Çözüm |
+    |---|---|---|
+    | `Disconnected. Reconnect.` (eğitimin ortasında) | Ücretsiz katman 90 dk inaktif kuralı veya kota | Sayfayı sık etkin tut; `Runtime → Manage sessions → Terminate` sonra yeniden başla; alternatif Colab Pro |
+    | `RuntimeError: CUDA out of memory` | T4'te model batch + adaptör + gradyan sığmıyor | `per_device_train_batch_size=1`; `gradient_accumulation_steps=16`; `gradient_checkpointing=True` |
+    | `403 Forbidden` (model indirme) | Llama gibi modeller HF'te onay ister | Model sayfasında "Access" → form doldur → onay bekle (genelde anlık) |
+    | `OSError: ... shared memory` | Colab `/dev/shm` küçük | `dataloader_num_workers=0` set et |
+    | `push_to_hub` başarısız | Token write yetkisi yok | HF token'ı **Write** seçenekliyle yeniden oluştur |
+    | İlk hücre 5 dakika takılı kaldı | Pip resolver bağımlılık çözümlüyor | Sabırlı ol; sürüm pin'le hızlanır (yukarıdaki blok) |
 
 ## Anthropic ekosistemi — bu deneyim CV'de nasıl geçer
 
@@ -622,7 +634,7 @@ HuggingFace Hub'da `https://huggingface.co/USERNAME/qwen-tr-musteri-destek-v1` U
 
 **Başarı kriteri:** 45 dakika sonunda HF Hub'da kendi adapter'ın public URL ile erişilebilir. Base vs FT karşılaştırma çıktısı ekran görüntüsü kanıt.
 
-**Başaramadıysan:** Colab T4 kuyruğu (ücretsiz tier) yoğun olabilir — `Runtime → Manage sessions → Terminate` sonra tekrar dene. Alternatif: TinyLlama-1.1B ile deneme (daha küçük, T4'te daha rahat).
+**Başaramadıysan:** Colab T4 kuyruğu (ücretsiz katman) yoğun olabilir — `Runtime → Manage sessions → Terminate` sonra tekrar dene. Alternatif: **Llama 3.2 1B-Instruct** ya da **Qwen 2.5-0.5B-Instruct** ile deneme (daha küçük, T4'te daha rahat). Veya Colab Pro ($10/ay) ile L4/A100 erişimi.
 
 </div>
 
