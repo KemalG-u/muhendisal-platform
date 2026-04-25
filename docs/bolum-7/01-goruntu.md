@@ -493,7 +493,7 @@ Claude vision evrimini hızlı takip etmek gerek:
 
 ### Computer use — vision'ın ileri uzantısı
 
-[Claude computer use](https://platform.claude.com/docs/en/docs/build-with-claude/computer-use) — Claude bilgisayar ekranını **görür** + fare + klavye simüle eder. Agent otomasyonu için radikal değişim.
+[Claude computer use](https://platform.claude.com/docs/en/build-with-claude/computer-use) — Claude bilgisayar ekranını **görür** + fare + klavye simüle eder. Ajan otomasyonu için radikal değişim.
 
 **Use case'ler:**
 
@@ -584,5 +584,5 @@ Bir test ekran görüntüsü üzerinde Madde 5 pattern: PII tespit + koordinat +
 
 ← [Bölüm 7 girişi](index.md) &nbsp;|&nbsp; [Ana sayfa](../index.md) &nbsp;|&nbsp; [Bölüm 6 — Agent + MCP](../bolum-6/index.md)
 
-**Pekiştirme:** [Claude vision docs](https://platform.claude.com/docs/en/docs/build-with-claude/vision) + [Anthropic Cookbook vision notebook'ları](https://github.com/anthropics/claude-cookbooks/tree/main/multimodal) + [Computer use guide](https://platform.claude.com/docs/en/docs/build-with-claude/computer-use). Üçü 2 saatte okunur; vision API refleksi oturur.
+**Pekiştirme:** [Claude vision docs](https://platform.claude.com/docs/en/build-with-claude/vision) + [Anthropic Cookbook vision notebook'ları](https://github.com/anthropics/claude-cookbooks/tree/main/multimodal) + [Computer use guide](https://platform.claude.com/docs/en/build-with-claude/computer-use). Üçü 2 saatte okunur; vision API refleksi oturur.
 </div>

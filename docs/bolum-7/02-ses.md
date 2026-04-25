@@ -443,7 +443,7 @@ Anthropic Claude API referans dokümanı ve Model Overview sayfası Claude'un se
 **4. Sessizliğin stratejik anlamı.** Ses modalitesinin yokluğu **eksiklik değil tercih** — Claude'un diferansiyel değeri *reasoning* + *tool use* + *vision* üçgeninde. Ses olgun bir problem (Whisper + ElevenLabs çözdü), Anthropic bunu tekrar çözmek yerine *audio reasoning* (duygu, niyet, konuşmacı) gibi farklılaşmaya doğru gidebilir.
 
 <div class="ma-anthropic-oz-kaynak" markdown>
-**Kaynak:** [platform.claude.com/docs — Messages API](https://platform.claude.com/docs/en/api/messages) (EN, ~10 dk) + [platform.claude.com/docs — Models Overview](https://platform.claude.com/docs/en/docs/about-claude/models/overview) (EN, ~8 dk). Claude'un kabul ettiği content block'ların tam listesi + multimodal yol haritası.
+**Kaynak:** [platform.claude.com — Messages API](https://platform.claude.com/docs/en/api/messages) (EN, ~10 dk) + [platform.claude.com — Models Overview](https://platform.claude.com/docs/en/about-claude/models/overview) (EN, ~8 dk). Claude'un kabul ettiği içerik bloklarının tam listesi + multimodal yol haritası.
 </div>
 </div>
 

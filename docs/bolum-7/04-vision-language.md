@@ -306,7 +306,7 @@ Anthropic Model Overview + Claude Sonnet 4.6 System Card + Vision dokümanı vis
 **4. Açık kaynak alternatifleri ciddi ama niş.** Qwen2-VL 72B ve LLaVA-Med gibi açık kaynak vision modelleri Claude'a yaklaşıyor; Anthropic bu gerçeği cookbook'un third_party klasöründe zımnen kabul ediyor. Anthropic'in pozisyonu: **"Claude'u seç çünkü reasoning + vision + tool use tek pakette; açık kaynak seç çünkü ucuz ve customizable"** — iki ayrı optimizasyon problemi.
 
 <div class="ma-anthropic-oz-kaynak" markdown>
-**Kaynak:** [platform.claude.com/docs — Models Overview](https://platform.claude.com/docs/en/docs/about-claude/models/overview) (EN, ~10 dk) + [Claude Sonnet 4.5 System Card](https://www.anthropic.com/claude-sonnet-4-5-system-card) (PDF, EN, ~40 sayfa, vision benchmark sayısal veriler).
+**Kaynak:** [platform.claude.com — Models Overview](https://platform.claude.com/docs/en/about-claude/models/overview) (EN, ~10 dk) + [Claude Sonnet 4.5 System Card](https://www.anthropic.com/claude-sonnet-4-5-system-card) (PDF, EN, ~40 sayfa, vision benchmark sayısal veriler).
 </div>
 </div>
 

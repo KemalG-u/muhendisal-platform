@@ -493,7 +493,7 @@ Anthropic Vision dokümantasyonu ve multimodal kullanım kılavuzu video'yu şö
 **4. Native video desteği yol haritası belirsiz.** Anthropic News'te 2025-2026 boyunca native video endpoint'i için somut açıklama yok. Gemini'nin video kabul etmesi tercih değil — Anthropic reasoning odaklı kalmayı seçti. Bu yüzden frame-based desen **kısa-orta vadede kalıcı**.
 
 <div class="ma-anthropic-oz-kaynak" markdown>
-**Kaynak:** [platform.claude.com/docs — Vision](https://platform.claude.com/docs/en/docs/build-with-claude/vision) (EN, ~12 dk) + [Anthropic Cookbook — multimodal](https://github.com/anthropics/claude-cookbooks/tree/main/multimodal) (Jupyter, EN). Image block yapısı + batch frame pattern örnekleri.
+**Kaynak:** [platform.claude.com — Vision](https://platform.claude.com/docs/en/build-with-claude/vision) (EN, ~12 dk) + [Anthropic Cookbook — multimodal](https://github.com/anthropics/claude-cookbooks/tree/main/multimodal) (Jupyter, EN). Image block yapısı + batch frame deseni örnekleri.
 </div>
 </div>
 
