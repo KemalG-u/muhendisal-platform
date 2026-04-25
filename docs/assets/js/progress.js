@@ -42,8 +42,19 @@
   }
 
   // --- Tamamla butonu ---
+  // Aşama 7.2: default kapalı; localStorage.ma_show_complete_btn='1' ise göster.
+
+  function shouldShowCompleteButton() {
+    try {
+      return localStorage.getItem('ma_show_complete_btn') === '1';
+    } catch (e) {
+      return false;
+    }
+  }
 
   function renderCompleteButton(page_path) {
+    if (!shouldShowCompleteButton()) return;
+
     // navigation.instant ile sayfa değişiminde eski wrap kalabilir — kaldır
     var existing = document.getElementById("ma-complete-wrap");
     if (existing) existing.parentNode.removeChild(existing);

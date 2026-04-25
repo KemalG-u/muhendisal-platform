@@ -2,6 +2,41 @@
 
 İlerlemeni, quiz geçmişini ve hedef seçimini tek ekranda takip edersin. Sayfa otomatik olarak backend'den veri çeker.
 
+## ⚙️ Görünüm Tercihleri
+
+<div class="ma-toggle-group" id="ma-toggle-group">
+  <label class="ma-toggle">
+    <input type="checkbox" id="ma-toggle-badge">
+    <span>Her sayfada XP rozetini göster</span>
+  </label>
+  <label class="ma-toggle">
+    <input type="checkbox" id="ma-toggle-complete">
+    <span>Her sayfada "Bu sayfayı tamamladım" butonunu göster</span>
+  </label>
+</div>
+
+<script>
+(function () {
+  function bind(id, key) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    try {
+      el.checked = localStorage.getItem(key) === '1';
+    } catch (e) {}
+    el.addEventListener('change', function () {
+      try {
+        if (el.checked) localStorage.setItem(key, '1');
+        else localStorage.removeItem(key);
+      } catch (e) {}
+    });
+  }
+  document.addEventListener('DOMContentLoaded', function () {
+    bind('ma-toggle-badge', 'ma_show_badge');
+    bind('ma-toggle-complete', 'ma_show_complete_btn');
+  });
+})();
+</script>
+
 ## 🎯 Hedefin
 
 <div class="ma-target-tabs">

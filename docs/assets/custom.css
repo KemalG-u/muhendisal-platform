@@ -11,6 +11,27 @@
   --md-accent-fg-color: #E89272;
 }
 
+/* Aşama 7: Dashboard görünüm toggle'ları */
+.ma-toggle-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 1rem 0 1.5rem;
+  padding: 0.75rem 1rem;
+  background: var(--md-accent-fg-color--transparent);
+  border-radius: 6px;
+}
+.ma-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 0.95em;
+}
+.ma-toggle input[type="checkbox"] {
+  cursor: pointer;
+}
+
 /* Aşama 3.5: Persona kutusu 4 satır flex layout */
 .ma-meta {
   background: var(--md-accent-fg-color--transparent);
