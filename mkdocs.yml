@@ -207,10 +207,5 @@ extra_css:
   - assets/custom.css
 
 extra_javascript:
-  - assets/js/api-client.js
-  - assets/js/progress.js
-  - assets/js/quiz.js
-  - assets/js/code-editor.js
-  - assets/js/dashboard.js
-  - assets/js/app.js
-  - assets/js/ekosistem.js
+  # Aşama 5: Tek loader, sayfa-spesifik lazy yükleme yapar
+  - assets/js/loader.js
