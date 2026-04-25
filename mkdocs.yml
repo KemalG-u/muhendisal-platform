@@ -59,7 +59,16 @@ extra:
   social:
     - icon: fontawesome/brands/x-twitter
       link: https://x.com/KarincaAI
-      name: KarıncaAI - X (Twitter)
+      name: KarıncaAI — X (Twitter)
+    - icon: fontawesome/brands/github
+      link: https://github.com/KemalG-u/muhendisal-platform
+      name: GitHub repo
+    - icon: fontawesome/solid/rss
+      link: /feed_rss_created.xml
+      name: RSS feed (yeni bölümler)
+    - icon: fontawesome/solid/envelope
+      link: mailto:hatay61@gmail.com
+      name: E-posta
   status:
     new: Yeni eklendi
     deprecated: Eski
