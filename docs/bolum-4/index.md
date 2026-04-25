@@ -90,7 +90,7 @@ RAG konusunda Anthropic'in **en güçlü teknik makalelerinden biri** burada dev
 
 **2. Anthropic Cookbook — contextual-embeddings notebook.** Yukarıdaki makalenin pratik Jupyter versiyonu. Bölüm 3.5'te giriş yaptık, 4.2'de derinleşiyoruz. Kendi Colab'inde çalıştırabilirsin.
 
-**3. Prompt Caching (platform.claude.com/docs/en/docs/build-with-claude/prompt-caching).** RAG'de uzun sistem prompt'ları tekrar tekrar gönderilir — caching ile bu ~%90 ucuzlar. 4.4 "Context Engineering"de bu tekniği entegre ediyoruz. 2.7-2.8'de görmüştük, burada uygulaması.
+**3. Prompt Caching ([platform.claude.com/docs/en/build-with-claude/prompt-caching](https://platform.claude.com/docs/en/build-with-claude/prompt-caching)).** RAG'de uzun sistem prompt'ları tekrar tekrar gönderilir — caching ile cache okuma maliyeti yaklaşık %90 düşer (cache hit base × 0.1). 4.4 "Context Engineering"de bu tekniği entegre ediyoruz. 2.7-2.8'de görmüştük, burada uygulaması.
 
 **4. Claude'u cevap üretici olarak kullanmanın avantajı.** RAG'ın "Generate" adımında model seçimi kritik. Claude Sonnet 4.x uzun bağlama (200K token) iyi dayanır, "I don't know" demeyi biliyor (halüsinasyon az). 4.3-4.4'te bu davranışları test ediyoruz.
 

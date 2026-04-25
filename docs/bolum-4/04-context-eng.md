@@ -284,7 +284,7 @@ Context engineering Anthropic'in **prompt mühendisliğinin tepe noktası** olar
     **Streaming + caching uyumlu.** `client.messages.stream()` + `cache_control` beraber çalışır. Streaming UX hızlandırır, caching maliyet düşürür — ikisi birden production ideali.
 
 <div class="ma-anthropic-oz-kaynak" markdown>
-**Kaynak:** [platform.claude.com/docs — Prompt Caching](https://platform.claude.com/docs/en/docs/build-with-claude/prompt-caching) (EN, ~15 dk). Tüm cache_control parametre detayları. **Pekiştirme:** [platform.claude.com/docs — Use XML Tags](https://platform.claude.com/docs/en/docs/build-with-claude/prompt-engineering/use-xml-tags) — neden XML Claude'da bu kadar güçlü çalışıyor, örneklerle.
+**Kaynak:** [platform.claude.com/docs — Prompt Caching](https://platform.claude.com/docs/en/build-with-claude/prompt-caching) (EN, ~15 dk). Tüm `cache_control` parametre detayları, model-spesifik minimum tokenler (Sonnet 4.6 = 2048; Opus 4.7 / Haiku 4.5 = 4096), 5 dakika varsayılan + 1 saat genişletilmiş TTL seçeneği. **Pekiştirme:** [Claude Prompting Best Practices](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices) — XML tag'leri, sistem promptu ve örnek tasarımı tek sayfada birleşmiş 2026 sürümü.
 </div>
 </div>
 

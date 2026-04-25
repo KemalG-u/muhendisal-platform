@@ -21,7 +21,7 @@ Senaryo: RAG sistemini kurdun. 3-4 soru sordun, cevaplar "iyi görünüyor" dedi
 
 İkincisi: **RAG üç aşamalı bir sistem** (retrieval + augmentation + generation) ve her aşamanın **kendine özgü hatası** var. Retrieval yanlışsa (yanlış belge geldi), generation doğru da yapsa yanlış cevap. Generation halüsine ettiyse (belgede yok ama uydurdu), retrieval iyi olsa da yanlış cevap. **Hangi aşama bozuk bilmeden onaramazsın.** Eval sana bu tanıyı verir.
 
-Üçüncüsü: **Prompt veya chunking değişikliği = deploy.** Chunk boyutunu 200'den 500'e çıkardığında kalitenin **arttığını mı azaldığını mı** bilmek zorundasın. Kod'da unit test olmadan deploy yapmak nasıl tehlikeli ise, RAG'de eval olmadan değişiklik yapmak aynı tehlike. Anthropic 2024'te bu konuya büyük yatırım yaptı — Console "Evaluate" sekmesi + [anthropic-evals](https://github.com/anthropics/evals) public repo = "olgun AI development" disiplini.
+Üçüncüsü: **Prompt veya chunking değişikliği = yayına alma.** Chunk boyutunu 200'den 500'e çıkardığında kalitenin **arttığını mı azaldığını mı** bilmek zorundasın. Kodda birim test olmadan yayına almak ne kadar tehlikeliyse, RAG'de eval olmadan değişiklik yapmak da aynı tehlike. Anthropic bu konuya büyük yatırım yaptı — Console "Evaluate" sekmesi + [anthropics/courses → prompt_evaluations](https://github.com/anthropics/courses/tree/master/prompt_evaluations) eğitim notebook'u = olgun AI geliştirme disiplini.
 
 ## RAG eval kısaca — üç paragraf, matematiksiz
 
@@ -222,7 +222,7 @@ Elinde doküman var, 20 soru nasıl hazırlayacaksın?
 <div class="ma-anthropic-oz" markdown>
 <div class="ma-anthropic-oz-header">📖 Anthropic bu konuyu nasıl anlatıyor — öz</div>
 
-Anthropic 2024-2025'te eval'e büyük yatırım yaptı — Console'da "Evaluate" sekmesi, anthropic-evals repo'su, docs/test-and-evaluate kategorisi.
+Anthropic eval'e büyük yatırım yaptı — Console'da "Evaluate" sekmesi, anthropics/courses içindeki `prompt_evaluations` notebook'u, docs/test-and-evaluate kategorisi.
 
 **1. Eval eksikliği = en büyük "ölüm" sebebi.** Anthropic'in kendi ekibi production AI servislerinin %70'inin **eval eksiği nedeniyle** başarısız olduğunu söylüyor. "Çalışıyor sanıyor" → "çalışmıyor fark ediyor" → kullanıcı kaybı.
 
@@ -245,7 +245,7 @@ Anthropic 2024-2025'te eval'e büyük yatırım yaptı — Console'da "Evaluate"
     **Anthropic Console Evaluate.** console.anthropic.com → Workbench → "Evaluate" sekmesi. Görsel A/B test, 2 prompt sürümünü aynı test setinde çalıştırıp yan yana gösterir. Non-developer ekip üyeleri prompt değişikliğini test edebilir.
 
 <div class="ma-anthropic-oz-kaynak" markdown>
-**Kaynak:** [platform.claude.com/docs — Test and Evaluate](https://platform.claude.com/docs/en/docs/test-and-evaluate/develop-tests) (EN, ~15 dk). Full eval metodolojisi. Pekiştirme: [anthropic-evals GitHub](https://github.com/anthropics/evals) — Anthropic'in kendi modelini değerlendirmek için kullandığı açık kaynak eval set'i. Kendi eval set'ini bu formatta yapman önerilir.
+**Kaynak:** [platform.claude.com — Test and Evaluate](https://platform.claude.com/docs/en/test-and-evaluate/develop-tests) (EN, ~15 dk). Tam eval metodolojisi. Pekiştirme: [anthropics/courses → prompt_evaluations](https://github.com/anthropics/courses/tree/master/prompt_evaluations) — Anthropic'in eval iş akışı için resmi eğitim notebook'u. Kendi eval setini bu formatta yapman önerilir. (Not: `anthropics/evals` reposu eval *çerçevesi* değil, davranış araştırma veri setleri.)
 </div>
 </div>
 

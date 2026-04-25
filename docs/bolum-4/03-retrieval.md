@@ -169,11 +169,11 @@ pip install cohere
 
 ```python
 import cohere  # COHERE_API_KEY env değişkeni
-co = cohere.Client()
+co = cohere.ClientV2()  # Cohere SDK v5+ ClientV2 standart
 
 def cohere_rerank(soru, aday_chunks, k=3):
     r = co.rerank(
-        model="rerank-multilingual-v3.0",  # Türkçe destekli
+        model="rerank-v3.5",  # multilingual; Türkçe dahil 100+ dil
         query=soru,
         documents=aday_chunks,
         top_n=k,
@@ -241,7 +241,7 @@ Anthropic Contextual Retrieval makalesinin **ikinci ve üçüncü ayağı** bu s
 
 **1. Hibrit retrieval olmadan contextual retrieval yarım kalır.** Blog yazısı rakam verir: sadece contextual embedding %35 iyileşme; **contextual embedding + BM25 = %49.** İki tekniğin birleşmesi hem ucuz hem keskin kalite artışı.
 
-**2. Re-ranker son dokunuş.** Anthropic Cohere Rerank ve Voyage Rerank önerir. Testlerde hibrit + rerank = **%67 accuracy gain** (baseline embedding'e göre). "Rerank'i ekleyin, parasının hakkını veriyor" tonunda.
+**2. Re-ranker son dokunuş.** Anthropic Cohere Rerank (`rerank-v3.5`) ve Voyage Rerank (`rerank-2` / `rerank-2-lite`) önerir. Testlerde hibrit + rerank = **%67 accuracy gain** (baseline embedding'e göre). "Rerank'i ekleyin, parasının hakkını veriyor" tonunda.
 
 **3. Claude'u re-ranker olarak kullanmak alternatif.** Haiku 4.5 rerank görevinde hızlı + ucuz + Türkçe anlıyor. Cohere'siz çalışmak isteyenler için resmi alternatif. Tek zayıflık: 20+ aday'da prompt uzuyor, maliyet artıyor.
 

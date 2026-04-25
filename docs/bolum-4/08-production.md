@@ -219,12 +219,12 @@ HBV Chatbot **Anthropic'in önerdiği her şeyi** yapmıyor — çünkü gerçek
 
     **Anthropic rate limit marjı.** Tier 2 hesap → 1000 RPM. HBV peak trafiği ~30 RPM → 33x marj. Bayram gününde 10x trafik beklentisi bile sınırın altında kalır.
 
-    **Claude Sonnet 4.6 vs 4.6 karar.** 4.5 HBV'de test edildi, 4.6 çıktığında A/B yapılacak — hem kalite farkı hem maliyet farkı. Opus 4.7 için: fiyat performans oranı HBV için gereksiz.
+    **Claude Sonnet 4.5 → 4.6 kararı.** Sonnet 4.5 HBV'de test edildi, 4.6 çıktığında A/B yapıldı — hem kalite farkı hem maliyet farkı ölçüldü. Opus 4.7 için: fiyat-performans oranı HBV için gereksiz; Sonnet 4.6 yetiyor.
 
     **Bilgi bankası değişim yönetimi.** 16 MD dosya git altında. Pull request → code review (Kemal + vakıf yetkilisi) → main'e merge → pm2 restart. Dev ortamda preview sonra prod.
 
 <div class="ma-anthropic-oz-kaynak" markdown>
-**Kaynak:** [Anthropic — Building Effective Agents](https://www.anthropic.com/research/building-effective-agents) (EN, ~20 dk). Anthropic'in üretim AI ürünleri için "karmaşıklık ekleme" yerine "sadelik tutma" tezi. HBV kararlarıyla birebir örtüşür. **Pekiştirme:** [platform.claude.com/docs — Prompt Caching best practices](https://platform.claude.com/docs/en/docs/build-with-claude/prompt-caching) — HBV cache stratejisinin teorisi.
+**Kaynak:** [Anthropic — Building Effective Agents](https://www.anthropic.com/research/building-effective-agents) (EN, ~20 dk). Anthropic'in üretim AI ürünleri için "karmaşıklık ekleme" yerine "sadelik tutma" tezi. HBV kararlarıyla birebir örtüşür. **Pekiştirme:** [platform.claude.com — Prompt Caching best practices](https://platform.claude.com/docs/en/build-with-claude/prompt-caching) — HBV cache stratejisinin teorisi.
 </div>
 </div>
 

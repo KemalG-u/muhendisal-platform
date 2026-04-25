@@ -184,11 +184,13 @@ COLLECTION = "hbv_bilgi"
 embedder = SentenceTransformer("sentence-transformers/paraphrase-multilingual-mpnet-base-v2")
 
 async def indexle(belgeler: list[str]):
-    """Offline adım — bir kere çalıştırılır."""
-    await qdrant.recreate_collection(
-        collection_name=COLLECTION,
-        vectors_config=VectorParams(size=768, distance=Distance.COSINE),
-    )
+    """Çevrim dışı (offline) adım — bir kere çalıştırılır."""
+    # qdrant-client 1.10+ modern API: önce var mı kontrol et, yoksa oluştur
+    if not await qdrant.collection_exists(COLLECTION):
+        await qdrant.create_collection(
+            collection_name=COLLECTION,
+            vectors_config=VectorParams(size=768, distance=Distance.COSINE),
+        )
     vektorler = embedder.encode(belgeler)
     await qdrant.upsert(
         collection_name=COLLECTION,
@@ -200,12 +202,13 @@ async def indexle(belgeler: list[str]):
 
 async def retrieve_async(soru: str, k: int = 3) -> list[str]:
     qvec = embedder.encode([soru])[0].tolist()
-    r = await qdrant.search(
+    # query_points modern API (Qdrant 1.18'de eski search() kaldırılıyor)
+    r = await qdrant.query_points(
         collection_name=COLLECTION,
-        query_vector=qvec,
+        query=qvec,
         limit=k,
     )
-    return [hit.payload["metin"] for hit in r]
+    return [hit.payload["metin"] for hit in r.points]
 
 async def rag_cevap_async(soru: str) -> str:
     chunks = await retrieve_async(soru, k=3)

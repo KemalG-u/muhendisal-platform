@@ -87,7 +87,8 @@ flowchart LR
 Kurulum:
 
 ```bash
-pip install langchain langchain-anthropic langchain-qdrant langchain-voyageai
+# LangChain 0.3.x serisi (Nisan 2026); text_splitter ayrı paket
+pip install "langchain>=0.3,<0.4" langchain-anthropic langchain-qdrant langchain-voyageai langchain-text-splitters langchain-community
 ```
 
 `rag_langchain.py`:
@@ -96,7 +97,7 @@ pip install langchain langchain-anthropic langchain-qdrant langchain-voyageai
 from langchain_anthropic import ChatAnthropic
 from langchain_voyageai import VoyageAIEmbeddings
 from langchain_qdrant import QdrantVectorStore
-from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import TextLoader
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnablePassthrough
@@ -107,7 +108,7 @@ docs = TextLoader("hbv-bilgi-bankasi.md").load()
 chunks = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50).split_documents(docs)
 
 # 2. Embedding + vector store
-emb = VoyageAIEmbeddings(model="voyage-3")
+emb = VoyageAIEmbeddings(model="voyage-4")
 vs = QdrantVectorStore.from_documents(chunks, emb, url="http://localhost:6333", collection_name="hbv")
 
 # 3. Retriever + prompt + LLM
