@@ -83,18 +83,18 @@ Bu çıktı **platformun gerçek bitişi.** Önceki 9 bölüm "üretmeyi" öğre
 
 Kariyer tarafında Anthropic **doğrudan ders vermez** ama ekosistemin "saygı kazandıran" referansları onlardan gelir:
 
-**1. Anthropic Academy certifications.** [anthropic.skilljar.com](https://anthropic.skilljar.com) — 18 ücretsiz sertifika. LinkedIn "Licenses & Certifications" bölümüne her birini ekleyebilirsin. AI işveren CV taraması yaparken Anthropic sertifikası **piyasa için belirgin sinyal** (Anthropic'in itibarı CV'ye yansıyor).
+**1. Anthropic Academy sertifikaları.** [anthropic.com/learn](https://www.anthropic.com/learn) — birden çok ücretsiz sertifikalı kurs (AI Fluency, Claude with the API, Tool Use, MCP, Claude Code). LinkedIn "Licenses & Certifications" bölümüne her birini ekleyebilirsin. AI işverenleri CV taraması yaparken Anthropic sertifikası **piyasa için belirgin sinyal** (Anthropic'in itibarı CV'ye yansıyor).
 
 **2. AI Fluency for Educators / Students / Nonprofits.** Domain-spesifik kurslar. Eğitimde, öğrenciyle, STK'da çalışıyorsan ek 3 sertifika kapısı — ilgili olduğun alana göre seç.
 
 **3. Teaching AI Fluency.** "AI öğretmeyi öğreten" kurs. Bu ileri bir adım — sen başkalarına öğretirken gerçek anlamda öğreniyorsun. Mentorluk planın varsa bu kurs hızlandırır.
 
-**4. Claude in Slack / Cowork integration.** [platform.claude.com/docs/en/docs/claude-in-slack](https://platform.claude.com/docs/en/docs/claude-in-slack) — ekiple çalışma deneyimi gösterirken Claude'u Slack'e entegre etmiş olman teknik bir referans. 10.3 açık kaynak işinin bir varyantı: Anthropic'in resmi entegrasyonlarına katkı.
+**4. Claude in Slack ve diğer entegrasyonlar.** [platform.claude.com — Claude in Slack](https://platform.claude.com/docs/en/claude-in-slack) — ekiple çalışma deneyimi gösterirken Claude'u Slack'e entegre etmiş olman teknik bir referans. 10.3 açık kaynak işinin bir varyantı: Anthropic'in resmi entegrasyonlarına katkı.
 
 **5. Anthropic blog + research.** [anthropic.com/news](https://www.anthropic.com/news) ayda 5-10 önemli post. 10.4 ileri konular için birincil kaynak. RSS abone ol, haftalık özet oku.
 
 <div class="ma-anthropic-oz-kaynak" markdown>
-**Kaynak:** [Anthropic Academy](https://anthropic.skilljar.com/) sertifikalar listesi. 10.1 LinkedIn güncellemesinden sonra aç — bitirebileceğin sertifikaları işaretle, LinkedIn "Licenses & Certifications"a sırayla ekle. 18 kursun hepsi ücretsiz; 4-6 hafta içinde tamamlanabilir.
+**Kaynak:** [Anthropic Academy](https://www.anthropic.com/learn) sertifikalar listesi. 10.1 LinkedIn güncellemesinden sonra aç — bitirebileceğin sertifikaları işaretle, LinkedIn "Licenses & Certifications"a sırayla ekle. Tüm kurslar ücretsiz; 4-6 hafta içinde tamamlanabilir.
 </div>
 </div>
 

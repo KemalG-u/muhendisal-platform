@@ -304,7 +304,7 @@ Bu platformu Claude ile yazdım. Sen **öğrencisi** olarak geldin, şimdi **kul
 
 4. **[Anthropic Research](https://www.anthropic.com/research)** — ayda 1-2 yeni makale. Derin makaleler (örn. Constitutional AI, Building Effective Agents) AI Engineer'ın **temel bilgisidir**. Her birini 1 saat oku + özet çıkar.
 
-5. **[Model Spec](https://platform.claude.com/docs/en/docs/model-spec)** — Claude davranış tanımı. Müşteri sorusu için canlı referans.
+5. **[Model Spec](https://platform.claude.com/docs/en/about-claude/model-spec)** — Claude davranış tanımı. Müşteri sorusu için canlı referans.
 
 ### Anthropic ambassador / community programı
 

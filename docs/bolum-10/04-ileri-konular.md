@@ -133,7 +133,7 @@ Eski LLM sadece metin. Yeni modeller metin + görsel + ses + video **aynı için
 
 ### Kaynak
 
-- [Claude vision docs](https://platform.claude.com/docs/en/docs/build-with-claude/vision)
+- [Claude vision docs](https://platform.claude.com/docs/en/build-with-claude/vision)
 - [Gemini multimodal](https://ai.google.dev/gemini-api/docs/vision)
 - [OpenAI GPT-4o](https://openai.com/index/hello-gpt-4o/)
 - [LMSYS Multimodal Arena](https://lmarena.ai/) — model karşılaştırma
@@ -173,7 +173,7 @@ Eski LLM sadece metin. Yeni modeller metin + görsel + ses + video **aynı için
 - [Anthropic prompt caching (2024-11)](https://www.anthropic.com/news/prompt-caching) — long context'i ucuzlatır
 - [OpenAI o3 system card](https://openai.com/index/o3-and-o4-mini-system-card/) — reasoning model detayı
 - [Gemini 1M context](https://blog.google/technology/ai/google-gemini-next-generation-model-february-2024/)
-- [Anthropic extended thinking](https://platform.claude.com/docs/en/docs/build-with-claude/extended-thinking)
+- [Anthropic extended thinking](https://platform.claude.com/docs/en/build-with-claude/extended-thinking)
 
 ## Trend 4 — AI Tooling Maturity
 
