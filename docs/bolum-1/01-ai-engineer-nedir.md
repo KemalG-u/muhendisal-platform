@@ -167,12 +167,12 @@ Bu üçü elinde olmadan görüşmeye gitmek zor. Bu platform "başlangıçta yo
 
 Saat 09:00. Laptop açık. Kahve yanında. Sırayla şunlar olabilir:
 
-1. **Slack mesajına bak (10 dk):** "Geçen hafta RAG chatbot'un verdiği cevaplar bazen yanlış kaynak gösteriyor." — Bir Jira ticket'ı açılmış.
-2. **Log incele (20 dk):** Son 100 başarısız cevabı filtrele, Anthropic Console'da token kullanımına bak. Sorunu bul: chunk'lar çok büyük, retrieval 5 yerine 3 dönüyor.
-3. **Düzeltmeyi kodla (45 dk):** `rag.py`'de chunk boyutunu 800→600 tokena indir, top_k'yı 3→5'e çıkar. Testleri çalıştır.
-4. **PR aç, review bekle (arada):** GitHub'a push, CI yeşil, ekip üyesinden review.
-5. **Deploy (20 dk):** Merge sonrası GitHub Actions otomatik deploy. Canlıda 5 test sorusu dene, cevaplar artık doğru.
-6. **Dokümante et (15 dk):** Notion'a/Confluence'a "Chunk boyutu neden 600" notu.
+1. **Slack mesajına bak (10 dk):** Slack (ekip içi mesajlaşma) → "Geçen hafta RAG chatbot'un verdiği cevaplar bazen yanlış kaynak gösteriyor." Jira'da (görev takip aracı) bir destek kaydı (ticket) açılmış.
+2. **Log incele (20 dk):** Son 100 başarısız cevabı filtrele, Anthropic Console'da token kullanımına bak. Sorunu bul: parçalar (chunk'lar) çok büyük, getirme (retrieval) 5 yerine 3 sonuç döndürüyor. (Bu terimleri Bölüm 4'te ayrıntıyla göreceksin — şimdilik "büyük belgeyi parçalara böl, sorguya yakın olanı bul" diye düşün.)
+3. **Düzeltmeyi kodla (45 dk):** `rag.py`'de parça boyutunu 800 token'dan 600'e indir, getirilen sonuç sayısını (`top_k`) 3'ten 5'e çıkar. Testleri çalıştır.
+4. **PR aç, inceleme bekle (arada):** GitHub'a gönder (push), otomatik testler (CI) yeşil, ekip üyesinden inceleme (review) gelsin.
+5. **Yayına al (20 dk):** Birleştirme (merge) sonrası GitHub Actions otomatik yayına alır. Canlıda 5 test sorusu dene, cevaplar artık doğru.
+6. **Belgele (15 dk):** Notion / Confluence (ekip içi belgeleme araçları) → "Parça boyutunu neden 600 yaptık" notunu yaz.
 
 Toplam yarım iş günü. Bu ritim sana "rahat" geliyorsa AI Engineer yolculuğun iş tarafı iyi gidecek. Teknik detayları platform öğretir.
 
@@ -196,9 +196,9 @@ Toplam yarım iş günü. Bu ritim sana "rahat" geliyorsa AI Engineer yolculuğu
 
 Üç neden:
 
-1. **MCP (Model Context Protocol)** — 2024 Kasım'da Anthropic çıkardı, 2025-2026'da endüstri standardı haline geldi. Claude ekosistemi bu protokolü merkeze aldı; öğrenen öğrenci 2026 iş piyasasında bir adım önde başlıyor.
-2. **Uzun bağlam + dürüstlük refleksi** — Claude 200K token bağlam kabul eder (yaklaşık 500 sayfa). "Emin değilim" demekte görece iyidir. RAG ve agent projelerinde halüsinasyon riski daha düşük — öğrenci için daha güvenli öğrenme ortamı.
-3. **Öğrenme araçları** — [Anthropic Academy](https://www.anthropic.com/learn) ücretsiz, 18+ kurs (AI Fluency, Prompt Engineering, Tool Use, MCP). Bu platform her bölümde ilgili Academy kursuna köprü verir; **iki öğrenme kaynağı tek yolda birleşir**.
+1. **MCP (Model Context Protocol — Model Bağlam Protokolü)** — Anthropic 2024 Kasım'da çıkardı, 2025'te OpenAI ve Google da kabul etti, Aralık 2025'te Linux Foundation'a bağışlanarak satıcı-bağımsız (vendor-neutral) ortak standart hâline geldi. Claude ekosistemi bu protokolü merkeze aldı; öğrenen öğrenci 2026 iş piyasasında bir adım önde başlıyor.
+2. **Uzun bağlam + dürüstlük refleksi** — Claude Opus 4.7 ve Sonnet 4.6 **1 milyon token** bağlam kabul eder (yaklaşık 2.500 sayfa); Haiku 4.5 ise 200K token (~500 sayfa). "Emin değilim" demekte görece iyidir. RAG ve agent projelerinde halüsinasyon (uydurma cevap verme) riski daha düşük — öğrenci için daha güvenli öğrenme ortamı.
+3. **Öğrenme araçları** — [Anthropic Academy](https://www.anthropic.com/learn) ücretsiz; AI Fluency, Claude with the API, Tool Use, MCP, Claude Code gibi kurslar. Bu platform her bölümde ilgili Academy kursuna köprü verir; **iki öğrenme kaynağı tek yolda birleşir**.
 
 Platform OpenAI'yi dışlamaz — Bölüm 1.3'te ekosistem karşılaştırmasını detaylı yapar. Ama **ana dil Claude**, yardımcı dil diğerleri.
 
@@ -252,9 +252,9 @@ Kanıt: dosya + ekran görüntüsü (Console dashboard).
 
 Üç soruya evet diyorsan bu platform için uygunsun:
 
-1. **"Hobbye dönüştürebileceğim bir uğraş ister miyim?"** AI Engineer öğrenmek gerçek emek ister — haftada 5 saat, 6 ay.
-2. **"Kod yazarken takıldığımda sabrım var mı?"** Hatayla karşılaşınca "bu benim için değil" diyip kapatmak en büyük tuzak. Tutor (Claude) yanında, ama sabır sende.
-3. **"Gelecek 1 yıl içinde iş değiştirme/yan gelir hedefim var mı?"** Hedefsiz çalışmak tükettirir. Hedef küçük olabilir — "yarı-zamanlı remote iş" bile yeter — ama olsun.
+1. **"Hobiye dönüştürebileceğim bir uğraş ister miyim?"** AI Engineer öğrenmek gerçek emek ister — haftada 5 saat, 6 ay.
+2. **"Kod yazarken takıldığımda sabrım var mı?"** Hatayla karşılaşınca "bu benim için değil" deyip kapatmak en büyük tuzak. Özel öğretmenin (Claude) yanında, ama sabır sende.
+3. **"Gelecek 1 yıl içinde iş değiştirme/yan gelir hedefim var mı?"** Hedefsiz çalışmak insanı tüketir. Hedef küçük olabilir — "yarı zamanlı uzaktan iş" bile yeter — ama olsun.
 
 Üçüne de evet dediysen [1.2 AI Engineer vs ML Engineer](02-ai-vs-ml-engineer.md) sayfasına geç. İki-üç hafta sonra "hangi yoldan gideceğim" netleşsin diye [1.4 Hangi Yolu Seçmeli](04-yol-secimi.md) sayfasına atlamak da mantıklı — orası sana **6 haftalık somut plan** çıkarır.
 

@@ -92,17 +92,17 @@ flowchart TB
 
 | Model | Güç | Hız | Bağlam | Fiyat (input/output per 1M token, yaklaşık) |
 |---|---|---|---|---|
-| **Opus 4.7** | Zirve (en yeni) | Orta | 200K+ | ~$15 / ~$75 |
-| **Opus 4.6** | Çok yüksek | Orta | 200K | ~$15 / ~$75 |
-| **Sonnet 4.6** | Yüksek (dengeli) | Hızlı | 200K | ~$3 / ~$15 |
-| **Sonnet 4.6** | Yüksek | Hızlı | 200K | ~$3 / ~$15 |
+| **Opus 4.7** | Zirve (en yeni) | Orta | **1M** | ~$5 / ~$25 |
+| **Opus 4.6** | Çok yüksek | Orta | 1M | ~$5 / ~$25 |
+| **Sonnet 4.6** | Yüksek (dengeli) | Hızlı | **1M** | ~$3 / ~$15 |
+| **Sonnet 4.5** (legacy) | Yüksek | Hızlı | 200K | ~$3 / ~$15 |
 | **Haiku 4.5** | Orta | Çok hızlı | 200K | ~$1 / ~$5 |
 
 **Güçlü yönler:**
 - En uzun dürüstlük refleksi ("emin değilim" der)
-- 200K token bağlam (≈500 sayfa) — RAG + uzun belge işlemede üstün
-- **MCP (Model Context Protocol)** — kendi çıkardığı protokol, endüstri standardı oldu
-- [Claude Code](https://platform.claude.com/docs/en/docs/claude-code/overview) CLI + [Artifacts](https://www.anthropic.com/news/artifacts) özellikleri
+- **1M token bağlam** Opus 4.7 ve Sonnet 4.6'da (≈2500 sayfa) — RAG + uzun belge işlemede sınıfının lideri; Haiku 4.5 200K
+- **MCP (Model Context Protocol — Model Bağlam Protokolü)** — Anthropic 2024 Kasım'da çıkardı, Aralık 2025'te Linux Foundation'a bağışlandı; OpenAI ve Google da destekliyor (vendor-neutral standart)
+- [Claude Code](https://docs.claude.com/en/docs/claude-code/overview) CLI (komut satırı arabirimi) + [Artifacts](https://www.anthropic.com/news/artifacts) özellikleri
 - Türkçe performansı çok iyi (bu platform o yüzden Türkçe)
 
 **Zayıf yönler:**
@@ -121,14 +121,15 @@ flowchart TB
 
 **Şirket:** 2015, ChatGPT ile viralleşti. Pazarın en büyük payı (2026'da ~%55 API kullanım).
 
-**Modeller (2026 güncel):**
+**Modeller (2026 Nisan güncel):**
 
 | Model | Güç | Hız | Bağlam | Not |
 |---|---|---|---|---|
-| **GPT-5** | Zirve | Orta | 400K | En yeni nesil, Opus 4.7 rakibi |
-| **GPT-4o** | Yüksek | Hızlı | 128K | Multimodal — ses + görsel destek |
-| **o3 / o3-mini** | Yüksek (reasoning) | Yavaş | 200K | "Düşünen" seri — matematik/kod için |
-| **gpt-4o-mini** | Orta | Çok hızlı | 128K | Haiku rakibi |
+| **GPT-5.5** | Zirve (yeni nesil) | Orta | 1M | Nisan 2026, Opus 4.7 rakibi |
+| **GPT-5.2** | Çok yüksek | Hızlı | 400K | Aralık 2025, dengeli |
+| **GPT-5** | Yüksek | Hızlı | 400K | Ağustos 2025, ilk GPT-5 |
+| **o3 / o3-pro** | Yüksek (reasoning — akıl yürütme) | Yavaş | 200K | "Düşünen" seri — matematik/kod için |
+| **gpt-5-mini** | Orta | Çok hızlı | 128K | Haiku rakibi |
 
 **Güçlü yönler:**
 - **Multimodal** — ses + görsel + video anlama + görsel üretim (DALL-E, Sora)
@@ -151,9 +152,9 @@ flowchart TB
 
 | Model | Güç | Hız | Bağlam | Not |
 |---|---|---|---|---|
-| **Gemini 2.5 Pro** | Zirve | Orta | **2M** | **Devasa bağlam** — 6 saatlik video |
+| **Gemini 2.5 Pro** | Zirve | Orta | **1M** | Devasa bağlam — uzun belge/video; 2M sürümü ileride söz verildi, henüz GA değil |
 | **Gemini 2.5 Flash** | Yüksek | Çok hızlı | 1M | Sonnet rakibi |
-| **Gemini 2.5 Nano** | Orta | Cihaz-içi | Küçük | Android'de lokal çalışır |
+| **Gemini Nano** | Orta | Cihaz-içi | Küçük | Android (Pixel) ve Chrome'da yerel çalışır |
 
 **Güçlü yönler:**
 - **2M token bağlam** — tüm kitap, uzun video, büyük codebase tek seferde
@@ -172,20 +173,28 @@ flowchart TB
 
 **Şirket:** Meta AI Research. 2023'te Llama 1 ile açık kaynak devrimi başladı.
 
-**Modeller (Llama 4, 2026):**
+**Modeller (Llama 4 ailesi, 2026 — Karma Uzman / Mixture-of-Experts mimarisi):**
+
+| Model | Aktif / Toplam | Donanım | Kullanım |
+|---|---|---|---|
+| **Llama 4 Scout** | 17B aktif / 109B toplam | 1× H100 (~$3-4/saat) | Hızlı, hafif kullanım |
+| **Llama 4 Maverick** | 17B aktif / 400B toplam | 2-4× H100 | Orta-üst seviye, Claude rakibi |
+| **Llama 4 Behemoth** | 288B aktif / 2T toplam | 8+× H100 ($150-200/saat) | Kurumsal, frontier-yakın |
+
+**Eski (hâlâ kullanılan) — Llama 3.1 ailesi (yoğun mimari, yerel için kolay):**
 
 | Model | Parametre | Donanım | Kullanım |
 |---|---|---|---|
-| **Llama 4 8B** | 8 milyar | Laptop (16GB RAM) | Hobby, hızlı deneme |
-| **Llama 4 70B** | 70 milyar | 2× A100 GPU ($50/saat) | Orta seviye üretim |
-| **Llama 4 405B** | 405 milyar | 8× H100 ($200/saat) | Kurumsal, Claude rakibi |
+| **Llama 3.1 8B** | 8 milyar | Dizüstü (16 GB RAM) | Hobi, hızlı deneme — Ollama'da popüler |
+| **Llama 3.1 70B** | 70 milyar | 2× A100 GPU | Orta seviye üretim |
+| **Llama 3.1 405B** | 405 milyar | 8× H100 (NVIDIA üst-segment GPU'lar) | Kurumsal kullanım |
 
 **Güçlü yönler:**
-- **Ağırlıklar açık** — ticari kullanım serbest (MAU < 700M, bu platform için tamamen)
+- **Ağırlıklar açık** — ticari kullanım serbest, ama lisans şartı: MAU (Monthly Active Users — aylık aktif kullanıcı sayısı) 700 milyondan azsa Meta'ya kayıt yetiyor; üstündeyse özel anlaşma şart
 - Veri gizliliği: veri hiç dışarı çıkmaz, kendi makinende
 - Maliyet: donanım masrafı bir kez, sonra sıfır fatura
 - Fine-tuning serbest — kendi veri setinle özelleştir
-- Lokal çalışınca **offline** kullanım mümkün
+- Yerel çalışınca **internetsiz (offline)** kullanım mümkün
 
 **Zayıf yönler:**
 - Büyük modeller pahalı donanım gerektirir (tek GPU yetmez)
@@ -197,11 +206,11 @@ flowchart TB
 
 ### 🟣 DeepSeek + 🟠 Qwen + ⚪ Mistral — diğer açık modeller
 
-**DeepSeek (V3.2):** Çin menşeli. **Çok güçlü + çok ucuz**; 405B parametre, Claude Sonnet benzeri performans, API fiyatı ~10× ucuz. Ticari kullanıma açık. **Uyarı:** Veri çıkış noktası Çin sunucuları olabilir; KVKK hassas projelerde dikkat. Çözüm: Ollama ile lokal çalıştır.
+**DeepSeek (V3.2):** Çin menşeli. **Çok güçlü + çok ucuz**; 671 milyar parametre (MoE — sadece 37B aktif), GPT-5/Gemini 2.5 Pro yakın performans, API fiyatı ~10 kat ucuz. Aralık 2025'te yayınlandı. Ticari kullanıma açık. **Uyarı:** Veri çıkış noktası Çin sunucuları olabilir; KVKK hassas projelerde dikkat. Çözüm: Ollama ile yerel çalıştır.
 
-**Qwen 3.5/3.6 (Alibaba):** Çin menşeli, özellikle kod + matematik güçlü. Ollama'da popüler. Llama rakibi.
+**Qwen 3.5 / Qwen 3.6 (Alibaba):** Çin menşeli, özellikle kod + matematik güçlü. Qwen 3.5 (Şubat 2026) açık ağırlıklı; Qwen 3.6-Plus (Nisan 2026) kapalı/API-only; Qwen 3.6-35B-A3B (Nisan 2026) açık. Ollama'da popüler. Llama rakibi.
 
-**Mistral (Fransa):** Avrupa açık kaynak alternatifi, GDPR dostu. Codestral kod için ayrı model. Küçük modelleri (7B) çok iyi.
+**Mistral (Fransa):** Avrupa açık kaynak alternatifi, GDPR (AB Genel Veri Koruma Yönetmeliği) dostu. Codestral 25.08 kod için ayrı model. Küçük modelleri (Mistral 7B) çok iyi.
 
 ## Açık kaynak vs kapalı — 3 paragraf karar
 
@@ -240,9 +249,9 @@ flowchart TB
 **Örnek karar akışı:**
 
 - "CV analiz chatbot, ayda 100 kullanıcı, kişisel proje." → **Claude Haiku 4.5** ($1-5/ay fatura, hızlı, 200K bağlam).
-- "Sağlık kayıtları asistanı, hasta verisi KVKK kapsamında." → **Llama 4 70B lokal** (veri hiç dışarı çıkmaz).
-- "Hukuki doküman özeti, 300 sayfa PDF." → **Gemini 2.5 Pro** (2M bağlam tam fitness).
-- "Video dersini transcribe + özet." → **GPT-4o** (ses + video multimodal).
+- "Sağlık kayıtları asistanı, hasta verisi KVKK kapsamında." → **Llama 3.1 70B yerel** veya **Llama 4 Scout** (veri hiç dışarı çıkmaz).
+- "Hukuki doküman özeti, 300 sayfa PDF (~150K token)." → **Claude Opus 4.7** veya **Gemini 2.5 Pro** (1M bağlam — 300 sayfa rahat sığar).
+- "Video dersini transkribe + özet." → **Gemini 2.5 Pro** (video native multimodal) veya **GPT-5.5** (ses + görsel).
 - "Maliyet hassas agent sistemi, 10K çağrı/gün." → **DeepSeek V3.2 + Claude** karma (DeepSeek ucuz + Claude kritik kararlarda).
 
 ## Fiyat karşılaştırma — 1000 çağrılık proje
@@ -251,14 +260,14 @@ Varsayım: Ortalama çağrı 500 input + 300 output token. 1000 çağrı/ay. Yak
 
 | Model | Aylık fiyat | Not |
 |---|---|---|
-| Llama 4 70B (kendi GPU'n) | $0 | Donanım yoksa yok |
-| DeepSeek V3.2 API | ~$0.50 | En ucuz cloud |
+| Llama 3.1 70B veya Llama 4 Scout (kendi GPU'n) | $0 | Donanım yoksa yok |
+| DeepSeek V3.2 API | ~$0.50 | En ucuz bulut |
 | Haiku 4.5 | ~$2.00 | Hız + kalite dengesi |
-| GPT-4o-mini | ~$2.50 | Claude Haiku rakibi |
-| Gemini 2.5 Flash | ~$3.00 | Multimodal + büyük bağlam |
-| Sonnet 4.5/4.6 | ~$6.00 | Platform default seçimi |
-| GPT-5 | ~$10-15 | Premium |
-| Opus 4.6/4.7 | ~$30-40 | Kritik karar için |
+| GPT-5-mini | ~$0.30-0.50 | Claude Haiku rakibi (en düşük segment) |
+| Gemini 2.5 Flash | ~$1.50 | Multimodal + büyük bağlam |
+| Sonnet 4.6 | ~$7.00 | Platform varsayılan seçimi |
+| GPT-5.2 | ~$5-6 | Dengeli premium |
+| Opus 4.6/4.7 | ~$11-13 | Kritik karar için (yeni fiyat: $5/$25 per MTok) |
 
 **Not:** 1K çağrı düşük hacim. Gerçek üretim genelde 10K-100K/ay — rakamları 10-100 ile çarp.
 
@@ -278,20 +287,20 @@ Varsayım: Ortalama çağrı 500 input + 300 output token. 1000 çağrı/ay. Yak
 
 ### Gecikme (latency)
 
-Türkiye'den API çağrıları:
-- **Avrupa bölgesinden sunan provider:** ~60-100 ms (iyi)
+Türkiye'den API çağrıları (ms = milisaniye, saniyenin binde biri):
+- **Avrupa bölgesinden sunan sağlayıcı:** ~60-100 ms (iyi)
 - **ABD bölgesinden sunan:** ~150-200 ms (idare eder)
-- **Asya-Pasifik:** ~250-400 ms (yavaş; kullanıcı hisseder)
+- **Asya-Pasifik:** ~250-400 ms (yavaş; kullanıcı fark eder)
 
 Anthropic, OpenAI, Google **bölge seçimi yaptırmaz** — kendileri yönlendirir, sen göremezsin. Pratikte Avrupa'dan servis alıyorsun.
 
 ### KVKK uyumu
 
-**Tehlikeli alan:** Türkiye KVKK'sı AB GDPR benzeri — kişisel veriyi yurtdışı sunucuya göndermek **uygun aydınlatma + rıza** gerektirir. B2B projelerinde çok önemli. Kısa kural:
+**Tehlikeli alan:** Türkiye KVKK'sı (Kişisel Verileri Koruma Kanunu) AB GDPR'ına (Genel Veri Koruma Yönetmeliği) benzer — kişisel veriyi yurtdışı sunucuya göndermek **uygun aydınlatma + rıza** gerektirir. B2B projelerinde çok önemli. Kısa kural:
 
-- **Anonim veri (kişi kimliği çıkarılamaz):** Cloud API serbest.
-- **Kişisel veri (ad, email, telefon, TC):** Ya açık rıza alacaksın (belge) ya da **lokal model** zorunlu.
-- **Hassas veri (sağlık, hukuk, finans):** Neredeyse her zaman **lokal model** — Llama 4 70B + kendi VPS'inde.
+- **Anonim veri (kişi kimliği çıkarılamaz):** Bulut API serbest.
+- **Kişisel veri (ad, e-posta, telefon, TC):** Ya açık rıza alacaksın (belge) ya da **yerel model** zorunlu.
+- **Hassas veri (sağlık, hukuk, finans):** Neredeyse her zaman **yerel model** — Llama 3.1 70B veya Llama 4 Scout + kendi VPS'inde.
 
 Platformun Bölüm 8 (Güvenlik + Production) bu konuyu detayla açar.
 
@@ -310,12 +319,12 @@ Kendi projen var mı? (1.4'te yazacaksın veya daha çiğ halde) Aşağıdaki fo
 
 Bu 5 cevaba göre tablo:
 
-- Evet veri hassas + lokal donanım → **Llama 4 70B (Ollama)**
-- Evet veri hassas + donanım yok → **Proje revize et veya GPU kirala**
-- Hacim <1K/ay + veri normal → **Claude Haiku veya Sonnet**
-- Hacim 1K-10K + multimodal gerek → **GPT-4o veya Gemini Flash**
-- Hacim >10K + maliyet hassas → **DeepSeek V3.2**
-- Kritik karar + uzun doküman → **Claude Sonnet/Opus**
+- Evet veri hassas + yerel donanım → **Llama 3.1 70B veya Llama 4 Scout (Ollama)**
+- Evet veri hassas + donanım yok → **Projeyi revize et veya GPU kirala**
+- Aylık 1.000 çağrıdan az + veri normal → **Claude Haiku veya Sonnet**
+- 1.000-10.000 çağrı + multimodal gerek → **GPT-5.5 veya Gemini Flash**
+- 10.000 çağrıdan fazla + maliyet hassas → **DeepSeek V3.2**
+- Kritik karar + uzun doküman → **Claude Sonnet 4.6 veya Opus 4.7**
 
 Kanıt: `muhendisal-notlarim/bolum-1/03-model-karar.md` — 5 cevap + seçtiğin model + gerekçesi.
 
@@ -330,7 +339,7 @@ Kanıt: `muhendisal-notlarim/bolum-1/03-model-karar.md` — 5 cevap + seçtiğin
 | 3 | Fiyat cetvelini unutmak | Q1'de $10, Q3'te $80 fatura | Aylık Anthropic Console budget alert |
 | 4 | Multimodal gerekmeden GPT-4o | Claude-Haiku'nun 5× ücretini öde | İhtiyacı net tespit |
 | 5 | DeepSeek'i KVKK olmadan kullanmak | Veri Çin sunucusunda, yasal risk | Ya lokal çalıştır ya veri anonimize |
-| 6 | Llama'yı laptop'ta 70B çalıştırmak | RAM yetmez, makine donar | Küçük model (8B) başla, cloud GPU sonra |
+| 6 | Llama'yı dizüstünde 70B çalıştırmak | RAM yetmez, makine donar | Küçük model (Llama 3.1 8B veya Llama 4 Scout) ile başla, bulut GPU sonra |
 | 7 | Hiç açık kaynak denememek | Veri gizliliği proje çıkınca hazırlıksız | Bölüm 0.3 Ollama deneyimini atlama |
 | 8 | "Claude Türkçe kötü" miti | 2024 efsanesi, Sonnet 4.6 Türkçe iyi | Kendin test et, "Türkçe özetle" yaz |
 
@@ -343,11 +352,11 @@ Platform neden Claude'u ana dil olarak seçti — eleştirel cevap:
 
 1. **MCP (Model Context Protocol) endüstri standardı oldu.** 2024 Kasım'da Anthropic çıkardı, 2025-2026'da OpenAI, Google, IDE üreticileri (Cursor, VS Code, JetBrains) MCP'yi destekledi. Bölüm 6'da MCP server yazmak 2026 AI Engineer refleksinin kalbi — bu protokolü doğduğu yerden öğrenmek pedagojik olarak anlamlı.
 
-2. **Uzun bağlam + dürüstlük.** Claude 200K bağlam + "emin değilim" refleksi birlikte RAG + agent projelerinde halüsinasyon riskini düşürür. Öğrenci için daha güvenli öğrenme: "Claude cevapladı ama yanlış" vakası görece az.
+2. **Uzun bağlam + dürüstlük.** Claude'un 1M token bağlamı (Opus 4.7 ve Sonnet 4.6) + "emin değilim" refleksi birlikte RAG + agent projelerinde halüsinasyon (modelin uydurma cevap verme) riskini düşürür. Öğrenci için daha güvenli öğrenme ortamı: "Claude cevapladı ama yanlış" vakası görece az.
 
-3. **Türkçe performansı sağlam.** Platform Türkçe. Öğrencinin denediği her örnek Türkçe çalışıyor olmalı — Claude'un Türkçe tutarlılığı (2026 Sonnet 4.5/4.6) bu ihtiyacı karşılıyor.
+3. **Türkçe performansı sağlam.** Platform Türkçe. Öğrencinin denediği her örnek Türkçe çalışıyor olmalı — Claude'un Türkçe tutarlılığı (2026 Sonnet 4.6) bu ihtiyacı karşılıyor.
 
-4. **Anthropic Academy ücretsiz + kaliteli.** 18+ kurs, hepsi ücretsiz, İngilizce (ama platform Türkçe özetler + alıştırma verir). Diğer provider'ların öğrenme kaynakları ya ücretli ya dağınık.
+4. **Anthropic Academy ücretsiz + kaliteli.** Birden çok kurs (AI Fluency, Claude with the API, Tool Use, MCP, Claude Code), hepsi ücretsiz, İngilizce (ama platform Türkçe özetler + alıştırma verir). Diğer sağlayıcıların öğrenme kaynakları ya ücretli ya dağınık.
 
 5. **Ürün düşüncesi.** Anthropic'in kendi ürünleri (Claude Code, Artifacts, Computer Use, Claude in Excel) öğrenciye "AI Engineer rol modeli" sunar. Claude'u kullanan kişi Anthropic'in nasıl düşündüğünü günlük olarak görür.
 

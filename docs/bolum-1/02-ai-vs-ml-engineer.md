@@ -99,15 +99,15 @@ bot.bankax.com"]
 
 ### ML Engineer — bu 5 iş senin değil
 
-1. **Veri toplama + temizleme (2 hafta):** 50.000 geçmiş müşteri konuşmasını anonimleştir, CSV'e çıkar, eksik alanları temizle. Araçlar: Python + pandas + SQL + Apache Beam. Alan uzmanlığı: veri mühendisliği + gizlilik (KVKK).
+1. **Veri toplama + temizleme (2 hafta):** 50.000 geçmiş müşteri konuşmasını anonimleştir (kişi bilgisini çıkar), CSV (virgülle ayrılmış tablo) olarak kaydet, eksik alanları temizle. Araçlar: Python + pandas + SQL + Apache Beam (büyük veri akışı kütüphanesi). Alan uzmanlığı: veri mühendisliği + gizlilik (KVKK).
 
-2. **Etiketleme + niyet sınıfı tasarımı (1.5 hafta):** Her konuşma için "müşterinin niyeti ne?" etiketi. 12 sınıf: `bloke`, `borç`, `şifre`, `hesap`, `yatırım`, vs. Karışık örneklerde ekip etiketler, anlaşamazlarsa kıdemli karar verir. Araç: Label Studio / Prodigy.
+2. **Etiketleme + niyet sınıfı tasarımı (1.5 hafta):** Her konuşma için "müşterinin asıl isteği ne?" etiketi. 12 sınıf: `bloke`, `borç`, `şifre`, `hesap`, `yatırım`, vs. Karışık örneklerde ekip etiketler, anlaşamazlarsa kıdemli karar verir. Araç: Label Studio / Prodigy (etiketleme yazılımları).
 
-3. **Base model seçim + fine-tune (2-3 hafta):** Hazır Türkçe BERT (dbmdz/bert-base-turkish-uncased) üzerine 40K konuşma ile fine-tune. GPU gerekir (4× A100 = saatlik $12, tam eğitim ~8 saat = $96). Araç: PyTorch + Hugging Face Transformers.
+3. **Temel model seçim + fine-tune / ince ayar (2-3 hafta):** Hazır Türkçe **BERT** (Google'ın 2018'de çıkardığı dil modeli ailesi; `dbmdz/bert-base-turkish-uncased` Türkçe sürümü) üzerine 40.000 konuşma ile ince ayar yap. GPU gerekir (2026'da 4× A100 ≈ saatlik $6-12, tam eğitim ~8 saat ≈ $50-100). Araç: PyTorch + Hugging Face Transformers.
 
-4. **Değerlendirme + hata analizi (1 hafta):** Test setinde (10K konuşma) model nasıl gitti? F1 skoru sınıf bazında ne? Hangi 3 sınıf birbirine karışıyor? Confusion matrix incele, gerekirse veri ekle + yeniden eğit. Araç: scikit-learn + matplotlib.
+4. **Değerlendirme + hata analizi (1 hafta):** Test setinde (10.000 konuşma) model nasıl gitti? Sınıf bazında **F1 skoru** (doğruluk + kapsama dengesinin tek sayı özeti) ne? Hangi 3 sınıf birbirine karışıyor? Karışıklık matrisini (confusion matrix) incele, gerekirse veri ekle + yeniden eğit. Araç: scikit-learn + matplotlib.
 
-5. **Model versiyonlama + teslim (0.5 hafta):** Model dosyası (`bertx.pt`, 420 MB) S3'e yüklenir, MLflow'da versiyonlanır, "v1.2.0 — F1 0.87" notu geçilir. Serving için ONNX'e çevirilir (inference hızı 3× artar). Teslim dokümanı AI Engineer'a. Araç: MLflow + ONNX Runtime.
+5. **Model sürümleme + teslim (0.5 hafta):** Model dosyası (`bertx.pt`, 420 MB) **S3**'e (Amazon'un dosya depolama servisi) yüklenir, MLflow'da (model takip aracı) sürümlenir, "v1.2.0 — F1 0.87" notu düşülür. Çalıştırma hızı için **ONNX**'e (model değişim formatı, çıkarım 3 kat hızlanır) çevrilir. Teslim belgesi AI Engineer'a. Araç: MLflow + ONNX Runtime.
 
 **Süre toplam:** ~8 hafta, 1-2 ML Engineer.
 **Donanım maliyeti:** ~$150-300 (GPU kiralaması).
@@ -119,11 +119,11 @@ bot.bankax.com"]
 
 2. **Prompt yazımı + sistem talimatı (1 hafta):** Claude için system prompt. Banka ton, yasal sorumluluk disklaymer, "ödeme yap" gibi eylem önerisini **yapma** komutu. Kullanıcı mesajına yönerge: "Bu konuşma bir banka müşterisiyle; amacın bilgi vermek, işlem yapmak değil." Prompt versiyonla; A/B test hazırlığı.
 
-3. **RAG kur — BankaX kural dokümantasyonu (1.5 hafta):** Bankanın 140 sayfalık iç kuralları (faiz oranı değişimi, hesap açma kuralı, kart blokesi prosedürü). PDF parse → 800 token chunk → Voyage AI embed → Qdrant. Claude'a soru geldiğinde önce ilgili 5 chunk getir, context olarak ver. 4.8 HBV vakasına simetrik.
+3. **RAG kur — BankaX kural dokümantasyonu (1.5 hafta):** Bankanın 140 sayfalık iç kuralları (faiz oranı değişimi, hesap açma kuralı, kart blokesi prosedürü). PDF'i ayrıştır (parse) → 800 token'lık parçalara böl (chunk) → Voyage AI ile vektöre çevir (embedding) → Qdrant'a (vektör veritabanı) kaydet. Claude'a soru geldiğinde önce ilgili 5 parçayı getir, bağlam (context) olarak ver. (Tüm bu zinciri Bölüm 4'te ayrıntıyla göreceksin; şimdi sadece "büyük belgeyi parçalayıp soru soracaksın" diye düşün.)
 
-4. **FastAPI + Docker + deploy (1 hafta):** Endpoint'ler: `/chat` (ana), `/niyet` (ML model çağırır), `/kaynaklar` (RAG debug). Docker compose: app + Qdrant + ML inference container. 9.3 pipeline ile GitHub push → main → canlı. HTTPS + rate limit + auth token BankaX kimlik.
+4. **FastAPI + Docker + yayına alma (1 hafta):** Uç noktalar (endpoints): `/chat` (ana), `/niyet` (ML modeli çağırır), `/kaynaklar` (RAG hata ayıklama). Docker Compose ile: uygulama + Qdrant + ML çıkarım kabı (container). Bölüm 9.3'teki otomatik yayım hattıyla GitHub'a gönder → ana dal → canlı. HTTPS + istek sınırı (rate limit) + kimlik doğrulama belirteci (auth token) BankaX kimliğiyle.
 
-5. **Monitoring + maliyet + fallback (sürekli):** Her çağrının token sayısını logla, aylık budget alert ($400), Claude API 500 verirse fallback (şablon cevap). PagerDuty entegrasyonu — sistem düşerse telefonu çalsın. Grafana dashboard'u: çağrı sayısı, ortalama gecikme, dil dağılımı, maliyet/gün.
+5. **İzleme + maliyet + yedek plan (sürekli):** Her çağrının token sayısını günlüğe yaz, aylık bütçe uyarısı ($400), Claude API 500 hatası verirse yedek plan (şablon cevap). PagerDuty (kriz sırasında telefonu çaldıran çağrı sistemi) entegrasyonu. Grafana panosu (Grafana = açık kaynak izleme aracı): çağrı sayısı, ortalama gecikme, dil dağılımı, günlük maliyet.
 
 **Süre toplam:** ~5-6 hafta, 1 AI Engineer.
 **Donanım maliyeti:** ~$10/ay (VPS) + ~$200/ay (Claude + Voyage, 100K müşteri trafiği).
@@ -140,8 +140,8 @@ bot.bankax.com"]
 | **Matematik** | Yoğun (lineer cebir, olasılık) | Hafif (yüzde, oran) |
 | **Dil** | Python + CUDA | Python + YAML + Docker |
 | **Kütüphane** | PyTorch, HF, sklearn, pandas | Claude SDK, FastAPI, Qdrant |
-| **Başarı ölçüsü** | F1 skoru, recall, MRR | Canlı 99.9% uptime, aylık fatura |
-| **Öğrenme kaynağı** | Andrew Ng, Fast.ai, papers | Anthropic Docs, Cookbook, Academy |
+| **Başarı ölçüsü** | F1 skoru, recall (kapsama), MRR (sıralama metriği) | Canlı %99.9 ayakta kalma süresi, aylık fatura |
+| **Öğrenme kaynağı** | Andrew Ng, Fast.ai, akademik makaleler | Anthropic Docs, Cookbook, Academy |
 | **Eğitim süresi (0→iş)** | 2-3 yıl | 6-12 ay |
 | **Formal eğitim** | BS + MS tavsiye, PhD rekabetçi | Diploma zorunsuz, portföy kilit |
 | **Ev ortamı** | Cloud GPU gerekebilir | Laptop + internet yeter |
@@ -213,7 +213,7 @@ bot.bankax.com"]
 
 ### ML Engineer'dan AI Engineer'a geçiş (tersi)
 
-ML Engineer'sen ve AI Engineer rolüne geçmek istiyorsan: **Bölüm 2 + 6 + 9** yeter. Prompt disiplini + agent/MCP + deploy refleksi. 2-3 ay içinde geçebilirsin, hatta ikisini beraber yapabilirsin (MLOps engineer rolü bu iki yolun ortak kesişimi).
+ML Engineer'sen ve AI Engineer rolüne geçmek istiyorsan: **Bölüm 2 + 6 + 9** yeter. Prompt disiplini + agent/MCP + yayına alma refleksi. 2-3 ay içinde geçebilirsin, hatta ikisini beraber yapabilirsin: **MLOps Engineer** (Machine Learning Operations — model üretim hattı uzmanı) rolü bu iki yolun ortak kesişimidir.
 
 ## 2026 maaş bantları — gerçekçi rakamlar
 

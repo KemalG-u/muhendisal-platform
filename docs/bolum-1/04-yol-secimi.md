@@ -13,13 +13,13 @@
 </div>
 
 !!! tip "Yabancı kelime mi gördün?"
-    **Persona** (persona) = öğrenci tipi, hedef okuyucu modeli. **Portföy** (portfolio) = GitHub + canlı URL + README'lerden oluşan iş başvuru kanıt paketi. **Checklist** = her hafta bitmesi gereken somut madde listesi.
+    **Persona** = öğrenci/kullanıcı tipi, hedef okuyucu profili. **Portföy** (portfolio) = GitHub + canlı URL + README'lerden oluşan iş başvuru kanıt paketi. **Kontrol listesi (checklist)** = her hafta bitmesi gereken somut madde listesi.
 
 ## Neden bu sayfa?
 
 Platform 11 bölüm, 67 sayfa, ~200 saatlik içerik. "Baştan sona oku" şeklinde yürünürse de **6-8 ay** sürer, doğru. Ama herkesin hedefi farklı: biri **iş bulmak** ister, biri **kendi projesini yapmak**, biri sadece **merakını gidermek**. Üç hedef farklı yol ister. Bu sayfa üç yolu açıkça yazar — sen kendini bulursun, planını koyarsın.
 
-İkincisi: Hedefsiz çalışmak tüketir. 3. haftada "neden bunu yapıyorum?" diye duraksayan öğrenci 4. haftada kapatır. **Yazılı plan = panzehir.** Aşağıda sana bu sayfayı bitirmeden önce doldurman için bir şablon vereceğiz; planı görebilir halde tutacaksın.
+İkincisi: Hedefsiz çalışmak insanı tüketir. 3. haftada "neden bunu yapıyorum?" diye duraksayan öğrenci 4. haftada kapatır. **Yazılı plan = panzehir.** Aşağıda bu sayfayı bitirmeden önce dolduracağın bir şablon var; planı sürekli göz önünde tut.
 
 Üçüncüsü: Personalar arasında geçiş mümkün. "🟢 başlangıç"tan "🔵 iş"e geçiş doğaldır — başlangıçta meraklıydın, 3 ay sonra ciddileştin. Bu sayfa bugünkü kendini seçmen için; 3 ay sonra tekrar okuyacaksın.
 
@@ -43,7 +43,7 @@ flowchart TB
     P2 --> T2["⏱ 8-15 saat/hafta\n4-8 ay"]
     P3 --> T3["⏱ 3-6 saat/hafta\nProje bitene kadar"]
 
-    T1 --> O1["📦 2-3 portföy projesi\n(hobby seviye)"]
+    T1 --> O1["📦 2-3 portföy projesi\n(hobi seviye)"]
     T2 --> O2["📦 3-4 portföy projesi\n(iş ilanı seviye)\n+ LinkedIn içerik"]
     T3 --> O3["📦 1-2 iç proje\n(kendi sorun odaklı)"]
 
@@ -61,7 +61,7 @@ flowchart TB
 
 | Persona | Motivasyon | Haftalık zaman | Toplam süre | Portföy |
 |---|---|---|---|---|
-| 🟢 **Başlangıç** | Yeni alan keşfi, merak | 5-8 saat | 6-12 ay | 2-3 hobby proje |
+| 🟢 **Başlangıç** | Yeni alan keşfi, merak | 5-8 saat | 6-12 ay | 2-3 hobi proje |
 | 🔵 **İş** | Kariyer değişimi / terfi | 8-15 saat | 4-8 ay | 3-4 ciddi proje + LinkedIn |
 | 🟣 **Kişisel** | Kendi sorununu çözmek | 3-6 saat | Proje odaklı | 1-2 kişisel araç |
 
@@ -101,7 +101,7 @@ Kod hiç yazmadın veya çok az yazdın. AI/ChatGPT/Claude'u duydun, ilgini çek
 ### 6. hafta sonrası — nereye
 
 - **Sonraki 6 hafta (7-12):** Bölüm 5 + 6 (Agent, MCP) + Bölüm 8 (Güvenlik) + ikinci portföy projesi (Agent bazlı). Bu noktada **persona 🔵 iş**'e geçmeye hazırsın — LinkedIn'de aktif ol, junior AI Engineer pozisyonlarına başvur.
-- **İlk 3 ay bittiğinde:** Kendine sor "bu işi gerçekten seviyor muyum?" Cevap evet → iş persona'sına geç. Hayır → sorun yok, kendi hobby projen için devam.
+- **İlk 3 ay bittiğinde:** Kendine sor "bu işi gerçekten seviyor muyum?" Cevap evet → iş personasına geç. Hayır → sorun yok, kendi hobi projen için devam.
 
 ## 🔵 İş persona — "6-12 ay içinde AI rolüne geçmek"
 
@@ -190,7 +190,7 @@ Sistemi kur (1-2 hafta), kendi kullan (1-2 hafta — **en önemli aşama**, bu a
 
 ### 🟣 ipucu: "küçük tut"
 
-Kişisel projede en büyük hata **aşırı hedef.** "Evdeki tüm cihazları AI ile kontrol edeceğim" = hiçbir zaman bitmez. "Mutfaktaki AC'yi Claude'a 'odam sıcak' dediğimde çalıştır" = 2 haftada biter, 1 yıl kullanırsın. **Küçük + bitmiş > büyük + yarım.**
+Kişisel projede en büyük hata **aşırı hedef.** "Evdeki tüm cihazları AI ile kontrol edeceğim" = hiçbir zaman bitmez. "Mutfaktaki klimayı Claude'a 'odam sıcak' dediğimde çalıştır" = 2 haftada biter, 1 yıl kullanırsın. **Küçük + bitmiş > büyük + yarım.**
 
 ## 30 dakikalık plan hazırlama atölyesi
 
@@ -272,7 +272,7 @@ Yukarıdaki persona tablosundan kopyala, kendi takvim tarihleriyle:
 | 4 | Kur-bırak (projeyi kurar, kullanmaz) | Portföy 1'den sonra | Kendi projenin ilk kullanıcısı olmak zorunlu |
 | 5 | Claude-bağımlılık (düşünmeden her şeyi Claude'a sorma) | 5-6. hafta | Önce 10 dk kendin dene, sonra Claude'a sor |
 | 6 | LinkedIn pasifliği (🔵) | 8-12. hafta | Haftada 1 içerik, kalite-odaklı |
-| 7 | Burnout | 10-16. hafta | Hafta sonu tam dinlen, hobby dışı aktivite |
+| 7 | Tükenmişlik (burnout) | 10-16. hafta | Hafta sonu tam dinlen, AI dışı aktivite |
 | 8 | Karşılaştırma (YouTube'da 20 yaşında AI startup kurmuş) | Sürekli | Onları değil, kendi 1 hafta önceki halini karşılaştır |
 
 ## Anthropic ekosistemi — persona köprüsü
@@ -342,7 +342,7 @@ Eğer Bölüm 0'ı henüz geçmediysen şimdi [Bölüm 0'a](../bolum-0/index.md)
 <li>**Her personanın 6 haftası farklıdır.** 🟢 1 portföy; 🔵 2 portföy + LinkedIn; 🟣 proje-odaklı. Bu yüzden **çıkış kriteri somut yazılmalı.**</li>
 <li>**İş persona'sı için LinkedIn ritüeli zorunludur.** Sessiz kalan aday görünmez. Bu yüzden **haftalık 1 içerik paylaşımı = kariyer yatırımı.**</li>
 <li>**Haftalık + aylık ritüel sürekliliği sağlar.** Pazartesi hedefle, pazar gözden geçir, ayda revize et. Bu yüzden **tempo sabit kalır, tükenme önlenir.**</li>
-<li>**8 klasik tuzak önceden tanındığında kaçınılabilir.** Perfektionizm, kur-bırak, burnout, karşılaştırma. Bu yüzden **tuzakları isimle bilmek yeterli uyarı.**</li>
+<li>**8 klasik tuzak önceden tanındığında kaçınılabilir.** Mükemmeliyetçilik, kur-bırak, tükenmişlik, başkalarıyla kıyaslama. Bu yüzden **tuzakları adıyla bilmek yeterli uyarı.**</li>
 <li>**Anthropic Academy persona'ya göre kurslar sunar.** Platform + Academy iki yol birleşir. Bu yüzden **sertifika isteyen öğrenci ekstra kaynak bulur.**</li>
 </ol>
 
