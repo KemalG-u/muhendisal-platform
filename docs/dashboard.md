@@ -79,8 +79,6 @@ Hedefin, ileride içerik filtrelemesini ayarlar. Şimdilik profilinde saklanır 
 
 <div id="ma-pg-list">
 <!-- PAGES_START -->
-<h3 class="ma-pg-section">Genel</h3>
-<div class="ma-pg-row" data-page-path="yazim-kurallari"><span class="ma-pg-icon">○</span><span class="ma-pg-label">Yazım Kuralları (CTO)</span></div>
 <h3 class="ma-pg-section">Bölüm 0 — Temel Hazırlık</h3>
 <div class="ma-pg-row" data-page-path="bolum-0/01-vps-linux"><span class="ma-pg-icon">○</span><span class="ma-pg-label">0.1 VPS ve Linux Komutları</span></div>
 <div class="ma-pg-row" data-page-path="bolum-0/02-python-venv"><span class="ma-pg-icon">○</span><span class="ma-pg-label">0.2 Python ve Sanal Ortam</span></div>
@@ -156,5 +154,7 @@ Hedefin, ileride içerik filtrelemesini ayarlar. Şimdilik profilinde saklanır 
 <div class="ma-pg-row" data-page-path="bolum-10/03-acik-kaynak"><span class="ma-pg-icon">○</span><span class="ma-pg-label">10.3 Açık Kaynak Katkı</span></div>
 <div class="ma-pg-row" data-page-path="bolum-10/04-ileri-konular"><span class="ma-pg-icon">○</span><span class="ma-pg-label">10.4 İleri Konular ve Trendler</span></div>
 <div class="ma-pg-row" data-page-path="bolum-10/05-topluluk"><span class="ma-pg-icon">○</span><span class="ma-pg-label">10.5 Topluluk ve Mentorluk</span></div>
+<h3 class="ma-pg-section">Genel</h3>
+<div class="ma-pg-row" data-page-path="hakkimda"><span class="ma-pg-icon">○</span><span class="ma-pg-label">Hakkımda</span></div>
 <!-- PAGES_END -->
 </div>

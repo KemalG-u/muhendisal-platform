@@ -3,7 +3,7 @@
 AI Engineer Türkçe öğrenme platformu — interaktif quiz, kod sandbox, ilerleme takibi.
 
 **Canlı:** https://wiki.oluk.org/platform/
-**Sayfa sayısı:** <!-- SAYFA-SAYISI -->79<!-- /SAYFA-SAYISI --> (otomatik güncellenir, `./scripts/rebuild.sh` ile)
+**Sayfa sayısı:** <!-- SAYFA-SAYISI -->78<!-- /SAYFA-SAYISI --> (otomatik güncellenir, `./scripts/rebuild.sh` ile)
 
 ## Teknoloji
 
